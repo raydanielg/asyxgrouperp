@@ -7,8 +7,8 @@
     <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {{-- Header --}}
         <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-8 py-8 text-center">
-            <div class="w-16 h-16 mx-auto bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+            <div class="w-20 h-20 mx-auto bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+                <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group" class="w-16 h-16 object-contain">
             </div>
             <h2 class="text-2xl font-extrabold text-white">Welcome Back</h2>
             <p class="text-emerald-100 text-sm mt-1">Sign in to your account</p>
