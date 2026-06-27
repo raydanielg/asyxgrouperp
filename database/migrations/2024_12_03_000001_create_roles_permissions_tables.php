@@ -33,6 +33,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained()->cascadeOnDelete();
             $table->foreignId('permission_id')->constrained()->cascadeOnDelete();
             $table->unique(['role_id', 'permission_id']);
+            $table->timestamps();
         });
 
         // Role-User pivot
@@ -41,6 +42,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('role_id')->constrained()->cascadeOnDelete();
             $table->unique(['user_id', 'role_id']);
+            $table->timestamps();
         });
 
         // Login History
