@@ -255,174 +255,214 @@
             @endforeach
             @else
             @php
-                // Role-specific sidebar menus
+                // Role-specific sidebar menus - using role.page route
                 $roleName = auth()->user()->roles()->first()?->name ?? auth()->user()->role ?? 'user';
                 $roleSlug = str_replace('_', '-', $roleName);
+                $iconDashboard = 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z';
+                $iconReports = 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z';
+                $iconProjects = 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2';
+                $iconEmployees = 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z';
+                $iconSales = 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z';
+                $iconPurchases = 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z';
+                $iconExpenses = 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z';
+                $iconRevenues = 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8';
+                $iconTickets = 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
+                $iconProducts = 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4';
+                $iconWarehouses = 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5';
+                $iconUsers = 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z';
+                $iconRoles = 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z';
+                $iconSettings = 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z';
+                $iconAttendance = 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m-6 9l2 2 4-4';
+                $iconPayroll = 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8';
+                $iconLeaves = 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z';
+                $iconLeads = 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6';
+                $iconContacts = 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z';
+                $iconDeals = 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586';
+                $iconContracts = 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586';
+                $iconBills = 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z';
+                $iconBank = 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z';
+                $iconTransfers = 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4';
+                $iconTimesheets = 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z';
+                $iconBugs = 'M13 10V3L4 14h7v7l9-11h-7z';
+                $iconAssets = 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4';
+                $iconPolicies = 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586';
+                $iconStock = 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4';
+                $iconSuppliers = 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5';
+                $iconPos = 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17';
+                $iconPerformance = 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6';
+                $iconTraining = 'M12 14l9-5-9-5-9 5 9 5z';
+                $iconRecruitment = 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2';
+                $iconSalesDash = 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17';
+
                 $roleMenus = [
                     'director' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z', 'match' => 'role.dashboard'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'match' => 'admin.reports*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Sales Dashboard', 'route' => 'admin.sales-dashboard', 'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17', 'match' => 'admin.sales-dashboard*'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'match' => 'admin.employees*'],
-                        ['label' => 'Sales Invoices', 'route' => 'admin.sales-invoices.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Purchases', 'route' => 'admin.purchase-invoices.index', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Expenses', 'route' => 'admin.expenses.index', 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z', 'match' => 'admin.expenses*'],
-                        ['label' => 'Helpdesk', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Sales Dashboard', 'module' => 'sales-dashboard', 'icon' => $iconSalesDash],
+                        ['label' => 'Employees', 'module' => 'employees', 'icon' => $iconEmployees],
+                        ['label' => 'Sales Invoices', 'module' => 'sales-invoices', 'icon' => $iconSales],
+                        ['label' => 'Purchases', 'module' => 'purchase-invoices', 'icon' => $iconPurchases],
+                        ['label' => 'Expenses', 'module' => 'expenses', 'icon' => $iconExpenses],
+                        ['label' => 'Helpdesk', 'module' => 'tickets', 'icon' => $iconTickets],
                     ],
                     'finance_officer' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z', 'match' => 'role.dashboard'],
-                        ['label' => 'Sales Invoices', 'route' => 'admin.sales-invoices.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Purchase Invoices', 'route' => 'admin.purchase-invoices.index', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Expenses', 'route' => 'admin.expenses.index', 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z', 'match' => 'admin.expenses*'],
-                        ['label' => 'Revenues', 'route' => 'admin.revenues.index', 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.revenues*'],
-                        ['label' => 'Bills', 'route' => 'admin.bills.index', 'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z', 'match' => 'admin.bills*'],
-                        ['label' => 'Bank Accounts', 'route' => 'admin.bank-accounts.index', 'icon' => 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z', 'match' => 'admin.bank-accounts*'],
-                        ['label' => 'Transfers', 'route' => 'admin.acc-transfers.index', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'match' => 'admin.acc-transfers*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Sales Invoices', 'module' => 'sales-invoices', 'icon' => $iconSales],
+                        ['label' => 'Purchase Invoices', 'module' => 'purchase-invoices', 'icon' => $iconPurchases],
+                        ['label' => 'Expenses', 'module' => 'expenses', 'icon' => $iconExpenses],
+                        ['label' => 'Revenues', 'module' => 'revenues', 'icon' => $iconRevenues],
+                        ['label' => 'Bills', 'module' => 'bills', 'icon' => $iconBills],
+                        ['label' => 'Bank Accounts', 'module' => 'bank-accounts', 'icon' => $iconBank],
+                        ['label' => 'Transfers', 'module' => 'transfers', 'icon' => $iconTransfers],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
                     ],
                     'hr_officer' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'match' => 'admin.employees*'],
-                        ['label' => 'Attendance', 'route' => 'admin.attendance.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m-6 9l2 2 4-4', 'match' => 'admin.attendance*'],
-                        ['label' => 'Payroll', 'route' => 'admin.payroll.index', 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8', 'match' => 'admin.payroll*'],
-                        ['label' => 'Leaves', 'route' => 'admin.leaves.index', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', 'match' => 'admin.leaves*'],
-                        ['label' => 'Performance', 'route' => 'admin.performance.index', 'icon' => 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', 'match' => 'admin.performance*'],
-                        ['label' => 'Training', 'route' => 'admin.training.index', 'icon' => 'M12 14l9-5-9-5-9 5 9 5z', 'match' => 'admin.training*'],
-                        ['label' => 'Recruitment', 'route' => 'admin.job-postings.index', 'icon' => 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2', 'match' => 'admin.job-postings*'],
-                        ['label' => 'Assets', 'route' => 'admin.assets.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.assets*'],
-                        ['label' => 'Policies', 'route' => 'admin.policies.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586', 'match' => 'admin.policies*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Employees', 'module' => 'employees', 'icon' => $iconEmployees],
+                        ['label' => 'Attendance', 'module' => 'attendance', 'icon' => $iconAttendance],
+                        ['label' => 'Payroll', 'module' => 'payroll', 'icon' => $iconPayroll],
+                        ['label' => 'Leaves', 'module' => 'leaves', 'icon' => $iconLeaves],
+                        ['label' => 'Performance', 'module' => 'performance', 'icon' => $iconPerformance],
+                        ['label' => 'Training', 'module' => 'training', 'icon' => $iconTraining],
+                        ['label' => 'Recruitment', 'module' => 'recruitment', 'icon' => $iconRecruitment],
+                        ['label' => 'Assets', 'module' => 'assets', 'icon' => $iconAssets],
+                        ['label' => 'Policies', 'module' => 'policies', 'icon' => $iconPolicies],
                     ],
                     'auditor' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Sales Invoices', 'route' => 'admin.sales-invoices.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586', 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Purchase Invoices', 'route' => 'admin.purchase-invoices.index', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Expenses', 'route' => 'admin.expenses.index', 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2', 'match' => 'admin.expenses*'],
-                        ['label' => 'Revenues', 'route' => 'admin.revenues.index', 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2', 'match' => 'admin.revenues*'],
-                        ['label' => 'Bills', 'route' => 'admin.bills.index', 'icon' => 'M9 14l6-6m-5.5.5h.01', 'match' => 'admin.bills*'],
-                        ['label' => 'Bank Accounts', 'route' => 'admin.bank-accounts.index', 'icon' => 'M3 10h18M7 15h1m4 0h1', 'match' => 'admin.bank-accounts*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Sales Invoices', 'module' => 'sales-invoices', 'icon' => $iconSales],
+                        ['label' => 'Purchase Invoices', 'module' => 'purchase-invoices', 'icon' => $iconPurchases],
+                        ['label' => 'Expenses', 'module' => 'expenses', 'icon' => $iconExpenses],
+                        ['label' => 'Revenues', 'module' => 'revenues', 'icon' => $iconRevenues],
+                        ['label' => 'Bills', 'module' => 'bills', 'icon' => $iconBills],
+                        ['label' => 'Bank Accounts', 'module' => 'bank-accounts', 'icon' => $iconBank],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
                     ],
                     'admin_manager' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Users', 'route' => 'admin.users.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'match' => 'admin.users*'],
-                        ['label' => 'Roles & Permissions', 'route' => 'admin.roles.index', 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'match' => 'admin.roles*'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7', 'match' => 'admin.employees*'],
-                        ['label' => 'Attendance', 'route' => 'admin.attendance.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.attendance*'],
-                        ['label' => 'Leaves', 'route' => 'admin.leaves.index', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', 'match' => 'admin.leaves*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
-                        ['label' => 'Settings', 'route' => 'admin.settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37', 'match' => 'admin.settings*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Users', 'module' => 'users', 'icon' => $iconUsers],
+                        ['label' => 'Roles & Permissions', 'module' => 'roles', 'icon' => $iconRoles],
+                        ['label' => 'Employees', 'module' => 'employees', 'icon' => $iconEmployees],
+                        ['label' => 'Attendance', 'module' => 'attendance', 'icon' => $iconAttendance],
+                        ['label' => 'Leaves', 'module' => 'leaves', 'icon' => $iconLeaves],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
+                        ['label' => 'Settings', 'module' => 'settings', 'icon' => $iconSettings],
                     ],
                     'cashier' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'POS Terminal', 'route' => 'admin.pos.index', 'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17', 'match' => 'admin.pos.index*'],
-                        ['label' => 'POS Reports', 'route' => 'admin.pos.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.pos.reports*'],
-                        ['label' => 'Sales Invoices', 'route' => 'admin.sales-invoices.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586', 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.products*'],
-                        ['label' => 'Revenues', 'route' => 'admin.revenues.index', 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2', 'match' => 'admin.revenues*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'POS Terminal', 'module' => 'pos', 'icon' => $iconPos],
+                        ['label' => 'POS Reports', 'module' => 'pos-reports', 'icon' => $iconReports],
+                        ['label' => 'Sales Invoices', 'module' => 'sales-invoices', 'icon' => $iconSales],
+                        ['label' => 'Products', 'module' => 'products', 'icon' => $iconProducts],
+                        ['label' => 'Revenues', 'module' => 'revenues', 'icon' => $iconRevenues],
                     ],
                     'technical_manager' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Tickets', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Timesheets', 'route' => 'admin.timesheets.index', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.timesheets*'],
-                        ['label' => 'Bugs', 'route' => 'admin.bugs.index', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'match' => 'admin.bugs*'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857', 'match' => 'admin.employees*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Timesheets', 'module' => 'timesheets', 'icon' => $iconTimesheets],
+                        ['label' => 'Bugs', 'module' => 'bugs', 'icon' => $iconBugs],
+                        ['label' => 'Employees', 'module' => 'employees', 'icon' => $iconEmployees],
                     ],
                     'technician' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'My Tickets', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Timesheets', 'route' => 'admin.timesheets.index', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.timesheets*'],
-                        ['label' => 'Bugs', 'route' => 'admin.bugs.index', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'match' => 'admin.bugs*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'My Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Timesheets', 'module' => 'timesheets', 'icon' => $iconTimesheets],
+                        ['label' => 'Bugs', 'module' => 'bugs', 'icon' => $iconBugs],
                     ],
                     'ict_officer' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Tickets', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Bugs', 'route' => 'admin.bugs.index', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'match' => 'admin.bugs*'],
-                        ['label' => 'Assets', 'route' => 'admin.assets.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.assets*'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857', 'match' => 'admin.employees*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Bugs', 'module' => 'bugs', 'icon' => $iconBugs],
+                        ['label' => 'Assets', 'module' => 'assets', 'icon' => $iconAssets],
+                        ['label' => 'Employees', 'module' => 'employees', 'icon' => $iconEmployees],
                     ],
                     'ict_engineer' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Tickets', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Bugs', 'route' => 'admin.bugs.index', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'match' => 'admin.bugs*'],
-                        ['label' => 'Assets', 'route' => 'admin.assets.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.assets*'],
-                        ['label' => 'Settings', 'route' => 'admin.settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0', 'match' => 'admin.settings*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Bugs', 'module' => 'bugs', 'icon' => $iconBugs],
+                        ['label' => 'Assets', 'module' => 'assets', 'icon' => $iconAssets],
+                        ['label' => 'Settings', 'module' => 'settings', 'icon' => $iconSettings],
                     ],
                     'project_manager' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Timesheets', 'route' => 'admin.timesheets.index', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.timesheets*'],
-                        ['label' => 'Bugs', 'route' => 'admin.bugs.index', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'match' => 'admin.bugs*'],
-                        ['label' => 'Deals', 'route' => 'admin.crm-deals.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586', 'match' => 'admin.crm-deals*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Timesheets', 'module' => 'timesheets', 'icon' => $iconTimesheets],
+                        ['label' => 'Bugs', 'module' => 'bugs', 'icon' => $iconBugs],
+                        ['label' => 'Deals', 'module' => 'deals', 'icon' => $iconDeals],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
                     ],
                     'operations_manager' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.products*'],
-                        ['label' => 'Warehouses', 'route' => 'admin.warehouses.index', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5', 'match' => 'admin.warehouses*'],
-                        ['label' => 'Stock Movements', 'route' => 'admin.stock-movements.index', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'match' => 'admin.stock-movements*'],
-                        ['label' => 'Sales', 'route' => 'admin.sales-invoices.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586', 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Purchases', 'route' => 'admin.purchase-invoices.index', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Products', 'module' => 'products', 'icon' => $iconProducts],
+                        ['label' => 'Warehouses', 'module' => 'warehouses', 'icon' => $iconWarehouses],
+                        ['label' => 'Stock Movements', 'module' => 'stock-movements', 'icon' => $iconStock],
+                        ['label' => 'Sales', 'module' => 'sales-invoices', 'icon' => $iconSales],
+                        ['label' => 'Purchases', 'module' => 'purchase-invoices', 'icon' => $iconPurchases],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
                     ],
                     'logistics_officer' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.products*'],
-                        ['label' => 'Warehouses', 'route' => 'admin.warehouses.index', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5', 'match' => 'admin.warehouses*'],
-                        ['label' => 'Stock Movements', 'route' => 'admin.stock-movements.index', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'match' => 'admin.stock-movements*'],
-                        ['label' => 'Suppliers', 'route' => 'admin.suppliers.index', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5', 'match' => 'admin.suppliers*'],
-                        ['label' => 'Transfers', 'route' => 'admin.transfers.index', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'match' => 'admin.transfers*'],
-                        ['label' => 'Purchases', 'route' => 'admin.purchase-invoices.index', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'match' => 'admin.purchase-invoices*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Products', 'module' => 'products', 'icon' => $iconProducts],
+                        ['label' => 'Warehouses', 'module' => 'warehouses', 'icon' => $iconWarehouses],
+                        ['label' => 'Stock Movements', 'module' => 'stock-movements', 'icon' => $iconStock],
+                        ['label' => 'Suppliers', 'module' => 'suppliers', 'icon' => $iconSuppliers],
+                        ['label' => 'Transfers', 'module' => 'inventory-transfers', 'icon' => $iconTransfers],
+                        ['label' => 'Purchases', 'module' => 'purchase-invoices', 'icon' => $iconPurchases],
                     ],
                     'receptionist' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Leads', 'route' => 'admin.crm-leads.index', 'icon' => 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', 'match' => 'admin.crm-leads*'],
-                        ['label' => 'Contacts', 'route' => 'admin.crm-contacts.index', 'icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'match' => 'admin.crm-contacts*'],
-                        ['label' => 'Tickets', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Leads', 'module' => 'leads', 'icon' => $iconLeads],
+                        ['label' => 'Contacts', 'module' => 'contacts', 'icon' => $iconContacts],
+                        ['label' => 'Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
                     ],
                     'call_center_agent' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Leads', 'route' => 'admin.crm-leads.index', 'icon' => 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', 'match' => 'admin.crm-leads*'],
-                        ['label' => 'Contacts', 'route' => 'admin.crm-contacts.index', 'icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'match' => 'admin.crm-contacts*'],
-                        ['label' => 'Tickets', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Leads', 'module' => 'leads', 'icon' => $iconLeads],
+                        ['label' => 'Contacts', 'module' => 'contacts', 'icon' => $iconContacts],
+                        ['label' => 'Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
                     ],
                     'legal_officer' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Contracts', 'route' => 'admin.crm-contracts.index', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586', 'match' => 'admin.crm-contracts*'],
-                        ['label' => 'Contacts', 'route' => 'admin.crm-contacts.index', 'icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'match' => 'admin.crm-contacts*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Contracts', 'module' => 'contracts', 'icon' => $iconContracts],
+                        ['label' => 'Contacts', 'module' => 'contacts', 'icon' => $iconContacts],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
                     ],
                     'supervisor' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857', 'match' => 'admin.employees*'],
-                        ['label' => 'Attendance', 'route' => 'admin.attendance.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.attendance*'],
-                        ['label' => 'Leaves', 'route' => 'admin.leaves.index', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', 'match' => 'admin.leaves*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'POS Terminal', 'route' => 'admin.pos.index', 'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293', 'match' => 'admin.pos.index*'],
-                        ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.products*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Employees', 'module' => 'employees', 'icon' => $iconEmployees],
+                        ['label' => 'Attendance', 'module' => 'attendance', 'icon' => $iconAttendance],
+                        ['label' => 'Leaves', 'module' => 'leaves', 'icon' => $iconLeaves],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'POS Terminal', 'module' => 'pos', 'icon' => $iconPos],
+                        ['label' => 'Products', 'module' => 'products', 'icon' => $iconProducts],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
                     ],
                     'administrator' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z', 'match' => 'role.dashboard'],
-                        ['label' => 'Users', 'route' => 'admin.users.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857', 'match' => 'admin.users*'],
-                        ['label' => 'Roles', 'route' => 'admin.roles.index', 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944', 'match' => 'admin.roles*'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857', 'match' => 'admin.employees*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'match' => 'admin.projects*'],
-                        ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4', 'match' => 'admin.products*'],
-                        ['label' => 'Settings', 'route' => 'admin.settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0', 'match' => 'admin.settings*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z', 'match' => 'admin.reports*'],
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Users', 'module' => 'users', 'icon' => $iconUsers],
+                        ['label' => 'Roles', 'module' => 'roles', 'icon' => $iconRoles],
+                        ['label' => 'Employees', 'module' => 'employees', 'icon' => $iconEmployees],
+                        ['label' => 'Projects', 'module' => 'projects', 'icon' => $iconProjects],
+                        ['label' => 'Products', 'module' => 'products', 'icon' => $iconProducts],
+                        ['label' => 'Settings', 'module' => 'settings', 'icon' => $iconSettings],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
                     ],
                 ];
                 $myMenu = $roleMenus[$roleName] ?? $roleMenus['administrator'] ?? [];
             @endphp
             @foreach($myMenu as $item)
-            <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+            @php
+                $itemUrl = isset($item['route']) ? route($item['route']) : route('role.page', ['module' => $item['module']]);
+                $itemActive = isset($item['match']) ? request()->routeIs($item['match']) : (request()->routeIs('role.page') && request()->segment(2) === $item['module']);
+            @endphp
+            <a href="{{ $itemUrl }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ $itemActive ? 'active' : '' }}">
                 <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
