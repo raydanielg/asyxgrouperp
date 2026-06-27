@@ -153,6 +153,96 @@
                         ['label' => 'Settings', 'route' => 'admin.settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z', 'match' => 'admin.settings*'],
                     ]],
                 ];
+
+                // Permission map: route match pattern => required permission
+                $permMap = [
+                    'admin.business-flow*' => 'view-dashboard',
+                    'admin.tenders*' => 'view-dashboard',
+                    'admin.quotations*' => 'view-dashboard',
+                    'admin.budgets*' => 'view-dashboard',
+                    'admin.lpos*' => 'view-dashboard',
+                    'admin.grns*' => 'view-dashboard',
+                    'admin.delivery-notes*' => 'view-dashboard',
+                    'admin.vendor-invoices*' => 'view-dashboard',
+                    'admin.office-expenses*' => 'view-expenses',
+                    'admin.client-receipts*' => 'view-revenues',
+                    'admin.users*' => 'view-users',
+                    'admin.roles*' => 'view-roles',
+                    'admin.users.login-history*' => 'view-login-history',
+                    'admin.profile*' => 'view-dashboard',
+                    'admin.employees*' => 'view-employees',
+                    'admin.attendance*' => 'view-attendance',
+                    'admin.payroll*' => 'view-payroll',
+                    'admin.leaves*' => 'view-leaves',
+                    'admin.performance*' => 'view-performance',
+                    'admin.training*' => 'view-training',
+                    'admin.job-postings*' => 'view-recruitment',
+                    'admin.assets*' => 'view-assets',
+                    'admin.hr-events*' => 'view-events',
+                    'admin.policies*' => 'view-policies',
+                    'admin.crm-leads*' => 'view-crm-leads',
+                    'admin.crm-deals*' => 'view-crm-deals',
+                    'admin.crm-contracts*' => 'view-crm-contracts',
+                    'admin.crm-contacts*' => 'view-crm-contacts',
+                    'admin.bank-accounts*' => 'view-bank-accounts',
+                    'admin.acc-transfers*' => 'view-acc-transfers',
+                    'admin.expenses*' => 'view-expenses',
+                    'admin.revenues*' => 'view-revenues',
+                    'admin.bills*' => 'view-bills',
+                    'admin.estimates*' => 'view-dashboard',
+                    'admin.projects*' => 'view-projects',
+                    'admin.timesheets*' => 'view-timesheets',
+                    'admin.bugs*' => 'view-bugs',
+                    'admin.products*' => 'view-products',
+                    'admin.product-categories*' => 'view-product-categories',
+                    'admin.suppliers*' => 'view-suppliers',
+                    'admin.stock-movements*' => 'view-stock-movements',
+                    'admin.warehouses*' => 'view-warehouses',
+                    'admin.transfers*' => 'view-acc-transfers',
+                    'admin.sales-dashboard*' => 'view-dashboard',
+                    'admin.sales-proposals*' => 'view-sales-invoices',
+                    'admin.sales-invoices*' => 'view-sales-invoices',
+                    'admin.sales-returns*' => 'view-sales-invoices',
+                    'admin.purchase-invoices*' => 'view-purchase-invoices',
+                    'admin.purchase-returns*' => 'view-purchase-invoices',
+                    'admin.pos.index*' => 'view-pos',
+                    'admin.pos.reports*' => 'view-pos',
+                    'admin.plans*' => 'view-dashboard',
+                    'admin.orders*' => 'view-dashboard',
+                    'admin.coupons*' => 'view-dashboard',
+                    'admin.bank-transfers*' => 'view-bank-accounts',
+                    'admin.helpdesk*' => 'view-helpdesk-tickets',
+                    'admin.helpdesk-categories*' => 'view-helpdesk-tickets',
+                    'admin.add-ons*' => 'view-settings',
+                    'admin.email-templates*' => 'view-settings',
+                    'admin.notification-templates*' => 'view-settings',
+                    'admin.media*' => 'view-settings',
+                    'admin.messenger*' => 'view-dashboard',
+                    'admin.reports*' => 'view-reports',
+                    'admin.settings*' => 'view-settings',
+                ];
+
+                // Filter nav groups based on user permissions
+                $currentUser = auth()->user();
+                $isFullAdmin = $currentUser->isAdmin();
+                $filteredGroups = [];
+                foreach ($navGroups as $group) {
+                    $visibleItems = [];
+                    foreach ($group['items'] as $item) {
+                        if ($isFullAdmin) {
+                            $visibleItems[] = $item;
+                            continue;
+                        }
+                        $requiredPerm = $permMap[$item['match']] ?? null;
+                        if (!$requiredPerm || $currentUser->hasPermission($requiredPerm)) {
+                            $visibleItems[] = $item;
+                        }
+                    }
+                    if (!empty($visibleItems)) {
+                        $filteredGroups[] = ['title' => $group['title'], 'items' => $visibleItems];
+                    }
+                }
+                $navGroups = $filteredGroups;
             @endphp
 
             {{-- Top-level items --}}
