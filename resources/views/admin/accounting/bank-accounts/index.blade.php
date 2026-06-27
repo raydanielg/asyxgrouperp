@@ -23,7 +23,7 @@
         <p class="text-xs font-mono text-gray-400 mb-3">{{ $a->account_number }}</p>
         <div class="border-t pt-3">
             <p class="text-[10px] text-gray-400 uppercase tracking-wide">Current Balance</p>
-            <p class="text-xl font-bold text-emerald-700">${{ number_format($a->current_balance, 2) }}</p>
+            <p class="text-xl font-bold text-emerald-700">TZS {{ number_format($a->current_balance) }}</p>
             <p class="text-[10px] text-gray-400">{{ $a->currency }}</p>
         </div>
         <div class="mt-3 pt-3 border-t">

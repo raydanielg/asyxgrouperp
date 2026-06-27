@@ -29,8 +29,8 @@
                 <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.purchase-invoices.show', $invoice) }}" class="hover:text-emerald-600">{{ $invoice->invoice_number }}</a></td>
                     <td class="px-5 py-3 text-xs text-gray-700">{{ $invoice->vendor?->name ?? 'N/A' }}</td>
-                    <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($invoice->total_amount, 2) }}</td>
-                    <td class="px-5 py-3 text-xs text-gray-500">${{ number_format($invoice->balance_amount, 2) }}</td>
+                    <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($invoice->total_amount) }}</td>
+                    <td class="px-5 py-3 text-xs text-gray-500">TZS {{ number_format($invoice->balance_amount) }}</td>
                     <td class="px-5 py-3">
                         @php $colors = ['draft'=>'gray','posted'=>'sky','partial'=>'amber','paid'=>'emerald','overdue'=>'red']; @endphp
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $colors[$invoice->status] ?? 'gray' }}-50 text-{{ $colors[$invoice->status] ?? 'gray' }}-700 border border-{{ $colors[$invoice->status] ?? 'gray' }}-100">{{ ucfirst($invoice->status) }}</span>

@@ -61,7 +61,7 @@
                     <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700">{{ $employee->department ?? 'N/A' }}</span></td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $employee->designation ?? 'N/A' }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $employee->employment_type ?? '—' }}</td>
-                    <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($employee->salary ?? 0, 2) }}</td>
+                    <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($employee->salary ?? 0) }}</td>
                     <td class="px-5 py-3">
                         @php $colors = ['active'=>'emerald','inactive'=>'gray','terminated'=>'red','on_leave'=>'amber']; $color = $colors[$employee->status] ?? 'gray'; @endphp
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $color }}-50 text-{{ $color }}-700 border border-{{ $color }}-100">{{ ucfirst(str_replace('_', ' ', $employee->status)) }}</span>

@@ -10,8 +10,8 @@
             @if($addon->is_enable)<span class="w-2 h-2 bg-emerald-500 rounded-full mt-2"></span>@else<span class="w-2 h-2 bg-gray-300 rounded-full mt-2"></span>@endif
         </div>
         <div class="flex items-baseline gap-1 mb-3">
-            <span class="text-lg font-bold text-gray-900">${{ number_format($addon->monthly_price, 2) }}</span><span class="text-xs text-gray-400">/mo</span>
-            <span class="text-xs text-gray-400 ml-2">${{ number_format($addon->yearly_price, 2) }}/yr</span>
+            <span class="text-lg font-bold text-gray-900">TZS {{ number_format($addon->monthly_price) }}</span><span class="text-xs text-gray-400">/mo</span>
+            <span class="text-xs text-gray-400 ml-2">TZS {{ number_format($addon->yearly_price) }}/yr</span>
         </div>
         <form method="POST" action="{{ route('admin.add-ons.toggle', $addon) }}" class="inline">@csrf @method('PATCH')
             <button class="text-xs {{ $addon->is_enable ? 'text-red-500 hover:text-red-700' : 'text-emerald-600 hover:text-emerald-700' }}">{{ $addon->is_enable ? 'Disable' : 'Enable' }}</button>

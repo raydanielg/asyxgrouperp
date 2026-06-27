@@ -16,7 +16,7 @@
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $t->transfer_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $t->fromAccount?->account_name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $t->toAccount?->account_name ?? 'N/A' }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($t->amount, 2) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($t->amount) }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $t->transfer_date->format('d M Y') }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">{{ ucfirst($t->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-trf-{{ $t->id }}" method="POST" action="{{ route('admin.acc-transfers.destroy', $t) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-trf-{{ $t->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
@@ -28,7 +28,7 @@
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Bank Transfer</h3>
         <form method="POST" action="{{ route('admin.acc-transfers.store') }}" class="space-y-3">@csrf
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">From Account *</label><select name="from_account_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($accounts as $a)<option value="{{ $a->id }}">{{ $a->account_name }} (${{ number_format($a->current_balance, 2) }})</option>@endforeach</select></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">From Account *</label><select name="from_account_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($accounts as $a)<option value="{{ $a->id }}">{{ $a->account_name }} (TZS {{ number_format($a->current_balance) }})</option>@endforeach</select></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">To Account *</label><select name="to_account_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($accounts as $a)<option value="{{ $a->id }}">{{ $a->account_name }}</option>@endforeach</select></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Amount *</label><input name="amount" type="number" step="0.01" required value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Transfer Date *</label><input name="transfer_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>

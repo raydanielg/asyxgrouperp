@@ -6,7 +6,7 @@
 @section('content')
 @php
 $fmt = fn($n) => $n >= 1000000000 ? number_format($n/1000000000,2).'B' : ($n >= 1000000 ? number_format($n/1000000,2).'M' : ($n >= 1000 ? number_format($n/1000,1).'K' : number_format($n)));
-$money = fn($n) => '$' . number_format($n, 2);
+$money = fn($n) => 'TZS ' . number_format($n);
 @endphp
 
 {{-- ═══ ERP KPI Cards ═══ --}}

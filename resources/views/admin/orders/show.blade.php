@@ -14,7 +14,7 @@
             <div><p class="text-xs text-gray-400 mb-1">Customer Name</p><p class="text-sm font-medium text-gray-900">{{ $order->name ?? 'N/A' }}</p></div>
             <div><p class="text-xs text-gray-400 mb-1">Email</p><p class="text-sm font-medium text-gray-900">{{ $order->email ?? 'N/A' }}</p></div>
             <div><p class="text-xs text-gray-400 mb-1">Plan</p><p class="text-sm font-medium text-gray-900">{{ $order->plan_name ?? $order->plan?->name ?? 'N/A' }}</p></div>
-            <div><p class="text-xs text-gray-400 mb-1">Price</p><p class="text-sm font-medium text-gray-900">${{ number_format($order->price, 2) }} {{ $order->currency }}</p></div>
+            <div><p class="text-xs text-gray-400 mb-1">Price</p><p class="text-sm font-medium text-gray-900">TZS {{ number_format($order->price) }} {{ $order->currency }}</p></div>
             <div><p class="text-xs text-gray-400 mb-1">Payment Type</p><p class="text-sm text-gray-700">{{ ucfirst(str_replace('_', ' ', $order->payment_type)) }}</p></div>
             <div><p class="text-xs text-gray-400 mb-1">Transaction ID</p><p class="text-sm font-mono text-gray-700">{{ $order->txn_id ?? 'N/A' }}</p></div>
             <div><p class="text-xs text-gray-400 mb-1">Date</p><p class="text-sm text-gray-700">{{ $order->created_at->format('d M Y H:i') }}</p></div>

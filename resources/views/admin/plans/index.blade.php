@@ -25,9 +25,9 @@
         </div>
         <p class="text-xs text-gray-400 mb-3">{{ $plan->description ?? 'No description' }}</p>
         <div class="flex items-baseline gap-1 mb-3">
-            <span class="text-2xl font-bold text-gray-900">${{ number_format($plan->package_price_monthly, 2) }}</span>
+            <span class="text-2xl font-bold text-gray-900">TZS {{ number_format($plan->package_price_monthly) }}</span>
             <span class="text-xs text-gray-400">/mo</span>
-            <span class="text-xs text-gray-400 ml-2">${{ number_format($plan->package_price_yearly, 2) }}/yr</span>
+            <span class="text-xs text-gray-400 ml-2">TZS {{ number_format($plan->package_price_yearly) }}/yr</span>
         </div>
         <div class="text-xs text-gray-500 space-y-1 mb-3">
             <p>Users: {{ $plan->number_of_users }}</p>

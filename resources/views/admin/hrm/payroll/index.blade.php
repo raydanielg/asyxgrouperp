@@ -16,10 +16,10 @@
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $p->payroll_number }}</td>
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $p->employee?->full_name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $p->month }} {{ $p->year }}</td>
-            <td class="px-5 py-3 text-xs text-gray-700">${{ number_format($p->basic_salary, 2) }}</td>
-            <td class="px-5 py-3 text-xs text-emerald-600">${{ number_format($p->allowances, 2) }}</td>
-            <td class="px-5 py-3 text-xs text-red-500">${{ number_format($p->deductions, 2) }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($p->net_salary, 2) }}</td>
+            <td class="px-5 py-3 text-xs text-gray-700">TZS {{ number_format($p->basic_salary) }}</td>
+            <td class="px-5 py-3 text-xs text-emerald-600">TZS {{ number_format($p->allowances) }}</td>
+            <td class="px-5 py-3 text-xs text-red-500">TZS {{ number_format($p->deductions) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($p->net_salary) }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($p->status=='paid')bg-emerald-50 text-emerald-700 @elseif($p->status=='pending')bg-amber-50 text-amber-700 @else bg-gray-50 text-gray-600 @endif">{{ ucfirst($p->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-pay-{{ $p->id }}" method="POST" action="{{ route('admin.payroll.destroy', $p) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-pay-{{ $p->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         </tr>@empty<tr><td colspan="9" class="px-5 py-8 text-center text-gray-400 text-xs">No payroll records</td></tr>@endforelse</tbody>

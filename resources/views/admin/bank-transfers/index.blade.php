@@ -8,7 +8,7 @@
         <tbody>@forelse($transfers as $transfer)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $transfer->order_id }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $transfer->user?->name ?? 'N/A' }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($transfer->price ?? 0, 2) }} {{ $transfer->price_currency }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($transfer->price ?? 0) }} {{ $transfer->price_currency }}</td>
             <td class="px-5 py-3">@php $c=['pending'=>'amber','approved'=>'emerald','rejected'=>'red']; @endphp<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$transfer->status] ?? 'gray' }}-50 text-{{ $c[$transfer->status] ?? 'gray' }}-700 border border-{{ $c[$transfer->status] ?? 'gray' }}-100">{{ ucfirst($transfer->status) }}</span></td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $transfer->created_at->format('d M Y') }}</td>
             <td class="px-5 py-3">@if($transfer->status === 'pending')

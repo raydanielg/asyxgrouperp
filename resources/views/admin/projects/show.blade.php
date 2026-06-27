@@ -14,7 +14,7 @@
             <div class="flex justify-between"><span class="text-gray-400">Manager</span><span class="text-gray-700">{{ $project->manager?->name ?? 'N/A' }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Start Date</span><span class="text-gray-700">{{ $project->start_date?->format('d M Y') ?? '—' }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Due Date</span><span class="text-gray-700">{{ $project->due_date?->format('d M Y') ?? '—' }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-400">Budget</span><span class="font-semibold text-gray-900">${{ number_format($project->budget, 2) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Budget</span><span class="font-semibold text-gray-900">TZS {{ number_format($project->budget) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Priority</span><span class="text-gray-700">{{ ucfirst($project->priority) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></div>
         </div>

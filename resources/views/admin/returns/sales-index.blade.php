@@ -9,7 +9,7 @@
             <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.sales-returns.show', $return) }}" class="hover:text-emerald-600">{{ $return->return_number }}</a></td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $return->customer?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst(str_replace('_', ' ', $return->reason)) }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($return->total_amount, 2) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($return->total_amount) }}</td>
             <td class="px-5 py-3">@php $c=['draft'=>'gray','approved'=>'sky','completed'=>'emerald','cancelled'=>'red']; @endphp<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$return->status] ?? 'gray' }}-50 text-{{ $c[$return->status] ?? 'gray' }}-700 border border-{{ $c[$return->status] ?? 'gray' }}-100">{{ ucfirst($return->status) }}</span></td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $return->return_date->format('d M Y') }}</td>
             <td class="px-5 py-3"><form method="POST" action="{{ route('admin.sales-returns.destroy', $return) }}" class="inline" onsubmit="return confirm('Delete?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form></td>

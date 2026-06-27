@@ -23,7 +23,7 @@
             <div class="flex justify-between"><span class="text-gray-400">Gender</span><span class="text-gray-700">{{ ucfirst($employee->gender ?? 'N/A') }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Nationality</span><span class="text-gray-700">{{ $employee->nationality ?? 'N/A' }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Employment Type</span><span class="text-gray-700">{{ $employee->employment_type ?? 'N/A' }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-400">Salary</span><span class="font-semibold text-gray-900">${{ number_format($employee->salary ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Salary</span><span class="font-semibold text-gray-900">TZS {{ number_format($employee->salary ?? 0) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Joining Date</span><span class="text-gray-700">{{ $employee->joining_date?->format('d M Y') ?? 'N/A' }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Manager</span><span class="text-gray-700">{{ $employee->manager?->full_name ?? 'N/A' }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">{{ ucfirst(str_replace('_', ' ', $employee->status)) }}</span></div>
@@ -89,7 +89,7 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Payroll History</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Number</th><th class="py-2">Month</th><th class="py-2">Net Salary</th><th class="py-2">Status</th></tr></thead>
-                <tbody>@forelse($employee->payrolls as $p)<tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $p->payroll_number }}</td><td class="py-2 text-gray-500">{{ $p->month }} {{ $p->year }}</td><td class="py-2 font-semibold text-gray-900">${{ number_format($p->net_salary, 2) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-amber-50 text-amber-700">{{ ucfirst($p->status) }}</span></td></tr>@empty<tr><td colspan="4" class="py-4 text-center text-gray-400">No payroll records</td></tr>@endforelse</tbody>
+                <tbody>@forelse($employee->payrolls as $p)<tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $p->payroll_number }}</td><td class="py-2 text-gray-500">{{ $p->month }} {{ $p->year }}</td><td class="py-2 font-semibold text-gray-900">TZS {{ number_format($p->net_salary) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-amber-50 text-amber-700">{{ ucfirst($p->status) }}</span></td></tr>@empty<tr><td colspan="4" class="py-4 text-center text-gray-400">No payroll records</td></tr>@endforelse</tbody>
             </table></div>
         </div>
 

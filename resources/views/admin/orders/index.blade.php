@@ -21,7 +21,7 @@
                     <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $order->order_id }}</td>
                     <td class="px-5 py-3 text-xs text-gray-700">{{ $order->name ?? $order->email ?? 'N/A' }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $order->plan_name ?? $order->plan?->name ?? 'N/A' }}</td>
-                    <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($order->price, 2) }}</td>
+                    <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($order->price) }}</td>
                     <td class="px-5 py-3">
                         @if($order->payment_status === 'succeeded')
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Succeeded</span>

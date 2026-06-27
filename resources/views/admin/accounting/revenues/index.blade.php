@@ -16,7 +16,7 @@
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $r->revenue_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $r->category ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $r->payer ?? 'N/A' }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-emerald-600">${{ number_format($r->amount, 2) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-emerald-600">TZS {{ number_format($r->amount) }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst($r->payment_method) }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $r->revenue_date->format('d M Y') }}</td>
             <td class="px-5 py-3"><form id="del-rev-{{ $r->id }}" method="POST" action="{{ route('admin.revenues.destroy', $r) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-rev-{{ $r->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>

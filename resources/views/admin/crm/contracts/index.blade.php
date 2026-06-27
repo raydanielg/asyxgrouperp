@@ -16,7 +16,7 @@
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $c->contract_number }}</td>
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $c->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $c->client_name }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($c->value, 2) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($c->value) }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $c->start_date?->format('d M Y') ?? '—' }} - {{ $c->end_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $cl=['draft'=>'gray','active'=>'emerald','expired'=>'red','terminated'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $cl[$c->status] ?? 'gray' }}-50 text-{{ $cl[$c->status] ?? 'gray' }}-700">{{ ucfirst($c->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-con-{{ $c->id }}" method="POST" action="{{ route('admin.crm-contracts.destroy', $c) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-con-{{ $c->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>

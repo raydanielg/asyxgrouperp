@@ -15,8 +15,8 @@
         <tbody>@forelse($bills as $b)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $b->bill_number }}</td>
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $b->vendor_name }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">${{ number_format($b->amount, 2) }}</td>
-            <td class="px-5 py-3 text-xs text-emerald-600">${{ number_format($b->paid_amount, 2) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($b->amount) }}</td>
+            <td class="px-5 py-3 text-xs text-emerald-600">TZS {{ number_format($b->paid_amount) }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $b->due_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $c=['unpaid'=>'red','partial'=>'amber','paid'=>'emerald']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$b->status] ?? 'gray' }}-50 text-{{ $c[$b->status] ?? 'gray' }}-700">{{ ucfirst($b->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-bill-{{ $b->id }}" method="POST" action="{{ route('admin.bills.destroy', $b) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-bill-{{ $b->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>

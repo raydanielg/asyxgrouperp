@@ -16,7 +16,7 @@
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $e->expense_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $e->category ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $e->payee ?? 'N/A' }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-red-600">${{ number_format($e->amount, 2) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-red-600">TZS {{ number_format($e->amount) }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst($e->payment_method) }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $e->expense_date->format('d M Y') }}</td>
             <td class="px-5 py-3"><form id="del-exp-{{ $e->id }}" method="POST" action="{{ route('admin.expenses.destroy', $e) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-exp-{{ $e->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>

@@ -5,11 +5,11 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
     <div class="bg-white rounded-xl border p-6">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Today's Sales</p>
-        <p class="text-2xl font-bold text-emerald-700">${{ number_format($todayTotal, 2) }}</p>
+        <p class="text-2xl font-bold text-emerald-700">TZS {{ number_format($todayTotal) }}</p>
     </div>
     <div class="bg-white rounded-xl border p-6">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">This Month's Sales</p>
-        <p class="text-2xl font-bold text-emerald-700">${{ number_format($monthTotal, 2) }}</p>
+        <p class="text-2xl font-bold text-emerald-700">TZS {{ number_format($monthTotal) }}</p>
     </div>
 </div>
 <div class="bg-white rounded-xl border overflow-hidden">
@@ -19,7 +19,7 @@
         <tbody>@forelse($sales as $s)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $s->sale_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $s->items->count() }} items</td>
-            <td class="px-5 py-3 text-xs font-semibold text-emerald-700">${{ number_format($s->total_amount, 2) }}</td>
+            <td class="px-5 py-3 text-xs font-semibold text-emerald-700">TZS {{ number_format($s->total_amount) }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst($s->payment_method) }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $s->cashier?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $s->created_at->format('d M Y H:i') }}</td>
