@@ -1,0 +1,52 @@
+# ============================================================
+# ASYX Group ERP System - Root .htaccess
+# Forces SSL, redirects to public/, and protects sensitive files
+# ============================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # --- Force HTTPS (SSL) ---
+    # Redirect all HTTP traffic to HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # --- Redirect to public/ directory ---
+    # Skip redirect if already in public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ /public/$1 [L,QSA]
+</IfModule>
+
+# --- Protect sensitive files ---
+<FilesMatch "(?i)^(\.env|\.gitignore|\.gitattributes|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|README\.md|artisan|\.editorconfig)$">
+    Require all denied
+    <IfModule mod_rewrite.c>
+        RewriteEngine Off
+    </IfModule>
+</FilesMatch>
+
+# --- Protect sensitive directories ---
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)/(.*)$ - [F,L]
+</IfModule>
+
+# --- Security Headers ---
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(),microphone=(),camera=()"
+    # Strict Transport Security (HSTS) — enforce HTTPS for 1 year
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# --- Disable directory listing ---
+Options -Indexes
+
+# --- Default charset ---
+AddDefaultCharset UTF-8
