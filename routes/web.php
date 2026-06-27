@@ -6,7 +6,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes(['reset' => false]);
+Auth::routes(['reset' => false, 'register' => false]);
+
+// Registration disabled — show notice
+Route::get('/register', function () {
+    return view('auth.register-disabled');
+})->name('register');
 
 // Custom password reset with activation code
 Route::get('password/reset', [App\Http\Controllers\Auth\PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');

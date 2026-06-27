@@ -77,20 +77,14 @@
                 </button>
             </form>
 
-            {{-- Divider --}}
-            <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
-                <div class="relative flex justify-center text-sm"><span class="px-3 bg-white text-gray-400">or</span></div>
+            {{-- Account creation disabled notice --}}
+            <div class="mt-6 p-4 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-500 flex items-center gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                <span>Account creation is currently disabled. Please contact the system administrator to get an account.</span>
             </div>
-
-            {{-- Register link --}}
-            <p class="text-center text-sm text-gray-500">
-                Don't have an account?
-                <a href="{{ route('register') }}" class="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Create account</a>
-            </p>
         </div>
     </div>
 
-    <p class="mt-6 text-center text-xs text-gray-400">&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.</p>
+    <p class="mt-6 text-center text-xs text-gray-400">&copy; {{ date('Y') }} ASYX Group. All rights reserved.</p>
 </div>
 @endsection
