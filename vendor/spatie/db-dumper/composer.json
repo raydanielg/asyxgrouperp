@@ -1,0 +1,47 @@
+{
+    "name": "spatie/db-dumper",
+    "description": "Dump databases",
+    "keywords": [
+        "spatie",
+        "dump",
+        "database",
+        "mysqldump",
+        "db-dumper"
+    ],
+    "homepage": "https://github.com/spatie/db-dumper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Freek Van der Herten",
+            "email": "freek@spatie.be",
+            "homepage": "https://spatie.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "symfony/process": "^7.0|^8.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^4.0",
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spatie\\DbDumper\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spatie\\DbDumper\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

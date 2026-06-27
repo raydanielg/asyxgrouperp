@@ -1,0 +1,99 @@
+{
+    "name": "spatie/laravel-backup",
+    "description": "A Laravel package to backup your application",
+    "keywords": [
+        "spatie",
+        "backup",
+        "database",
+        "laravel-backup"
+    ],
+    "homepage": "https://github.com/spatie/laravel-backup",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Freek Van der Herten",
+            "email": "freek@spatie.be",
+            "homepage": "https://spatie.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "ext-zip": "^1.14.0",
+        "illuminate/console": "^12.40|^13.0",
+        "illuminate/contracts": "^12.40|^13.0",
+        "illuminate/events": "^12.40|^13.0",
+        "illuminate/filesystem": "^12.40|^13.0",
+        "illuminate/notifications": "^12.40|^13.0",
+        "illuminate/support": "^12.40|^13.0",
+        "league/flysystem": "^3.30.2",
+        "spatie/db-dumper": "^4.0",
+        "spatie/laravel-package-tools": "^1.92.7",
+        "spatie/laravel-signal-aware-command": "^2.1",
+        "spatie/temporary-directory": "^2.3",
+        "symfony/console": "^7.3.6|^8.0",
+        "symfony/finder": "^7.3.5|^8.0"
+    },
+    "require-dev": {
+        "composer-runtime-api": "^2.0",
+        "ext-pcntl": "*",
+        "larastan/larastan": "^3.8",
+        "laravel/slack-notification-channel": "^3.7",
+        "league/flysystem-aws-s3-v3": "^3.30.1",
+        "mockery/mockery": "^1.6.12",
+        "orchestra/testbench": "^10.8|^11.0",
+        "pestphp/pest": "^4.1.5",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan-deprecation-rules": "^2.0.3",
+        "phpstan/phpstan-phpunit": "^2.0.8",
+        "rector/rector": "^2.2.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spatie\\Backup\\": "src"
+        },
+        "files": [
+            "src/Helpers/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spatie\\Backup\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest --compact",
+        "analyse": "vendor/bin/phpstan analyse",
+        "rector": "vendor/bin/rector --dry-run",
+        "baseline": "./vendor/bin/phpstan analyse --generate-baseline --memory-limit=2G"
+    },
+    "suggest": {
+        "laravel/slack-notification-channel": "Required for sending notifications via Slack"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Spatie\\Backup\\BackupServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spatie"
+        },
+        {
+            "type": "other",
+            "url": "https://spatie.be/open-source/support-us"
+        }
+    ]
+}
