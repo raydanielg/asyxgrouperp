@@ -12,6 +12,9 @@ Route::get('/register/success', [App\Http\Controllers\Auth\RegisterController::c
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+// Role-based Dashboard (non-admin users)
+Route::get('/dashboard', [App\Http\Controllers\RoleDashboardController::class, 'index'])->name('role.dashboard')->middleware('auth');
+
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // Dashboard
