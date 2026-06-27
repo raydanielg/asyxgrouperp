@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
 
 class PasswordResetController extends Controller
 {
@@ -41,11 +41,8 @@ class PasswordResetController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        // Send email with the code
-        Mail::send('auth.emails.password-reset', ['code' => $code, 'email' => $email], function ($message) use ($email) {
-            $message->to($email);
-            $message->subject('Password Reset Activation Code - ASYX Group');
-        });
+        // Send email using PHP mail() directly — no SMTP config needed
+        $this->sendCodeEmail($email, $code);
 
         return redirect()->route('password.code', ['email' => base64_encode($email)])
             ->with('status', 'A 6-digit activation code has been sent to your email. The code expires in 15 minutes.');
@@ -118,10 +115,7 @@ class PasswordResetController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        Mail::send('auth.emails.password-reset', ['code' => $code, 'email' => $email], function ($message) use ($email) {
-            $message->to($email);
-            $message->subject('Password Reset Activation Code - ASYX Group');
-        });
+        $this->sendCodeEmail($email, $code);
 
         return back()->with('status', 'A new activation code has been sent to your email.');
     }
@@ -193,5 +187,50 @@ class PasswordResetController extends Controller
 
         return redirect()->route('login')
             ->with('status', 'Your password has been reset successfully. Please sign in with your new password.');
+    }
+
+    /**
+     * Send activation code email using PHP mail() directly.
+     * No SMTP configuration needed — works out of the box.
+     */
+    private function sendCodeEmail(string $email, string $code): void
+    {
+        $subject = 'Password Reset Activation Code - ASYX Group';
+
+        // Build HTML email body from Blade view
+        $htmlBody = View::make('auth.emails.password-reset', ['code' => $code, 'email' => $email])->render();
+
+        // Plain text fallback
+        $textBody = "ASYX Group ERP System\n\n"
+            . "You requested a password reset.\n\n"
+            . "Your activation code is: {$code}\n\n"
+            . "This code expires in 15 minutes.\n\n"
+            . "If you did not request this, please ignore this email.\n\n"
+            . "© " . date('Y') . " ASYX Group. All rights reserved.";
+
+        // MIME boundary
+        $boundary = md5(time() . $email);
+
+        $headers = [];
+        $headers[] = 'MIME-Version: 1.0';
+        $headers[] = 'Content-Type: multipart/alternative; boundary="' . $boundary . '"';
+        $headers[] = 'From: ASYX Group <noreply@asyxgroup.com>';
+        $headers[] = 'Reply-To: noreply@asyxgroup.com';
+        $headers[] = 'X-Mailer: PHP/' . phpversion();
+        $headers[] = 'X-Priority: 1';
+
+        // Build multipart message (text + HTML)
+        $message = "--{$boundary}\n"
+            . "Content-Type: text/plain; charset=UTF-8\n"
+            . "Content-Transfer-Encoding: 7bit\n\n"
+            . $textBody . "\n\n"
+            . "--{$boundary}\n"
+            . "Content-Type: text/html; charset=UTF-8\n"
+            . "Content-Transfer-Encoding: 7bit\n\n"
+            . $htmlBody . "\n\n"
+            . "--{$boundary}--";
+
+        // Send using PHP mail()
+        @mail($email, $subject, $message, implode("\r\n", $headers));
     }
 }
