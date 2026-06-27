@@ -50,7 +50,7 @@
         <div class="h-16 flex items-center px-6 border-b border-emerald-800/50 flex-shrink-0">
             <svg class="w-7 h-7 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             <span class="ml-2 text-white font-bold text-sm tracking-wide">{{ strtoupper(config('app.name', 'Laravel')) }}</span>
-            <span class="ml-1 text-gold-400 font-bold text-[10px] tracking-wider bg-gold-400/10 px-1.5 py-0.5 rounded">ADMIN</span>
+            <span class="ml-1 text-gold-400 font-bold text-[10px] tracking-wider bg-gold-400/10 px-1.5 py-0.5 rounded">{{ auth()->user()->isAdmin() ? 'ADMIN' : strtoupper(explode(' ', auth()->user()->roles()->first()?->label ?? 'USER')[0]) }}</span>
         </div>
 
         {{-- Menu --}}

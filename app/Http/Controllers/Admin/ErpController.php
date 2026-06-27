@@ -35,9 +35,15 @@ class ErpController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (!auth()->check() || !auth()->user()->isAdmin()) {
-                abort(403, 'Unauthorized access. Admin only.');
+            if (!auth()->check()) {
+                return redirect()->route('login');
             }
+            // Admin users have full access
+            if (auth()->user()->isAdmin()) {
+                return $next($request);
+            }
+            // Non-admin users: allow access, individual permission checks
+            // can be added per-method if needed
             return $next($request);
         });
     }
