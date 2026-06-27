@@ -40,7 +40,7 @@
                             <td class="px-3 py-2"><input name="items[0][unit_price]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
                             <td class="px-3 py-2"><input name="items[0][discount_amount]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
                             <td class="px-3 py-2"><input name="items[0][tax_percentage]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-                            <td class="px-3 py-2 text-xs font-semibold text-gray-900" id="rowTotal-0">$0.00</td>
+                            <td class="px-3 py-2 text-xs font-semibold text-gray-900" id="rowTotal-0">TZS 0</td>
                             <td class="px-3 py-2"><button type="button" onclick="removeRow(this)" class="text-red-400 hover:text-red-600 text-xs">&times;</button></td>
                         </tr>
                     </tbody>
@@ -48,10 +48,10 @@
             </div>
             <div class="mt-4 flex justify-end">
                 <div class="w-72 bg-gray-50 rounded-lg p-4 space-y-2">
-                    <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal</span><span class="font-medium" id="subtotal">$0.00</span></div>
-                    <div class="flex justify-between text-sm"><span class="text-gray-500">Discount</span><span class="font-medium text-red-600" id="discount">$0.00</span></div>
-                    <div class="flex justify-between text-sm"><span class="text-gray-500">Tax</span><span class="font-medium" id="tax">$0.00</span></div>
-                    <div class="border-t pt-2 flex justify-between"><span class="font-semibold">Total</span><span class="font-bold text-lg" id="total">$0.00</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal</span><span class="font-medium" id="subtotal">TZS 0</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-gray-500">Discount</span><span class="font-medium text-red-600" id="discount">TZS 0</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-gray-500">Tax</span><span class="font-medium" id="tax">TZS 0</span></div>
+                    <div class="border-t pt-2 flex justify-between"><span class="font-semibold">Total</span><span class="font-bold text-lg" id="total">TZS 0</span></div>
                 </div>
             </div>
             <input type="hidden" name="subtotal" id="subtotalInput" value="0">
@@ -101,13 +101,13 @@ function calcAll() {
         discount += disc;
         tax += lineTax;
         const totalEl = tr.querySelector('td:nth-child(6)');
-        if (totalEl) totalEl.textContent = '$' + (lineTotal + lineTax).toFixed(2);
+        if (totalEl) totalEl.textContent = 'TZS ' + Math.round(lineTotal + lineTax).toLocaleString();
     });
     const total = subtotal - discount + tax;
-    document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-    document.getElementById('discount').textContent = '$' + discount.toFixed(2);
-    document.getElementById('tax').textContent = '$' + tax.toFixed(2);
-    document.getElementById('total').textContent = '$' + total.toFixed(2);
+    document.getElementById('subtotal').textContent = 'TZS ' + Math.round(subtotal).toLocaleString();
+    document.getElementById('discount').textContent = 'TZS ' + Math.round(discount).toLocaleString();
+    document.getElementById('tax').textContent = 'TZS ' + Math.round(tax).toLocaleString();
+    document.getElementById('total').textContent = 'TZS ' + Math.round(total).toLocaleString();
     document.getElementById('subtotalInput').value = subtotal.toFixed(2);
     document.getElementById('taxInput').value = tax.toFixed(2);
     document.getElementById('discountInput').value = discount.toFixed(2);

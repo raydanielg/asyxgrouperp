@@ -459,7 +459,7 @@ class ErpExtendedController extends Controller
     // ═══════════════════════════════════════════════════════
     public function crmLeadIndex()
     {
-        $leads = CrmLead::latest()->paginate(15);
+        $leads = CrmLead::with(['deals', 'assignedTo'])->latest()->paginate(15);
         $users = User::where('role', 'admin')->get();
         return view('admin.crm.leads.index', compact('leads', 'users'));
     }

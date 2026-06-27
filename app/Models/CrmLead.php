@@ -13,6 +13,16 @@ class CrmLead extends Model
         return $this->hasMany(CrmDeal::class);
     }
 
+    public function tender()
+    {
+        return $this->belongsTo(Tender::class);
+    }
+
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class);
+    }
+
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;

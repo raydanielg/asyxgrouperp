@@ -15,6 +15,11 @@ class CrmDeal extends Model
         return $this->belongsTo(CrmLead::class);
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     public function contracts()
     {
         return $this->hasMany(CrmContract::class);

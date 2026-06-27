@@ -32,4 +32,59 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'manager_id');
     }
+
+    public function deal()
+    {
+        return $this->belongsTo(CrmDeal::class);
+    }
+
+    public function budgets()
+    {
+        return $this->hasMany(ProjectBudget::class);
+    }
+
+    public function lpos()
+    {
+        return $this->hasMany(Lpo::class);
+    }
+
+    public function officeExpenses()
+    {
+        return $this->hasMany(OfficeExpense::class);
+    }
+
+    public function vendorInvoices()
+    {
+        return $this->hasMany(VendorInvoice::class);
+    }
+
+    public function clientReceipts()
+    {
+        return $this->hasMany(ClientReceipt::class);
+    }
+
+    public function totalProcurementCost()
+    {
+        return $this->vendorInvoices()->sum('amount_paid');
+    }
+
+    public function totalOfficeExpenses()
+    {
+        return $this->officeExpenses()->where('status', 'approved')->sum('amount');
+    }
+
+    public function totalRevenue()
+    {
+        return $this->clientReceipts()->sum('amount');
+    }
+
+    public function totalCost()
+    {
+        return $this->totalProcurementCost() + $this->totalOfficeExpenses();
+    }
+
+    public function profit()
+    {
+        return $this->totalRevenue() - $this->totalCost();
+    }
 }

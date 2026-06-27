@@ -297,4 +297,77 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/pos/reports', [$ext, 'posReports'])->name('pos.reports');
     Route::get('/pos/{posSale}', [$ext, 'posSaleShow'])->name('pos.show');
     Route::delete('/pos/{posSale}', [$ext, 'posSaleDestroy'])->name('pos.destroy');
+
+    // ═══ Business Flow ═══
+    $bf = App\Http\Controllers\Admin\BusinessFlowController::class;
+    Route::get('/business-flow', [$bf, 'dashboard'])->name('business-flow.dashboard');
+
+    // Tenders
+    Route::get('/tenders', [$bf, 'tenderIndex'])->name('tenders.index');
+    Route::post('/tenders', [$bf, 'tenderStore'])->name('tenders.store');
+    Route::get('/tenders/{tender}', [$bf, 'tenderShow'])->name('tenders.show');
+    Route::delete('/tenders/{tender}', [$bf, 'tenderDestroy'])->name('tenders.destroy');
+    Route::post('/tenders/{tender}/convert-to-lead', [$bf, 'tenderConvertToLead'])->name('tenders.convert-to-lead');
+
+    // Quotations
+    Route::get('/quotations', [$bf, 'quotationIndex'])->name('quotations.index');
+    Route::post('/quotations', [$bf, 'quotationStore'])->name('quotations.store');
+    Route::get('/quotations/{quotation}', [$bf, 'quotationShow'])->name('quotations.show');
+    Route::patch('/quotations/{quotation}/status', [$bf, 'quotationUpdateStatus'])->name('quotations.status');
+    Route::delete('/quotations/{quotation}', [$bf, 'quotationDestroy'])->name('quotations.destroy');
+
+    // Lead → Deal conversion
+    Route::post('/crm-leads/{lead}/convert-to-deal', [$bf, 'leadConvertToDeal'])->name('crm-leads.convert-to-deal');
+
+    // Deal → Project conversion
+    Route::post('/crm-deals/{deal}/convert-to-project', [$bf, 'dealConvertToProject'])->name('crm-deals.convert-to-project');
+
+    // Project Budgets
+    Route::get('/budgets', [$bf, 'budgetIndex'])->name('budgets.index');
+    Route::post('/budgets', [$bf, 'budgetStore'])->name('budgets.store');
+    Route::post('/budgets/{budget}/approve', [$bf, 'budgetApprove'])->name('budgets.approve');
+    Route::post('/budgets/{budget}/reject', [$bf, 'budgetReject'])->name('budgets.reject');
+    Route::delete('/budgets/{budget}', [$bf, 'budgetDestroy'])->name('budgets.destroy');
+
+    // LPOs
+    Route::get('/lpos', [$bf, 'lpoIndex'])->name('lpos.index');
+    Route::post('/lpos', [$bf, 'lpoStore'])->name('lpos.store');
+    Route::get('/lpos/{lpo}', [$bf, 'lpoShow'])->name('lpos.show');
+    Route::patch('/lpos/{lpo}/status', [$bf, 'lpoUpdateStatus'])->name('lpos.status');
+    Route::delete('/lpos/{lpo}', [$bf, 'lpoDestroy'])->name('lpos.destroy');
+
+    // GRNs
+    Route::get('/grns', [$bf, 'grnIndex'])->name('grns.index');
+    Route::post('/grns', [$bf, 'grnStore'])->name('grns.store');
+    Route::get('/grns/{grn}', [$bf, 'grnShow'])->name('grns.show');
+    Route::delete('/grns/{grn}', [$bf, 'grnDestroy'])->name('grns.destroy');
+
+    // Delivery Notes
+    Route::get('/delivery-notes', [$bf, 'deliveryNoteIndex'])->name('delivery-notes.index');
+    Route::post('/delivery-notes', [$bf, 'deliveryNoteStore'])->name('delivery-notes.store');
+    Route::delete('/delivery-notes/{deliveryNote}', [$bf, 'deliveryNoteDestroy'])->name('delivery-notes.destroy');
+
+    // Vendor Invoices
+    Route::get('/vendor-invoices', [$bf, 'vendorInvoiceIndex'])->name('vendor-invoices.index');
+    Route::post('/vendor-invoices', [$bf, 'vendorInvoiceStore'])->name('vendor-invoices.store');
+    Route::get('/vendor-invoices/{invoice}', [$bf, 'vendorInvoiceShow'])->name('vendor-invoices.show');
+    Route::delete('/vendor-invoices/{invoice}', [$bf, 'vendorInvoiceDestroy'])->name('vendor-invoices.destroy');
+
+    // Vendor Payments
+    Route::post('/vendor-payments', [$bf, 'vendorPaymentStore'])->name('vendor-payments.store');
+
+    // Office Expenses
+    Route::get('/office-expenses', [$bf, 'officeExpenseIndex'])->name('office-expenses.index');
+    Route::post('/office-expenses', [$bf, 'officeExpenseStore'])->name('office-expenses.store');
+    Route::post('/office-expenses/{expense}/approve', [$bf, 'officeExpenseApprove'])->name('office-expenses.approve');
+    Route::post('/office-expenses/{expense}/reject', [$bf, 'officeExpenseReject'])->name('office-expenses.reject');
+    Route::delete('/office-expenses/{expense}', [$bf, 'officeExpenseDestroy'])->name('office-expenses.destroy');
+
+    // Client Receipts
+    Route::get('/client-receipts', [$bf, 'clientReceiptIndex'])->name('client-receipts.index');
+    Route::post('/client-receipts', [$bf, 'clientReceiptStore'])->name('client-receipts.store');
+    Route::delete('/client-receipts/{receipt}', [$bf, 'clientReceiptDestroy'])->name('client-receipts.destroy');
+
+    // Project Profit
+    Route::get('/projects/{project}/profit', [$bf, 'projectProfit'])->name('projects.profit');
 });
