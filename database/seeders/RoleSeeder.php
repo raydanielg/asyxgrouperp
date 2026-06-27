@@ -115,7 +115,6 @@ class RoleSeeder extends Seeder
                 $roleId = DB::table('roles')->insertGetId([
                     'name' => $roleData['name'],
                     'label' => $roleData['label'],
-                    'guard_name' => 'web',
                     'editable' => true,
                     'created_at' => $now,
                     'updated_at' => $now,
