@@ -43,6 +43,11 @@ class RoleDashboardController extends Controller
 
         $money = fn($n) => 'TZS ' . number_format($n);
 
+        $viewName = 'roles.' . str_replace('_', '-', $role) . '.dashboard';
+        if (view()->exists($viewName)) {
+            return view($viewName, compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis'));
+        }
+
         return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis'));
     }
 
