@@ -37,10 +37,13 @@ class RoleDashboardController extends Controller
         $recentItems = $this->getRecentItemsForRole($role);
         $kpiCards = $this->getKpiCardsForRole($role, $stats);
         $quickActions = $this->getQuickActionsForRole($role);
+        $chartData = $this->getChartDataForRole($role);
+        $roleLabel = $this->getRoleLabel($role);
+        $secondaryKpis = $this->getSecondaryKpisForRole($role, $stats);
 
         $money = fn($n) => 'TZS ' . number_format($n);
 
-        return view('dashboard.role', compact('role', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money'));
+        return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis'));
     }
 
     private function getUserRole($user): string
