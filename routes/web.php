@@ -15,6 +15,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Role-based Dashboard (non-admin users)
 Route::get('/dashboard', [App\Http\Controllers\RoleDashboardController::class, 'index'])->name('role.dashboard')->middleware('auth');
 
+// Role-specific pages (non-admin users)
+Route::get('/role/{module}', [App\Http\Controllers\RolePageController::class, 'page'])->name('role.page')->middleware('auth');
+
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // Dashboard
