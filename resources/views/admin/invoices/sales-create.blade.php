@@ -80,7 +80,7 @@ function addRow() {
         <td class="px-3 py-2"><input name="items[${rowIdx}][unit_price]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
         <td class="px-3 py-2"><input name="items[${rowIdx}][discount_amount]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
         <td class="px-3 py-2"><input name="items[${rowIdx}][tax_percentage]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-        <td class="px-3 py-2 text-xs font-semibold text-gray-900" id="rowTotal-${rowIdx}">$0.00</td>
+        <td class="px-3 py-2 text-xs font-semibold text-gray-900" id="rowTotal-${rowIdx}">TZS 0</td>
         <td class="px-3 py-2"><button type="button" onclick="removeRow(this)" class="text-red-400 hover:text-red-600 text-xs">&times;</button></td>`;
     tbody.appendChild(tr);
     rowIdx++;

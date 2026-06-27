@@ -78,6 +78,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/purchase-returns/{purchaseReturn}', [$erp, 'purchaseReturnShow'])->name('purchase-returns.show');
     Route::delete('/purchase-returns/{purchaseReturn}', [$erp, 'purchaseReturnDestroy'])->name('purchase-returns.destroy');
 
+    // Sales Dashboard
+    Route::get('/sales-dashboard', [$erp, 'salesDashboard'])->name('sales-dashboard');
+
     // Sales Invoices
     Route::get('/sales-invoices', [$erp, 'salesInvoiceIndex'])->name('sales-invoices.index');
     Route::get('/sales-invoices/create', [$erp, 'salesInvoiceCreate'])->name('sales-invoices.create');
@@ -101,6 +104,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/sales-proposals/{salesProposal}/edit', [$erp, 'salesProposalEdit'])->name('sales-proposals.edit');
     Route::patch('/sales-proposals/{salesProposal}', [$erp, 'salesProposalUpdate'])->name('sales-proposals.update');
     Route::patch('/sales-proposals/{salesProposal}/status', [$erp, 'salesProposalStatus'])->name('sales-proposals.status');
+    Route::post('/sales-proposals/{salesProposal}/convert', [$erp, 'salesProposalConvert'])->name('sales-proposals.convert');
     Route::delete('/sales-proposals/{salesProposal}', [$erp, 'salesProposalDestroy'])->name('sales-proposals.destroy');
 
     // Email Templates

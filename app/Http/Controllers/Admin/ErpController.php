@@ -391,11 +391,32 @@ class ErpController extends Controller
             'type' => 'required|in:product,service',
             'payment_terms' => 'nullable|string',
             'notes' => 'nullable|string',
+            'items' => 'nullable|array',
+            'items.*.product_name' => 'required|string|max:255',
+            'items.*.quantity' => 'required|numeric|min:0',
+            'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.discount_amount' => 'nullable|numeric|min:0',
+            'items.*.tax_percentage' => 'nullable|numeric|min:0',
         ]);
         $data['creator_id'] = auth()->id();
         $data['created_by'] = auth()->id();
         $data['balance_amount'] = $data['total_amount'];
-        SalesInvoice::create($data);
+        $invoice = SalesInvoice::create($data);
+        if (!empty($data['items'])) {
+            foreach ($data['items'] as $item) {
+                $lineTotal = ($item['quantity'] * $item['unit_price']) - ($item['discount_amount'] ?? 0);
+                $lineTax = $lineTotal * (($item['tax_percentage'] ?? 0) / 100);
+                $invoice->items()->create([
+                    'product_name' => $item['product_name'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'discount_amount' => $item['discount_amount'] ?? 0,
+                    'tax_percentage' => $item['tax_percentage'] ?? 0,
+                    'tax_amount' => $lineTax,
+                    'total_amount' => $lineTotal + $lineTax,
+                ]);
+            }
+        }
         return redirect()->route('admin.sales-invoices.index')->with('success', 'Sales invoice created.');
     }
 
@@ -436,12 +457,32 @@ class ErpController extends Controller
         return redirect()->route('admin.sales-returns.index')->with('success', 'Return deleted.');
     }
 
+    // ─── Sales Dashboard ───
+    public function salesDashboard()
+    {
+        $stats = [
+            'totalProposals' => SalesProposal::count(),
+            'totalInvoices' => SalesInvoice::count(),
+            'totalRevenue' => SalesInvoice::where('status', 'paid')->sum('total_amount'),
+            'totalOutstanding' => SalesInvoice::whereIn('status', ['posted', 'partial', 'overdue'])->sum('balance_amount'),
+        ];
+        $recentProposals = SalesProposal::with(['customer'])->latest()->limit(5)->get();
+        $recentInvoices = SalesInvoice::with(['customer'])->latest()->limit(5)->get();
+        return view('admin.sales.dashboard', compact('stats', 'recentProposals', 'recentInvoices'));
+    }
+
     // ─── Sales Proposals ───
     public function salesProposalIndex()
     {
         $proposals = SalesProposal::with(['customer'])->latest()->paginate(10);
         $customers = User::where('role', 'user')->get();
-        return view('admin.proposals.index', compact('proposals', 'customers'));
+        $stats = [
+            'total' => SalesProposal::count(),
+            'draft' => SalesProposal::where('status', 'draft')->count(),
+            'sent' => SalesProposal::where('status', 'sent')->count(),
+            'accepted' => SalesProposal::where('status', 'accepted')->count(),
+        ];
+        return view('admin.proposals.index', compact('proposals', 'customers', 'stats'));
     }
 
     public function salesProposalStore(Request $request)
@@ -457,11 +498,71 @@ class ErpController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'payment_terms' => 'nullable|string',
             'notes' => 'nullable|string',
+            'items' => 'nullable|array',
+            'items.*.product_name' => 'required|string|max:255',
+            'items.*.quantity' => 'required|numeric|min:0',
+            'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.discount_amount' => 'nullable|numeric|min:0',
+            'items.*.tax_percentage' => 'nullable|numeric|min:0',
         ]);
         $data['creator_id'] = auth()->id();
         $data['created_by'] = auth()->id();
-        SalesProposal::create($data);
-        return redirect()->route('admin.sales-proposals.index')->with('success', 'Proposal created.');
+        $proposal = SalesProposal::create($data);
+        if (!empty($data['items'])) {
+            foreach ($data['items'] as $item) {
+                $lineTotal = ($item['quantity'] * $item['unit_price']) - ($item['discount_amount'] ?? 0);
+                $lineTax = $lineTotal * (($item['tax_percentage'] ?? 0) / 100);
+                $proposal->items()->create([
+                    'product_name' => $item['product_name'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'discount_amount' => $item['discount_amount'] ?? 0,
+                    'tax_percentage' => $item['tax_percentage'] ?? 0,
+                    'tax_amount' => $lineTax,
+                    'total_amount' => $lineTotal + $lineTax,
+                ]);
+            }
+        }
+        return redirect()->route('admin.sales-proposals.index')->with('success', 'Quotation created.');
+    }
+
+    public function salesProposalConvert(SalesProposal $salesProposal)
+    {
+        if ($salesProposal->converted_to_invoice) {
+            return redirect()->back()->with('error', 'This quotation has already been converted.');
+        }
+        $invoice = SalesInvoice::create([
+            'invoice_number' => 'INV-S-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(4)),
+            'invoice_date' => now(),
+            'due_date' => $salesProposal->due_date,
+            'customer_id' => $salesProposal->customer_id,
+            'subtotal' => $salesProposal->subtotal,
+            'tax_amount' => $salesProposal->tax_amount ?? 0,
+            'discount_amount' => $salesProposal->discount_amount ?? 0,
+            'total_amount' => $salesProposal->total_amount,
+            'paid_amount' => 0,
+            'balance_amount' => $salesProposal->total_amount,
+            'status' => 'draft',
+            'type' => 'service',
+            'payment_terms' => $salesProposal->payment_terms,
+            'notes' => $salesProposal->notes,
+            'creator_id' => auth()->id(),
+            'created_by' => auth()->id(),
+        ]);
+        foreach ($salesProposal->items as $item) {
+            $invoice->items()->create([
+                'product_name' => $item->product_name,
+                'quantity' => $item->quantity,
+                'unit_price' => $item->unit_price,
+                'discount_amount' => $item->discount_amount,
+                'discount_percentage' => $item->discount_percentage,
+                'tax_percentage' => $item->tax_percentage,
+                'tax_amount' => $item->tax_amount,
+                'total_amount' => $item->total_amount,
+            ]);
+        }
+        $salesProposal->update(['converted_to_invoice' => true, 'status' => 'accepted']);
+        return redirect()->route('admin.sales-invoices.show', $invoice)->with('success', 'Quotation converted to invoice.');
     }
 
     public function salesProposalShow(SalesProposal $salesProposal)
@@ -703,9 +804,31 @@ class ErpController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'payment_terms' => 'nullable|string',
             'notes' => 'nullable|string',
+            'items' => 'nullable|array',
+            'items.*.product_name' => 'required|string|max:255',
+            'items.*.quantity' => 'required|numeric|min:0',
+            'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.discount_amount' => 'nullable|numeric|min:0',
+            'items.*.tax_percentage' => 'nullable|numeric|min:0',
         ]);
         $salesProposal->update($data);
-        return redirect()->route('admin.sales-proposals.index')->with('success', 'Proposal updated.');
+        $salesProposal->items()->delete();
+        if (!empty($data['items'])) {
+            foreach ($data['items'] as $item) {
+                $lineTotal = ($item['quantity'] * $item['unit_price']) - ($item['discount_amount'] ?? 0);
+                $lineTax = $lineTotal * (($item['tax_percentage'] ?? 0) / 100);
+                $salesProposal->items()->create([
+                    'product_name' => $item['product_name'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'discount_amount' => $item['discount_amount'] ?? 0,
+                    'tax_percentage' => $item['tax_percentage'] ?? 0,
+                    'tax_amount' => $lineTax,
+                    'total_amount' => $lineTotal + $lineTax,
+                ]);
+            }
+        }
+        return redirect()->route('admin.sales-proposals.index')->with('success', 'Quotation updated.');
     }
 
     // ─── Notification Templates ───
