@@ -7,11 +7,11 @@
     <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {{-- Header --}}
         <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-8 py-8 text-center">
-            <div class="w-16 h-16 mx-auto bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            <div class="w-20 h-20 mx-auto bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+                <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group" class="w-16 h-16 object-contain">
             </div>
             <h2 class="text-2xl font-extrabold text-white">Forgot Password</h2>
-            <p class="text-emerald-100 text-sm mt-1">Enter your email to reset your password</p>
+            <p class="text-emerald-100 text-sm mt-1">Enter your email to receive an activation code</p>
         </div>
 
         {{-- Form --}}
@@ -20,6 +20,13 @@
                 <div class="mb-5 p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-sm text-emerald-700 flex items-center gap-2">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     {{ session('status') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mb-5 p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700 flex items-center gap-2">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {{ session('error') }}
                 </div>
             @endif
 
