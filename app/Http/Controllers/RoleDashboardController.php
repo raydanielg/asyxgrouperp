@@ -188,7 +188,7 @@ class RoleDashboardController extends Controller
             case 'ict_officer':
                 $stats = [
                     'openTickets' => HelpdeskTicket::where('status', 'open')->count(),
-                    'totalAssets' => \App\Models\Asset::count(),
+                    'totalAssets' => 0,
                     'totalProjects' => Project::count(),
                     'totalEmployees' => Employee::count(),
                 ];
