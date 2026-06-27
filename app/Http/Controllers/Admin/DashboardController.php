@@ -32,10 +32,18 @@ class DashboardController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (!auth()->check() || !auth()->user()->isAdmin()) {
-                abort(403, 'Unauthorized access. Admin only.');
+            if (!auth()->check()) {
+                return redirect()->route('login');
             }
-            return $next($request);
+            // Admin users have full access
+            if (auth()->user()->isAdmin()) {
+                return $next($request);
+            }
+            // Non-admin users with view-dashboard permission can access dashboard
+            if (auth()->user()->hasPermission('view-dashboard')) {
+                return $next($request);
+            }
+            abort(403, 'You do not have permission to access this page.');
         });
     }
 
