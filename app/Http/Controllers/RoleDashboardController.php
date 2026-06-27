@@ -485,4 +485,261 @@ class RoleDashboardController extends Controller
             default => [],
         };
     }
+
+    private function getRoleLabel(string $role): string
+    {
+        $labels = [
+            'admin' => 'Administrator',
+            'director' => 'Director',
+            'admin_manager' => 'Admin Manager',
+            'administrator' => 'Administrator',
+            'finance_officer' => 'Finance Officer',
+            'auditor' => 'Auditor',
+            'hr_officer' => 'HR Officer',
+            'legal_officer' => 'Legal Officer',
+            'receptionist' => 'Receptionist',
+            'logistics_officer' => 'Logistics Officer',
+            'technical_manager' => 'Technical Manager',
+            'technician' => 'Technician',
+            'ict_officer' => 'ICT Officer',
+            'project_manager' => 'Project Manager',
+            'operations_manager' => 'Operations Manager',
+            'call_center_agent' => 'Call Center Agent',
+            'cashier' => 'Cashier',
+            'supervisor' => 'Supervisor',
+            'ict_engineer' => 'ICT Engineer',
+        ];
+        return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
+    }
+
+    private function getChartDataForRole(string $role): array
+    {
+        $data = [
+            'labels' => [],
+            'values' => [],
+            'type' => 'bar',
+            'title' => '',
+            'secondaryLabels' => [],
+            'secondaryValues' => [],
+            'secondaryTitle' => '',
+        ];
+
+        // 14-day trend labels
+        for ($i = 13; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $data['labels'][] = $date->format('d M');
+        }
+
+        switch ($role) {
+            case 'admin':
+            case 'administrator':
+            case 'admin_manager':
+            case 'director':
+                $data['title'] = 'Sales vs Purchases (14 days)';
+                $data['values'] = [];
+                $data['secondaryValues'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = (int) (SalesInvoice::whereDate('created_at', $date)->sum('total_amount') ?? 0);
+                    $data['secondaryValues'][] = (int) (PurchaseInvoice::whereDate('created_at', $date)->sum('total_amount') ?? 0);
+                }
+                $data['secondaryLabels'] = $data['labels'];
+                $data['secondaryTitle'] = 'Purchases';
+                break;
+
+            case 'finance_officer':
+            case 'auditor':
+                $data['title'] = 'Revenue vs Expenses (14 days)';
+                $data['values'] = [];
+                $data['secondaryValues'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = (int) (Revenue::whereDate('revenue_date', $date)->sum('amount') ?? 0);
+                    $data['secondaryValues'][] = (int) (Expense::whereDate('expense_date', $date)->sum('amount') ?? 0);
+                }
+                $data['secondaryLabels'] = $data['labels'];
+                $data['secondaryTitle'] = 'Expenses';
+                break;
+
+            case 'hr_officer':
+            case 'supervisor':
+                $data['title'] = 'Attendance Trend (14 days)';
+                $data['values'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = Attendance::whereDate('date', $date)->where('status', 'present')->count();
+                }
+                break;
+
+            case 'cashier':
+                $data['title'] = 'POS Sales (14 days)';
+                $data['values'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = (int) (PosSale::whereDate('created_at', $date)->sum('total_amount') ?? 0);
+                }
+                break;
+
+            case 'technical_manager':
+            case 'ict_officer':
+            case 'ict_engineer':
+            case 'technician':
+                $data['title'] = 'Tickets Created (14 days)';
+                $data['values'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = HelpdeskTicket::whereDate('created_at', $date)->count();
+                }
+                break;
+
+            case 'receptionist':
+            case 'call_center_agent':
+                $data['title'] = 'New Leads (14 days)';
+                $data['values'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = CrmLead::whereDate('created_at', $date)->count();
+                }
+                break;
+
+            case 'project_manager':
+            case 'operations_manager':
+                $data['title'] = 'Project Activity (14 days)';
+                $data['values'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = Project::whereDate('updated_at', $date)->count();
+                }
+                break;
+
+            case 'logistics_officer':
+                $data['title'] = 'Stock Movements (14 days)';
+                $data['values'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = \App\Models\StockMovement::whereDate('created_at', $date)->count() ?? 0;
+                }
+                break;
+
+            default:
+                $data['title'] = 'Activity (14 days)';
+                $data['values'] = array_fill(0, 14, 0);
+                break;
+        }
+
+        return $data;
+    }
+
+    private function getSecondaryKpisForRole(string $role, array $stats): array
+    {
+        $money = fn($n) => 'TZS ' . number_format($n);
+
+        return match ($role) {
+            'admin', 'administrator', 'admin_manager' => [
+                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'admin.employees.index'],
+                ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'violet', 'route' => 'admin.projects.index'],
+                ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'amber', 'route' => 'admin.leaves.index'],
+                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
+                ['label' => 'Total Revenues', 'value' => $money($stats['totalRevenues'] ?? 0), 'color' => 'emerald', 'route' => 'admin.revenues.index'],
+            ],
+            'director' => [
+                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'admin.employees.index'],
+                ['label' => 'Proposals', 'value' => $stats['totalProposals'] ?? 0, 'color' => 'violet', 'route' => 'admin.sales-proposals.index'],
+                ['label' => 'Accepted', 'value' => $stats['acceptedProposals'] ?? 0, 'color' => 'sky', 'route' => 'admin.sales-proposals.index'],
+                ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'amber', 'route' => 'admin.leaves.index'],
+                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
+            ],
+            'finance_officer' => [
+                ['label' => 'Sales Paid', 'value' => $money($stats['salesPaid'] ?? 0), 'color' => 'emerald', 'route' => 'admin.sales-invoices.index'],
+                ['label' => 'Purchases', 'value' => $money($stats['totalPurchases'] ?? 0), 'color' => 'sky', 'route' => 'admin.purchase-invoices.index'],
+                ['label' => 'Purchase Balance', 'value' => $money($stats['purchaseBalance'] ?? 0), 'color' => 'amber', 'route' => 'admin.purchase-invoices.index'],
+                ['label' => 'Month Revenue', 'value' => $money($stats['monthRevenues'] ?? 0), 'color' => 'emerald', 'route' => 'admin.revenues.index'],
+                ['label' => 'Draft Invoices', 'value' => $stats['draftInvoices'] ?? 0, 'color' => 'violet', 'route' => 'admin.sales-invoices.index'],
+                ['label' => 'Total Revenues', 'value' => $money($stats['totalRevenues'] ?? 0), 'color' => 'emerald', 'route' => 'admin.revenues.index'],
+            ],
+            'auditor' => [
+                ['label' => 'Sales Invoices', 'value' => $stats['salesInvoiceCount'] ?? 0, 'color' => 'emerald', 'route' => 'admin.sales-invoices.index'],
+                ['label' => 'Purchase Invoices', 'value' => $stats['purchaseInvoiceCount'] ?? 0, 'color' => 'sky', 'route' => 'admin.purchase-invoices.index'],
+                ['label' => 'Expense Records', 'value' => $stats['expenseCount'] ?? 0, 'color' => 'amber', 'route' => 'admin.expenses.index'],
+                ['label' => 'Revenue Records', 'value' => $stats['revenueCount'] ?? 0, 'color' => 'emerald', 'route' => 'admin.revenues.index'],
+                ['label' => 'POS Sales', 'value' => $money($stats['posSales'] ?? 0), 'color' => 'violet', 'route' => 'admin.pos.index'],
+                ['label' => 'Overdue', 'value' => $stats['overdueInvoices'] ?? 0, 'color' => 'rose', 'route' => 'admin.sales-invoices.index'],
+            ],
+            'hr_officer' => [
+                ['label' => 'Active Employees', 'value' => $stats['activeEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'admin.employees.index'],
+                ['label' => 'Absent Today', 'value' => $stats['absentToday'] ?? 0, 'color' => 'rose', 'route' => 'admin.attendance.index'],
+                ['label' => 'Total Payroll', 'value' => $money($stats['totalPayroll'] ?? 0), 'color' => 'amber', 'route' => 'admin.payroll.index'],
+                ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'violet', 'route' => 'admin.leaves.index'],
+            ],
+            'legal_officer' => [
+                ['label' => 'Total Contracts', 'value' => $stats['totalContracts'] ?? 0, 'color' => 'emerald', 'route' => 'admin.crm-contracts.index'],
+                ['label' => 'Total Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
+                ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
+            ],
+            'receptionist', 'call_center_agent' => [
+                ['label' => 'Total Leads', 'value' => $stats['totalLeads'] ?? 0, 'color' => 'emerald', 'route' => 'admin.crm-leads.index'],
+                ['label' => 'New Leads', 'value' => $stats['newLeads'] ?? 0, 'color' => 'sky', 'route' => 'admin.crm-leads.index'],
+                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'amber', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Contacts', 'value' => $stats['totalContacts'] ?? 0, 'color' => 'violet', 'route' => 'admin.crm-contacts.index'],
+            ],
+            'logistics_officer' => [
+                ['label' => 'Products', 'value' => $stats['totalProducts'] ?? 0, 'color' => 'emerald', 'route' => 'admin.products.index'],
+                ['label' => 'Low Stock', 'value' => $stats['lowStockProducts'] ?? 0, 'color' => 'amber', 'route' => 'admin.products.index'],
+                ['label' => 'Warehouses', 'value' => $stats['totalWarehouses'] ?? 0, 'color' => 'sky', 'route' => 'admin.warehouses.index'],
+                ['label' => 'Pending Transfers', 'value' => $stats['pendingTransfers'] ?? 0, 'color' => 'rose', 'route' => 'admin.transfers.index'],
+            ],
+            'technical_manager', 'ict_engineer' => [
+                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'In Progress', 'value' => $stats['inProgressTickets'] ?? 0, 'color' => 'amber', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Resolved', 'value' => $stats['resolvedTickets'] ?? 0, 'color' => 'emerald', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
+                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'violet', 'route' => 'admin.employees.index'],
+            ],
+            'technician' => [
+                ['label' => 'My Tickets', 'value' => $stats['myTickets'] ?? 0, 'color' => 'emerald', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Open', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'In Progress', 'value' => $stats['inProgressTickets'] ?? 0, 'color' => 'amber', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Resolved', 'value' => $stats['resolvedTickets'] ?? 0, 'color' => 'emerald', 'route' => 'admin.helpdesk-tickets.index'],
+            ],
+            'ict_officer' => [
+                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
+                ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
+                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'admin.employees.index'],
+            ],
+            'project_manager' => [
+                ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
+                ['label' => 'Completed', 'value' => $stats['completedProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
+                ['label' => 'Open Deals', 'value' => $stats['openDeals'] ?? 0, 'color' => 'amber', 'route' => 'admin.crm-deals.index'],
+                ['label' => 'Deal Value', 'value' => $money($stats['totalDealValue'] ?? 0), 'color' => 'emerald', 'route' => 'admin.crm-deals.index'],
+                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'violet', 'route' => 'admin.employees.index'],
+            ],
+            'operations_manager' => [
+                ['label' => 'Products', 'value' => $stats['totalProducts'] ?? 0, 'color' => 'emerald', 'route' => 'admin.products.index'],
+                ['label' => 'Low Stock', 'value' => $stats['lowStockProducts'] ?? 0, 'color' => 'amber', 'route' => 'admin.products.index'],
+                ['label' => 'Warehouses', 'value' => $stats['totalWarehouses'] ?? 0, 'color' => 'sky', 'route' => 'admin.warehouses.index'],
+                ['label' => 'Sales', 'value' => $stats['totalSales'] ?? 0, 'color' => 'emerald', 'route' => 'admin.sales-invoices.index'],
+                ['label' => 'Purchases', 'value' => $stats['totalPurchases'] ?? 0, 'color' => 'violet', 'route' => 'admin.purchase-invoices.index'],
+                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'rose', 'route' => 'admin.employees.index'],
+            ],
+            'cashier' => [
+                ['label' => "Today's Count", 'value' => $stats['todayCount'] ?? 0, 'color' => 'sky', 'route' => 'admin.pos.index'],
+                ['label' => 'Month Sales', 'value' => $money($stats['monthSales'] ?? 0), 'color' => 'amber', 'route' => 'admin.pos.reports'],
+                ['label' => 'Invoices', 'value' => $stats['totalInvoices'] ?? 0, 'color' => 'violet', 'route' => 'admin.sales-invoices.index'],
+                ['label' => 'Products', 'value' => $stats['totalProducts'] ?? 0, 'color' => 'emerald', 'route' => 'admin.products.index'],
+            ],
+            'supervisor' => [
+                ['label' => 'Present Today', 'value' => $stats['presentToday'] ?? 0, 'color' => 'emerald', 'route' => 'admin.attendance.index'],
+                ['label' => 'Absent Today', 'value' => $stats['absentToday'] ?? 0, 'color' => 'rose', 'route' => 'admin.attendance.index'],
+                ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'amber', 'route' => 'admin.leaves.index'],
+                ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
+                ['label' => 'POS Sales', 'value' => $money($stats['todaySales'] ?? 0), 'color' => 'emerald', 'route' => 'admin.pos.index'],
+                ['label' => 'Products', 'value' => $stats['totalProducts'] ?? 0, 'color' => 'violet', 'route' => 'admin.products.index'],
+            ],
+            default => [
+                ['label' => 'My Tasks', 'value' => $stats['myTasks'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
+            ],
+        };
+    }
 }
