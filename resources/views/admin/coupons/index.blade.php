@@ -39,7 +39,8 @@
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Inactive</span>
                         @endif
                     </td>
-                    <td class="px-5 py-3">
+                    <td class="px-5 py-3 flex items-center gap-2">
+                        <a href="{{ route('admin.coupons.edit', $coupon) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
                         <form method="POST" action="{{ route('admin.coupons.destroy', $coupon) }}" class="inline" onsubmit="return confirm('Delete this coupon?')">
                             @csrf @method('DELETE')
                             <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>

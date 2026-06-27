@@ -25,6 +25,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Warehouses
     Route::get('/warehouses', [$erp, 'warehouseIndex'])->name('warehouses.index');
     Route::post('/warehouses', [$erp, 'warehouseStore'])->name('warehouses.store');
+    Route::get('/warehouses/{warehouse}/edit', [$erp, 'warehouseEdit'])->name('warehouses.edit');
     Route::patch('/warehouses/{warehouse}', [$erp, 'warehouseUpdate'])->name('warehouses.update');
     Route::delete('/warehouses/{warehouse}', [$erp, 'warehouseDestroy'])->name('warehouses.destroy');
 
@@ -36,6 +37,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Plans
     Route::get('/plans', [$erp, 'planIndex'])->name('plans.index');
     Route::post('/plans', [$erp, 'planStore'])->name('plans.store');
+    Route::get('/plans/{plan}/edit', [$erp, 'planEdit'])->name('plans.edit');
     Route::patch('/plans/{plan}', [$erp, 'planUpdate'])->name('plans.update');
     Route::delete('/plans/{plan}', [$erp, 'planDestroy'])->name('plans.destroy');
 
@@ -46,6 +48,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Coupons
     Route::get('/coupons', [$erp, 'couponIndex'])->name('coupons.index');
     Route::post('/coupons', [$erp, 'couponStore'])->name('coupons.store');
+    Route::get('/coupons/{coupon}/edit', [$erp, 'couponEdit'])->name('coupons.edit');
+    Route::patch('/coupons/{coupon}', [$erp, 'couponUpdate'])->name('coupons.update');
     Route::delete('/coupons/{coupon}', [$erp, 'couponDestroy'])->name('coupons.destroy');
 
     // Helpdesk
@@ -61,8 +65,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Purchase Invoices
     Route::get('/purchase-invoices', [$erp, 'purchaseInvoiceIndex'])->name('purchase-invoices.index');
+    Route::get('/purchase-invoices/create', [$erp, 'purchaseInvoiceCreate'])->name('purchase-invoices.create');
     Route::post('/purchase-invoices', [$erp, 'purchaseInvoiceStore'])->name('purchase-invoices.store');
     Route::get('/purchase-invoices/{purchaseInvoice}', [$erp, 'purchaseInvoiceShow'])->name('purchase-invoices.show');
+    Route::get('/purchase-invoices/{purchaseInvoice}/edit', [$erp, 'purchaseInvoiceEdit'])->name('purchase-invoices.edit');
+    Route::patch('/purchase-invoices/{purchaseInvoice}', [$erp, 'purchaseInvoiceUpdate'])->name('purchase-invoices.update');
     Route::post('/purchase-invoices/{purchaseInvoice}/post', [$erp, 'purchaseInvoicePost'])->name('purchase-invoices.post');
     Route::delete('/purchase-invoices/{purchaseInvoice}', [$erp, 'purchaseInvoiceDestroy'])->name('purchase-invoices.destroy');
 
@@ -73,8 +80,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Sales Invoices
     Route::get('/sales-invoices', [$erp, 'salesInvoiceIndex'])->name('sales-invoices.index');
+    Route::get('/sales-invoices/create', [$erp, 'salesInvoiceCreate'])->name('sales-invoices.create');
     Route::post('/sales-invoices', [$erp, 'salesInvoiceStore'])->name('sales-invoices.store');
     Route::get('/sales-invoices/{salesInvoice}', [$erp, 'salesInvoiceShow'])->name('sales-invoices.show');
+    Route::get('/sales-invoices/{salesInvoice}/edit', [$erp, 'salesInvoiceEdit'])->name('sales-invoices.edit');
+    Route::patch('/sales-invoices/{salesInvoice}', [$erp, 'salesInvoiceUpdate'])->name('sales-invoices.update');
     Route::post('/sales-invoices/{salesInvoice}/post', [$erp, 'salesInvoicePost'])->name('sales-invoices.post');
     Route::delete('/sales-invoices/{salesInvoice}', [$erp, 'salesInvoiceDestroy'])->name('sales-invoices.destroy');
 
@@ -85,8 +95,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Sales Proposals
     Route::get('/sales-proposals', [$erp, 'salesProposalIndex'])->name('sales-proposals.index');
+    Route::get('/sales-proposals/create', [$erp, 'salesProposalCreate'])->name('sales-proposals.create');
     Route::post('/sales-proposals', [$erp, 'salesProposalStore'])->name('sales-proposals.store');
     Route::get('/sales-proposals/{salesProposal}', [$erp, 'salesProposalShow'])->name('sales-proposals.show');
+    Route::get('/sales-proposals/{salesProposal}/edit', [$erp, 'salesProposalEdit'])->name('sales-proposals.edit');
+    Route::patch('/sales-proposals/{salesProposal}', [$erp, 'salesProposalUpdate'])->name('sales-proposals.update');
     Route::patch('/sales-proposals/{salesProposal}/status', [$erp, 'salesProposalStatus'])->name('sales-proposals.status');
     Route::delete('/sales-proposals/{salesProposal}', [$erp, 'salesProposalDestroy'])->name('sales-proposals.destroy');
 
@@ -114,4 +127,174 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Media
     Route::get('/media', [$erp, 'mediaIndex'])->name('media.index');
+
+    // Notification Templates
+    Route::get('/notification-templates', [$erp, 'notificationTemplateIndex'])->name('notification-templates.index');
+    Route::get('/notification-templates/{notificationTemplate}/edit', [$erp, 'notificationTemplateEdit'])->name('notification-templates.edit');
+    Route::patch('/notification-templates/{notificationTemplate}', [$erp, 'notificationTemplateUpdate'])->name('notification-templates.update');
+
+    // Profile
+    Route::get('/profile', [$erp, 'profile'])->name('profile');
+    Route::patch('/profile', [$erp, 'profileUpdate'])->name('profile.update');
+    Route::patch('/profile/password', [$erp, 'passwordUpdate'])->name('password.update');
+
+    // User Management (ERP)
+    Route::get('/users-manage', [$erp, 'userIndex'])->name('users-index');
+    Route::get('/users-manage/create', [$erp, 'userCreate'])->name('users-create');
+    Route::post('/users-manage', [$erp, 'userStore'])->name('users-store');
+    Route::get('/users-manage/{user}/edit', [$erp, 'userEdit'])->name('users-edit');
+    Route::patch('/users-manage/{user}', [$erp, 'userUpdate'])->name('users-update');
+    Route::delete('/users-manage/{user}', [$erp, 'userDestroy'])->name('users-destroy');
+
+    // ═══ Roles & Permissions ═══
+    $roleCtrl = App\Http\Controllers\Admin\RoleController::class;
+    Route::get('/roles', [$roleCtrl, 'index'])->name('roles.index');
+    Route::get('/roles/create', [$roleCtrl, 'create'])->name('roles.create');
+    Route::post('/roles', [$roleCtrl, 'store'])->name('roles.store');
+    Route::get('/roles/{role}/edit', [$roleCtrl, 'edit'])->name('roles.edit');
+    Route::patch('/roles/{role}', [$roleCtrl, 'update'])->name('roles.update');
+    Route::delete('/roles/{role}', [$roleCtrl, 'destroy'])->name('roles.destroy');
+
+    // ═══ Enhanced User Management ═══
+    $userCtrl = App\Http\Controllers\Admin\UserController::class;
+    Route::get('/users', [$userCtrl, 'index'])->name('users.index');
+    Route::get('/users/create', [$userCtrl, 'create'])->name('users.create');
+    Route::post('/users', [$userCtrl, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [$userCtrl, 'edit'])->name('users.edit');
+    Route::patch('/users/{user}', [$userCtrl, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [$userCtrl, 'destroy'])->name('users.destroy');
+    Route::patch('/users/{user}/password', [$userCtrl, 'changePassword'])->name('users.change-password');
+    Route::get('/users-login-history', [$userCtrl, 'loginHistory'])->name('users.login-history');
+    Route::post('/users/{user}/impersonate', [$userCtrl, 'impersonate'])->name('users.impersonate');
+    Route::post('/users/stop-impersonating', [$userCtrl, 'stopImpersonating'])->name('users.stop-impersonating');
+
+    // ═══ Extended ERP Modules ═══
+    $ext = App\Http\Controllers\Admin\ErpExtendedController::class;
+
+    // ─── HRM ───
+    Route::get('/employees', [$ext, 'employeeIndex'])->name('employees.index');
+    Route::get('/employees/create', [$ext, 'employeeCreate'])->name('employees.create');
+    Route::post('/employees', [$ext, 'employeeStore'])->name('employees.store');
+    Route::get('/employees/{employee}', [$ext, 'employeeShow'])->name('employees.show');
+    Route::get('/employees/{employee}/edit', [$ext, 'employeeEdit'])->name('employees.edit');
+    Route::patch('/employees/{employee}', [$ext, 'employeeUpdate'])->name('employees.update');
+    Route::delete('/employees/{employee}', [$ext, 'employeeDestroy'])->name('employees.destroy');
+
+    Route::get('/attendance', [$ext, 'attendanceIndex'])->name('attendance.index');
+    Route::post('/attendance', [$ext, 'attendanceStore'])->name('attendance.store');
+    Route::delete('/attendance/{attendance}', [$ext, 'attendanceDestroy'])->name('attendance.destroy');
+
+    Route::get('/payroll', [$ext, 'payrollIndex'])->name('payroll.index');
+    Route::post('/payroll', [$ext, 'payrollStore'])->name('payroll.store');
+    Route::delete('/payroll/{payroll}', [$ext, 'payrollDestroy'])->name('payroll.destroy');
+
+    Route::get('/leaves', [$ext, 'leaveIndex'])->name('leaves.index');
+    Route::post('/leaves', [$ext, 'leaveStore'])->name('leaves.store');
+    Route::patch('/leaves/{leave}/approve', [$ext, 'leaveApprove'])->name('leaves.approve');
+    Route::patch('/leaves/{leave}/reject', [$ext, 'leaveReject'])->name('leaves.reject');
+    Route::delete('/leaves/{leave}', [$ext, 'leaveDestroy'])->name('leaves.destroy');
+
+    Route::get('/performance', [$ext, 'performanceIndex'])->name('performance.index');
+    Route::post('/performance', [$ext, 'performanceStore'])->name('performance.store');
+    Route::delete('/performance/{review}', [$ext, 'performanceDestroy'])->name('performance.destroy');
+
+    Route::get('/training', [$ext, 'trainingIndex'])->name('training.index');
+    Route::post('/training', [$ext, 'trainingStore'])->name('training.store');
+    Route::delete('/training/{training}', [$ext, 'trainingDestroy'])->name('training.destroy');
+
+    Route::get('/job-postings', [$ext, 'jobPostingIndex'])->name('job-postings.index');
+    Route::post('/job-postings', [$ext, 'jobPostingStore'])->name('job-postings.store');
+    Route::delete('/job-postings/{jobPosting}', [$ext, 'jobPostingDestroy'])->name('job-postings.destroy');
+
+    Route::get('/employee-assets', [$ext, 'assetIndex'])->name('assets.index');
+    Route::post('/employee-assets', [$ext, 'assetStore'])->name('assets.store');
+    Route::delete('/employee-assets/{asset}', [$ext, 'assetDestroy'])->name('assets.destroy');
+
+    Route::get('/hr-events', [$ext, 'hrEventIndex'])->name('hr-events.index');
+    Route::post('/hr-events', [$ext, 'hrEventStore'])->name('hr-events.store');
+    Route::delete('/hr-events/{hrEvent}', [$ext, 'hrEventDestroy'])->name('hr-events.destroy');
+
+    Route::get('/policies', [$ext, 'policyIndex'])->name('policies.index');
+    Route::post('/policies', [$ext, 'policyStore'])->name('policies.store');
+    Route::delete('/policies/{policy}', [$ext, 'policyDestroy'])->name('policies.destroy');
+
+    // ─── CRM ───
+    Route::get('/crm-leads', [$ext, 'crmLeadIndex'])->name('crm-leads.index');
+    Route::post('/crm-leads', [$ext, 'crmLeadStore'])->name('crm-leads.store');
+    Route::delete('/crm-leads/{lead}', [$ext, 'crmLeadDestroy'])->name('crm-leads.destroy');
+
+    Route::get('/crm-deals', [$ext, 'crmDealIndex'])->name('crm-deals.index');
+    Route::post('/crm-deals', [$ext, 'crmDealStore'])->name('crm-deals.store');
+    Route::delete('/crm-deals/{deal}', [$ext, 'crmDealDestroy'])->name('crm-deals.destroy');
+
+    Route::get('/crm-contracts', [$ext, 'crmContractIndex'])->name('crm-contracts.index');
+    Route::post('/crm-contracts', [$ext, 'crmContractStore'])->name('crm-contracts.store');
+    Route::delete('/crm-contracts/{contract}', [$ext, 'crmContractDestroy'])->name('crm-contracts.destroy');
+
+    Route::get('/crm-contacts', [$ext, 'crmContactIndex'])->name('crm-contacts.index');
+    Route::post('/crm-contacts', [$ext, 'crmContactStore'])->name('crm-contacts.store');
+    Route::delete('/crm-contacts/{contact}', [$ext, 'crmContactDestroy'])->name('crm-contacts.destroy');
+
+    // ─── Accounting ───
+    Route::get('/bank-accounts', [$ext, 'bankAccountIndex'])->name('bank-accounts.index');
+    Route::post('/bank-accounts', [$ext, 'bankAccountStore'])->name('bank-accounts.store');
+    Route::delete('/bank-accounts/{bankAccount}', [$ext, 'bankAccountDestroy'])->name('bank-accounts.destroy');
+
+    Route::get('/acc-transfers', [$ext, 'accTransferIndex'])->name('acc-transfers.index');
+    Route::post('/acc-transfers', [$ext, 'accTransferStore'])->name('acc-transfers.store');
+    Route::delete('/acc-transfers/{transfer}', [$ext, 'accTransferDestroy'])->name('acc-transfers.destroy');
+
+    Route::get('/expenses', [$ext, 'expenseIndex'])->name('expenses.index');
+    Route::post('/expenses', [$ext, 'expenseStore'])->name('expenses.store');
+    Route::delete('/expenses/{expense}', [$ext, 'expenseDestroy'])->name('expenses.destroy');
+
+    Route::get('/revenues', [$ext, 'revenueIndex'])->name('revenues.index');
+    Route::post('/revenues', [$ext, 'revenueStore'])->name('revenues.store');
+    Route::delete('/revenues/{revenue}', [$ext, 'revenueDestroy'])->name('revenues.destroy');
+
+    Route::get('/bills', [$ext, 'billIndex'])->name('bills.index');
+    Route::post('/bills', [$ext, 'billStore'])->name('bills.store');
+    Route::delete('/bills/{bill}', [$ext, 'billDestroy'])->name('bills.destroy');
+
+    Route::get('/estimates', [$ext, 'estimateIndex'])->name('estimates.index');
+    Route::post('/estimates', [$ext, 'estimateStore'])->name('estimates.store');
+    Route::delete('/estimates/{estimate}', [$ext, 'estimateDestroy'])->name('estimates.destroy');
+
+    // ─── Projects ───
+    Route::get('/projects', [$ext, 'projectIndex'])->name('projects.index');
+    Route::post('/projects', [$ext, 'projectStore'])->name('projects.store');
+    Route::get('/projects/{project}', [$ext, 'projectShow'])->name('projects.show');
+    Route::delete('/projects/{project}', [$ext, 'projectDestroy'])->name('projects.destroy');
+    Route::post('/projects/{project}/tasks', [$ext, 'projectTaskStore'])->name('projects.tasks.store');
+    Route::delete('/projects/tasks/{task}', [$ext, 'projectTaskDestroy'])->name('projects.tasks.destroy');
+
+    Route::get('/timesheets', [$ext, 'timesheetIndex'])->name('timesheets.index');
+    Route::post('/timesheets', [$ext, 'timesheetStore'])->name('timesheets.store');
+    Route::delete('/timesheets/{timesheet}', [$ext, 'timesheetDestroy'])->name('timesheets.destroy');
+
+    Route::get('/bugs', [$ext, 'bugIndex'])->name('bugs.index');
+    Route::post('/bugs', [$ext, 'bugStore'])->name('bugs.store');
+    Route::delete('/bugs/{bug}', [$ext, 'bugDestroy'])->name('bugs.destroy');
+
+    // ─── Products & Inventory ───
+    Route::get('/product-categories', [$ext, 'productCategoryIndex'])->name('product-categories.index');
+    Route::post('/product-categories', [$ext, 'productCategoryStore'])->name('product-categories.store');
+    Route::delete('/product-categories/{category}', [$ext, 'productCategoryDestroy'])->name('product-categories.destroy');
+
+    Route::get('/products', [$ext, 'productIndex'])->name('products.index');
+    Route::post('/products', [$ext, 'productStore'])->name('products.store');
+    Route::delete('/products/{product}', [$ext, 'productDestroy'])->name('products.destroy');
+
+    Route::get('/suppliers', [$ext, 'supplierIndex'])->name('suppliers.index');
+    Route::post('/suppliers', [$ext, 'supplierStore'])->name('suppliers.store');
+    Route::delete('/suppliers/{supplier}', [$ext, 'supplierDestroy'])->name('suppliers.destroy');
+
+    Route::get('/stock-movements', [$ext, 'stockMovementIndex'])->name('stock-movements.index');
+
+    // ─── POS ───
+    Route::get('/pos', [$ext, 'posIndex'])->name('pos.index');
+    Route::post('/pos', [$ext, 'posStore'])->name('pos.store');
+    Route::get('/pos/reports', [$ext, 'posReports'])->name('pos.reports');
+    Route::get('/pos/{posSale}', [$ext, 'posSaleShow'])->name('pos.show');
+    Route::delete('/pos/{posSale}', [$ext, 'posSaleDestroy'])->name('pos.destroy');
 });

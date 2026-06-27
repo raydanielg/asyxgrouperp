@@ -24,8 +24,11 @@ use App\Models\SalesInvoiceReturn;
 use App\Models\SalesProposal;
 use App\Models\ChMessage;
 use App\Models\User;
+use App\Models\NotificationTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class ErpController extends Controller
 {
@@ -562,5 +565,260 @@ class ErpController extends Controller
     public function mediaIndex()
     {
         return view('admin.media.index');
+    }
+
+    // ─── Warehouse Edit ───
+    public function warehouseEdit(Warehouse $warehouse)
+    {
+        return view('admin.warehouses.edit', compact('warehouse'));
+    }
+
+    // ─── Plan Edit ───
+    public function planEdit(Plan $plan)
+    {
+        return view('admin.plans.edit', compact('plan'));
+    }
+
+    // ─── Coupon Edit ───
+    public function couponEdit(Coupon $coupon)
+    {
+        return view('admin.coupons.edit', compact('coupon'));
+    }
+
+    public function couponUpdate(Request $request, Coupon $coupon)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => ['required', 'string', 'max:50', Rule::unique('coupons', 'code')->ignore($coupon->id)],
+            'description' => 'nullable|string',
+            'discount' => 'required|numeric|min:0',
+            'type' => 'required|in:percentage,flat,fixed',
+            'limit' => 'nullable|integer|min:0',
+            'minimum_spend' => 'nullable|numeric|min:0',
+            'maximum_spend' => 'nullable|numeric|min:0',
+            'limit_per_user' => 'nullable|integer|min:0',
+            'expiry_date' => 'nullable|date',
+            'status' => 'boolean',
+        ]);
+        $data['status'] = $request->boolean('status', true);
+        $coupon->update($data);
+        return redirect()->route('admin.coupons.index')->with('success', 'Coupon updated successfully.');
+    }
+
+    // ─── Sales Invoice Create/Edit ───
+    public function salesInvoiceCreate()
+    {
+        $customers = User::where('role', 'user')->get();
+        $warehouses = Warehouse::where('is_active', true)->get();
+        return view('admin.invoices.sales-create', compact('customers', 'warehouses'));
+    }
+
+    public function salesInvoiceEdit(SalesInvoice $salesInvoice)
+    {
+        $salesInvoice->load(['items']);
+        $customers = User::where('role', 'user')->get();
+        $warehouses = Warehouse::where('is_active', true)->get();
+        return view('admin.invoices.sales-edit', compact('salesInvoice', 'customers', 'warehouses'));
+    }
+
+    public function salesInvoiceUpdate(Request $request, SalesInvoice $salesInvoice)
+    {
+        $data = $request->validate([
+            'invoice_number' => 'required|string|max:255',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'customer_id' => 'required|exists:users,id',
+            'warehouse_id' => 'nullable|exists:warehouses,id',
+            'subtotal' => 'required|numeric|min:0',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'discount_amount' => 'nullable|numeric|min:0',
+            'total_amount' => 'required|numeric|min:0',
+            'type' => 'required|in:product,service',
+            'payment_terms' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+        $salesInvoice->update($data);
+        return redirect()->route('admin.sales-invoices.index')->with('success', 'Sales invoice updated.');
+    }
+
+    // ─── Purchase Invoice Create/Edit ───
+    public function purchaseInvoiceCreate()
+    {
+        $vendors = User::where('role', 'user')->get();
+        $warehouses = Warehouse::where('is_active', true)->get();
+        return view('admin.invoices.purchase-create', compact('vendors', 'warehouses'));
+    }
+
+    public function purchaseInvoiceEdit(PurchaseInvoice $purchaseInvoice)
+    {
+        $purchaseInvoice->load(['items']);
+        $vendors = User::where('role', 'user')->get();
+        $warehouses = Warehouse::where('is_active', true)->get();
+        return view('admin.invoices.purchase-edit', compact('purchaseInvoice', 'vendors', 'warehouses'));
+    }
+
+    public function purchaseInvoiceUpdate(Request $request, PurchaseInvoice $purchaseInvoice)
+    {
+        $data = $request->validate([
+            'invoice_number' => 'required|string|max:255',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'vendor_id' => 'required|exists:users,id',
+            'warehouse_id' => 'nullable|exists:warehouses,id',
+            'subtotal' => 'required|numeric|min:0',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'discount_amount' => 'nullable|numeric|min:0',
+            'total_amount' => 'required|numeric|min:0',
+            'payment_terms' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+        $purchaseInvoice->update($data);
+        return redirect()->route('admin.purchase-invoices.index')->with('success', 'Purchase invoice updated.');
+    }
+
+    // ─── Sales Proposal Create/Edit ───
+    public function salesProposalCreate()
+    {
+        $customers = User::where('role', 'user')->get();
+        return view('admin.proposals.create', compact('customers'));
+    }
+
+    public function salesProposalEdit(SalesProposal $salesProposal)
+    {
+        $salesProposal->load(['items']);
+        $customers = User::where('role', 'user')->get();
+        return view('admin.proposals.edit', compact('salesProposal', 'customers'));
+    }
+
+    public function salesProposalUpdate(Request $request, SalesProposal $salesProposal)
+    {
+        $data = $request->validate([
+            'proposal_number' => 'required|string|max:255',
+            'proposal_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:proposal_date',
+            'customer_id' => 'required|exists:users,id',
+            'subtotal' => 'required|numeric|min:0',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'discount_amount' => 'nullable|numeric|min:0',
+            'total_amount' => 'required|numeric|min:0',
+            'payment_terms' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+        $salesProposal->update($data);
+        return redirect()->route('admin.sales-proposals.index')->with('success', 'Proposal updated.');
+    }
+
+    // ─── Notification Templates ───
+    public function notificationTemplateIndex()
+    {
+        $templates = NotificationTemplate::latest()->paginate(10);
+        return view('admin.notification-templates.index', compact('templates'));
+    }
+
+    public function notificationTemplateEdit(NotificationTemplate $notificationTemplate)
+    {
+        return view('admin.notification-templates.edit', compact('notificationTemplate'));
+    }
+
+    public function notificationTemplateUpdate(Request $request, NotificationTemplate $notificationTemplate)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'subject' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'type' => 'nullable|string|max:50',
+            'is_active' => 'boolean',
+        ]);
+        $data['is_active'] = $request->boolean('is_active', true);
+        $notificationTemplate->update($data);
+        return redirect()->route('admin.notification-templates.index')->with('success', 'Notification template updated.');
+    }
+
+    // ─── Profile ───
+    public function profile()
+    {
+        $user = auth()->user();
+        return view('admin.profile', compact('user'));
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        $user = auth()->user();
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
+            'phone' => 'nullable|string|max:20',
+        ]);
+        $user->update($data);
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function passwordUpdate(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        if (!Hash::check($request->current_password, auth()->user()->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+        auth()->user()->update(['password' => Hash::make($request->password)]);
+        return redirect()->back()->with('success', 'Password updated successfully.');
+    }
+
+    // ─── Users Management ───
+    public function userIndex()
+    {
+        $users = User::latest()->paginate(15);
+        return view('admin.users-index', compact('users'));
+    }
+
+    public function userCreate()
+    {
+        return view('admin.users-create');
+    }
+
+    public function userStore(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:admin,user',
+            'phone' => 'nullable|string|max:20',
+        ]);
+        $data['password'] = Hash::make($data['password']);
+        User::create($data);
+        return redirect()->route('admin.users-index')->with('success', 'User created successfully.');
+    }
+
+    public function userEdit(User $user)
+    {
+        return view('admin.users-edit', compact('user'));
+    }
+
+    public function userUpdate(Request $request, User $user)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
+            'role' => 'required|in:admin,user',
+            'phone' => 'nullable|string|max:20',
+        ]);
+        if ($request->filled('password')) {
+            $request->validate(['password' => 'string|min:8']);
+            $data['password'] = Hash::make($request->password);
+        }
+        $user->update($data);
+        return redirect()->route('admin.users-index')->with('success', 'User updated successfully.');
+    }
+
+    public function userDestroy(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->withErrors(['error' => 'You cannot delete yourself.']);
+        }
+        $user->delete();
+        return redirect()->route('admin.users-index')->with('success', 'User deleted.');
     }
 }
