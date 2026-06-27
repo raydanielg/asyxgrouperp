@@ -29,10 +29,11 @@ class LoginController extends Controller
 
     protected function redirectTo(): string
     {
-        if (auth()->user()->isAdmin()) {
+        $user = auth()->user();
+        if ($user->isAdmin()) {
             return '/admin/dashboard';
         }
-        return '/home';
+        return '/dashboard';
     }
 
     /**
