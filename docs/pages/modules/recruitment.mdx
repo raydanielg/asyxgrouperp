@@ -1,0 +1,104 @@
+# Recruitment
+
+Manage the entire hiring process from job posting to candidate onboarding.
+
+## Job Postings
+
+Create and manage open positions.
+
+**Features:**
+- Job title, description, requirements
+- Department and location
+- Salary range (optional)
+- Status: Open → Closed → On Hold
+- Company association (multi-company)
+- Application deadline
+- Public visibility on careers page
+
+**Navigation:** Admin → HRM → Recruitment
+
+## Job Applications
+
+Track candidate applications through the hiring pipeline.
+
+**Features:**
+- Application listing with filters (status, job, date)
+- Applicant details (name, email, phone)
+- Resume and cover letter uploads
+- Additional document attachments
+- Status workflow: Submitted → Shortlisted → Interview → Hired / Rejected
+- Notes and comments per application
+- Company context filtering
+
+**Navigation:** Admin → HRM → Applications
+
+## Application Workflow
+
+```
+Submitted → Under Review → Shortlisted → Interview → Offer → Hired
+                                                    ↘ Rejected
+```
+
+### Approval Actions
+- **Shortlist** — Move to interview stage
+- **Reject** — Decline with reason
+- **Hire** — Mark as successfully hired
+
+Each action creates an approval record with:
+- Action taken
+- User who performed the action
+- Timestamp
+- Notes/comments
+
+## Internal Application Creation
+
+HR staff can create applications on behalf of walk-in candidates.
+
+**Steps:**
+1. Navigate to Admin → HRM → Applications
+2. Click "Create Application"
+3. Fill in candidate details
+4. Select target job posting
+5. Upload resume and documents
+6. Submit
+
+**Navigation:** Admin → Applications → Create
+
+## Public Careers Portal
+
+External candidates can apply directly through the public careers page.
+
+**URL:** `/careers/jobs`
+
+**Features:**
+- Lists all open positions
+- Job details view
+- Online application form
+- File upload (resume, cover letter, attachments)
+- No login required
+- Confirmation message on submission
+
+## Email Notifications
+
+When a new application is submitted (both internal and public):
+- All HR officers receive email notification
+- Notification includes:
+  - Applicant name and contact
+  - Job applied for
+  - Direct link to review the application
+
+## Bell Notifications
+
+The admin header bell icon shows:
+- Count of pending applications
+- Quick link to applications list
+- Red dot indicator for new submissions
+
+## Document Management
+
+Each application supports:
+- **Resume** (PDF, DOC, DOCX)
+- **Cover Letter** (PDF, DOC, DOCX)
+- **Additional Attachments** (certificates, portfolios, etc.)
+
+Files are stored in `storage/app/public/applications/` organized by type.
