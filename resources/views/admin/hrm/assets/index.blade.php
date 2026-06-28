@@ -20,7 +20,7 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $a->asset_type ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs font-mono text-gray-500">{{ $a->serial_number ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $a->assigned_date?->format('d M Y') ?? '—' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($a->status=='assigned')bg-emerald-50 text-emerald-700 @elseif($a->status=='returned')bg-gray-50 text-gray-600 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($a->status) }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($a->status=='assigned') ? 'bg-emerald-50 text-emerald-700' : ($a->status=='returned') ? 'bg-gray-50 text-gray-600' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($a->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-asset-{{ $a->id }}" method="POST" action="{{ route('admin.assets.destroy', $a) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-asset-{{ $a->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>

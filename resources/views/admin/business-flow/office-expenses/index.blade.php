@@ -24,7 +24,7 @@
             <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($e->amount) }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $e->expense_date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $e->requestedBy?->name ?? 'N/A' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($e->status==='approved')bg-emerald-50 text-emerald-700@elseif($e->status==='rejected')bg-red-50 text-red-700@elseif($e->status==='disbursed')bg-sky-50 text-sky-700@else bg-amber-50 text-amber-700@endif">{{ ucfirst($e->status) }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($e->status==='approved') ? 'bg-emerald-50 text-emerald-700' : ($e->status==='rejected') ? 'bg-red-50 text-red-700' : 'if($e->status==='disbursed')bg-sky-50 text-sky-700@else bg-amber-50 text-amber-700' }}">{{ ucfirst($e->status) }}</span></td>
             <td class="px-5 py-3 flex items-center gap-2">
         @if($e->status==='pending')
         <form method="POST" action="{{ route('admin.office-expenses.approve', $e) }">@csrf<button type="submit" class="text-emerald-600 hover:text-emerald-700 text-xs">Approve</button></form><form method="POST" action="{{ route('admin.office-expenses.reject', $e) }">@csrf<button type="submit" class="text-red-500 hover:text-red-700 text-xs">Reject</button></form>

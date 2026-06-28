@@ -20,7 +20,7 @@
     </div>
     <div class="bg-white rounded-xl border p-4">
         <p class="text-[10px] text-gray-400 uppercase">Net Profit</p>
-        <p class="text-lg font-bold @if($profit>=0)text-emerald-700@else text-red-700@endif">TZS {{ number_format($profit) }}</p>
+        <p class="text-lg font-bold {{ ($profit>=0) ? 'text-emerald-700' : 'text-red-700' }}">TZS {{ number_format($profit) }}</p>
         <p class="text-[10px] text-gray-400">Margin: {{ number_format($margin, 1) }}%</p>
     </div>
 </div>
@@ -32,13 +32,13 @@
         <div class="space-y-3 text-xs">
             <div class="flex justify-between items-center"><span class="text-gray-500">Planned Budget</span><span class="font-semibold text-gray-900">TZS {{ number_format($project->budget) }}</span></div>
             <div class="flex justify-between items-center"><span class="text-gray-500">Total Cost (Actual)</span><span class="font-semibold text-red-600">TZS {{ number_format($totalCost) }}</span></div>
-            <div class="flex justify-between items-center border-t pt-2"><span class="text-gray-500">Budget Variance</span>@php $variance = $project->budget - $totalCost; @endphp<span class="font-bold @if($variance>=0)text-emerald-600@else text-red-600@endif">TZS {{ number_format($variance) }}</span></div>
+            <div class="flex justify-between items-center border-t pt-2"><span class="text-gray-500">Budget Variance</span>@php $variance = $project->budget - $totalCost; @endphp<span class="font-bold {{ ($variance>=0) ? 'text-emerald-600' : 'text-red-600' }}">TZS {{ number_format($variance) }}</span></div>
         </div>
         @if($project->budgets->isNotEmpty())
         <div class="mt-4 pt-4 border-t">
             <p class="text-[10px] text-gray-400 uppercase mb-2">Budget History</p>
         @foreach($project->budgets as $b)
-        <div class="flex justify-between text-xs py-1"><span class="text-gray-500">{{ $b->budget_number }}</span><span class="text-gray-700">TZS {{ number_format($b->total_budget) }} <span class="inline-flex px-1.5 py-0.5 rounded-full text-[9px] @if($b->status==='approved')bg-emerald-50 text-emerald-700@elseif($b->status==='rejected')bg-red-50 text-red-700@else bg-amber-50 text-amber-700@endif">{{ ucfirst($b->status) }}</span></span></div>
+        <div class="flex justify-between text-xs py-1"><span class="text-gray-500">{{ $b->budget_number }}</span><span class="text-gray-700">TZS {{ number_format($b->total_budget) }} <span class="inline-flex px-1.5 py-0.5 rounded-full text-[9px] {{ ($b->status==='approved') ? 'bg-emerald-50 text-emerald-700' : ($b->status==='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($b->status) }}</span></span></div>
         @endforeach
         </div>
         @endif
@@ -83,7 +83,7 @@
             <thead><tr class="text-left text-gray-500"><th class="py-2">Expense No.</th><th class="py-2">Description</th><th class="py-2">Amount</th><th class="py-2">Status</th></tr></thead>
             <tbody>
         @forelse($project->officeExpenses as $e)
-        <tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $e->expense_number }}</td><td class="py-2 text-gray-500">{{ $e->description }}</td><td class="py-2 text-gray-700">TZS {{ number_format($e->amount) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($e->status==='approved')bg-emerald-50 text-emerald-700@elseif($e->status==='rejected')bg-red-50 text-red-700@else bg-amber-50 text-amber-700@endif">{{ ucfirst($e->status) }}</span></td>
+        <tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $e->expense_number }}</td><td class="py-2 text-gray-500">{{ $e->description }}</td><td class="py-2 text-gray-700">TZS {{ number_format($e->amount) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($e->status==='approved') ? 'bg-emerald-50 text-emerald-700' : ($e->status==='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($e->status) }}</span></td>
         </tr>
         @empty
         <tr><td colspan="4" class="py-4 text-center text-gray-400">No expenses</td></tr>

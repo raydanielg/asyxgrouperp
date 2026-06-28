@@ -17,7 +17,7 @@
         <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs"><div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-[10px]">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>{{ $user->name }}</div></td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $user->email }}</td>
-            <td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($user->role === 'admin') bg-emerald-50 text-emerald-700 border border-emerald-100 @else bg-sky-50 text-sky-700 border border-sky-100 @endif capitalize">{{ $user->role }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($user->role === 'admin') ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-sky-50 text-sky-700 border border-sky-100' }} capitalize">{{ $user->role }}</span></td>
             <td class="px-5 py-3">
         @if($user->email_verified_at)
         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Verified</span>

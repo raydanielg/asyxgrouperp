@@ -12,7 +12,7 @@
             <div class="flex justify-between"><span class="text-gray-400">Supplier</span><span class="text-gray-700">{{ $grn->supplier?->name ?? 'N/A' }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Received Date</span><span class="text-gray-700">{{ $grn->received_date->format('d M Y') }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">DN Ref</span><span class="text-gray-700">{{ $grn->delivery_note_number ?? 'N/A' }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($grn->status==='received')bg-emerald-50 text-emerald-700@elseif($grn->status==='discrepant')bg-amber-50 text-amber-700@else bg-red-50 text-red-700@endif">{{ ucfirst($grn->status) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($grn->status==='received') ? 'bg-emerald-50 text-emerald-700' : ($grn->status==='discrepant') ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700' }}">{{ ucfirst($grn->status) }}</span></div>
         </div>
         @if($grn->notes)
         <div class="mt-3 pt-3 border-t"><p class="text-[10px] text-gray-400 uppercase mb-1">Notes</p><p class="text-xs text-gray-600">{{ $grn->notes }}</p></div>
@@ -29,7 +29,7 @@
                     <td class="py-2 text-gray-700">{{ $item->description }}</td>
                     <td class="py-2 text-gray-500">{{ $item->quantity_expected }} {{ $item->unit ?? '' }}</td>
                     <td class="py-2 text-gray-700 font-medium">{{ $item->quantity_received }} {{ $item->unit ?? '' }}</td>
-                    <td class="py-2 @if($item->quantity_discrepant>0)text-red-600 font-semibold@else text-emerald-600@endif">{{ $item->quantity_discrepant > 0 ? $item->quantity_discrepant : '✓' }}</td>
+                    <td class="py-2 {{ ($item->quantity_discrepant>0) ? 'text-red-600 font-semibold' : 'text-emerald-600' }}">{{ $item->quantity_discrepant > 0 ? $item->quantity_discrepant : '✓' }}</td>
                     <td class="py-2 text-gray-400">{{ $item->remarks ?? '—' }}</td>
                 </tr>
         @endforeach

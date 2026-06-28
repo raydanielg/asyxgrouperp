@@ -91,7 +91,7 @@
         @foreach(($projects ?? collect())->items() ?? [] as $project)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $project->name }}</td>
-                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($project->status === 'in_progress') bg-sky-50 text-sky-700 @elseif($project->status === 'completed') bg-emerald-50 text-emerald-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></td>
+                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($project->status === 'in_progress') ? 'bg-sky-50 text-sky-700' : ($project->status === 'completed') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $project->due_date?->format('d M Y') ?? '-' }}</td>
                     </tr>
         @endforeach
@@ -118,7 +118,7 @@
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->position ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->department ?? '-' }}</td>
-                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if(($emp->status ?? '') === 'active') bg-emerald-50 text-emerald-700 @else bg-gray-50 text-gray-600 @endif">{{ ucfirst($emp->status ?? 'N/A') }}</span></td>
+                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ (($emp->status ?? '') ? '=== 'active') bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-600' }}">{{ ucfirst($emp->status ?? 'N/A') }}</span></td>
                     </tr>
         @endforeach
         </tbody>
@@ -246,7 +246,7 @@
         @foreach(($tickets ?? collect())->items() ?? [] as $ticket)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $ticket->subject ?? 'Ticket #' . $ticket->id }}</td>
-                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($ticket->status === 'open') bg-rose-50 text-rose-700 @elseif($ticket->status === 'resolved') bg-emerald-50 text-emerald-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_', ' ', $ticket->status ?? '')) }}</span></td>
+                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($ticket->status === 'open') ? 'bg-rose-50 text-rose-700' : ($ticket->status === 'resolved') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst(str_replace('_', ' ', $ticket->status ?? '')) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($ticket->priority ?? '-') }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $ticket->created_at->format('d M Y') }}</td>
                     </tr>
@@ -493,7 +493,7 @@
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $r->employee?->first_name ?? '' }} {{ $r->employee?->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $r->date?->format('d M Y') ?? '-' }}</td>
-                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($r->status === 'present') bg-emerald-50 text-emerald-700 @elseif($r->status === 'absent') bg-rose-50 text-rose-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($r->status) }}</span></td>
+                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($r->status === 'present') ? 'bg-emerald-50 text-emerald-700' : ($r->status === 'absent') ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($r->status) }}</span></td>
                     </tr>
         @endforeach
         </tbody>
@@ -518,7 +518,7 @@
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $l->employee?->first_name ?? '' }} {{ $l->employee?->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $l->leave_type ?? '-' }}</td>
-                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($l->status === 'approved') bg-emerald-50 text-emerald-700 @elseif($l->status === 'rejected') bg-rose-50 text-rose-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($l->status ?? 'Pending') }}</span></td>
+                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($l->status === 'approved') ? 'bg-emerald-50 text-emerald-700' : ($l->status === 'rejected') ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($l->status ?? 'Pending') }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $l->start_date?->format('d M') ?? '' }} - {{ $l->end_date?->format('d M Y') ?? '' }}</td>
                     </tr>
         @endforeach

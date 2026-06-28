@@ -20,7 +20,7 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $l->start_date->format('d M') }} - {{ $l->end_date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $l->days }}</td>
             <td class="px-5 py-3 text-xs text-gray-400 max-w-xs truncate">{{ $l->reason ?? '—' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($l->status=='approved')bg-emerald-50 text-emerald-700 @elseif($l->status=='rejected')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($l->status) }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($l->status=='approved') ? 'bg-emerald-50 text-emerald-700' : ($l->status=='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($l->status) }}</span></td>
             <td class="px-5 py-3 flex items-center gap-2">
         @if($l->status=='pending')
         <form method="POST" action="{{ route('admin.leaves.approve', $l) }}">@csrf @method('PATCH')<button class="text-emerald-600 hover:text-emerald-700 text-xs">Approve</button></form><form method="POST" action="{{ route('admin.leaves.reject', $l) }}">@csrf @method('PATCH')<button class="text-amber-600 hover:text-amber-700 text-xs">Reject</button></form>

@@ -19,7 +19,7 @@
             <div class="flex justify-between border-t pt-2"><span class="font-semibold">Total</span><span class="font-bold text-emerald-700">TZS {{ number_format($invoice->total) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Paid</span><span class="text-emerald-600">TZS {{ number_format($invoice->amount_paid) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Balance</span><span class="text-red-600 font-semibold">TZS {{ number_format($invoice->balance) }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($invoice->status==='paid')bg-emerald-50 text-emerald-700@elseif($invoice->status==='partially_paid')bg-amber-50 text-amber-700@else bg-red-50 text-red-700@endif">{{ ucfirst(str_replace('_',' ',$invoice->status)) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($invoice->status==='paid') ? 'bg-emerald-50 text-emerald-700' : ($invoice->status==='partially_paid') ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700' }}">{{ ucfirst(str_replace('_',' ',$invoice->status)) }}</span></div>
         </div>
         @if($invoice->balance > 0)
         <div class="mt-4 pt-4 border-t">

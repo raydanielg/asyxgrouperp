@@ -23,7 +23,7 @@
         @endif
         </div>
         <h3 class="text-sm font-bold text-gray-900">{{ $a->account_name }}</h3>
-        <p class="text-xs text-gray-500 mb-1">{{ $a->bank_name }} @if($a->branch) - {{ $a->branch }}@endif</p>
+        <p class="text-xs text-gray-500 mb-1">{{ $a->bank_name }} {{ ($a->branch) ? '- {{ $a->branch }}' : '' }}</p>
         <p class="text-xs font-mono text-gray-400 mb-3">{{ $a->account_number }}</p>
         <div class="border-t pt-3">
             <p class="text-[10px] text-gray-400 uppercase tracking-wide">Current Balance</p>

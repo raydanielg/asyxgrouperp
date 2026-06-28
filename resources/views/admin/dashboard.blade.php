@@ -298,14 +298,14 @@ $money = fn($n) => 'TZS ' . number_format($n);
         <div class="p-5 space-y-3">
         @forelse($recentTickets as $ticket)
         <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg @if($ticket->priority === 'urgent') bg-red-50 @elseif($ticket->priority === 'high') bg-orange-50 @elseif($ticket->priority === 'medium') bg-amber-50 @else bg-blue-50 @endif flex items-center justify-center shrink-0">
-                    <svg class="w-4 h-4 @if($ticket->priority === 'urgent') text-red-600 @elseif($ticket->priority === 'high') text-orange-600 @elseif($ticket->priority === 'medium') text-amber-600 @else text-blue-600 @endif" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="w-8 h-8 rounded-lg {{ ($ticket->priority === 'urgent') ? 'bg-red-50' : ($ticket->priority === 'high') ? 'bg-orange-50' : 'if($ticket->priority === 'medium') bg-amber-50 @else bg-blue-50' }} flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 {{ ($ticket->priority === 'urgent') ? 'text-red-600' : ($ticket->priority === 'high') ? 'text-orange-600' : 'if($ticket->priority === 'medium') text-amber-600 @else text-blue-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                     <a href="{{ route('admin.helpdesk-tickets.show', $ticket) }}" class="text-sm font-medium text-gray-900 truncate hover:text-emerald-600">{{ $ticket->title }}</a>
                     <p class="text-xs text-gray-400">{{ $ticket->ticket_id }} · {{ $ticket->created_at->diffForHumans() }}</p>
                 </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($ticket->status === 'open') bg-emerald-50 text-emerald-700 border border-emerald-100 @elseif($ticket->status === 'in_progress') bg-amber-50 text-amber-700 border border-amber-100 @else bg-gray-50 text-gray-600 border border-gray-100 @endif capitalize">{{ str_replace('_', ' ', $ticket->status) }}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($ticket->status === 'open') ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($ticket->status === 'in_progress') ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-gray-50 text-gray-600 border border-gray-100' }} capitalize">{{ str_replace('_', ' ', $ticket->status) }}</span>
             </div>
         @empty
         <p class="text-sm text-gray-400 text-center py-4">No tickets yet</p>
@@ -329,7 +329,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                     <a href="{{ route('admin.sales-proposals.show', $proposal) }}" class="text-sm font-medium text-gray-900 truncate hover:text-emerald-600">{{ $proposal->proposal_number }}</a>
                     <p class="text-xs text-gray-400">{{ $proposal->customer?->name ?? 'N/A' }} · {{ $money($proposal->total_amount) }}</p>
                 </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($proposal->status === 'accepted') bg-emerald-50 text-emerald-700 border border-emerald-100 @elseif($proposal->status === 'sent') bg-sky-50 text-sky-700 border border-sky-100 @elseif($proposal->status === 'rejected') bg-red-50 text-red-700 border border-red-100 @else bg-gray-50 text-gray-600 border border-gray-100 @endif capitalize">{{ $proposal->status }}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($proposal->status === 'accepted') ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($proposal->status === 'sent') ? 'bg-sky-50 text-sky-700 border border-sky-100' : 'if($proposal->status === 'rejected') bg-red-50 text-red-700 border border-red-100 @else bg-gray-50 text-gray-600 border border-gray-100' }} capitalize">{{ $proposal->status }}</span>
             </div>
         @empty
         <p class="text-sm text-gray-400 text-center py-4">No proposals yet</p>

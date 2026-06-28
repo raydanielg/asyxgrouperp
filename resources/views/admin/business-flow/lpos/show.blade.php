@@ -47,7 +47,7 @@
         <tr class="border-t border-gray-100">
                     <td class="py-2 text-gray-700">{{ $item->description }}</td>
                     <td class="py-2 text-gray-500">{{ $item->quantity_ordered }} {{ $item->unit ?? '' }}</td>
-                    <td class="py-2 @if($item->quantity_received>=$item->quantity_ordered)text-emerald-600@elseif($item->quantity_received>0)text-amber-600@else text-gray-400@endif">{{ $item->quantity_received }}</td>
+                    <td class="py-2 {{ ($item->quantity_received>=$item->quantity_ordered) ? 'text-emerald-600' : ($item->quantity_received>0) ? 'text-amber-600' : 'text-gray-400' }}">{{ $item->quantity_received }}</td>
                     <td class="py-2 text-gray-500">TZS {{ number_format($item->unit_price) }}</td>
                     <td class="py-2 font-semibold text-gray-900">TZS {{ number_format($item->line_total) }}</td>
                 </tr>
@@ -66,7 +66,7 @@
         <tr class="border-t border-gray-100">
                     <td class="py-2 font-mono text-gray-700">{{ $g->grn_number }}</td>
                     <td class="py-2 text-gray-500">{{ $g->received_date->format('d M Y') }}</td>
-                    <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($g->status==='received')bg-emerald-50 text-emerald-700@else bg-amber-50 text-amber-700@endif">{{ ucfirst($g->status) }}</span></td>
+                    <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($g->status==='received') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($g->status) }}</span></td>
                     <td class="py-2"><a href="{{ route('admin.grns.show', $g) }}" class="text-sky-600 text-xs">View</a></td>
                 
         </tr>
@@ -111,7 +111,7 @@
                     <td class="py-2 font-semibold text-gray-900">TZS {{ number_format($v->total) }}</td>
                     <td class="py-2 text-emerald-600">TZS {{ number_format($v->amount_paid) }}</td>
                     <td class="py-2 text-red-600">TZS {{ number_format($v->balance) }}</td>
-                    <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($v->status==='paid')bg-emerald-50 text-emerald-700@elseif($v->status==='partially_paid')bg-amber-50 text-amber-700@else bg-red-50 text-red-700@endif">{{ ucfirst(str_replace('_',' ',$v->status)) }}</span></td>
+                    <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($v->status==='paid') ? 'bg-emerald-50 text-emerald-700' : ($v->status==='partially_paid') ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700' }}">{{ ucfirst(str_replace('_',' ',$v->status)) }}</span></td>
                     <td class="py-2"><a href="{{ route('admin.vendor-invoices.show', $v) }}" class="text-sky-600 text-xs">View</a></td>
                 
         </tr>

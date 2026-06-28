@@ -125,7 +125,7 @@
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Type</th><th class="py-2">Dates</th><th class="py-2">Days</th><th class="py-2">Status</th></tr></thead>
                 <tbody>
         @forelse($employee->leaves as $l)
-        <tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ ucfirst($l->leave_type) }}</td><td class="py-2 text-gray-500">{{ $l->start_date->format('d M') }} - {{ $l->end_date->format('d M Y') }}</td><td class="py-2 text-gray-700">{{ $l->days }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($l->status=='approved')bg-emerald-50 text-emerald-700 @elseif($l->status=='rejected')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($l->status) }}</span></td>
+        <tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ ucfirst($l->leave_type) }}</td><td class="py-2 text-gray-500">{{ $l->start_date->format('d M') }} - {{ $l->end_date->format('d M Y') }}</td><td class="py-2 text-gray-700">{{ $l->days }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($l->status=='approved') ? 'bg-emerald-50 text-emerald-700' : ($l->status=='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($l->status) }}</span></td>
         </tr>
         @empty
         <tr><td colspan="4" class="py-4 text-center text-gray-400">No leave records</td></tr>
