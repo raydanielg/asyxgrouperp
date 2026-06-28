@@ -1,0 +1,222 @@
+# Deployment
+
+Guide for deploying ASYX Group ERP to production environments.
+
+## Server Requirements
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| PHP | 8.2 | 8.3 |
+| MySQL | 8.0 | 8.0+ |
+| RAM | 2 GB | 4 GB+ |
+| Storage | 20 GB | 50 GB+ |
+| CPU | 2 cores | 4 cores |
+
+## Production Deployment
+
+### 1. Server Setup (Ubuntu/Debian)
+
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install PHP and extensions
+sudo apt install php8.2 php8.2-fpm php8.2-mysql php8.2-mbstring \
+  php8.2-xml php8.2-curl php8.2-zip php8.2-gd php8.2-bcmath -y
+
+# Install MySQL
+sudo apt install mysql-server -y
+
+# Install Nginx
+sudo apt install nginx -y
+
+# Install Composer
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+
+# Install Node.js
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install nodejs -y
+```
+
+### 2. Deploy Application
+
+```bash
+# Clone to web directory
+cd /var/www
+sudo git clone https://github.com/asyxgroup/erp.git asyxgroup
+cd asyxgroup
+
+# Set permissions
+sudo chown -R www-data:www-data .
+sudo chmod -R 755 .
+sudo chmod -R 775 storage bootstrap/cache
+
+# Install dependencies
+composer install --no-dev --optimize-autoloader
+npm install && npm run build
+
+# Configure environment
+cp .env.example .env
+php artisan key:generate
+# Edit .env with production settings
+```
+
+### 3. Environment Configuration
+
+```env
+APP_NAME="ASYX Group ERP"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://erp.asyxgroup.com
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=asyxgroup_erp
+DB_USERNAME=erp_user
+DB_PASSWORD=secure_password_here
+
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.yourprovider.com
+MAIL_PORT=587
+MAIL_USERNAME=notifications@asyxgroup.com
+MAIL_PASSWORD=your_mail_password
+MAIL_ENCRYPTION=tls
+```
+
+### 4. Nginx Configuration
+
+```nginx
+server {
+    listen 80;
+    server_name erp.asyxgroup.com;
+    root /var/www/asyxgroup/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    client_max_body_size 50M;
+}
+```
+
+### 5. SSL Certificate (Let's Encrypt)
+
+```bash
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d erp.asyxgroup.com
+```
+
+### 6. Final Steps
+
+```bash
+# Run migrations
+php artisan migrate --force
+
+# Cache configuration
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Storage link
+php artisan storage:link
+
+# Restart services
+sudo systemctl restart php8.2-fpm
+sudo systemctl restart nginx
+```
+
+## Database Backups
+
+### Automated Daily Backup
+
+Create `/etc/cron.d/erp-backup`:
+
+```cron
+0 2 * * * root mysqldump -u erp_user -p'password' asyxgroup_erp | gzip > /backups/erp-$(date +\%Y\%m\%d).sql.gz
+```
+
+### Manual Backup
+
+```bash
+php artisan backup:run
+```
+
+## Monitoring
+
+### Log Files
+
+- Application: `storage/logs/laravel.log`
+- Nginx: `/var/log/nginx/error.log`
+- PHP: `/var/log/php8.2-fpm.log`
+
+### Health Checks
+
+Set up monitoring for:
+- HTTP status (200 OK on `/login`)
+- Database connectivity
+- Disk space usage
+- Memory usage
+- Queue processing
+
+## Updating
+
+```bash
+cd /var/www/asyxgroup
+
+# Pull latest code
+git pull origin main
+
+# Update dependencies
+composer install --no-dev --optimize-autoloader
+npm install && npm run build
+
+# Run migrations
+php artisan migrate --force
+
+# Clear caches
+php artisan cache:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Restart PHP
+sudo systemctl restart php8.2-fpm
+```
+
+## Documentation Site
+
+The documentation (this site) is built with Nextra and can be deployed separately:
+
+```bash
+cd docs
+npm install
+npm run build
+# Deploy the 'out' folder to any static hosting (Netlify, Vercel, etc.)
+```
