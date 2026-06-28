@@ -13,7 +13,7 @@ class CrmLead extends Model
 
     public function deals()
     {
-        return $this->hasMany(CrmDeal::class);
+        return $this->hasMany(CrmDeal::class, 'lead_id');
     }
 
     public function tender()
