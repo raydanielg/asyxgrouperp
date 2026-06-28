@@ -27,17 +27,6 @@
     RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)/(.*)$ - [F,L]
 </IfModule>
 
-# --- Security Headers ---
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Permissions-Policy "geolocation=(),microphone=(),camera=()"
-    # Strict Transport Security (HSTS) — enforce HTTPS for 1 year
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-</IfModule>
-
 # --- Disable directory listing ---
 Options -Indexes
 
