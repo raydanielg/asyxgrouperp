@@ -38,14 +38,15 @@
             {{-- Right: Visual --}}
             <div class="relative">
                 <div class="rounded-2xl overflow-hidden shadow-2xl">
-                    <div class="aspect-[4/3] hero-gradient flex items-center justify-center p-12 relative">
-                        <div class="absolute inset-0 opacity-[0.04]" style="background-image: url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M0 0h60v60H0z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221%22/%3E%3C/svg%3E');"></div>
-                        <div class="relative text-center">
-                            <div class="w-24 h-24 mx-auto rounded-full cta-gradient flex items-center justify-center mb-6 shadow-xl">
-                                <span class="font-heading font-black text-3xl text-white">2009</span>
+                    <div class="aspect-[4/3] relative">
+                        <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80" alt="ASYX Group professionals at work" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-8">
+                            <div class="w-20 h-20 rounded-full cta-gradient flex items-center justify-center mb-4 shadow-xl">
+                                <span class="font-heading font-black text-2xl text-white">2009</span>
                             </div>
-                            <p class="font-heading text-xl font-bold text-white mb-2">Since 2009</p>
-                            <p class="text-sm text-gray-300 max-w-xs">Powersing Tanzania's mission-critical systems for 16+ years</p>
+                            <p class="font-heading text-xl font-bold text-white mb-1">Since 2009</p>
+                            <p class="text-sm text-gray-200">Powering Tanzania's mission-critical systems for 16+ years</p>
                         </div>
                     </div>
                 </div>
@@ -53,6 +54,11 @@
                 <div class="absolute -bottom-4 -left-4 bg-white rounded-xl px-6 py-3 shadow-xl">
                     <p class="font-heading text-sm font-bold text-navy">Mission-Critical Ready</p>
                     <p class="text-xs text-gray-500">24/7 Support Available</p>
+                </div>
+                {{-- Floating stat card --}}
+                <div class="absolute -top-4 -right-4 cta-gradient rounded-xl px-5 py-3 shadow-xl">
+                    <p class="font-heading text-2xl font-black text-white">50+</p>
+                    <p class="text-xs text-white/80">Enterprise Clients</p>
                 </div>
             </div>
         </div>
