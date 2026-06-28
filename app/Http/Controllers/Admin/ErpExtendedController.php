@@ -989,6 +989,10 @@ class ErpExtendedController extends Controller
     {
         $name = $product->name;
         $product->delete();
+
+        if (request()->ajax() || request()->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Product "' . $name . '" deleted successfully!']);
+        }
         return redirect()->route('admin.products.index')->with('success', 'Product "' . $name . '" deleted successfully!');
     }
 
