@@ -25,7 +25,7 @@
             <td class="px-5 py-3 flex items-center gap-2">
         @if($d->status==='open' && !$d->project_id)
         <form method="POST" action="{{ route('admin.crm-deals.convert-to-project', $d) }}">@csrf<button type="submit" class="text-emerald-600 hover:text-emerald-700 text-xs" onclick="return confirm('Convert this deal to a Project?')">→ Project</button></form>
-        @endif<form id="del-deal-{{ $d->id }}" method="POST" action="{{ route('admin.crm-deals.destroy', $d) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-deal-{{ $d->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
+        @endif<button onclick="downloadPdf('{{ route('admin.crm-deals.pdf', $d) }}', '{{ $d->deal_number }}')" class="text-emerald-600 hover:text-emerald-700 text-xs">PDF</button><form id="del-deal-{{ $d->id }}" method="POST" action="{{ route('admin.crm-deals.destroy', $d) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-deal-{{ $d->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>
         @empty
@@ -58,4 +58,18 @@
         </form>
     </div>
 </div>
+@push('scripts')
+<script>
+function downloadPdf(url, title) {
+  Swal.fire({
+    title: 'Downloading...',
+    text: 'Preparing ' + title,
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); },
+    timer: 800,
+    willClose: () => { window.open(url, '_blank'); }
+  });
+}
+</script>
+@endpush
 @endsection
