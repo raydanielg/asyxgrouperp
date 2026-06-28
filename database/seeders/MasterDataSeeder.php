@@ -492,7 +492,7 @@ class MasterDataSeeder extends Seeder
                 'assigned_to' => $employees[array_rand($employees)]->id,
             ]);
             VehicleMaintenance::create(['vehicle_id'=>$v->id,'maintenance_type'=>'service','description'=>'Regular service','service_date'=>$now->subDays(rand(5,60)),'cost'=>rand(200000,1500000),'service_provider'=>'Auto Center','status'=>'completed']);
-            FuelLog::create(['vehicle_id'=>$v->id,'fuel_date'=>$now->subDays(rand(1,14)),'liters'=>rand(20,80),'cost_per_liter'=>2950,'total_cost'=>rand(59000,236000),'driver_name'=>$employees[array_rand($employees)]->full_name]);
+            FuelLog::create(['vehicle_id'=>$v->id,'fuel_date'=>$now->subDays(rand(1,14)),'litres'=>rand(20,80),'cost_per_litre'=>2950,'total_cost'=>rand(59000,236000),'fuel_station'=>'Total Energies']);
         }
 
         // ═══════════════════════════════════════
@@ -518,8 +518,9 @@ class MasterDataSeeder extends Seeder
                 'caller_name' => 'Caller ' . $i,
                 'caller_phone' => '2557' . str_pad((string)rand(10000000,99999999),8,'0',STR_PAD_LEFT),
                 'call_direction' => ['inbound','outbound'][rand(0,1)],
+                'call_start' => $now->subHours(rand(1, 72)),
                 'duration_seconds' => rand(30, 1800),
-                'status' => ['completed','missed','in_progress'][rand(0,2)],
+                'status' => ['completed','missed','failed'][rand(0,2)],
                 'agent_id' => $users[array_rand($users)]->id,
             ]);
         }
