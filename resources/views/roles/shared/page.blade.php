@@ -939,6 +939,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Transfer #</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Amount</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
+                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -947,6 +948,15 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">Transfer #{{ $t->id }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($t->amount ?? 0) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $t->created_at->format('d M Y') }}</td>
+                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $t) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this transfer?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                        @endif
                     </tr>
         @endforeach
         </tbody>
@@ -1173,14 +1183,15 @@ $hasActions = $canEdit || $canDelete || $canApprove;
     @case('training')
     @case('recruitment')
         <div class="p-5">
-            <p class="text-sm text-gray-500">{{ ucfirst(str_replace('-', ' ', $module)) }} module for {{ $roleLabel }}.</p>
-            <div class="mt-4 overflow-x-auto">
+            <p class="text-sm text-gray-500 mb-4">{{ ucfirst(str_replace('-', ' ', $module)) }} module for {{ $roleLabel }}.</p>
+            <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 border-b">
                         <tr>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Name</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Details</th>
                             <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
+                            @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -1189,6 +1200,15 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                             <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $item->name ?? ($item->first_name ?? '') . ' ' . ($item->last_name ?? '') }}</td>
                             <td class="px-4 py-3 text-xs text-gray-500">{{ $item->position ?? $item->status ?? '-' }}</td>
                             <td class="px-4 py-3 text-xs text-gray-500">{{ ($item->created_at ?? now())->format('d M Y') }}</td>
+                            @if($hasActions)
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-1">
+                                    @if($canDelete && isset($routeMap[$module]['delete']))
+                                    <form action="{{ route($routeMap[$module]['delete'], $item) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this item?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                    @endif
+                                </div>
+                            </td>
+                            @endif
                         </tr>
         @endforeach
         </tbody>
