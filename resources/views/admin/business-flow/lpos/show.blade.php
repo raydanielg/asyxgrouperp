@@ -58,7 +58,12 @@
                     <td class="py-2 text-gray-500">{{ $g->received_date->format('d M Y') }}</td>
                     <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($g->status==='received')bg-emerald-50 text-emerald-700@else bg-amber-50 text-amber-700@endif">{{ ucfirst($g->status) }}</span></td>
                     <td class="py-2"><a href="{{ route('admin.grns.show', $g) }}" class="text-sky-600 text-xs">View</a></td>
-                </tr>@empty<tr><td colspan="4" class="py-4 text-center text-gray-400">No GRNs yet</td></tr>@endforelse</tbody>
+                
+        </tr>
+        @empty
+        <tr><td colspan="4" class="py-4 text-center text-gray-400">No GRNs yet</td></tr>
+        @endforelse
+        </tbody>
             </table></div>
         </div>
 
@@ -72,7 +77,12 @@
                     <td class="py-2 text-gray-500">{{ $d->delivery_date->format('d M Y') }}</td>
                     <td class="py-2 text-gray-500">{{ $d->delivered_by ?? 'N/A' }}</td>
                     <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-700">{{ ucfirst($d->status) }}</span></td>
-                </tr>@empty<tr><td colspan="4" class="py-4 text-center text-gray-400">No delivery notes yet</td></tr>@endforelse</tbody>
+                
+        </tr>
+        @empty
+        <tr><td colspan="4" class="py-4 text-center text-gray-400">No delivery notes yet</td></tr>
+        @endforelse
+        </tbody>
             </table></div>
         </div>
 
@@ -89,7 +99,12 @@
                     <td class="py-2 text-red-600">TZS {{ number_format($v->balance) }}</td>
                     <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($v->status==='paid')bg-emerald-50 text-emerald-700@elseif($v->status==='partially_paid')bg-amber-50 text-amber-700@else bg-red-50 text-red-700@endif">{{ ucfirst(str_replace('_',' ',$v->status)) }}</span></td>
                     <td class="py-2"><a href="{{ route('admin.vendor-invoices.show', $v) }}" class="text-sky-600 text-xs">View</a></td>
-                </tr>@empty<tr><td colspan="7" class="py-4 text-center text-gray-400">No vendor invoices yet</td></tr>@endforelse</tbody>
+                
+        </tr>
+        @empty
+        <tr><td colspan="7" class="py-4 text-center text-gray-400">No vendor invoices yet</td></tr>
+        @endforelse
+        </tbody>
             </table></div>
         </div>
     </div>

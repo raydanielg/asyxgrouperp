@@ -25,7 +25,12 @@
         <div class="space-y-2">@forelse($project->tasks as $t)<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div class="flex-1"><p class="text-xs font-medium text-gray-900">{{ $t->title }}</p><p class="text-[10px] text-gray-400">{{ $t->assignee?->name ?? 'Unassigned' }} @if($t->due_date) - Due {{ $t->due_date->format('d M') }}@endif</p></div>
             <div class="flex items-center gap-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($t->status=='done')bg-emerald-50 text-emerald-700 @elseif($t->status=='in_progress')bg-amber-50 text-amber-700 @else bg-gray-100 text-gray-600 @endif">{{ ucfirst(str_replace('_', ' ', $t->status)) }}</span><form id="del-task-{{ $t->id }}" method="POST" action="{{ route('admin.projects.tasks.destroy', $t) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-task-{{ $t->id }}')" class="text-red-500 hover:text-red-700 text-[10px]">Delete</button></div>
-        </div>@empty<p class="text-xs text-gray-400 text-center py-4">No tasks yet</p>@endforelse</div>
+        
+        </div>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No tasks yet</p>
+        @endforelse
+        </div>
     </div>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -34,14 +39,24 @@
         <div class="space-y-2">@forelse($project->bugs as $b)<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div class="flex-1"><p class="text-xs font-medium text-gray-900">{{ $b->title }}</p><p class="text-[10px] text-gray-400">Severity: {{ ucfirst($b->severity) }}</p></div>
             <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($b->status=='open')bg-red-50 text-red-700 @elseif($b->status=='fixed')bg-emerald-50 text-emerald-700 @else bg-gray-100 text-gray-600 @endif">{{ ucfirst($b->status) }}</span>
-        </div>@empty<p class="text-xs text-gray-400 text-center py-4">No bugs reported</p>@endforelse</div>
+        
+        </div>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No bugs reported</p>
+        @endforelse
+        </div>
     </div>
     <div class="bg-white rounded-xl border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Timesheets</h3>
         <div class="space-y-2">@forelse($project->timesheets as $ts)<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div class="flex-1"><p class="text-xs font-medium text-gray-900">{{ $ts->description ?? 'Timesheet entry' }}</p><p class="text-[10px] text-gray-400">{{ $ts->date->format('d M Y') }}</p></div>
             <span class="text-xs font-semibold text-emerald-700">{{ $ts->hours }}h</span>
-        </div>@empty<p class="text-xs text-gray-400 text-center py-4">No timesheet entries</p>@endforelse</div>
+        
+        </div>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No timesheet entries</p>
+        @endforelse
+        </div>
     </div>
 </div>
 <div id="taskModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">

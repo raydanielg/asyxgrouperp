@@ -51,7 +51,7 @@
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $user->created_at->format('d M Y') }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No users found</td></tr>
+        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No users found</td></tr>
                 @endforelse
             </tbody>
         </table>

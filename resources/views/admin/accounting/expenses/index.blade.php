@@ -20,7 +20,12 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst($e->payment_method) }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $e->expense_date->format('d M Y') }}</td>
             <td class="px-5 py-3"><form id="del-exp-{{ $e->id }}" method="POST" action="{{ route('admin.expenses.destroy', $e) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-exp-{{ $e->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No expenses found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No expenses found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $expenses->links() }}</div>
 </div>

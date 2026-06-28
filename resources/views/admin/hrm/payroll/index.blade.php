@@ -22,7 +22,12 @@
             <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($p->net_salary) }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($p->status=='paid')bg-emerald-50 text-emerald-700 @elseif($p->status=='pending')bg-amber-50 text-amber-700 @else bg-gray-50 text-gray-600 @endif">{{ ucfirst($p->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-pay-{{ $p->id }}" method="POST" action="{{ route('admin.payroll.destroy', $p) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-pay-{{ $p->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="9" class="px-5 py-8 text-center text-gray-400 text-xs">No payroll records</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="9" class="px-5 py-8 text-center text-gray-400 text-xs">No payroll records</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $payrolls->links() }}</div>
 </div>

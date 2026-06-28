@@ -249,7 +249,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                         <td class="px-5 py-2.5"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100 capitalize">{{ $invoice->status }}</span></td>
                     </tr>
                     @empty
-                    <tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No sales invoices yet</td></tr>
+        <tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No sales invoices yet</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -279,7 +279,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                         <td class="px-5 py-2.5"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100 capitalize">{{ $invoice->status }}</span></td>
                     </tr>
                     @empty
-                    <tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No purchase invoices yet</td></tr>
+        <tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No purchase invoices yet</td></tr>
                     @endforelse
                 </tbody>
             </table>

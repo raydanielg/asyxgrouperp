@@ -20,7 +20,12 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $b->due_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $c=['unpaid'=>'red','partial'=>'amber','paid'=>'emerald']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$b->status] ?? 'gray' }}-50 text-{{ $c[$b->status] ?? 'gray' }}-700">{{ ucfirst($b->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-bill-{{ $b->id }}" method="POST" action="{{ route('admin.bills.destroy', $b) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-bill-{{ $b->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No bills found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No bills found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $bills->links() }}</div>
 </div>

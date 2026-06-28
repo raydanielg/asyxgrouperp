@@ -19,7 +19,12 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $a->check_out ?? '—' }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($a->status=='present')bg-emerald-50 text-emerald-700 @elseif($a->status=='absent')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif border border-{{ $a->status=='present'?'emerald':($a->status=='absent'?'red':'amber')}}-100">{{ ucfirst($a->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-att-{{ $a->id }}" method="POST" action="{{ route('admin.attendance.destroy', $a) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-att-{{ $a->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No attendance records</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No attendance records</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $attendances->links() }}</div>
 </div>

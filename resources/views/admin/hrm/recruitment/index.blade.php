@@ -20,7 +20,12 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $j->deadline?->format('d M Y') ?? 'No deadline' }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($j->status=='open')bg-emerald-50 text-emerald-700 @else bg-gray-50 text-gray-600 @endif">{{ ucfirst($j->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-job-{{ $j->id }}" method="POST" action="{{ route('admin.job-postings.destroy', $j) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-job-{{ $j->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No job postings</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No job postings</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $jobs->links() }}</div>
 </div>

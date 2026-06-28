@@ -11,7 +11,12 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $template->subject ?? 'N/A' }}</td>
             <td class="px-5 py-3">@if($template->is_active)<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>@else<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Inactive</span>@endif</td>
             <td class="px-5 py-3"><a href="{{ route('admin.notification-templates.edit', $template) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a></td>
-        </tr>@empty<tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No notification templates found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No notification templates found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $templates->links() }}</div>
 </div>

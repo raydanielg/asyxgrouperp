@@ -18,7 +18,12 @@
             <td class="px-5 py-3">@php $c=['low'=>'sky','medium'=>'amber','high'=>'orange','critical'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$b->severity] ?? 'gray' }}-50 text-{{ $c[$b->severity] ?? 'gray' }}-700">{{ ucfirst($b->severity) }}</span></td>
             <td class="px-5 py-3">@php $s=['open'=>'red','in_progress'=>'amber','fixed'=>'emerald','closed'=>'gray']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $s[$b->status] ?? 'gray' }}-50 text-{{ $s[$b->status] ?? 'gray' }}-700">{{ ucfirst(str_replace('_', ' ', $b->status)) }}</span></td>
             <td class="px-5 py-3"><form id="del-bug-{{ $b->id }}" method="POST" action="{{ route('admin.bugs.destroy', $b) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-bug-{{ $b->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No bugs reported</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No bugs reported</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $bugs->links() }}</div>
 </div>

@@ -23,7 +23,12 @@
                 @if($l->status=='pending')<form method="POST" action="{{ route('admin.leaves.approve', $l) }}">@csrf @method('PATCH')<button class="text-emerald-600 hover:text-emerald-700 text-xs">Approve</button></form><form method="POST" action="{{ route('admin.leaves.reject', $l) }}">@csrf @method('PATCH')<button class="text-amber-600 hover:text-amber-700 text-xs">Reject</button></form>@endif
                 <form id="del-leave-{{ $l->id }}" method="POST" action="{{ route('admin.leaves.destroy', $l) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-leave-{{ $l->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
             </td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No leave requests</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No leave requests</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $leaves->links() }}</div>
 </div>

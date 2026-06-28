@@ -19,7 +19,12 @@
             <td class="px-5 py-3 text-xs font-semibold text-emerald-700">{{ $t->hours }}h</td>
             <td class="px-5 py-3 text-xs text-gray-400 max-w-xs truncate">{{ $t->description ?? '—' }}</td>
             <td class="px-5 py-3"><form id="del-ts-{{ $t->id }}" method="POST" action="{{ route('admin.timesheets.destroy', $t) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-ts-{{ $t->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No timesheet entries</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No timesheet entries</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $timesheets->links() }}</div>
 </div>

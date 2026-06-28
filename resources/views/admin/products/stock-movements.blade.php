@@ -16,7 +16,12 @@
             <td class="px-5 py-3 text-xs text-gray-700">{{ $m->balance_after }}</td>
             <td class="px-5 py-3 text-xs text-gray-400 max-w-xs truncate">{{ $m->reference ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $m->created_at->format('d M Y H:i') }}</td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No stock movements recorded</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No stock movements recorded</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $movements->links() }}</div>
 </div>

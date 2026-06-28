@@ -20,7 +20,12 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $c->start_date?->format('d M Y') ?? '—' }} - {{ $c->end_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $cl=['draft'=>'gray','active'=>'emerald','expired'=>'red','terminated'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $cl[$c->status] ?? 'gray' }}-50 text-{{ $cl[$c->status] ?? 'gray' }}-700">{{ ucfirst($c->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-con-{{ $c->id }}" method="POST" action="{{ route('admin.crm-contracts.destroy', $c) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-con-{{ $c->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No contracts found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No contracts found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $contracts->links() }}</div>
 </div>

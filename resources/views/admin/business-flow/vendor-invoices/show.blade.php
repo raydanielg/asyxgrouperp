@@ -38,7 +38,12 @@
                     <td class="py-2 font-semibold text-emerald-600">TZS {{ number_format($p->amount) }}</td>
                     <td class="py-2 text-gray-500">{{ ucfirst(str_replace('_',' ',$p->payment_method)) }}</td>
                     <td class="py-2 text-gray-400">{{ $p->reference_number ?? '—' }}</td>
-                </tr>@empty<tr><td colspan="5" class="py-4 text-center text-gray-400">No payments recorded</td></tr>@endforelse</tbody>
+                
+        </tr>
+        @empty
+        <tr><td colspan="5" class="py-4 text-center text-gray-400">No payments recorded</td></tr>
+        @endforelse
+        </tbody>
             </table></div>
         </div>
     </div>

@@ -13,7 +13,12 @@
             <td class="px-5 py-3 text-xs font-mono text-gray-500">{{ $h->ip ?? $h->ip_address ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-400 max-w-xs truncate">{{ $h->user_agent ?? $h->details['user_agent'] ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $h->login_at?->format('d M Y H:i') ?? $h->created_at->format('d M Y H:i') }}</td>
-        </tr>@empty<tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No login history</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No login history</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $histories->links() }}</div>
 </div>

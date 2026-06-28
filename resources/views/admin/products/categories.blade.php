@@ -18,7 +18,12 @@
             <td class="px-5 py-3 text-xs text-gray-700">{{ $c->products->count() }}</td>
             <td class="px-5 py-3">@if($c->is_active)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>@else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>@endif</td>
             <td class="px-5 py-3"><form id="del-cat-{{ $c->id }}" method="POST" action="{{ route('admin.product-categories.destroy', $c) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-cat-{{ $c->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No categories found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No categories found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $categories->links() }}</div>
 </div>

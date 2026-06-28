@@ -27,7 +27,12 @@
                 <form id="del-vinv-{{ $v->id }}" method="POST" action="{{ route('admin.vendor-invoices.destroy', $v) }}">@csrf @method('DELETE')</form>
                 <button onclick="confirmDelete('del-vinv-{{ $v->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
             </td>
-        </tr>@empty<tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No vendor invoices found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No vendor invoices found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $invoices->links() }}</div>
 </div>

@@ -23,7 +23,12 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst(str_replace('_',' ',$r->payment_method)) }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $r->reference_number ?? '—' }}</td>
             <td class="px-5 py-3"><form id="del-cr-{{ $r->id }}" method="POST" action="{{ route('admin.client-receipts.destroy', $r) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-cr-{{ $r->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No client receipts found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No client receipts found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $receipts->links() }}</div>
 </div>

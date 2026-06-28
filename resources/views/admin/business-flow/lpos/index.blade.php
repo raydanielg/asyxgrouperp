@@ -27,7 +27,12 @@
                 <form id="del-lpo-{{ $l->id }}" method="POST" action="{{ route('admin.lpos.destroy', $l) }}">@csrf @method('DELETE')</form>
                 <button onclick="confirmDelete('del-lpo-{{ $l->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
             </td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No LPOs found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No LPOs found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $lpos->links() }}</div>
 </div>

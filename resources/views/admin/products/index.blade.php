@@ -21,7 +21,12 @@
             <td class="px-5 py-3">@if($p->stock_quantity <= $p->reorder_level && $p->reorder_level > 0)<span class="text-xs font-bold text-red-600">{{ $p->stock_quantity }} {{ $p->unit }}</span><span class="ml-1 text-[9px] text-red-500">LOW</span>@else<span class="text-xs text-gray-700">{{ $p->stock_quantity }} {{ $p->unit }}</span>@endif</td>
             <td class="px-5 py-3">@if($p->is_active)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>@else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>@endif</td>
             <td class="px-5 py-3"><form id="del-prod-{{ $p->id }}" method="POST" action="{{ route('admin.products.destroy', $p) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-prod-{{ $p->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No products found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No products found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $products->links() }}</div>
 </div>

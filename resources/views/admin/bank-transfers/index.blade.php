@@ -19,7 +19,12 @@
                     <input type="hidden" name="status" value="rejected"><button class="text-red-500 hover:text-red-700 text-xs">Reject</button>
                 </form>
             @endif</td>
-        </tr>@empty<tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No bank transfers found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No bank transfers found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $transfers->links() }}</div>
 </div>

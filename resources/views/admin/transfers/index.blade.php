@@ -39,7 +39,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No transfers found</td></tr>
+        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No transfers found</td></tr>
                 @endforelse
             </tbody>
         </table>

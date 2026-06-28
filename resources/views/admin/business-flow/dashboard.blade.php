@@ -48,7 +48,9 @@
                 <div><p class="font-medium text-gray-900">{{ $t->title }}</p><p class="text-[10px] text-gray-400">{{ $t->tender_number }} • {{ $t->client_name }}</p></div>
                 <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($t->status=='converted')bg-emerald-50 text-emerald-700 @elseif($t->status=='rejected')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_',' ',$t->status)) }}</span>
             </div>
-        @empty<p class="text-xs text-gray-400 text-center py-4">No tenders yet</p>@endforelse</div>
+        @empty<p class="text-xs text-gray-400 text-center py-4">No tenders yet</p>
+        @endforelse
+        </div>
     </div>
 
     {{-- Recent LPOs --}}
@@ -59,7 +61,9 @@
                 <div><p class="font-medium text-gray-900">{{ $l->lpo_number }}</p><p class="text-[10px] text-gray-400">{{ $l->supplier?->name ?? 'N/A' }} • {{ $l->project?->title ?? 'No Project' }}</p></div>
                 <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($l->status=='received')bg-emerald-50 text-emerald-700 @elseif($l->status=='draft')bg-gray-50 text-gray-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_',' ',$l->status)) }}</span>
             </div>
-        @empty<p class="text-xs text-gray-400 text-center py-4">No LPOs yet</p>@endforelse</div>
+        @empty<p class="text-xs text-gray-400 text-center py-4">No LPOs yet</p>
+        @endforelse
+        </div>
     </div>
 
     {{-- Recent Projects --}}
@@ -70,7 +74,9 @@
                 <div><p class="font-medium text-gray-900">{{ $p->title }}</p><p class="text-[10px] text-gray-400">{{ $p->project_number }} • Budget: TZS {{ number_format($p->budget) }}</p></div>
                 <a href="{{ route('admin.projects.profit', $p) }}" class="text-[10px] text-emerald-600 hover:underline">Profit</a>
             </div>
-        @empty<p class="text-xs text-gray-400 text-center py-4">No projects yet</p>@endforelse</div>
+        @empty<p class="text-xs text-gray-400 text-center py-4">No projects yet</p>
+        @endforelse
+        </div>
     </div>
 </div>
 @endsection

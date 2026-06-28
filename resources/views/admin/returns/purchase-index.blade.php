@@ -13,7 +13,12 @@
             <td class="px-5 py-3">@php $c=['draft'=>'gray','approved'=>'sky','completed'=>'emerald','cancelled'=>'red']; @endphp<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$return->status] ?? 'gray' }}-50 text-{{ $c[$return->status] ?? 'gray' }}-700 border border-{{ $c[$return->status] ?? 'gray' }}-100">{{ ucfirst($return->status) }}</span></td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $return->return_date->format('d M Y') }}</td>
             <td class="px-5 py-3"><form method="POST" action="{{ route('admin.purchase-returns.destroy', $return) }}" class="inline" onsubmit="return confirm('Delete?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form></td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No returns found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No returns found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $returns->links() }}</div>
 </div>

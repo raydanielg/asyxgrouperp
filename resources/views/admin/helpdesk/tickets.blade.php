@@ -44,7 +44,7 @@
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $ticket->created_at->format('d M Y') }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No tickets found</td></tr>
+        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No tickets found</td></tr>
                 @endforelse
             </tbody>
         </table>

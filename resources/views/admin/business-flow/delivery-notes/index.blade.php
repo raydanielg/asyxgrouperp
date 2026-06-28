@@ -23,7 +23,12 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $d->vehicle_number ?? '—' }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($d->status==='verified')bg-emerald-50 text-emerald-700@elseif($d->status==='pending_verification')bg-amber-50 text-amber-700@else bg-sky-50 text-sky-700@endif">{{ ucfirst(str_replace('_',' ',$d->status)) }}</span></td>
             <td class="px-5 py-3"><form id="del-dn-{{ $d->id }}" method="POST" action="{{ route('admin.delivery-notes.destroy', $d) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-dn-{{ $d->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No delivery notes found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No delivery notes found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $deliveryNotes->links() }}</div>
 </div>

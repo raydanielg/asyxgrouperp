@@ -22,7 +22,12 @@
                 <a href="{{ route('admin.users-edit', $user) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
                 @if($user->id !== auth()->id())<form method="POST" action="{{ route('admin.users-destroy', $user) }}" class="inline" onsubmit="return confirm('Delete this user?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>@endif
             </td>
-        </tr>@empty<tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No users found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No users found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $users->links() }}</div>
 </div>

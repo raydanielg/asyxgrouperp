@@ -21,7 +21,12 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $d->expected_close_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $c=['open'=>'emerald','won'=>'emerald','lost'=>'red','cancelled'=>'gray']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$d->status] ?? 'gray' }}-50 text-{{ $c[$d->status] ?? 'gray' }}-700">{{ ucfirst($d->status) }}</span></td>
             <td class="px-5 py-3 flex items-center gap-2">@if($d->status==='open' && !$d->project_id)<form method="POST" action="{{ route('admin.crm-deals.convert-to-project', $d) }}">@csrf<button type="submit" class="text-emerald-600 hover:text-emerald-700 text-xs" onclick="return confirm('Convert this deal to a Project?')">→ Project</button></form>@endif<form id="del-deal-{{ $d->id }}" method="POST" action="{{ route('admin.crm-deals.destroy', $d) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-deal-{{ $d->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No deals found</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No deals found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $deals->links() }}</div>
 </div>

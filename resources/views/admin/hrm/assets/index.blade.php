@@ -20,7 +20,12 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $a->assigned_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($a->status=='assigned')bg-emerald-50 text-emerald-700 @elseif($a->status=='returned')bg-gray-50 text-gray-600 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($a->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-asset-{{ $a->id }}" method="POST" action="{{ route('admin.assets.destroy', $a) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-asset-{{ $a->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No assets assigned</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No assets assigned</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $assets->links() }}</div>
 </div>

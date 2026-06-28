@@ -24,7 +24,12 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $s->cashier?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $s->created_at->format('d M Y H:i') }}</td>
             <td class="px-5 py-3 flex items-center gap-2"><a href="{{ route('admin.pos.show', $s) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a><form id="del-pos-{{ $s->id }}" method="POST" action="{{ route('admin.pos.destroy', $s) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-pos-{{ $s->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        </tr>@empty<tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No sales recorded</td></tr>@endforelse</tbody>
+        
+        </tr>
+        @empty
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No sales recorded</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $sales->links() }}</div>
 </div>

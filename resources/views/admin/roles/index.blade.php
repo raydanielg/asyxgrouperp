@@ -54,7 +54,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No roles found</td></tr>
+        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No roles found</td></tr>
                 @endforelse
             </tbody>
         </table>
