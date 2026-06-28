@@ -1,0 +1,146 @@
+# Human Resource Management (HRM)
+
+The HRM module is the backbone of people management in ASYX Group ERP. It handles everything from employee onboarding to payroll processing.
+
+## Modules Overview
+
+### Employees
+Manage your entire workforce with detailed profiles.
+
+**Features:**
+- Employee directory with search and filters
+- Personal information, emergency contacts, bank details
+- Department and designation assignment
+- Employment status tracking (active, probation, terminated)
+- Document attachments (ID, contracts, certificates)
+- Salary and compensation management
+
+**Navigation:** Admin → HRM → Employees
+
+### Attendance
+
+Track employee attendance with clock-in/clock-out functionality.
+
+**Features:**
+- Daily attendance marking (present, absent, late, half-day)
+- Clock-in/clock-out with timestamps
+- Overtime tracking
+- Monthly attendance reports
+- Attendance correction requests
+
+**Navigation:** Admin → HRM → Attendance
+
+### Payroll
+
+Generate and manage monthly payroll with statutory deductions.
+
+**Features:**
+- Automatic payroll generation from employee salaries
+- Statutory deductions:
+  - **NSSF** (National Social Security Fund) — 10% employee + 10% employer
+  - **NHIF** (National Health Insurance Fund) — tiered rates
+  - **PAYE** (Pay As You Earn) — progressive tax brackets
+- Loan/advance deductions
+- Payslip PDF generation
+- Payroll history and reports
+- Company-context aware generation
+
+**Navigation:** Admin → HRM → Payroll
+
+**Generating Payroll:**
+1. Navigate to Payroll page
+2. Select month and year
+3. Click "Generate Payroll"
+4. System calculates gross pay, deductions, and net pay
+5. Review and approve
+
+### Leaves
+
+Manage employee leave requests and approvals.
+
+**Features:**
+- Leave request submission
+- Multiple leave types (annual, sick, maternity, paternity, etc.)
+- Leave balance tracking
+- Approval workflow (pending → approved/rejected)
+- Leave calendar view
+
+**Navigation:** Admin → HRM → Leaves
+
+### Performance Reviews
+
+Conduct and track employee performance evaluations.
+
+**Features:**
+- Performance review cycles
+- Rating scales and criteria
+- Self-assessment and manager review
+- Performance goals and objectives
+- Historical performance data
+
+**Navigation:** Admin → HRM → Performance
+
+### Training
+
+Manage employee training programs and certifications.
+
+**Features:**
+- Training program creation
+- Employee enrollment
+- Training status tracking
+- Certificate management
+- Training budget tracking
+
+**Navigation:** Admin → HRM → Training
+
+### Policies
+
+Maintain company HR policies accessible to all employees.
+
+**Features:**
+- Policy document management
+- Version control
+- Department-specific policies
+- Acknowledgment tracking
+
+**Navigation:** Admin → HRM → Policies
+
+### Events
+
+Manage company events and celebrations.
+
+**Features:**
+- Event creation and scheduling
+- Employee notifications
+- Event categories
+- RSVP tracking
+
+**Navigation:** Admin → HRM → Events
+
+## Payroll Deduction Calculations
+
+### NSSF (Tanzania)
+```
+Employee contribution: 10% of gross salary
+Employer contribution: 10% of gross salary
+Maximum contributory earnings: TZS 720,000/month
+```
+
+### NHIF (Tanzania)
+| Salary Range (TZS) | Monthly Contribution |
+|---------------------|---------------------|
+| Up to 150,000 | 5,100 |
+| 150,001 - 250,000 | 8,500 |
+| 250,001 - 350,000 | 11,900 |
+| 350,001 - 450,000 | 15,300 |
+| 450,001 - 600,000 | 20,400 |
+| 600,001+ | 25,500 |
+
+### PAYE (Tanzania)
+| Monthly Income (TZS) | Rate |
+|----------------------|------|
+| 0 - 270,000 | 0% |
+| 270,001 - 520,000 | 8% |
+| 520,001 - 760,000 | 20% |
+| 760,001 - 1,000,000 | 25% |
+| Above 1,000,000 | 30% |
