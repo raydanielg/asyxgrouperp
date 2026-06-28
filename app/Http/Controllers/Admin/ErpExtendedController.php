@@ -476,6 +476,56 @@ class ErpExtendedController extends Controller
         return redirect()->route('admin.applications.index')->with('success', 'Application created.');
     }
 
+    // ───────────────────────────────────────────────────────
+    //  Public Careers
+    // ───────────────────────────────────────────────────────
+    public function careersJobsIndex()
+    {
+        $jobs = JobPosting::where('status', 'open')->latest()->paginate(12);
+        return view('careers.jobs.index', compact('jobs'));
+    }
+
+    public function careersApplyForm(JobPosting $jobPosting)
+    {
+        abort_if($jobPosting->status !== 'open', 404);
+        return view('careers.jobs.apply', compact('jobPosting'));
+    }
+
+    public function careersApplySubmit(Request $request, JobPosting $jobPosting)
+    {
+        abort_if($jobPosting->status !== 'open', 404);
+        $data = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'cover_letter' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'attachments.*' => 'nullable|file|max:5120',
+            'notes' => 'nullable|string',
+        ]);
+        $resumePath = $request->file('resume')?->store('applications/resumes', 'public');
+        $coverPath = $request->file('cover_letter')?->store('applications/covers', 'public');
+        $extra = [];
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $f) {
+                $extra[] = $f->store('applications/attachments', 'public');
+            }
+        }
+        \App\Models\JobApplication::create([
+            'job_posting_id' => $jobPosting->id,
+            'company_id' => $jobPosting->company_id ?? null,
+            'full_name' => $data['full_name'],
+            'email' => $data['email'] ?? null,
+            'phone' => $data['phone'] ?? null,
+            'resume_path' => $resumePath,
+            'cover_letter_path' => $coverPath,
+            'extra_docs' => $extra ?: null,
+            'status' => 'submitted',
+            'notes' => $data['notes'] ?? null,
+        ]);
+        return redirect()->route('careers.jobs')->with('success', 'Application submitted successfully.');
+    }
+
     // ═══════════════════════════════════════════════════════
     //  HRM — ASSETS
     // ═══════════════════════════════════════════════════════
