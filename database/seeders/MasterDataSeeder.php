@@ -80,34 +80,39 @@ class MasterDataSeeder extends Seeder
 
         foreach ($empData as $i => $e) {
             $company = $companies->get($i % $companies->count());
-            $emp = Employee::create([
-                'company_id' => $company->id,
-                'employee_id' => 'EMP-' . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
-                'first_name' => $e['f'],
-                'last_name' => $e['l'],
-                'email' => $e['e'],
-                'phone' => $e['p'],
-                'department' => $e['d'],
-                'designation' => $e['sig'],
-                'salary' => $e['sal'],
-                'status' => 'active',
-                'joining_date' => $now->subYears(rand(1, 5))->subDays(rand(0, 365)),
-                'gender' => $i % 2 == 0 ? 'male' : 'female',
-                'employment_type' => 'full_time',
-            ]);
+            $empId = 'EMP-' . str_pad($i + 1, 4, '0', STR_PAD_LEFT);
+            $emp = Employee::updateOrCreate(
+                ['employee_id' => $empId],
+                [
+                    'company_id' => $company->id,
+                    'first_name' => $e['f'],
+                    'last_name' => $e['l'],
+                    'email' => $e['e'],
+                    'phone' => $e['p'],
+                    'department' => $e['d'],
+                    'designation' => $e['sig'],
+                    'salary' => $e['sal'],
+                    'status' => 'active',
+                    'joining_date' => $now->copy()->subYears(rand(1, 5))->subDays(rand(0, 365)),
+                    'gender' => $i % 2 == 0 ? 'male' : 'female',
+                    'employment_type' => 'full_time',
+                ]
+            );
             $employees[] = $emp;
 
-            $user = User::create([
-                'company_id' => $company->id,
-                'name' => $e['f'] . ' ' . $e['l'],
-                'first_name' => $e['f'],
-                'last_name' => $e['l'],
-                'email' => $e['e'],
-                'phone' => $e['p'],
-                'password' => Hash::make('password123'),
-                'email_verified_at' => $now,
-                'role' => 'user',
-            ]);
+            $user = User::updateOrCreate(
+                ['email' => $e['e']],
+                [
+                    'company_id' => $company->id,
+                    'name' => $e['f'] . ' ' . $e['l'],
+                    'first_name' => $e['f'],
+                    'last_name' => $e['l'],
+                    'phone' => $e['p'],
+                    'password' => Hash::make('password123'),
+                    'email_verified_at' => $now,
+                    'role' => 'user',
+                ]
+            );
             $users[] = $user;
 
             Attendance::create([
