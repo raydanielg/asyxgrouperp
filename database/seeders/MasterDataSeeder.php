@@ -313,8 +313,8 @@ class MasterDataSeeder extends Seeder
                 'status' => $st, 'creator_id' => $admin->id, 'created_by' => $admin->id,
             ]);
             SalesInvoiceItem::create([
-                'sales_invoice_id' => $inv->id, 'description' => 'Item',
-                'quantity' => rand(1, 10), 'unit_price' => $total / rand(1, 10), 'total' => $total,
+                'invoice_id' => $inv->id, 'product_name' => 'Item',
+                'quantity' => rand(1, 10), 'unit_price' => $total / rand(1, 10), 'total_amount' => $total,
             ]);
         }
 
