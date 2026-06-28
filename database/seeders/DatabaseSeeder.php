@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             RoleSeeder::class,
             UserRoleSeeder::class,
+            ApprovalWorkflowSeeder::class,
         ]);
     }
 }
