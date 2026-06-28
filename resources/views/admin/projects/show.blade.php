@@ -82,4 +82,18 @@
         </form>
     </div>
 </div>
+@push('scripts')
+<script>
+function downloadPdf(url, title) {
+  Swal.fire({
+    title: 'Downloading...',
+    text: 'Preparing ' + title,
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); },
+    timer: 800,
+    willClose: () => { window.open(url, '_blank'); }
+  });
+}
+</script>
+@endpush
 @endsection
