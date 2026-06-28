@@ -71,10 +71,17 @@
                 </div>
 
                 {{-- Submit --}}
-                <button type="submit" class="w-full py-3 text-sm font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                <button type="submit" id="loginBtn" class="w-full py-3 text-sm font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                    Sign In
+                    <span id="loginBtnText">Sign In</span>
                 </button>
+                <script>
+                document.querySelector('#loginBtn').closest('form').addEventListener('submit', function(e) {
+                    document.getElementById('loginBtn').disabled = true;
+                    document.getElementById('loginBtnText').textContent = 'Signing In...';
+                    document.getElementById('loginBtn').classList.add('opacity-70', 'cursor-not-allowed');
+                });
+                </script>
             </form>
 
             {{-- Account creation disabled notice --}}
