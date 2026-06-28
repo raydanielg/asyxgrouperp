@@ -16,12 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'audit' => \App\Http\Middleware\AuditLogMiddleware::class,
+            'company' => \App\Http\Middleware\SetCompanyContext::class,
         ]);
         $middleware->redirectTo(
             guests: fn () => route('login'),
             users: fn () => auth()->user()?->isAdmin() ? '/admin/dashboard' : '/dashboard',
         );
         $middleware->appendToGroup('web', \App\Http\Middleware\AuditLogMiddleware::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\SetCompanyContext::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
