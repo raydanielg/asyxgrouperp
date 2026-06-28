@@ -18,7 +18,7 @@ class ApprovalWorkflow extends Model
 
     public function steps()
     {
-        return $this->hasMany(ApprovalStep::class)->orderBy('order');
+        return $this->hasMany(ApprovalStep::class, 'workflow_id')->orderBy('order');
     }
 
     public function requests()
