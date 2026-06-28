@@ -940,32 +940,34 @@ class ErpExtendedController extends Controller
 
     public function productStore(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:product_categories,id',
-            'unit' => 'nullable|string|max:20',
-            'purchase_price' => 'nullable|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'stock_quantity' => 'nullable|integer|min:0',
-            'reorder_level' => 'nullable|integer|min:0',
-            'type' => 'nullable|string',
-            'is_active' => 'boolean',
-            'warehouse_id' => 'nullable|exists:warehouses,id',
-            'company_id' => 'nullable|exists:companies,id',
-        ]);
-        $data['product_code'] = 'PRD-' . strtoupper(Str::random(8));
-        $data['is_active'] = $request->boolean('is_active', true);
-        if (!isset($data['company_id']) || !$data['company_id']) {
-            $switchedId = session('switched_company_id');
-            $data['company_id'] = $switchedId ?? auth()->user()->company_id;
-        }
+        $isAjax = $request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest';
 
         try {
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'category_id' => 'nullable|exists:product_categories,id',
+                'unit' => 'nullable|string|max:20',
+                'purchase_price' => 'nullable|numeric|min:0',
+                'sale_price' => 'nullable|numeric|min:0',
+                'stock_quantity' => 'nullable|integer|min:0',
+                'reorder_level' => 'nullable|integer|min:0',
+                'type' => 'nullable|string',
+                'is_active' => 'boolean',
+                'warehouse_id' => 'nullable|exists:warehouses,id',
+                'company_id' => 'nullable|exists:companies,id',
+            ]);
+            $data['product_code'] = 'PRD-' . strtoupper(Str::random(8));
+            $data['is_active'] = $request->boolean('is_active', true);
+            if (!isset($data['company_id']) || !$data['company_id']) {
+                $switchedId = session('switched_company_id');
+                $data['company_id'] = $switchedId ?? auth()->user()->company_id;
+            }
+
             $product = Product::create($data);
             $product->load(['category', 'warehouse', 'company']);
 
-            if ($request->expectsJson() || $request->ajax()) {
+            if ($isAjax) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Product "' . $data['name'] . '" created successfully!',
@@ -974,12 +976,21 @@ class ErpExtendedController extends Controller
             }
 
             return redirect()->route('admin.products.index')->with('success', 'Product "' . $data['name'] . '" created successfully!');
-        } catch (\Exception $e) {
-            if ($request->expectsJson() || $request->ajax()) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($isAjax) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error creating product: ' . $e->getMessage()
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
                 ], 422);
+            }
+            throw $e;
+        } catch (\Exception $e) {
+            if ($isAjax) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error: ' . $e->getMessage()
+                ], 500);
             }
             return redirect()->back()->with('error', 'Error creating product: ' . $e->getMessage())->withInput();
         }
