@@ -34,6 +34,7 @@ use App\Models\StockMovement;
 use App\Models\PosSale;
 use App\Models\PosSaleItem;
 use App\Models\Warehouse;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -927,10 +928,14 @@ class ErpExtendedController extends Controller
 
     public function productIndex()
     {
-        $products = Product::with(['category', 'warehouse'])->latest()->paginate(15);
+        $products = Product::with(['category', 'warehouse', 'company'])->latest()->paginate(15);
         $categories = ProductCategory::where('is_active', true)->get();
         $warehouses = Warehouse::where('is_active', true)->get();
-        return view('admin.products.index', compact('products', 'categories', 'warehouses'));
+        $companies = Company::orderBy('is_group', 'desc')->orderBy('name')->get();
+        $userCompany = auth()->user()->company;
+        $isGroupUser = $userCompany && $userCompany->is_group;
+        $currentCompanyId = session('switched_company_id', auth()->user()->company_id);
+        return view('admin.products.index', compact('products', 'categories', 'warehouses', 'companies', 'userCompany', 'isGroupUser', 'currentCompanyId'));
     }
 
     public function productStore(Request $request)
@@ -947,17 +952,23 @@ class ErpExtendedController extends Controller
             'type' => 'nullable|string',
             'is_active' => 'boolean',
             'warehouse_id' => 'nullable|exists:warehouses,id',
+            'company_id' => 'nullable|exists:companies,id',
         ]);
         $data['product_code'] = 'PRD-' . strtoupper(Str::random(8));
         $data['is_active'] = $request->boolean('is_active', true);
+        if (!isset($data['company_id']) || !$data['company_id']) {
+            $switchedId = session('switched_company_id');
+            $data['company_id'] = $switchedId ?? auth()->user()->company_id;
+        }
         Product::create($data);
-        return redirect()->route('admin.products.index')->with('success', 'Product created.');
+        return redirect()->route('admin.products.index')->with('success', 'Product "' . $data['name'] . '" created successfully!');
     }
 
     public function productDestroy(Product $product)
     {
+        $name = $product->name;
         $product->delete();
-        return redirect()->route('admin.products.index')->with('success', 'Product deleted.');
+        return redirect()->route('admin.products.index')->with('success', 'Product "' . $name . '" deleted successfully!');
     }
 
     public function supplierIndex()
