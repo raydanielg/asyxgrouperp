@@ -960,8 +960,29 @@ class ErpExtendedController extends Controller
             $switchedId = session('switched_company_id');
             $data['company_id'] = $switchedId ?? auth()->user()->company_id;
         }
-        Product::create($data);
-        return redirect()->route('admin.products.index')->with('success', 'Product "' . $data['name'] . '" created successfully!');
+
+        try {
+            $product = Product::create($data);
+            $product->load(['category', 'warehouse', 'company']);
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product "' . $data['name'] . '" created successfully!',
+                    'product' => $product
+                ]);
+            }
+
+            return redirect()->route('admin.products.index')->with('success', 'Product "' . $data['name'] . '" created successfully!');
+        } catch (\Exception $e) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error creating product: ' . $e->getMessage()
+                ], 422);
+            }
+            return redirect()->back()->with('error', 'Error creating product: ' . $e->getMessage())->withInput();
+        }
     }
 
     public function productDestroy(Product $product)
