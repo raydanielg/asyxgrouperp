@@ -545,6 +545,37 @@
                 <h1 class="text-lg font-bold text-gray-800">@yield('page_title', 'Dashboard')</h1>
             </div>
             <div class="flex items-center gap-4">
+                {{-- Company Context Switcher --}}
+                @php
+                    $userCompany = auth()->user()->company;
+                    $allCompanies = $userCompany && $userCompany->is_group
+                        ? \App\Models\Company::orderBy('is_group', 'desc')->orderBy('name')->get()
+                        : collect([$userCompany]);
+                    $sessionCompanyId = session('switched_company_id', auth()->user()->company_id);
+                @endphp
+                @if($allCompanies->count() > 1)
+                <div class="relative" id="companySwitcher">
+                    <button onclick="document.getElementById('companyDropdown').classList.toggle('hidden')" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-sm">
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>
+                        <span class="text-gray-700 font-medium">{{ $allCompanies->where('id', $sessionCompanyId)->first()?->short_code ?? 'All' }}</span>
+                        <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="companyDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl border shadow-lg z-50 py-2 max-h-80 overflow-y-auto">
+                        <a href="{{ route('admin.companies.switch', ['company' => 'all']) }}" class="flex items-center gap-2 px-4 py-2 text-xs hover:bg-gray-50 {{ $sessionCompanyId === null ? 'text-emerald-600 font-medium' : 'text-gray-700' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            All Companies (Group View)
+                        </a>
+                        <div class="border-t my-1"></div>
+                        @foreach($allCompanies as $c)
+                        <a href="{{ route('admin.companies.switch', ['company' => $c->id]) }}" class="flex items-center gap-2 px-4 py-2 text-xs hover:bg-gray-50 {{ $sessionCompanyId == $c->id ? 'text-emerald-600 font-medium' : 'text-gray-700' }}">
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-medium bg-emerald-50 text-emerald-700">{{ $c->short_code }}</span>
+                            {{ $c->name }}
+                            @if($c->is_group)<span class="text-[9px] text-gold-500">Group</span>@endif
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
                 <div class="hidden md:flex items-center bg-gray-50 rounded-lg px-3 py-1.5 border border-gray-100">
                     <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     <input type="text" placeholder="Search..." class="bg-transparent text-sm outline-none w-48 text-gray-600 placeholder-gray-400">
