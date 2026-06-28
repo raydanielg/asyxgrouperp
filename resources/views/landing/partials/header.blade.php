@@ -18,6 +18,10 @@
 
             {{-- CTA Buttons --}}
             <div class="flex items-center gap-3">
+                <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 border border-white/20 text-white text-sm font-semibold rounded-lg hover:bg-white/10 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                    Login
+                </a>
                 <a href="{{ route('contact') }}" class="hidden sm:inline-flex items-center gap-1.5 px-6 py-2.5 cta-gradient text-white text-sm font-bold rounded-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
                     Contact Us
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
@@ -39,6 +43,7 @@
             <a href="{{ route('services') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Services</a>
             <a href="{{ route('careers') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Careers</a>
             <a href="{{ route('contact') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contacts</a>
+            <a href="{{ route('login') }}" class="block px-4 py-2.5 text-sm font-semibold text-white border border-white/20 rounded-lg text-center hover:bg-white/10 transition-colors">Login</a>
             <a href="{{ route('contact') }}" class="block px-4 py-2.5 text-sm font-bold text-white cta-gradient rounded-lg text-center mt-2">Contact Us</a>
         </div>
     </div>
