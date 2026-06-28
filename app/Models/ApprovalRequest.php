@@ -23,7 +23,7 @@ class ApprovalRequest extends Model
 
     public function workflow()
     {
-        return $this->belongsTo(ApprovalWorkflow::class);
+        return $this->belongsTo(ApprovalWorkflow::class, 'workflow_id');
     }
 
     public function tracks()
