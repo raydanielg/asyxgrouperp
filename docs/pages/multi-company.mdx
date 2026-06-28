@@ -1,0 +1,117 @@
+# Multi-Company Management
+
+ASYX Group ERP supports managing multiple companies (subsidiaries) from a single unified platform.
+
+## Overview
+
+The multi-company feature allows:
+- **Centralized Administration** — Manage all subsidiaries from one login
+- **Data Isolation** — Each company's data is separate and secure
+- **Context Switching** — Seamlessly switch between companies
+- **Consolidated Reporting** — Aggregate reports across all companies
+- **Intercompany Transactions** — Record transactions between subsidiaries
+
+## Company Management
+
+### Creating a Company
+
+**Navigation:** Admin → Multi-Company → Companies → Create
+
+**Required Fields:**
+- Company Name
+- Registration Number
+- Tax ID (TIN)
+- Contact Email
+- Phone Number
+- Address
+- Status (active/inactive)
+- Logo (optional)
+
+### Company Fields
+
+| Field | Description |
+|-------|-------------|
+| name | Legal company name |
+| short_name | Abbreviated name for display |
+| registration_no | Business registration number |
+| tin | Tax Identification Number |
+| email | Primary contact email |
+| phone | Primary phone number |
+| address | Physical address |
+| city | City/Town |
+| country | Country |
+| status | active or inactive |
+| logo | Company logo image |
+
+## Context Switching
+
+### How It Works
+
+1. Click the **company switcher** in the admin header
+2. Select the target company
+3. All data views, forms, and reports will now show data for that company
+4. The current company is stored in the session
+
+### Technical Implementation
+
+```php
+// Store switched company in session
+session(['switched_company_id' => $companyId]);
+
+// Get current company context
+$companyId = session('switched_company_id', auth()->user()->company_id);
+
+// Filter queries by company
+$employees = Employee::where('company_id', $companyId)->get();
+```
+
+### Which Modules Support Company Context
+
+| Module | Company Filtered |
+|--------|-----------------|
+| Employees | ✅ |
+| Payroll | ✅ |
+| Sales Invoices | ✅ |
+| Purchase Invoices | ✅ |
+| Expenses | ✅ |
+| Revenues | ✅ |
+| Projects | ✅ |
+| Job Postings | ✅ |
+| Applications | ✅ |
+| Products | ✅ |
+| Vehicles | ✅ |
+| Bank Accounts | ✅ |
+
+## Consolidated Reports
+
+View aggregate data across all companies.
+
+**Navigation:** Admin → Multi-Company → Consolidated Report
+
+**Includes:**
+- Total revenue across all companies
+- Total expenses across all companies
+- Employee headcount by company
+- Profit/loss per company
+- Comparative charts
+
+## Intercompany Transactions
+
+Record transactions between your subsidiaries.
+
+**Navigation:** Admin → Multi-Company → Intercompany
+
+**Features:**
+- Record transfers between companies
+- Automatic double-entry (debit one, credit another)
+- Transaction history
+- Reconciliation tools
+- Balance tracking between entities
+
+## Best Practices
+
+1. **Set up all companies first** before entering transactional data
+2. **Assign employees** to their respective companies
+3. **Use company context switching** to enter data for the correct entity
+4. **Review consolidated reports** regularly for group-wide insights
+5. **Maintain consistent** chart of accounts across companies
