@@ -179,9 +179,9 @@ class MasterDataSeeder extends Seeder
                 'company_id' => $companies->random()->id,
                 'category_id' => $cat->id,
                 'name' => $pd['n'],
-                'sku' => $pd['sku'],
-                'unit_price' => $pd['p'],
-                'cost_price' => $pd['c'],
+                'product_code' => $pd['sku'],
+                'sale_price' => $pd['p'],
+                'purchase_price' => $pd['c'],
                 'stock_quantity' => $pd['s'],
                 'reorder_level' => 10,
                 'is_active' => true,
@@ -204,7 +204,7 @@ class MasterDataSeeder extends Seeder
                 'phone' => $sd['p'],
                 'email' => $sd['e'],
                 'address' => 'Dar es Salaam',
-                'status' => 'active',
+                'is_active' => true,
             ]);
         }
 
