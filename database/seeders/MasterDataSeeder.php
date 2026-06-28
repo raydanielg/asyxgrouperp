@@ -272,7 +272,7 @@ class MasterDataSeeder extends Seeder
                 'start_date' => $now->subDays(rand(15, 90)), 'due_date' => $now->addDays(rand(30, 180)),
                 'status' => $pd['s'], 'priority' => ['high','medium','low'][rand(0,2)],
                 'manager_id' => $users[array_rand($users)]->id,
-                'deal_id' => $deals[$i] ?? null,
+                'deal_id' => isset($deals[$i]) ? $deals[$i]->id : null,
             ]);
             $projects[] = $proj;
 
