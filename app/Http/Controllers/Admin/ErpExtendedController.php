@@ -467,7 +467,7 @@ class ErpExtendedController extends Controller
                 $extra[] = $f->store('applications/attachments', 'public');
             }
         }
-        \App\Models\JobApplication::create([
+        $app = JobApplication::create([
             'job_posting_id' => $data['job_posting_id'],
             'company_id' => $companyId,
             'full_name' => $data['full_name'],
