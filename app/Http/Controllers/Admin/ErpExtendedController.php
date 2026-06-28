@@ -49,6 +49,10 @@ class ErpExtendedController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
+            $publicMethods = ['careersJobsIndex', 'careersApplyForm', 'careersApplySubmit'];
+            if (in_array($request->route()->getActionMethod(), $publicMethods)) {
+                return $next($request);
+            }
             if (!auth()->check() || !auth()->user()->isAdmin()) {
                 abort(403, 'Unauthorized access. Admin only.');
             }
