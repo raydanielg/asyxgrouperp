@@ -276,7 +276,7 @@ class MasterDataSeeder extends Seeder
             ]);
             $projects[] = $proj;
 
-            foreach (array_rand(array_flip($taskNames), 4) as $tk) {
+            foreach (array_rand($taskNames, 4) as $tk) {
                 ProjectTask::create([
                     'project_id' => $proj->id, 'title' => $taskNames[$tk],
                     'assigned_to' => $users[array_rand($users)]->id,
