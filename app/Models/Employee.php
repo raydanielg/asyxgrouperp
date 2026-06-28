@@ -32,6 +32,11 @@ class Employee extends Model
         return $this->hasMany(Payroll::class);
     }
 
+    public function salaryAdvances()
+    {
+        return $this->hasMany(SalaryAdvance::class);
+    }
+
     public function leaves()
     {
         return $this->hasMany(Leave::class);
