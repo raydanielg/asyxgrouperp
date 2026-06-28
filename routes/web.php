@@ -351,6 +351,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/job-postings', [$ext, 'jobPostingIndex'])->name('job-postings.index');
     Route::post('/job-postings', [$ext, 'jobPostingStore'])->name('job-postings.store');
     Route::delete('/job-postings/{jobPosting}', [$ext, 'jobPostingDestroy'])->name('job-postings.destroy');
+    // Applications
+    Route::get('/applications', [$ext, 'applicationsIndex'])->name('applications.index');
+    Route::get('/job-postings/{jobPosting}/applications', [$ext, 'applicationsForJob'])->name('job-postings.applications');
+    Route::get('/applications/{application}', [$ext, 'applicationShow'])->name('applications.show');
+    Route::post('/applications/{application}/approve', [$ext, 'applicationApprove'])->name('applications.approve');
 
     Route::get('/employee-assets', [$ext, 'assetIndex'])->name('assets.index');
     Route::post('/employee-assets', [$ext, 'assetStore'])->name('assets.store');
