@@ -150,19 +150,22 @@ class PayrollController extends Controller
             $deductions = $nssf_employee + $nhif_employee + $paye + $studentLoan + $bankLoan + $employerLoan;
             $net = $basic + $allowances - $deductions;
 
-            Payroll::create([
-                'company_id' => auth()->user()->company_id,
-                'employee_id' => $emp->id,
-                'payroll_number' => 'PAY-' . $year . str_pad(date('m', strtotime("1 $month")), 2, '0', STR_PAD_LEFT) . '-' . str_pad($emp->id, 4, '0', STR_PAD_LEFT),
-                'month' => $month,
-                'year' => $year,
-                'basic_salary' => $basic,
-                'allowances' => $allowances,
-                'deductions' => $deductions,
-                'net_salary' => $net,
-                'status' => 'pending',
-                'created_by' => auth()->id(),
-            ]);
+            $pnum = 'PAY-' . $year . str_pad(date('m', strtotime("1 $month")), 2, '0', STR_PAD_LEFT) . '-' . str_pad($emp->id, 4, '0', STR_PAD_LEFT);
+            Payroll::updateOrCreate(
+                ['payroll_number' => $pnum],
+                [
+                    'company_id' => auth()->user()->company_id,
+                    'employee_id' => $emp->id,
+                    'month' => $month,
+                    'year' => $year,
+                    'basic_salary' => $basic,
+                    'allowances' => $allowances,
+                    'deductions' => $deductions,
+                    'net_salary' => $net,
+                    'status' => 'pending',
+                    'created_by' => auth()->id(),
+                ]
+            );
             $count++;
         }
 
