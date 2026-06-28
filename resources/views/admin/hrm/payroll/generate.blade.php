@@ -37,7 +37,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1.5">Month *</label>
-                    <select name="month" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                    <select name="month" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none bg-white">
                         @foreach($months as $m)
                             <option value="{{ $m }}" @selected($m == date('F'))>{{ $m }}</option>
                         @endforeach
@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1.5">Year *</label>
-                    <select name="year" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none bg-white">
+                    <select name="year" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none bg-white">
                         @foreach($years as $y)
                             <option value="{{ $y }}" @selected($y == date('Y'))>{{ $y }}</option>
                         @endforeach
@@ -65,7 +65,7 @@
 
             <div class="flex gap-3 mt-6">
                 <a href="{{ route('admin.payroll.index') }}" class="px-4 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors">Cancel</a>
-                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 flex items-center gap-2">
+                <button type="submit" class="px-6 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Generate Payroll
                 </button>
