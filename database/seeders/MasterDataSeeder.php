@@ -109,7 +109,6 @@ class MasterDataSeeder extends Seeder
 
             $user = User::create([
                 'company_id' => $company->id,
-                'employee_id' => $emp->id,
                 'name' => $e['fname'] . ' ' . $e['lname'],
                 'first_name' => $e['fname'],
                 'last_name' => $e['lname'],
