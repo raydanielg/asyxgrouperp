@@ -10,10 +10,10 @@
             Invoice <b style="color:#1C2321;">{{ $salesInvoice->invoice_number }}</b> &middot; {{ config('app.name') }}
         </div>
         <div class="flex items-center gap-2">
-            <button onclick="window.print()" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all flex items-center gap-2" style="background:#C9A227;color:#23270F;" onmouseover="this.style.background='#B8941F'" onmouseout="this.style.background='#C9A227'">
+            <a href="{{ route('admin.sales-invoices.pdf', $salesInvoice) }}" target="_blank" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all inline-flex items-center gap-2" style="background:#C9A227;color:#23270F;" onmouseover="this.style.background='#B8941F'" onmouseout="this.style.background='#C9A227'">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Download PDF
-            </button>
+            </a>
             <a href="{{ route('admin.sales-invoices.index') }}" class="px-4 py-2.5 text-xs font-bold rounded-lg border transition-all" style="border-color:#E3DDCB;color:#6E7570;" onmouseover="this.style.background='#FBF9F2'" onmouseout="this.style.background='transparent'">Back</a>
         </div>
     </div>
