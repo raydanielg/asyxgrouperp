@@ -338,6 +338,95 @@ $money = fn($n) => 'TZS ' . number_format($n);
     </div>
 </div>
 
+{{-- ═══ Attendance Widget ═══ --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+    {{-- Attendance Stats --}}
+    <div class="bg-white rounded-xl border p-5">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-gray-800">Today's Attendance</h3>
+            <a href="{{ route('admin.attendance.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">View All →</a>
+        </div>
+        <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center"><svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <span class="text-xs font-medium text-gray-700">Present</span>
+                </div>
+                <span class="text-lg font-bold text-emerald-600">{{ $stats['todayPresent'] }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <span class="text-xs font-medium text-gray-700">Late</span>
+                </div>
+                <span class="text-lg font-bold text-amber-600">{{ $stats['todayLate'] }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center"><svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                    <span class="text-xs font-medium text-gray-700">Absent</span>
+                </div>
+                <span class="text-lg font-bold text-red-600">{{ $stats['todayAbsent'] }}</span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-sky-50 rounded-lg">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center"><svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg></div>
+                    <span class="text-xs font-medium text-gray-700">Clocked In Now</span>
+                </div>
+                <span class="text-lg font-bold text-sky-600">{{ $stats['currentlyClockedIn'] }}</span>
+            </div>
+        </div>
+    </div>
+
+    {{-- Recent Clock-Ins --}}
+    <div class="bg-white rounded-xl border p-5 lg:col-span-2">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-gray-800">Recent Clock-Ins Today</h3>
+            <a href="{{ route('admin.attendance.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">Manage →</a>
+        </div>
+        @if($recentAttendance->isNotEmpty())
+        <div class="space-y-2">
+            @foreach($recentAttendance as $att)
+            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 border border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">{{ strtoupper(substr($att->employee?->first_name ?? '?', 0, 1)) }}</div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-900">{{ $att->employee?->full_name ?? 'N/A' }}</p>
+                        <p class="text-[10px] text-gray-400">{{ $att->employee?->employee_id ?? '' }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    @if($att->clock_in_at)
+                    <div class="text-right">
+                        <p class="text-xs font-medium text-emerald-600">{{ $att->clock_in_at->format('H:i:s') }}</p>
+                        <p class="text-[10px] text-gray-400">In</p>
+                    </div>
+                    @endif
+                    @if($att->clock_out_at)
+                    <div class="text-right">
+                        <p class="text-xs font-medium text-red-500">{{ $att->clock_out_at->format('H:i:s') }}</p>
+                        <p class="text-[10px] text-gray-400">Out</p>
+                    </div>
+                    @elseif($att->clock_in_at)
+                    <div class="text-right">
+                        <p class="text-[10px] text-amber-500 italic">Working</p>
+                        <p class="text-[10px] text-gray-400">{{ $att->formatted_work_hours }}</p>
+                    </div>
+                    @endif
+                    {!! $att->status_badge !!}
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @else
+        <div class="text-center py-8">
+            <svg class="w-10 h-10 mx-auto text-gray-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p class="text-xs text-gray-400">No one has clocked in yet today</p>
+        </div>
+        @endif
+    </div>
+</div>
+
 {{-- ═══ Quick Stats Footer ═══ --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
     <div class="bg-white rounded-xl border p-4 text-center">
