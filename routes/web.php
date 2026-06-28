@@ -67,6 +67,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/users', [App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users');
     Route::get('/reports', [App\Http\Controllers\Admin\DashboardController::class, 'reports'])->name('reports');
 
+    // ═══ Multi-Company ═══
+    $companyCtrl = App\Http\Controllers\Admin\CompanyController::class;
+    Route::get('/companies', [$companyCtrl, 'index'])->name('companies.index');
+    Route::get('/companies/create', [$companyCtrl, 'create'])->name('companies.create');
+    Route::post('/companies', [$companyCtrl, 'store'])->name('companies.store');
+    Route::get('/companies/{company}', [$companyCtrl, 'show'])->name('companies.show');
+    Route::get('/companies/{company}/edit', [$companyCtrl, 'edit'])->name('companies.edit');
+    Route::patch('/companies/{company}', [$companyCtrl, 'update'])->name('companies.update');
+    Route::delete('/companies/{company}', [$companyCtrl, 'destroy'])->name('companies.destroy');
+    Route::get('/companies-consolidated', [$companyCtrl, 'consolidated'])->name('companies.consolidated');
+
+    // Intercompany Transactions
+    $ictCtrl = App\Http\Controllers\Admin\IntercompanyTransactionController::class;
+    Route::get('/intercompany', [$ictCtrl, 'index'])->name('intercompany.index');
+    Route::get('/intercompany/create', [$ictCtrl, 'create'])->name('intercompany.create');
+    Route::post('/intercompany', [$ictCtrl, 'store'])->name('intercompany.store');
+    Route::get('/intercompany/{intercompany}', [$ictCtrl, 'show'])->name('intercompany.show');
+    Route::post('/intercompany/{intercompany}/eliminate', [$ictCtrl, 'eliminate'])->name('intercompany.eliminate');
+    Route::delete('/intercompany/{intercompany}', [$ictCtrl, 'destroy'])->name('intercompany.destroy');
+
     // ERP Modules
     $erp = App\Http\Controllers\Admin\ErpController::class;
 
