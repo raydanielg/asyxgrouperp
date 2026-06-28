@@ -370,6 +370,70 @@ class ErpExtendedController extends Controller
         return redirect()->route('admin.job-postings.index')->with('success', 'Job posting deleted.');
     }
 
+    // ───────────────────────────────────────────────────────
+    //  Applications
+    // ───────────────────────────────────────────────────────
+    public function applicationsIndex(Request $request)
+    {
+        $companyId = session('switched_company_id', auth()->user()->company_id);
+        $q = \App\Models\JobApplication::query()->with('jobPosting')
+            ->when($companyId, fn($qq) => $qq->where('company_id', $companyId))
+            ->when($request->filled('job'), fn($qq) => $qq->where('job_posting_id', $request->integer('job')))
+            ->when($request->filled('status'), fn($qq) => $qq->where('status', $request->string('status')))
+            ->when($request->filled('search'), function($qq) use ($request) {
+                $s = $request->string('search');
+                $qq->where(function($w) use ($s){
+                    $w->where('full_name', 'like', "%{$s}%")
+                      ->orWhere('email', 'like', "%{$s}%")
+                      ->orWhere('phone', 'like', "%{$s}%");
+                });
+            })
+            ->latest();
+        $applications = $q->paginate(15)->withQueryString();
+        $jobs = JobPosting::query()->latest()->get(['id','title']);
+        return view('admin.hrm.recruitment.applications.index', compact('applications','jobs'));
+    }
+
+    public function applicationsForJob(JobPosting $jobPosting, Request $request)
+    {
+        $companyId = session('switched_company_id', auth()->user()->company_id);
+        $applications = \App\Models\JobApplication::query()
+            ->where('job_posting_id', $jobPosting->id)
+            ->when($companyId, fn($qq) => $qq->where('company_id', $companyId))
+            ->latest()->paginate(15)->withQueryString();
+        return view('admin.hrm.recruitment.applications.index', [
+            'applications' => $applications,
+            'jobs' => collect([$jobPosting->only(['id','title'])]),
+        ]);
+    }
+
+    public function applicationShow(\App\Models\JobApplication $application)
+    {
+        $application->load(['jobPosting','approvals.approver']);
+        return view('admin.hrm.recruitment.applications.show', compact('application'));
+    }
+
+    public function applicationApprove(Request $request, \App\Models\JobApplication $application)
+    {
+        $data = $request->validate([
+            'decision' => 'required|in:shortlist,reject,hire',
+            'comment' => 'nullable|string',
+        ]);
+        \App\Models\JobApplicationApproval::create([
+            'job_application_id' => $application->id,
+            'approved_by' => auth()->id(),
+            'decision' => $data['decision'],
+            'comment' => $data['comment'] ?? null,
+        ]);
+        $statusMap = [
+            'shortlist' => 'shortlisted',
+            'reject' => 'rejected',
+            'hire' => 'hired',
+        ];
+        $application->update(['status' => $statusMap[$data['decision']] ?? $application->status]);
+        return back()->with('success', 'Decision recorded.');
+    }
+
     // ═══════════════════════════════════════════════════════
     //  HRM — ASSETS
     // ═══════════════════════════════════════════════════════
