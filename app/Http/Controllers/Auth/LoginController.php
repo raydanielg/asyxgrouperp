@@ -23,7 +23,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        session(['current_company_id' => $user->company_id]);
+        session(['current_company_id' => $user->company_id, 'switched_company_id' => $user->company_id]);
     }
 
     public function __construct()
