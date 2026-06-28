@@ -434,6 +434,48 @@ class ErpExtendedController extends Controller
         return back()->with('success', 'Decision recorded.');
     }
 
+    public function applicationCreate()
+    {
+        $jobs = JobPosting::query()->latest()->get(['id','title']);
+        return view('admin.hrm.recruitment.applications.create', compact('jobs'));
+    }
+
+    public function applicationStore(Request $request)
+    {
+        $data = $request->validate([
+            'job_posting_id' => 'required|exists:job_postings,id',
+            'full_name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'cover_letter' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'attachments.*' => 'nullable|file|max:5120',
+            'notes' => 'nullable|string',
+        ]);
+        $companyId = session('switched_company_id', auth()->user()->company_id);
+        $resumePath = $request->file('resume')?->store('applications/resumes', 'public');
+        $coverPath = $request->file('cover_letter')?->store('applications/covers', 'public');
+        $extra = [];
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $f) {
+                $extra[] = $f->store('applications/attachments', 'public');
+            }
+        }
+        \App\Models\JobApplication::create([
+            'job_posting_id' => $data['job_posting_id'],
+            'company_id' => $companyId,
+            'full_name' => $data['full_name'],
+            'email' => $data['email'] ?? null,
+            'phone' => $data['phone'] ?? null,
+            'resume_path' => $resumePath,
+            'cover_letter_path' => $coverPath,
+            'extra_docs' => $extra ?: null,
+            'status' => 'submitted',
+            'notes' => $data['notes'] ?? null,
+        ]);
+        return redirect()->route('admin.applications.index')->with('success', 'Application created.');
+    }
+
     // ═══════════════════════════════════════════════════════
     //  HRM — ASSETS
     // ═══════════════════════════════════════════════════════
