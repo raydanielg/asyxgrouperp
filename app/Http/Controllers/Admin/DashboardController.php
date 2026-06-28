@@ -176,6 +176,29 @@ class DashboardController extends Controller
         $stats['totalActiveEmployees'] = Employee::where('status', 'active')->count();
         $recentAttendance = Attendance::with('employee')->today()->latest('clock_in_at')->take(5)->get();
 
+        // ─── Multi-Company Stats ───
+        $stats['totalCompanies'] = \App\Models\Company::count();
+        $stats['activeCompanies'] = \App\Models\Company::where('status', 'active')->count();
+
+        // ─── Recruitment Stats ───
+        $stats['openJobPostings'] = \App\Models\JobPosting::where('status', 'open')->count();
+        $stats['totalApplications'] = \App\Models\JobApplication::count();
+        $stats['pendingApplications'] = \App\Models\JobApplication::where('status', 'submitted')->count();
+        $stats['shortlistedApplications'] = \App\Models\JobApplication::where('status', 'shortlisted')->count();
+
+        // ─── Fleet Stats ───
+        try {
+            $stats['totalVehicles'] = \App\Models\Vehicle::count();
+            $stats['activeVehicles'] = \App\Models\Vehicle::where('status', 'active')->count();
+        } catch (\Throwable $e) {
+            $stats['totalVehicles'] = 0;
+            $stats['activeVehicles'] = 0;
+        }
+
+        // ─── Financial Summary ───
+        $stats['netProfit'] = ($stats['totalRevenues'] + $stats['totalSalesAmount']) - ($stats['totalExpenses'] + $stats['totalPurchaseAmount']);
+        $stats['monthNetProfit'] = $stats['monthRevenues'] - $stats['monthExpenses'];
+
         return view('admin.dashboard', compact(
             'stats', 'recentSales', 'recentPurchases', 'recentTickets',
             'recentProposals', 'recentUsers',
