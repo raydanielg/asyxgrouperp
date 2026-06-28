@@ -23,7 +23,7 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $d->delivery_date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $d->delivered_by ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $d->vehicle_number ?? '—' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($d->status==='verified') ? 'bg-emerald-50 text-emerald-700' : ($d->status==='pending_verification') ? 'bg-amber-50 text-amber-700' : 'bg-sky-50 text-sky-700' }}">{{ ucfirst(str_replace('_',' ',$d->status)) }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($d->status==='verified') ? 'bg-emerald-50 text-emerald-700' : (($d->status==='pending_verification') ? 'bg-amber-50 text-amber-700' : 'bg-sky-50 text-sky-700') }}">{{ ucfirst(str_replace('_',' ',$d->status)) }}</span></td>
             <td class="px-5 py-3"><form id="del-dn-{{ $d->id }}" method="POST" action="{{ route('admin.delivery-notes.destroy', $d) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-dn-{{ $d->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>

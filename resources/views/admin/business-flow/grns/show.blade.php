@@ -12,7 +12,7 @@
             <div class="flex justify-between"><span class="text-gray-400">Supplier</span><span class="text-gray-700">{{ $grn->supplier?->name ?? 'N/A' }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Received Date</span><span class="text-gray-700">{{ $grn->received_date->format('d M Y') }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">DN Ref</span><span class="text-gray-700">{{ $grn->delivery_note_number ?? 'N/A' }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($grn->status==='received') ? 'bg-emerald-50 text-emerald-700' : ($grn->status==='discrepant') ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700' }}">{{ ucfirst($grn->status) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($grn->status==='received') ? 'bg-emerald-50 text-emerald-700' : (($grn->status==='discrepant') ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700') }}">{{ ucfirst($grn->status) }}</span></div>
         </div>
         @if($grn->notes)
         <div class="mt-3 pt-3 border-t"><p class="text-[10px] text-gray-400 uppercase mb-1">Notes</p><p class="text-xs text-gray-600">{{ $grn->notes }}</p></div>

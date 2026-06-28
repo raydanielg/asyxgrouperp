@@ -305,7 +305,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                     <a href="{{ route('admin.helpdesk-tickets.show', $ticket) }}" class="text-sm font-medium text-gray-900 truncate hover:text-emerald-600">{{ $ticket->title }}</a>
                     <p class="text-xs text-gray-400">{{ $ticket->ticket_id }} · {{ $ticket->created_at->diffForHumans() }}</p>
                 </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($ticket->status === 'open') ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($ticket->status === 'in_progress') ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-gray-50 text-gray-600 border border-gray-100' }} capitalize">{{ str_replace('_', ' ', $ticket->status) }}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($ticket->status === 'open') ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : (($ticket->status === 'in_progress') ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-gray-50 text-gray-600 border border-gray-100') }} capitalize">{{ str_replace('_', ' ', $ticket->status) }}</span>
             </div>
         @empty
         <p class="text-sm text-gray-400 text-center py-4">No tickets yet</p>

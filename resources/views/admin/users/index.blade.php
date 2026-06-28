@@ -55,7 +55,7 @@
                     <td class="px-5 py-3">
                         <div class="flex flex-wrap gap-1">
         @foreach($user->roles as $r)
-        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($r->name==='admin') ? 'bg-emerald-50 text-emerald-700' : ($r->name==='manager') ? 'bg-sky-50 text-sky-700' : 'bg-gray-50 text-gray-600' }}">{{ $r->label }}</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($r->name==='admin') ? 'bg-emerald-50 text-emerald-700' : (($r->name==='manager') ? 'bg-sky-50 text-sky-700' : 'bg-gray-50 text-gray-600') }}">{{ $r->label }}</span>
         @endforeach
                             @if($user->roles->isEmpty())<span class="text-[10px] text-gray-400">No role</span>
         @endif

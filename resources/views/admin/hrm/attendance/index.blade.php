@@ -19,7 +19,7 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $a->date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $a->check_in ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $a->check_out ?? '—' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($a->status=='present') ? 'bg-emerald-50 text-emerald-700' : ($a->status=='absent') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700' }} border border-{{ $a->status=='present'?'emerald':($a->status=='absent'?'red':'amber')}}-100">{{ ucfirst($a->status) }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($a->status=='present') ? 'bg-emerald-50 text-emerald-700' : (($a->status=='absent') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700') }} border border-{{ $a->status=='present'?'emerald':($a->status=='absent'?'red':'amber')}}-100">{{ ucfirst($a->status) }}</span></td>
             <td class="px-5 py-3"><form id="del-att-{{ $a->id }}" method="POST" action="{{ route('admin.attendance.destroy', $a) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-att-{{ $a->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>

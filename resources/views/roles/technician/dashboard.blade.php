@@ -290,7 +290,7 @@
         @foreach($recentItems['recentAttendance']->take(5) as $att)
             <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
                 <div><p class="text-xs font-medium text-gray-900">{{ $att->employee?->first_name ?? '' }} {{ $att->employee?->last_name ?? '' }}</p><p class="text-[10px] text-gray-400">{{ $att->date?->format('d M Y') ?? '' }}</p></div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($att->status === 'present') ? 'bg-emerald-50 text-emerald-700' : ($att->status === 'absent') ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($att->status) }}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($att->status === 'present') ? 'bg-emerald-50 text-emerald-700' : (($att->status === 'absent') ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst($att->status) }}</span>
             </div>
         @endforeach
         </div>

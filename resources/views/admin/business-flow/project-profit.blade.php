@@ -38,7 +38,7 @@
         <div class="mt-4 pt-4 border-t">
             <p class="text-[10px] text-gray-400 uppercase mb-2">Budget History</p>
         @foreach($project->budgets as $b)
-        <div class="flex justify-between text-xs py-1"><span class="text-gray-500">{{ $b->budget_number }}</span><span class="text-gray-700">TZS {{ number_format($b->total_budget) }} <span class="inline-flex px-1.5 py-0.5 rounded-full text-[9px] {{ ($b->status==='approved') ? 'bg-emerald-50 text-emerald-700' : ($b->status==='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($b->status) }}</span></span></div>
+        <div class="flex justify-between text-xs py-1"><span class="text-gray-500">{{ $b->budget_number }}</span><span class="text-gray-700">TZS {{ number_format($b->total_budget) }} <span class="inline-flex px-1.5 py-0.5 rounded-full text-[9px] {{ ($b->status==='approved') ? 'bg-emerald-50 text-emerald-700' : (($b->status==='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst($b->status) }}</span></span></div>
         @endforeach
         </div>
         @endif
@@ -83,7 +83,7 @@
             <thead><tr class="text-left text-gray-500"><th class="py-2">Expense No.</th><th class="py-2">Description</th><th class="py-2">Amount</th><th class="py-2">Status</th></tr></thead>
             <tbody>
         @forelse($project->officeExpenses as $e)
-        <tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $e->expense_number }}</td><td class="py-2 text-gray-500">{{ $e->description }}</td><td class="py-2 text-gray-700">TZS {{ number_format($e->amount) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($e->status==='approved') ? 'bg-emerald-50 text-emerald-700' : ($e->status==='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($e->status) }}</span></td>
+        <tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $e->expense_number }}</td><td class="py-2 text-gray-500">{{ $e->description }}</td><td class="py-2 text-gray-700">TZS {{ number_format($e->amount) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] {{ ($e->status==='approved') ? 'bg-emerald-50 text-emerald-700' : (($e->status==='rejected') ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst($e->status) }}</span></td>
         </tr>
         @empty
         <tr><td colspan="4" class="py-4 text-center text-gray-400">No expenses</td></tr>
