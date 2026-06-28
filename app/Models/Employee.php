@@ -47,11 +47,6 @@ class Employee extends Model
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function department()
-    {
-        return $this->belongsTo(Department::class, 'department', 'name');
-    }
-
     public function manager()
     {
         return $this->belongsTo(Employee::class, 'manager_id');
