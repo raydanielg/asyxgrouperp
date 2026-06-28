@@ -31,13 +31,8 @@
         <div class="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 px-8 py-6 print:px-10 print:py-7">
             <div class="flex items-start justify-between">
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center">
-                        <svg width="40" height="40" viewBox="0 0 200 60">
-                            <rect x="0" y="0" width="200" height="60" rx="8" fill="rgba(255,255,255,0.15)"/>
-                            <text x="16" y="38" font-family="Arial Black, sans-serif" font-size="20" font-weight="900" fill="#f9ac00">ASYX</text>
-                            <text x="96" y="38" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="#ffffff">GROUP</text>
-                            <text x="16" y="52" font-family="Arial, sans-serif" font-size="7" fill="#a7f3d0" letter-spacing="1.5">ERP SYSTEM</text>
-                        </svg>
+                    <div class="w-14 h-14 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center p-2">
+                        <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group" class="w-full h-full object-contain">
                     </div>
                     <div>
                         <h1 class="text-2xl font-black text-white tracking-tight">PAYSLIP</h1>
