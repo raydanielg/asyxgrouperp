@@ -22,9 +22,10 @@
                 </div>
 
                 <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight animate-fade-up delay-100">
-                    Smart Technology.<br>
-                    Secure Infrastructure.<br>
-                    <span class="text-gradient">Sustainable Growth.</span>
+                    We Deliver<br>
+                    <span class="rotator-wrap relative inline-block">
+                        <span class="rotator-text text-gradient">Smart Technology</span>
+                    </span>
                 </h1>
 
                 <p class="mt-6 text-lg text-gray-300 max-w-xl mx-auto lg:mx-0 animate-fade-up delay-200 leading-relaxed">
