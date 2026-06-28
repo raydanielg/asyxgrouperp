@@ -8,7 +8,8 @@
     <div class="h-24 bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 relative">
       <div class="absolute -bottom-10 left-8">
         <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg border-4 border-white">
-          {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}{{ strtoupper(substr($user->name ?? '', strpos($user->name ?? ' ') ?: 1, 1)) }}
+          @php $nameParts = explode(' ', trim($user->name ?? 'U')); $initials = strtoupper(substr($nameParts[0] ?? 'U', 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : '')); @endphp
+          {{ $initials }}
         </div>
       </div>
     </div>
