@@ -25,11 +25,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('index_audit_logs_on_action', function (Blueprint $table) {
-            // placeholder - index added via raw
-        });
-        Schema::dropIfExists('index_audit_logs_on_action');
-
         \Illuminate\Support\Facades\DB::statement('CREATE INDEX audit_logs_action_index ON audit_logs (action)');
         \Illuminate\Support\Facades\DB::statement('CREATE INDEX audit_logs_module_index ON audit_logs (module)');
         \Illuminate\Support\Facades\DB::statement('CREATE INDEX audit_logs_user_id_index ON audit_logs (user_id)');
