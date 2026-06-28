@@ -1,0 +1,72 @@
+# Approval Workflows
+
+Configurable multi-step approval processes for business operations.
+
+## Overview
+
+The approval system enables organizations to define workflows that require authorization before actions are completed.
+
+## Approval Workflows
+
+Define approval chains for different document types.
+
+**Supported Document Types:**
+- Purchase Orders (LPOs)
+- Leave Requests
+- Expense Claims
+- Budget Allocations
+- Inter-warehouse Transfers
+- Payroll Processing
+- Job Applications
+
+**Navigation:** Admin → Approvals → Workflows
+
+## Creating a Workflow
+
+1. Go to Admin → Approvals → Workflows
+2. Click "Create Workflow"
+3. Define:
+   - Workflow name
+   - Document type
+   - Approval steps (in order)
+   - Approvers for each step
+   - Conditions (amount thresholds, departments)
+4. Save and activate
+
+## Approval Requests
+
+View and act on pending approval requests.
+
+**Features:**
+- List of pending approvals for current user
+- Document preview
+- Approve/Reject with comments
+- Delegation (forward to another approver)
+- History of all approval actions
+
+**Navigation:** Admin → Approvals → Requests
+
+## Approval Flow
+
+```
+Requester submits → Step 1 Approver → Step 2 Approver → ... → Final Approval
+                         ↓                    ↓
+                      Rejected             Rejected
+```
+
+## Notifications
+
+When an approval is required:
+- Email notification sent to approver
+- In-app notification (bell icon)
+- Dashboard quick action for pending items
+
+## Role-Based Approvals
+
+| Role | Typical Approval Authority |
+|------|--------------------------|
+| Director | Final approval for large expenses |
+| Finance Officer | Budget and expense approvals |
+| HR Officer | Leave and recruitment approvals |
+| Operations Manager | Inventory transfer approvals |
+| Project Manager | Timesheet approvals |
