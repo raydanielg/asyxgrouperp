@@ -34,10 +34,11 @@
     <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 bg-navy">
         <div class="px-4 py-4 space-y-1">
             <a href="{{ route('home') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Home</a>
-            <a href="{{ route('about') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">About</a>
+            <a href="{{ route('about') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">About Us</a>
+            <a href="{{ route('hosting') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Hosting</a>
             <a href="{{ route('services') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Services</a>
-            <a href="{{ route('sectors') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Sectors &amp; Clients</a>
-            <a href="{{ route('why-asyx') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Why ASYX</a>
+            <a href="{{ route('careers') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Careers</a>
+            <a href="{{ route('contact') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contacts</a>
             <a href="{{ route('contact') }}" class="block px-4 py-2.5 text-sm font-bold text-white cta-gradient rounded-lg text-center mt-2">Contact Us</a>
         </div>
     </div>
