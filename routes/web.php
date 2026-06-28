@@ -235,6 +235,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::patch('/sales-proposals/{salesProposal}', [$erp, 'salesProposalUpdate'])->name('sales-proposals.update');
     Route::patch('/sales-proposals/{salesProposal}/status', [$erp, 'salesProposalStatus'])->name('sales-proposals.status');
     Route::post('/sales-proposals/{salesProposal}/convert', [$erp, 'salesProposalConvert'])->name('sales-proposals.convert');
+    Route::post('/sales-proposals/{proposal}/convert-to-project', [$ext, 'convertProposalToProject'])->name('sales-proposals.convert-to-project');
     Route::delete('/sales-proposals/{salesProposal}', [$erp, 'salesProposalDestroy'])->name('sales-proposals.destroy');
 
     // Email Templates
@@ -411,6 +412,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/projects', [$ext, 'projectIndex'])->name('projects.index');
     Route::post('/projects', [$ext, 'projectStore'])->name('projects.store');
     Route::get('/projects/{project}', [$ext, 'projectShow'])->name('projects.show');
+    Route::post('/projects/{project}/generate-invoice', [$ext, 'generateProjectInvoice'])->name('projects.generate-invoice');
     Route::get('/projects/{project}/pdf', [$ext, 'projectPdf'])->name('projects.pdf');
     Route::delete('/projects/{project}', [$ext, 'projectDestroy'])->name('projects.destroy');
     Route::post('/projects/{project}/tasks', [$ext, 'projectTaskStore'])->name('projects.tasks.store');
