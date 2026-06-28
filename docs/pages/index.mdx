@@ -1,0 +1,80 @@
+# ASYX Group ERP System
+
+Welcome to the **ASYX Group Enterprise Resource Planning (ERP)** system documentation. This comprehensive platform manages all aspects of business operations across multiple companies.
+
+## System Overview
+
+ASYX Group ERP is a full-featured, multi-company business management platform built with **Laravel** and a modern **Tailwind CSS** UI. It covers:
+
+- **Multi-Company Management** — Manage multiple subsidiaries from one unified dashboard
+- **Human Resource Management** — Employees, attendance, payroll, leaves, performance reviews
+- **Financial Management** — Sales invoices, purchase invoices, expenses, revenues, bank accounts
+- **Customer Relationship Management** — Leads, deals, contracts, contacts
+- **Project Management** — Projects, timesheets, bugs, tasks
+- **Inventory & Warehousing** — Products, stock movements, warehouses, transfers
+- **Point of Sale** — POS terminal with reports
+- **Recruitment** — Job postings, applications, approval workflows
+- **Fleet Management** — Vehicle tracking and maintenance
+- **Helpdesk** — Ticketing system with categories and assignments
+- **Document Management** — Centralized document storage
+- **Approval Workflows** — Configurable multi-step approvals
+- **Call Center** — Lead management and CRM integration
+- **Business Flow** — Tenders, quotations, LPOs, GRNs, delivery notes
+
+## Key Features
+
+| Feature | Description |
+|---------|-------------|
+| Multi-Company | Switch between companies seamlessly with context-aware data |
+| Role-Based Access | 15+ predefined roles with granular permissions |
+| Real-time Dashboards | Role-specific KPIs, charts, and quick actions |
+| Audit Logging | Complete activity tracking across all modules |
+| PDF Reports | Exportable reports for every module |
+| Email Notifications | Automated alerts for key events |
+| Public Careers | External-facing job portal for applicants |
+| Responsive UI | Works on desktop, tablet, and mobile |
+
+## Technology Stack
+
+- **Backend**: Laravel 11 (PHP 8.2+)
+- **Frontend**: Blade templates, Tailwind CSS 4, Alpine.js
+- **Database**: MySQL 8.0+
+- **Charts**: Chart.js, ApexCharts
+- **PDF**: DomPDF (barryvdh/laravel-dompdf)
+- **Auth**: Laravel built-in with role-based middleware
+- **File Storage**: Laravel filesystem (public disk)
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/asyxgroup/erp.git
+cd erp
+
+# Install dependencies
+composer install
+npm install
+
+# Configure environment
+cp .env.example .env
+php artisan key:generate
+
+# Run migrations and seed
+php artisan migrate --seed
+
+# Start development server
+php artisan serve
+```
+
+## Default Credentials
+
+After seeding, you can login with:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@asyxgroup.com | password |
+| Director | director@asyxgroup.com | password |
+| HR Officer | hr@asyxgroup.com | password |
+| Finance | finance@asyxgroup.com | password |
+
+> **Note**: Change all default passwords immediately in production environments.
