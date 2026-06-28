@@ -26,6 +26,14 @@ Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
 
+Route::get('/hosting', function () {
+    return view('pages.hosting');
+})->name('hosting');
+
+Route::get('/careers', function () {
+    return view('pages.careers');
+})->name('careers');
+
 Auth::routes(['reset' => false, 'register' => false]);
 
 // Registration disabled — show notice
