@@ -84,7 +84,7 @@ class MasterDataSeeder extends Seeder
         $this->command->info('Creating employees and users...');
         $employeeData = [
             ['first_name'=>'John','last_name'=>'Mushi','email'=>'john.mushi@asyxgroup.co.tz','phone'=>'255712000001','position'=>'Managing Director','department'=>'Executive','salary'=>8500000],
-            ['first_name'=>'Sarah','last_name='Mkono','email'=>'sarah.mkono@asyxgroup.co.tz','phone'=>'255712000002','position'=>'Finance Manager','department'=>'Finance','salary'=>5500000],
+            ['first_name'=>'Sarah','last_name'=>'Mkono','email'=>'sarah.mkono@asyxgroup.co.tz','phone'=>'255712000002','position'=>'Finance Manager','department'=>'Finance','salary'=>5500000],
             ['first_name'=>'Peter','last_name'=>'Kavuma','email'=>'peter.kavuma@parktech.co.tz','phone'=>'255712000003','position'=>'Technical Manager','department'=>'Technical','salary'=>4800000],
             ['first_name'=>'Grace','last_name'=>'Mwangi','email'=>'grace.mwangi@asyxgroup.co.tz','phone'=>'255712000004','position'=>'HR Officer','department'=>'Human Resources','salary'=>3200000],
             ['first_name'=>'David','last_name'=>'Ochieng','email'=>'david.ochieng@motisha.co.tz','phone'=>'255712000005','position'=>'Project Manager','department'=>'Projects','salary'=>5200000],
@@ -714,7 +714,7 @@ class MasterDataSeeder extends Seeder
             FixedAsset::create([
                 'company_id' => $companies->random()->id,
                 'asset_code' => 'AST-' . strtoupper(Str::random(6)),
-                'name' => $at . ' - ' . fake()->company(),
+                'name' => $at . ' - ' . ['ASYX','Parktech','Motisha','Terkmark','Glovin','TechMart','CompSys','NetConnect'][rand(0,7)],
                 'type' => $at,
                 'purchase_date' => $now->subMonths(rand(3, 36)),
                 'purchase_cost' => rand(500000, 5000000),
