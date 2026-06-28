@@ -11,7 +11,11 @@ trait BelongsToCompany
     {
         static::addGlobalScope('company', function (Builder $builder) {
             if (auth()->check() && auth()->user()->company_id) {
-                $builder->where($builder->getQuery()->from . '.company_id', auth()->user()->company_id);
+                $user = auth()->user();
+                if ($user->company && $user->company->is_group) {
+                    return;
+                }
+                $builder->where($builder->getQuery()->from . '.company_id', $user->company_id);
             }
         });
 
