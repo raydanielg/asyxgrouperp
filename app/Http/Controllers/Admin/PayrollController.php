@@ -158,7 +158,7 @@ class PayrollController extends Controller
     public function pdf(Payroll $payroll)
     {
         $payroll->load('employee', 'creator');
-        $company = auth()->user()->company;
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
 
         $pdf = Pdf::loadView('pdf.payslip', compact('payroll', 'company'));
         $pdf->setPaper('A4', 'portrait');
@@ -166,6 +166,7 @@ class PayrollController extends Controller
             'defaultFont' => 'sans-serif',
             'isHtml5ParserEnabled' => true,
             'isRemoteEnabled' => true,
+            'isPhpEnabled' => false,
         ]);
 
         $filename = 'payslip-' . $payroll->payroll_number . '.pdf';
