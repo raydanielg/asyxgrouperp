@@ -12,7 +12,12 @@ trait BelongsToCompany
         static::addGlobalScope('company', function (Builder $builder) {
             if (auth()->check() && auth()->user()->company_id) {
                 $user = auth()->user();
+                $switchedId = session('switched_company_id');
+
                 if ($user->company && $user->company->is_group) {
+                    if ($switchedId !== null) {
+                        $builder->where($builder->getQuery()->from . '.company_id', $switchedId);
+                    }
                     return;
                 }
                 $builder->where($builder->getQuery()->from . '.company_id', $user->company_id);
@@ -20,8 +25,13 @@ trait BelongsToCompany
         });
 
         static::creating(function ($model) {
-            if (!$model->company_id && auth()->check() && auth()->user()->company_id) {
-                $model->company_id = auth()->user()->company_id;
+            if (!$model->company_id && auth()->check()) {
+                $switchedId = session('switched_company_id');
+                if ($switchedId !== null) {
+                    $model->company_id = $switchedId;
+                } elseif (auth()->user()->company_id) {
+                    $model->company_id = auth()->user()->company_id;
+                }
             }
         });
     }
