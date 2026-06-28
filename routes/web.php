@@ -366,10 +366,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // ─── CRM ───
     Route::get('/crm-leads', [$ext, 'crmLeadIndex'])->name('crm-leads.index');
     Route::post('/crm-leads', [$ext, 'crmLeadStore'])->name('crm-leads.store');
+    Route::get('/crm-leads/{lead}/pdf', [$ext, 'crmLeadPdf'])->name('crm-leads.pdf');
     Route::delete('/crm-leads/{lead}', [$ext, 'crmLeadDestroy'])->name('crm-leads.destroy');
 
     Route::get('/crm-deals', [$ext, 'crmDealIndex'])->name('crm-deals.index');
     Route::post('/crm-deals', [$ext, 'crmDealStore'])->name('crm-deals.store');
+    Route::get('/crm-deals/{deal}/pdf', [$ext, 'crmDealPdf'])->name('crm-deals.pdf');
     Route::delete('/crm-deals/{deal}', [$ext, 'crmDealDestroy'])->name('crm-deals.destroy');
 
     Route::get('/crm-contracts', [$ext, 'crmContractIndex'])->name('crm-contracts.index');
@@ -409,6 +411,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/projects', [$ext, 'projectIndex'])->name('projects.index');
     Route::post('/projects', [$ext, 'projectStore'])->name('projects.store');
     Route::get('/projects/{project}', [$ext, 'projectShow'])->name('projects.show');
+    Route::get('/projects/{project}/pdf', [$ext, 'projectPdf'])->name('projects.pdf');
     Route::delete('/projects/{project}', [$ext, 'projectDestroy'])->name('projects.destroy');
     Route::post('/projects/{project}/tasks', [$ext, 'projectTaskStore'])->name('projects.tasks.store');
     Route::delete('/projects/tasks/{task}', [$ext, 'projectTaskDestroy'])->name('projects.tasks.destroy');
