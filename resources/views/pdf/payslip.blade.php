@@ -168,12 +168,7 @@
                             <tr>
                                 <td style="vertical-align: middle; padding-right: 14px;">
                                     <div class="logo-box">
-                                        <svg width="30" height="30" viewBox="0 0 200 60">
-                                            <rect x="0" y="0" width="200" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
-                                            <text x="16" y="38" font-family="Arial Black, sans-serif" font-size="20" font-weight="900" fill="#f9ac00">ASYX</text>
-                                            <text x="96" y="38" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="#ffffff">GROUP</text>
-                                            <text x="16" y="52" font-family="Arial, sans-serif" font-size="7" fill="#a7f3d0" letter-spacing="1.5">ERP SYSTEM</text>
-                                        </svg>
+                                        <img src="{{ public_path('asyxgrouplogo.png') }}" alt="ASYX Group" style="width:30px;height:30px;object-fit:contain;border-radius:6px;">
                                     </div>
                                 </td>
                                 <td style="vertical-align: middle;">
