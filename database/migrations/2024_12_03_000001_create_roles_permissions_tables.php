@@ -161,7 +161,13 @@ return new class extends Migration
         }
 
         // Assign admin role to existing admin users
-        $adminUsers = \DB::table('users')->where('role', 'admin')->get();
+        // Check if 'role' column exists (it's added in a later migration)
+        if (\Schema::hasColumn('users', 'role')) {
+            $adminUsers = \DB::table('users')->where('role', 'admin')->get();
+        } else {
+            // Fallback: assign to first user (typically the admin seeded earlier)
+            $adminUsers = \DB::table('users')->limit(1)->get();
+        }
         foreach ($adminUsers as $user) {
             \DB::table('role_user')->insertOrIgnore([
                 'user_id' => $user->id,
