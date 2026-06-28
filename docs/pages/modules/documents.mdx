@@ -1,0 +1,42 @@
+# Document Management
+
+Centralized document storage and management for the entire organization.
+
+## Features
+
+- **Upload & Storage** — Upload documents (PDF, DOC, XLSX, images)
+- **Categorization** — Organize by department, type, or project
+- **Version Control** — Track document revisions
+- **Access Control** — Role-based document visibility
+- **Search** — Full-text search across document titles and descriptions
+- **Sharing** — Share documents with specific users or roles
+
+## Document Types
+
+- Contracts and agreements
+- Company policies
+- Employee documents (HR)
+- Project documentation
+- Financial reports
+- Meeting minutes
+- Training materials
+
+## Navigation
+
+Admin → Documents → Document Mgmt
+
+## File Storage
+
+Documents are stored in Laravel's filesystem:
+- **Public documents**: `storage/app/public/documents/`
+- **Private documents**: `storage/app/private/documents/`
+
+Access to private documents is controlled through middleware.
+
+## Best Practices
+
+1. Use descriptive file names
+2. Add meaningful descriptions
+3. Set appropriate access levels
+4. Regularly review and archive old documents
+5. Use categories for easy navigation
