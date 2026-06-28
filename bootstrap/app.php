@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'audit' => \App\Http\Middleware\AuditLogMiddleware::class,
         ]);
+        $middleware->redirectTo(fn () => auth()->user()?->isAdmin() ? '/admin/dashboard' : '/dashboard');
         $middleware->appendToGroup('web', \App\Http\Middleware\AuditLogMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
