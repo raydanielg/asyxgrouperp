@@ -770,4 +770,20 @@ class BusinessFlowController extends Controller
 
         return view('admin.business-flow.project-profit', compact('project', 'totalProcurement', 'totalOfficeExp', 'totalRevenue', 'totalCost', 'profit', 'margin'));
     }
+
+    public function quotationPdf(Quotation $quotation)
+    {
+        $quotation->load(['lead', 'items']);
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+
+        $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        return $pdf->download('quotation-' . $quotation->quotation_number . '.pdf');
+    }
 }
