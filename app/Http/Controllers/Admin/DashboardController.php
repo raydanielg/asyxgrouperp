@@ -25,6 +25,7 @@ use App\Models\PosSale;
 use App\Models\Expense;
 use App\Models\Revenue;
 use App\Models\Leave;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
