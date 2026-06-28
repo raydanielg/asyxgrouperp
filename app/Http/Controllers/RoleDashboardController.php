@@ -517,6 +517,27 @@ class RoleDashboardController extends Controller
         return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
     }
 
+    public function reportPdf()
+    {
+        $user = auth()->user();
+        $role = $this->getUserRole($user);
+        $roleLabel = $this->getRoleLabel($role);
+        $stats = $this->getStatsForRole($role);
+        $recentItems = $this->getRecentItemsForRole($role);
+        $kpiCards = $this->getKpiCardsForRole($role, $stats);
+        $money = fn($n) => 'TZS ' . number_format($n);
+
+        $data = array_merge(compact('role', 'roleLabel', 'stats', 'kpiCards', 'money'), $recentItems);
+        $data['lowStockProducts'] = \App\Models\Product::whereColumn('stock_quantity', '<=', 'reorder_level')->where('reorder_level', '>', 0)->take(10)->get();
+        $data['activeProjects'] = \App\Models\Project::where('status', 'in_progress')->latest()->take(10)->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.role-report', $data);
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions(['isRemoteEnabled' => true, 'isHtml5ParserEnabled' => true]);
+
+        return $pdf->download('role-report-' . $role . '-' . now()->format('Ymd') . '.pdf');
+    }
+
     private function getChartDataForRole(string $role): array
     {
         $data = [
