@@ -70,6 +70,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // ═══ Multi-Company ═══
     $companyCtrl = App\Http\Controllers\Admin\CompanyController::class;
     Route::get('/companies', [$companyCtrl, 'index'])->name('companies.index');
+    Route::get('/companies/switch', [$companyCtrl, 'switchCompany'])->name('companies.switch');
     Route::get('/companies/create', [$companyCtrl, 'create'])->name('companies.create');
     Route::post('/companies', [$companyCtrl, 'store'])->name('companies.store');
     Route::get('/companies/{company}', [$companyCtrl, 'show'])->name('companies.show');
