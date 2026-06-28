@@ -1,6 +1,6 @@
 <section id="clients" class="py-16 bg-[#F2F2F2] border-y border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
+        <div class="text-center mb-10 reveal">
             <p class="font-heading text-sm font-bold text-bronze uppercase tracking-wider mb-2">Trusted By Tanzania's Most Critical Institutions</p>
             <h3 class="font-heading text-2xl font-bold text-navy">Our Clients &amp; Partners</h3>
         </div>
