@@ -118,7 +118,7 @@
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->position ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->department ?? '-' }}</td>
-                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ (($emp->status ?? '') ? '=== 'active') bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-600' }}">{{ ucfirst($emp->status ?? 'N/A') }}</span></td>
+                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($emp->status ?? '') === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-600' }}">{{ ucfirst($emp->status ?? 'N/A') }}</span></td>
                     </tr>
         @endforeach
         </tbody>
