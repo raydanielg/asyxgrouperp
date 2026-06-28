@@ -217,6 +217,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::patch('/sales-invoices/{salesInvoice}', [$erp, 'salesInvoiceUpdate'])->name('sales-invoices.update');
     Route::post('/sales-invoices/{salesInvoice}/post', [$erp, 'salesInvoicePost'])->name('sales-invoices.post');
     Route::delete('/sales-invoices/{salesInvoice}', [$erp, 'salesInvoiceDestroy'])->name('sales-invoices.destroy');
+    Route::get('/sales-invoices/{salesInvoice}/pdf', [$erp, 'salesInvoicePdf'])->name('sales-invoices.pdf');
 
     // Sales Returns
     Route::get('/sales-returns', [$erp, 'salesReturnIndex'])->name('sales-returns.index');
