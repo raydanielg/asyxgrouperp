@@ -304,6 +304,7 @@ class MasterDataSeeder extends Seeder
             $paid = $st === 'paid' ? $total : ($st === 'partial' ? $total * rand(1, 9) / 10 : 0);
             $inv = SalesInvoice::create([
                 'company_id' => $companies->random()->id,
+                'customer_id' => $users->random()->id,
                 'invoice_number' => 'INV-' . $now->format('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'invoice_date' => $now->subDays(rand(1, 60)),
                 'due_date' => $now->addDays(rand(1, 30)),
