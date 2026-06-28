@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
+#[Fillable(['name', 'first_name', 'last_name', 'email', 'phone', 'password', 'role', 'company_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -84,5 +84,15 @@ class User extends Authenticatable
     public function assignedTasks()
     {
         return $this->hasMany(ProjectTask::class, 'assigned_to');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function isGroupUser(): bool
+    {
+        return $this->company_id === null || ($this->company && $this->company->is_group);
     }
 }
