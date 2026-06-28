@@ -563,10 +563,18 @@
             setTimeout(() => { toast.classList.add('toast-out'); setTimeout(() => toast.remove(), 300); }, 5000);
         }
         window.showToast = showToast;
-        {{ (session('status') ? ') showToast('success', 'Success', '{{ session('status') }}');' : '' }}
-        {{ (session('error') ? ') showToast('error', 'Error', '{{ session('error') }}');' : '' }}
-        {{ (session('success') ? ') showToast('success', 'Success', '{{ session('success') }}');' : '' }}
-        {{ (session('warning') ? ') showToast('warning', 'Warning', '{{ session('warning') }}');' : '' }}
+        @if(session('status'))
+            showToast('success', 'Success', '{{ session('status') }}');
+        @endif
+        @if(session('error'))
+            showToast('error', 'Error', '{{ session('error') }}');
+        @endif
+        @if(session('success'))
+            showToast('success', 'Success', '{{ session('success') }}');
+        @endif
+        @if(session('warning'))
+            showToast('warning', 'Warning', '{{ session('warning') }}');
+        @endif
     })();
 
     // SweetAlert delete confirmation
