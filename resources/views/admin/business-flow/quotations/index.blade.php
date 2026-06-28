@@ -25,6 +25,7 @@
             <td class="px-5 py-3">@php $sc=['draft'=>'gray','sent'=>'sky','accepted'=>'emerald','rejected'=>'red','expired'=>'red']; $c=$sc[$q->status]??'gray'; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-{{ $c }}-50 text-{{ $c }}-700">{{ ucfirst($q->status) }}</span></td>
             <td class="px-5 py-3 flex items-center gap-2">
                 <a href="{{ route('admin.quotations.show', $q) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a>
+                <button onclick="downloadPdf('{{ route('admin.quotations.pdf', $q) }}', '{{ $q->quotation_number }}')" class="text-emerald-600 hover:text-emerald-700 text-xs">PDF</button>
                 <form id="del-quo-{{ $q->id }}" method="POST" action="{{ route('admin.quotations.destroy', $q) }}">@csrf @method('DELETE')</form>
                 <button onclick="confirmDelete('del-quo-{{ $q->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
             </td>
@@ -77,4 +78,18 @@ function addQuoItem() {
 }
 addQuoItem();
 </script>
+@push('scripts')
+<script>
+function downloadPdf(url, title) {
+  Swal.fire({
+    title: 'Downloading...',
+    text: 'Preparing ' + title,
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); },
+    timer: 800,
+    willClose: () => { window.open(url, '_blank'); }
+  });
+}
+</script>
+@endpush
 @endsection

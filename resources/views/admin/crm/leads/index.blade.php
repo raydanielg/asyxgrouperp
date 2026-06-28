@@ -23,8 +23,7 @@
             <td class="px-5 py-3">@php $c=['new'=>'sky','contacted'=>'amber','qualified'=>'emerald','lost'=>'red','converted'=>'emerald']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$l->status] ?? 'gray' }}-50 text-{{ $c[$l->status] ?? 'gray' }}-700">{{ ucfirst($l->status) }}</span></td>
             <td class="px-5 py-3 flex items-center gap-2">
         @if($l->status !== 'converted' && $l->deals->isEmpty())<form method="POST" action="{{ route('admin.crm-leads.convert-to-deal', $l) }}">@csrf<button type="submit" class="text-emerald-600 hover:text-emerald-700 text-xs" onclick="return confirm('Convert this lead to a Deal?')">→ Deal</button></form>
-        @endif<form id="del-lead-{{ $l->id }}" method="POST" action="{{ route('admin.crm-leads.destroy', $l) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-lead-{{ $l->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        
+        @endif<button onclick="downloadPdf('{{ route('admin.crm-leads.pdf', $l) }}', '{{ $l->lead_number }}')" class="text-emerald-600 hover:text-emerald-700 text-xs">PDF</button><form id="del-lead-{{ $l->id }}" method="POST" action="{{ route('admin.crm-leads.destroy', $l) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-lead-{{ $l->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         </tr>
         @empty
         <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No leads found</td></tr>
