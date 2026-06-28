@@ -8,7 +8,7 @@
                 </div>
                 <div class="flex flex-col leading-none">
                     <span class="font-heading font-black text-lg text-white">ASYX <span class="text-bronze">Group</span></span>
-                    <span class="text-[10px] font-medium text-gray-300 tracking-wider uppercase">Let''s Achieve Together</span>
+                    <span class="text-[10px] font-medium text-gray-300 tracking-wider uppercase">Let's Achieve Together</span>
                 </div>
             </a>
 
@@ -28,7 +28,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </a>
                 {{-- Mobile toggle --}}
-                <button id="mobileToggle" class="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors" onclick="document.getElementById(''mobileMenu'').classList.toggle(''hidden'')">
+                <button id="mobileToggle" class="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
             </div>
@@ -38,11 +38,11 @@
     {{-- Mobile Menu --}}
     <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 bg-navy">
         <div class="px-4 py-4 space-y-1">
-            <a href="{{ route('home') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById(''mobileMenu'').classList.add(''hidden'')">Home</a>
-            <a href="{{ route('about') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById(''mobileMenu'').classList.add(''hidden'')">About</a>
-            <a href="{{ route('services') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById(''mobileMenu'').classList.add(''hidden'')">Services</a>
-            <a href="{{ route('sectors') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById(''mobileMenu'').classList.add(''hidden'')">Sectors &amp; Clients</a>
-            <a href="{{ route('why-asyx') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById(''mobileMenu'').classList.add(''hidden'')">Why ASYX</a>
+            <a href="{{ route('home') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Home</a>
+            <a href="{{ route('about') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">About</a>
+            <a href="{{ route('services') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Services</a>
+            <a href="{{ route('sectors') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Sectors &amp; Clients</a>
+            <a href="{{ route('why-asyx') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Why ASYX</a>
             <a href="{{ route('contact') }}" class="block px-4 py-2.5 text-sm font-bold text-white cta-gradient rounded-lg text-center mt-2">Contact Us</a>
         </div>
     </div>
