@@ -616,6 +616,15 @@
                             <a href="{{ route('admin.audit-logs.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700">View all</a>
                         </div>
                         <div class="max-h-80 overflow-y-auto">
+                            @if($newApplicationsCount > 0)
+                            <a href="{{ route('admin.applications.index') }}" class="px-4 py-2 hover:bg-emerald-50 flex items-start gap-2 border-b border-emerald-100">
+                                <div class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-bold">N</div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-800">{{ $newApplicationsCount }} new application(s) submitted</p>
+                                    <p class="text-[10px] text-gray-400">Click to review</p>
+                                </div>
+                            </a>
+                            @endif
                             @forelse($recentLogs as $log)
                                 <div class="px-4 py-2 hover:bg-gray-50 flex items-start gap-2">
                                     <div class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-bold">{{ strtoupper(substr($log->action ?? 'A',0,1)) }}</div>
