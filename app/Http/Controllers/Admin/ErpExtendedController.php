@@ -33,6 +33,7 @@ use App\Models\Supplier;
 use App\Models\StockMovement;
 use App\Models\PosSale;
 use App\Models\PosSaleItem;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Warehouse;
 use App\Models\Company;
 use App\Models\User;
@@ -1102,5 +1103,53 @@ class ErpExtendedController extends Controller
     {
         $posSale->delete();
         return redirect()->route('admin.pos.reports')->with('success', 'POS sale deleted.');
+    }
+
+    public function crmLeadPdf(CrmLead $lead)
+    {
+        $lead->load(['deals', 'assignedTo']);
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+
+        $pdf = Pdf::loadView('pdf.lead', compact('lead', 'company'));
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        return $pdf->download('lead-' . $lead->lead_number . '.pdf');
+    }
+
+    public function crmDealPdf(CrmDeal $deal)
+    {
+        $deal->load(['lead', 'contracts', 'project']);
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+
+        $pdf = Pdf::loadView('pdf.deal', compact('deal', 'company'));
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        return $pdf->download('deal-' . $deal->deal_number . '.pdf');
+    }
+
+    public function projectPdf(Project $project)
+    {
+        $project->load(['tasks', 'bugs', 'timesheets', 'manager', 'deal']);
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+
+        $pdf = Pdf::loadView('pdf.project', compact('project', 'company'));
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        return $pdf->download('project-' . $project->project_number . '.pdf');
     }
 }

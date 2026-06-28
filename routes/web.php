@@ -458,6 +458,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/quotations', [$bf, 'quotationIndex'])->name('quotations.index');
     Route::post('/quotations', [$bf, 'quotationStore'])->name('quotations.store');
     Route::get('/quotations/{quotation}', [$bf, 'quotationShow'])->name('quotations.show');
+    Route::get('/quotations/{quotation}/pdf', [$bf, 'quotationPdf'])->name('quotations.pdf');
     Route::patch('/quotations/{quotation}/status', [$bf, 'quotationUpdateStatus'])->name('quotations.status');
     Route::delete('/quotations/{quotation}', [$bf, 'quotationDestroy'])->name('quotations.destroy');
 
