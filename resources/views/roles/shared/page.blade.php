@@ -601,6 +601,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     <tr>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Name</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Location</th>
+                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -608,6 +609,18 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $wh->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $wh->location ?? '-' }}</td>
+                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                @if($canEdit && isset($routeMap[$module]['edit']))
+                                <a href="{{ route($routeMap[$module]['edit'], $wh) }}" class="text-emerald-500 hover:text-emerald-700 p-1 rounded hover:bg-emerald-50 transition-colors" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></a>
+                                @endif
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $wh) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this warehouse?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                        @endif
                     </tr>
         @endforeach
         </tbody>
@@ -650,6 +663,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Name</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Phone</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Email</th>
+                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -658,6 +672,15 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $s->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $s->phone ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $s->email ?? '-' }}</td>
+                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $s) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this supplier?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                        @endif
                     </tr>
         @endforeach
         </tbody>
@@ -698,6 +721,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Employee</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -706,6 +730,15 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $r->employee?->first_name ?? '' }} {{ $r->employee?->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $r->date?->format('d M Y') ?? '-' }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($r->status === 'present') ? 'bg-emerald-50 text-emerald-700' : (($r->status === 'absent') ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst($r->status) }}</span></td>
+                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $r) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this record?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                        @endif
                     </tr>
         @endforeach
         </tbody>
@@ -723,6 +756,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Type</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Dates</th>
+                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -732,6 +766,18 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $l->leave_type ?? '-' }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($l->status === 'approved') ? 'bg-emerald-50 text-emerald-700' : (($l->status === 'rejected') ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst($l->status ?? 'Pending') }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $l->start_date?->format('d M') ?? '' }} - {{ $l->end_date?->format('d M Y') ?? '' }}</td>
+                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                @if($canApprove && isset($routeMap[$module]['approve']) && ($l->status ?? '') !== 'approved')
+                                <form action="{{ route($routeMap[$module]['approve'], $l) }}" method="POST" style="display:inline">@csrf @method('PATCH')<button type="submit" class="text-emerald-500 hover:text-emerald-700 p-1 rounded hover:bg-emerald-50 transition-colors" title="Approve"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></button></form>
+                                @endif
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $l) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this leave request?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                        @endif
                     </tr>
         @endforeach
         </tbody>
