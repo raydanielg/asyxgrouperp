@@ -9,6 +9,8 @@ class VehicleMaintenance extends Model
 {
     use HasFactory;
 
+    protected $table = 'vehicle_maintenance';
+
     protected $fillable = [
         'vehicle_id', 'maintenance_type', 'service_date', 'odometer_at_service',
         'service_provider', 'cost', 'description', 'next_service_date',
