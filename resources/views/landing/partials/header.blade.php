@@ -2,14 +2,8 @@
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 md:h-20">
             {{-- Logo --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-2 group">
-                <div class="w-11 h-11 rounded-lg bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                    <span class="font-heading font-black text-lg text-navy">A</span>
-                </div>
-                <div class="flex flex-col leading-none">
-                    <span class="font-heading font-black text-lg text-white">ASYX <span class="text-bronze">Group</span></span>
-                    <span class="text-[10px] font-medium text-gray-300 tracking-wider uppercase">Let's Achieve Together</span>
-                </div>
+            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+                <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group Logo" class="h-12 md:h-14 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-lg">
             </a>
 
             {{-- Desktop Nav --}}

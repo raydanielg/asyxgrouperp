@@ -3,14 +3,8 @@
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
             {{-- Brand --}}
             <div class="col-span-2">
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="w-11 h-11 rounded-lg bg-white flex items-center justify-center shadow-lg">
-                        <span class="font-heading font-black text-lg text-navy">A</span>
-                    </div>
-                    <div class="flex flex-col leading-none">
-                        <span class="font-heading font-black text-lg text-white">ASYX <span class="text-bronze">Group</span></span>
-                        <span class="text-[10px] font-medium text-gray-400 tracking-wider uppercase">Let's Achieve Together</span>
-                    </div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group Logo" class="h-14 w-auto object-contain drop-shadow-lg">
                 </div>
                 <p class="text-sm leading-relaxed max-w-sm mb-6">
                     Since 2009, ASYX Group has been the trusted technology partner behind Tanzania's most critical systems - from power utilities to public transport to financial regulation.
