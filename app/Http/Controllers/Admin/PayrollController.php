@@ -187,4 +187,19 @@ class PayrollController extends Controller
         $filename = 'payslip-' . $payroll->payroll_number . '.pdf';
         return $pdf->download($filename);
     }
+
+    private function computePAYE(float $taxable): float
+    {
+        // Example PAYE brackets (TZ). Adjust as per current official rates if needed.
+        // 0 - 270,000 => 0%
+        // 270,001 - 520,000 => 8% of excess over 270,000
+        // 520,001 - 760,000 => 20,000 + 20% of excess over 520,000
+        // 760,001 - 1,000,000 => 68,000 + 25% of excess over 760,000
+        // 1,000,001+ => 128,000 + 30% of excess over 1,000,000
+        if ($taxable <= 270000) return 0.0;
+        if ($taxable <= 520000) return round(0.08 * ($taxable - 270000), 2);
+        if ($taxable <= 760000) return round(20000 + 0.20 * ($taxable - 520000), 2);
+        if ($taxable <= 1000000) return round(68000 + 0.25 * ($taxable - 760000), 2);
+        return round(128000 + 0.30 * ($taxable - 1000000), 2);
+    }
 }
