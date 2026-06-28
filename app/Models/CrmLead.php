@@ -26,6 +26,11 @@ class CrmLead extends Model
         return $this->hasMany(Quotation::class);
     }
 
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;

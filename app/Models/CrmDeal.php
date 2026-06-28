@@ -22,6 +22,6 @@ class CrmDeal extends Model
 
     public function contracts()
     {
-        return $this->hasMany(CrmContract::class);
+        return $this->hasMany(CrmContract::class, 'deal_id');
     }
 }
