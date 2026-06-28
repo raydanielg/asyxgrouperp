@@ -12,8 +12,8 @@ class SetCompanyContext
     {
         if (auth()->check()) {
             $user = auth()->user();
-            $companyId = session('current_company_id', $user->company_id);
-            session(['current_company_id' => $companyId]);
+            $companyId = session('switched_company_id', $user->company_id);
+            session(['current_company_id' => $companyId, 'switched_company_id' => $companyId]);
             view()->share('currentCompany', $user->company);
         }
         return $next($request);

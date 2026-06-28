@@ -98,22 +98,15 @@ class User extends Authenticatable
 
     public function scopeForCompany($query)
     {
-        if (auth()->check() && !auth()->user()->isAdmin()) {
-            return $query->where('company_id', session('current_company_id'));
-        }
-        return $query;
-    }
-
-    public function scopeForCurrentCompany($query)
-    {
-        if (auth()->check() && !auth()->user()->isAdmin()) {
-            return $query->where('company_id', session('current_company_id'));
+        $companyId = session('current_company_id');
+        if ($companyId && auth()->check() && !auth()->user()->isAdmin()) {
+            return $query->where('company_id', $companyId);
         }
         return $query;
     }
 
     public static function currentCompanyId(): ?int
     {
-        return session('current_company_id');
+        return session('current_company_id') ?: session('switched_company_id');
     }
 }
