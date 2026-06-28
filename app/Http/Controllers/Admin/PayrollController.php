@@ -151,7 +151,7 @@ class PayrollController extends Controller
             $net = $basic + $allowances - $deductions;
 
             $pnum = 'PAY-' . $year . str_pad(date('m', strtotime("1 $month")), 2, '0', STR_PAD_LEFT) . '-' . str_pad($emp->id, 4, '0', STR_PAD_LEFT);
-            Payroll::updateOrCreate(
+            Payroll::withoutGlobalScopes()->updateOrCreate(
                 ['payroll_number' => $pnum],
                 [
                     'company_id' => auth()->user()->company_id,
