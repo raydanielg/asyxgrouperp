@@ -429,7 +429,7 @@ class ErpController extends Controller
 
     public function salesInvoiceShow(SalesInvoice $salesInvoice)
     {
-        $salesInvoice->load(['customer', 'warehouse', 'items']);
+        $salesInvoice->load(['customer', 'warehouse', 'items', 'creator']);
         return view('admin.invoices.sales-show', compact('salesInvoice'));
     }
 
