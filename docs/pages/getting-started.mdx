@@ -1,0 +1,168 @@
+# Getting Started
+
+This guide walks you through setting up the ASYX Group ERP system from scratch.
+
+## Prerequisites
+
+Before installing, ensure you have:
+
+- **PHP 8.2+** with extensions: `mbstring`, `xml`, `curl`, `mysql`, `gd`, `zip`
+- **Composer 2.x**
+- **Node.js 18+** and npm
+- **MySQL 8.0+** or MariaDB 10.6+
+- **Git**
+
+## Installation
+
+### 1. Clone & Install Dependencies
+
+```bash
+git clone https://github.com/asyxgroup/erp.git
+cd erp
+composer install
+npm install
+```
+
+### 2. Environment Configuration
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Edit `.env` and set your database credentials:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=asyxgroup_erp
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+### 3. Mail Configuration (for notifications)
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your@email.com
+MAIL_PASSWORD=your_app_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@asyxgroup.com
+MAIL_FROM_NAME="ASYX Group ERP"
+```
+
+### 4. Database Setup
+
+```bash
+# Create the database
+mysql -u root -p -e "CREATE DATABASE asyxgroup_erp;"
+
+# Run migrations
+php artisan migrate
+
+# Seed with sample data (optional)
+php artisan db:seed
+```
+
+### 5. Storage Link
+
+```bash
+php artisan storage:link
+```
+
+This creates a symbolic link from `public/storage` to `storage/app/public` for file uploads.
+
+### 6. Build Assets
+
+```bash
+npm run build
+```
+
+### 7. Start the Server
+
+```bash
+php artisan serve
+```
+
+Visit `http://localhost:8000` to access the application.
+
+## Post-Installation
+
+### Create Admin User
+
+If you didn't seed the database, create your first admin user:
+
+```bash
+php artisan tinker
+```
+
+```php
+$user = \App\Models\User::create([
+    'name' => 'Admin',
+    'email' => 'admin@yourcompany.com',
+    'password' => bcrypt('your-secure-password'),
+    'role' => 'admin',
+    'email_verified_at' => now(),
+]);
+```
+
+### Create First Company
+
+Navigate to **Admin → Multi-Company → Companies** and create your first company with:
+- Company name
+- Registration number
+- Contact details
+- Address
+- Logo
+
+### Set Up Roles
+
+Go to **Admin → User Management → Roles & Permissions** to configure roles for your organization.
+
+## Directory Structure
+
+```
+├── app/
+│   ├── Http/Controllers/Admin/    # Admin controllers
+│   ├── Models/                     # Eloquent models
+│   └── Services/                   # Business logic
+├── database/
+│   ├── migrations/                 # Database schema
+│   └── seeders/                    # Sample data
+├── resources/views/
+│   ├── admin/                      # Admin panel views
+│   ├── layouts/                    # Layout templates
+│   └── careers/                    # Public careers portal
+├── routes/
+│   └── web.php                     # All application routes
+├── docs/                           # This documentation (Nextra)
+└── public/                         # Public assets
+```
+
+## Common Issues
+
+### Storage permissions
+
+```bash
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+```
+
+### Symlink not working on Windows
+
+Run Command Prompt as Administrator:
+```bash
+php artisan storage:link
+```
+
+### Migration errors
+
+If you encounter foreign key errors, run migrations fresh:
+```bash
+php artisan migrate:fresh --seed
+```
+
+> **Warning**: This will destroy all existing data!
