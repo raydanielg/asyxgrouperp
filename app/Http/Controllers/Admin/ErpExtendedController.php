@@ -792,6 +792,30 @@ class ErpExtendedController extends Controller
         return view('admin.projects.index', compact('projects', 'managers'));
     }
 
+    public function convertProposalToProject(SalesProposal $proposal)
+    {
+        if ($proposal->status !== 'accepted') {
+            return redirect()->back()->with('error', 'Only accepted quotations can be converted to a project.');
+        }
+
+        $project = Project::create([
+            'project_number' => 'PRJ-' . date('Ym') . '-' . strtoupper(Str::random(4)),
+            'title' => 'Project for ' . ($proposal->customer?->name ?? 'Customer') . ' - ' . $proposal->proposal_number,
+            'description' => $proposal->notes,
+            'start_date' => now(),
+            'due_date' => $proposal->due_date,
+            'status' => 'in_progress',
+            'priority' => 'medium',
+            'manager_id' => auth()->id(),
+            'progress' => 0,
+            'budget' => $proposal->total_amount,
+            'customer_id' => $proposal->customer_id,
+            'proposal_id' => $proposal->id,
+        ]);
+
+        return redirect()->route('admin.projects.show', $project)->with('success', 'Project created from accepted quotation.');
+    }
+
     public function projectStore(Request $request)
     {
         $data = $request->validate([
@@ -814,6 +838,59 @@ class ErpExtendedController extends Controller
     {
         $project->load(['tasks', 'bugs', 'timesheets']);
         return view('admin.projects.show', compact('project'));
+    }
+
+    public function generateProjectInvoice(Project $project)
+    {
+        if (!in_array($project->status, ['completed', 'in_progress', 'planning'])) {
+            return redirect()->back()->with('error', 'Invalid project status for invoicing.');
+        }
+
+        // Prevent duplicate invoices tied to this project
+        $existing = SalesInvoice::where('project_id', $project->id)->first();
+        if ($existing) {
+            return redirect()->route('admin.sales-invoices.show', $existing)->with('info', 'Invoice for this project already exists.');
+        }
+
+        $invoice = SalesInvoice::create([
+            'invoice_number' => 'INV-P-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'invoice_date' => now(),
+            'due_date' => now()->copy()->addDays(14),
+            'customer_id' => $project->customer_id ?? ($project->deal->customer_id ?? null),
+            'subtotal' => $project->budget,
+            'tax_amount' => round($project->budget * 0.18, 2),
+            'discount_amount' => 0,
+            'total_amount' => round($project->budget * 1.18, 2),
+            'paid_amount' => 0,
+            'balance_amount' => round($project->budget * 1.18, 2),
+            'status' => 'draft',
+            'type' => 'service',
+            'payment_terms' => 'Due in 14 days',
+            'notes' => 'Invoice for project ' . ($project->title ?? $project->project_number),
+            'creator_id' => auth()->id(),
+            'created_by' => auth()->id(),
+            'project_id' => $project->id,
+            'proposal_id' => $project->proposal_id,
+        ]);
+
+        // Single summary line
+        $invoice->items()->create([
+            'product_name' => 'Project: ' . ($project->title ?? $project->project_number),
+            'quantity' => 1,
+            'unit_price' => $project->budget,
+            'discount_amount' => 0,
+            'discount_percentage' => 0,
+            'tax_percentage' => 18,
+            'tax_amount' => round($project->budget * 0.18, 2),
+            'total_amount' => round($project->budget * 1.18, 2),
+        ]);
+
+        // Optionally update project status to invoiced if already completed
+        if ($project->status === 'completed') {
+            $project->update(['status' => 'invoiced']);
+        }
+
+        return redirect()->route('admin.sales-invoices.show', $invoice)->with('success', 'Tax invoice generated from project.');
     }
 
     public function projectDestroy(Project $project)
