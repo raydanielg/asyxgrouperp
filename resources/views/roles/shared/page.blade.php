@@ -2,7 +2,84 @@
 @section('title', ucfirst(str_replace('-', ' ', $module)) . ' - ' . $roleLabel)
 @section('page_title', ucfirst(str_replace('-', ' ', $module)))
 @section('content')
-@php $money = fn($n) => 'TZS ' . number_format($n); @endphp
+@php
+$money = fn($n) => 'TZS ' . number_format($n);
+$permMap = [
+    'employees' => ['create' => 'create-employees', 'edit' => 'edit-employees', 'delete' => 'delete-employees'],
+    'sales-invoices' => ['create' => 'create-sales-invoices', 'edit' => 'edit-sales-invoices', 'delete' => 'delete-sales-invoices'],
+    'purchase-invoices' => ['create' => 'create-purchase-invoices', 'edit' => 'edit-purchase-invoices', 'delete' => 'delete-purchase-invoices'],
+    'expenses' => ['create' => 'create-expenses', 'delete' => 'delete-expenses'],
+    'revenues' => ['create' => 'create-revenues', 'delete' => 'delete-revenues'],
+    'tickets' => ['create' => 'create-helpdesk-tickets', 'edit' => 'edit-helpdesk-tickets', 'delete' => 'delete-helpdesk-tickets'],
+    'leads' => ['create' => 'create-crm-leads', 'edit' => 'edit-crm-leads', 'delete' => 'delete-crm-leads'],
+    'contacts' => ['create' => 'create-crm-contacts', 'delete' => 'delete-crm-contacts'],
+    'deals' => ['create' => 'create-crm-deals', 'edit' => 'edit-crm-deals', 'delete' => 'delete-crm-deals'],
+    'contracts' => ['create' => 'create-crm-contracts', 'delete' => 'delete-crm-contracts'],
+    'products' => ['create' => 'create-products', 'edit' => 'edit-products', 'delete' => 'delete-products'],
+    'warehouses' => ['create' => 'create-warehouses', 'edit' => 'edit-warehouses', 'delete' => 'delete-warehouses'],
+    'stock-movements' => ['create' => 'create-stock-movements'],
+    'suppliers' => ['create' => 'create-suppliers', 'delete' => 'delete-suppliers'],
+    'inventory-transfers' => ['create' => 'create-acc-transfers', 'delete' => 'delete-acc-transfers'],
+    'attendance' => ['create' => 'create-attendance', 'delete' => 'delete-attendance'],
+    'leaves' => ['create' => 'create-leaves', 'delete' => 'delete-leaves', 'approve' => 'approve-leaves'],
+    'users' => ['create' => 'create-users', 'edit' => 'edit-users', 'delete' => 'delete-users'],
+    'roles' => ['create' => 'create-roles', 'edit' => 'edit-roles', 'delete' => 'delete-roles'],
+    'bills' => ['create' => 'create-bills', 'delete' => 'delete-bills'],
+    'bank-accounts' => ['create' => 'create-bank-accounts', 'delete' => 'delete-bank-accounts'],
+    'transfers' => ['create' => 'create-acc-transfers', 'delete' => 'delete-acc-transfers'],
+    'payroll' => ['create' => 'create-payroll', 'delete' => 'delete-payroll'],
+    'pos' => ['create' => 'create-pos', 'delete' => 'delete-pos'],
+    'assets' => ['create' => 'create-assets', 'delete' => 'delete-assets'],
+    'bugs' => ['create' => 'create-bugs', 'delete' => 'delete-bugs'],
+    'projects' => ['create' => 'create-projects', 'edit' => 'edit-projects', 'delete' => 'delete-projects'],
+    'timesheets' => ['create' => 'create-timesheets', 'delete' => 'delete-timesheets'],
+    'policies' => ['create' => 'create-policies', 'delete' => 'delete-policies'],
+    'performance' => ['create' => 'create-performance', 'delete' => 'delete-performance'],
+    'training' => ['create' => 'create-training', 'delete' => 'delete-training'],
+    'recruitment' => ['create' => 'create-recruitment', 'delete' => 'delete-recruitment'],
+    'settings' => ['edit' => 'edit-settings'],
+];
+$routeMap = [
+    'employees' => ['create' => 'admin.employees.index', 'edit' => 'admin.employees.edit', 'delete' => 'admin.employees.destroy'],
+    'sales-invoices' => ['create' => 'admin.sales-invoices.create', 'edit' => 'admin.sales-invoices.edit', 'delete' => 'admin.sales-invoices.destroy'],
+    'purchase-invoices' => ['create' => 'admin.purchase-invoices.create', 'edit' => 'admin.purchase-invoices.edit', 'delete' => 'admin.purchase-invoices.destroy'],
+    'expenses' => ['create' => 'admin.expenses.index', 'delete' => 'admin.expenses.destroy'],
+    'revenues' => ['create' => 'admin.revenues.index', 'delete' => 'admin.revenues.destroy'],
+    'tickets' => ['create' => 'admin.helpdesk-tickets.index', 'delete' => 'admin.helpdesk-tickets.index'],
+    'leads' => ['create' => 'admin.crm-leads.index', 'delete' => 'admin.crm-leads.destroy'],
+    'contacts' => ['create' => 'admin.crm-contacts.index', 'delete' => 'admin.crm-contacts.destroy'],
+    'deals' => ['create' => 'admin.crm-deals.index', 'delete' => 'admin.crm-deals.destroy'],
+    'contracts' => ['create' => 'admin.crm-contracts.index', 'delete' => 'admin.crm-contracts.destroy'],
+    'products' => ['create' => 'admin.products.index', 'delete' => 'admin.products.destroy'],
+    'warehouses' => ['create' => 'admin.warehouses.index', 'edit' => 'admin.warehouses.edit', 'delete' => 'admin.warehouses.destroy'],
+    'stock-movements' => ['create' => 'admin.stock-movements.index'],
+    'suppliers' => ['create' => 'admin.suppliers.index', 'delete' => 'admin.suppliers.destroy'],
+    'inventory-transfers' => ['create' => 'admin.acc-transfers.index', 'delete' => 'admin.acc-transfers.destroy'],
+    'attendance' => ['create' => 'admin.attendance.index', 'delete' => 'admin.attendance.destroy'],
+    'leaves' => ['create' => 'admin.leaves.index', 'approve' => 'admin.leaves.approve', 'delete' => 'admin.leaves.destroy'],
+    'users' => ['create' => 'admin.users.create', 'edit' => 'admin.users.edit', 'delete' => 'admin.users.destroy'],
+    'roles' => ['create' => 'admin.roles.create', 'edit' => 'admin.roles.edit', 'delete' => 'admin.roles.destroy'],
+    'bills' => ['create' => 'admin.bills.index', 'delete' => 'admin.bills.destroy'],
+    'bank-accounts' => ['create' => 'admin.bank-accounts.index', 'delete' => 'admin.bank-accounts.destroy'],
+    'transfers' => ['create' => 'admin.acc-transfers.index', 'delete' => 'admin.acc-transfers.destroy'],
+    'payroll' => ['create' => 'admin.payroll.generate-form', 'delete' => 'admin.payroll.destroy'],
+    'pos' => ['create' => 'admin.pos.index', 'delete' => 'admin.pos.destroy'],
+    'assets' => ['create' => 'admin.assets.index', 'delete' => 'admin.assets.destroy'],
+    'bugs' => ['create' => 'admin.bugs.index', 'delete' => 'admin.bugs.destroy'],
+    'projects' => ['create' => 'admin.projects.index', 'delete' => 'admin.projects.destroy'],
+    'timesheets' => ['create' => 'admin.timesheets.index', 'delete' => 'admin.timesheets.destroy'],
+    'policies' => ['create' => 'admin.policies.index', 'delete' => 'admin.policies.destroy'],
+    'performance' => ['create' => 'admin.performance.index', 'delete' => 'admin.performance.destroy'],
+    'training' => ['create' => 'admin.training.index', 'delete' => 'admin.training.destroy'],
+    'recruitment' => ['create' => 'admin.job-postings.index', 'delete' => 'admin.job-postings.destroy'],
+    'settings' => ['edit' => 'admin.settings'],
+];
+$canCreate = isset($permMap[$module]['create']) && auth()->user()->hasPermission($permMap[$module]['create']);
+$canEdit = isset($permMap[$module]['edit']) && auth()->user()->hasPermission($permMap[$module]['edit']);
+$canDelete = isset($permMap[$module]['delete']) && auth()->user()->hasPermission($permMap[$module]['delete']);
+$canApprove = isset($permMap[$module]['approve']) && auth()->user()->hasPermission($permMap[$module]['approve']);
+$hasActions = $canEdit || $canDelete || $canApprove;
+@endphp
 
 <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
     <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
@@ -25,6 +102,12 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="px-5 py-4 border-b flex items-center justify-between">
         <h3 class="text-sm font-bold text-gray-900">{{ ucfirst(str_replace('-', ' ', $module)) }} List</h3>
+        @if($canCreate && isset($routeMap[$module]['create']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['create']))
+        <a href="{{ route($routeMap[$module]['create']) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            Create New
+        </a>
+        @endif
     </div>
 
     @switch($module)
