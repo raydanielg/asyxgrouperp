@@ -143,7 +143,7 @@ class MasterDataSeeder extends Seeder
 
         // ═══ PRODUCT CATEGORIES & PRODUCTS ═══
         $catNames = ['ICT Equipment','Software','Networking','Office Supplies','Furniture','Security Systems','Cabling'];
-        foreach ($catNames as $cn) ProductCategory::create(['name' => $cn]);
+        foreach ($catNames as $cn) ProductCategory::create(['name' => $cn, 'slug' => Str::slug($cn)]);
         $categories = ProductCategory::all();
 
         $warehouseNames = ['Main Warehouse - Dar','Parktech Warehouse','Motisha Storage','Terkmark Warehouse','Glovin Inventory'];
