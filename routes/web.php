@@ -311,9 +311,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::patch('/employees/{employee}', [$ext, 'employeeUpdate'])->name('employees.update');
     Route::delete('/employees/{employee}', [$ext, 'employeeDestroy'])->name('employees.destroy');
 
-    Route::get('/attendance', [$ext, 'attendanceIndex'])->name('attendance.index');
-    Route::post('/attendance', [$ext, 'attendanceStore'])->name('attendance.store');
-    Route::delete('/attendance/{attendance}', [$ext, 'attendanceDestroy'])->name('attendance.destroy');
+    // Attendance
+    $attCtrl = App\Http\Controllers\Admin\AttendanceController::class;
+    Route::get('/attendance', [$attCtrl, 'index'])->name('attendance.index');
+    Route::post('/attendance/clock-in', [$attCtrl, 'clockIn'])->name('attendance.clock-in');
+    Route::post('/attendance/clock-out', [$attCtrl, 'clockOut'])->name('attendance.clock-out');
+    Route::post('/attendance/clock-out-all', [$attCtrl, 'clockOutAll'])->name('attendance.clock-out-all');
+    Route::post('/attendance', [$attCtrl, 'store'])->name('attendance.store');
+    Route::delete('/attendance/{attendance}', [$attCtrl, 'destroy'])->name('attendance.destroy');
 
     Route::get('/payroll', [$ext, 'payrollIndex'])->name('payroll.index');
     Route::post('/payroll', [$ext, 'payrollStore'])->name('payroll.store');
