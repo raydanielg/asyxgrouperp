@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
 class Warehouse extends Model
 {
-    protected $fillable = ['name', 'address', 'city', 'zip_code', 'phone', 'email', 'is_active', 'creator_id', 'created_by'];
+    use BelongsToCompany;
+
+    protected $fillable = ['name', 'address', 'city', 'zip_code', 'phone', 'email', 'is_active', 'creator_id', 'created_by', 'company_id'];
 
     protected $casts = ['is_active' => 'boolean'];
 
