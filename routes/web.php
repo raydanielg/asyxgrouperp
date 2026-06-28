@@ -4,7 +4,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+
+Route::get('/services', function () {
+    return view('pages.services');
+})->name('services');
+
+Route::get('/sectors-clients', function () {
+    return view('pages.sectors');
+})->name('sectors');
+
+Route::get('/why-asyx', function () {
+    return view('pages.why-asyx');
+})->name('why-asyx');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
 
 Auth::routes(['reset' => false, 'register' => false]);
 
