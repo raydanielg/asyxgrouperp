@@ -534,7 +534,7 @@ class MasterDataSeeder extends Seeder
 
         AuditLog::create([
             'user_id' => $admin->id, 'company_id' => $group?->id,
-            'action' => 'system_seeded', 'entity_type' => 'System',
+            'action' => 'system_seeded', 'module' => 'System',
             'new_values' => json_encode(['message' => 'Master data seeded']),
             'ip_address' => '127.0.0.1',
         ]);
