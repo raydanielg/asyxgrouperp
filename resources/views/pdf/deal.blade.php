@@ -66,7 +66,7 @@
         <div class="grid-item"><div class="k">Stage</div><div class="v">{{ ucfirst(str_replace('_', ' ', $deal->stage)) }}</div></div>
         <div class="grid-item"><div class="k">Lead</div><div class="v">{{ $deal->lead?->full_name ?? 'N/A' }}</div></div>
         <div class="grid-item"><div class="k">Expected Close</div><div class="v">{{ $deal->expected_close_date?->format('d M Y') ?? 'N/A' }}</div></div>
-        <div class="grid-item"><div class="k">Assigned To</div><div class="v">{{ $deal->assigned_to_name ?? 'Unassigned' }}</div></div>
+        <div class="grid-item" style="display:none;"></div>
         <div class="grid-item"><div class="k">Created</div><div class="v">{{ $deal->created_at->format('d M Y') }}</div></div>
       </div>
       <div class="stage-bar">
@@ -92,7 +92,7 @@
       @endforeach
     </div>
     @endif
-    @if($deal->relation_loaded('project') && $deal->project)
+    @if($deal->relationLoaded('project') && $deal->project)
     <div class="card" style="padding:16px 22px;background:#0F3D3E;color:#fff;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7;">Converted to Project</div>
