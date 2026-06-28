@@ -168,12 +168,20 @@ class DashboardController extends Controller
         $stats['monthExpenses'] = Expense::whereMonth('expense_date', date('m'))->whereYear('expense_date', date('Y'))->sum('amount') ?? 0;
         $stats['monthRevenues'] = Revenue::whereMonth('revenue_date', date('m'))->whereYear('revenue_date', date('Y'))->sum('amount') ?? 0;
 
+        // ─── Attendance Stats ───
+        $stats['todayPresent'] = Attendance::today()->where('status', 'present')->count();
+        $stats['todayLate'] = Attendance::today()->where('status', 'late')->count();
+        $stats['todayAbsent'] = Attendance::today()->where('status', 'absent')->count();
+        $stats['currentlyClockedIn'] = Attendance::today()->clockedIn()->count();
+        $stats['totalActiveEmployees'] = Employee::where('status', 'active')->count();
+        $recentAttendance = Attendance::with('employee')->today()->latest('clock_in_at')->take(5)->get();
+
         return view('admin.dashboard', compact(
             'stats', 'recentSales', 'recentPurchases', 'recentTickets',
             'recentProposals', 'recentUsers',
             'dailyLabels', 'dailySales', 'dailyPurchases',
             'monthlyLabels', 'monthlySales', 'monthlyPurchases',
-            'salesStatusBreakdown'
+            'salesStatusBreakdown', 'recentAttendance'
         ));
     }
 
