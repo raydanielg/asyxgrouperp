@@ -232,10 +232,12 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
         body: formData
     })
     .then(res => {
-        if (!res.ok && res.status === 422) {
+        if (!res.ok) {
             return res.json().then(errData => {
-                const errors = errData.errors ? Object.values(errData.errors).flat().join('\n') : (errData.message || 'Validation error');
+                const errors = errData.errors ? Object.values(errData.errors).flat().join('\n') : (errData.message || 'Server error');
                 throw new Error(errors);
+            }).catch(() => {
+                throw new Error('Server returned status ' + res.status + '. Please refresh the page and try again.');
             });
         }
         return res.json();
