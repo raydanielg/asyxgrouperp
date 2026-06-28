@@ -489,18 +489,25 @@ class ErpExtendedController extends Controller
                 $q->whereIn('name', ['hr_officer', 'administrator', 'admin_manager']);
             })->pluck('email')->filter()->unique();
 
-            foreach ($hrUsers as $email) {
+            $name = $application->full_name;
+            $email = $application->email ?: 'N/A';
+            $phone = $application->phone ?: 'N/A';
+            $jobTitle = $application->jobPosting ? $application->jobPosting->title : 'N/A';
+            $status = ucfirst($application->status);
+            $reviewUrl = url('/admin/applications/' . $application->id);
+
+            foreach ($hrUsers as $toEmail) {
                 Mail::raw(
                     "New job application received.\n\n"
-                    . "Applicant: {$application->full_name}\n"
-                    . "Email: {$application->email ?? 'N/A'}\n"
-                    . "Phone: {$application->phone ?? 'N/A'}\n"
-                    . "Job: " . ($application->jobPosting?->title ?? 'N/A') . "\n"
-                    . "Status: " . ucfirst($application->status) . "\n\n"
-                    . "Review at: " . url('/admin/applications/' . $application->id),
-                    function ($msg) use ($email, $application) {
-                        $msg->to($email)
-                            ->subject('New Job Application: ' . $application->full_name);
+                    . "Applicant: {$name}\n"
+                    . "Email: {$email}\n"
+                    . "Phone: {$phone}\n"
+                    . "Job: {$jobTitle}\n"
+                    . "Status: {$status}\n\n"
+                    . "Review at: {$reviewUrl}",
+                    function ($msg) use ($toEmail, $name) {
+                        $msg->to($toEmail)
+                            ->subject('New Job Application: ' . $name);
                     }
                 );
             }
