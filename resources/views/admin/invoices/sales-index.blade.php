@@ -39,6 +39,7 @@
                     </td>
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $invoice->invoice_date->format('d M Y') }}</td>
                     <td class="px-5 py-3 flex items-center gap-2">
+                        <a href="{{ route('admin.sales-invoices.show', $invoice) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a>
                         <a href="{{ route('admin.sales-invoices.edit', $invoice) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
         @if($invoice->status === 'draft')
         <form method="POST" action="{{ route('admin.sales-invoices.post', $invoice) }}" class="inline">@csrf<button class="text-sky-600 hover:text-sky-700 text-xs">Post</button></form>

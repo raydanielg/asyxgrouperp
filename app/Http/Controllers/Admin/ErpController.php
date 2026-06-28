@@ -445,6 +445,21 @@ class ErpController extends Controller
         return redirect()->route('admin.sales-invoices.index')->with('success', 'Invoice deleted.');
     }
 
+    public function salesInvoicePdf(SalesInvoice $salesInvoice)
+    {
+        $salesInvoice->load(['customer', 'warehouse', 'items']);
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+
+        $pdf = Pdf::loadView('pdf.invoice', ['invoice' => $salesInvoice, 'company' => $company]);
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        return $pdf->download('invoice-' . $salesInvoice->invoice_number . '.pdf');
+    }
+
     // ─── Sales Returns ───
     public function salesReturnIndex()
     {
