@@ -165,4 +165,17 @@ class CompanyController extends Controller
             'intercompanyPending', 'intercompanyAmount'
         ));
     }
+
+    public function switchCompany(Request $request)
+    {
+        $company = $request->get('company', 'all');
+
+        if ($company === 'all') {
+            session(['switched_company_id' => null]);
+        } else {
+            session(['switched_company_id' => (int) $company]);
+        }
+
+        return redirect()->back()->with('success', 'Company context switched.');
+    }
 }
