@@ -1,0 +1,15 @@
+{
+  "hrm": "Human Resources (HRM)",
+  "finance": "Finance & Accounting",
+  "crm": "CRM",
+  "projects": "Projects",
+  "inventory": "Inventory & Warehouse",
+  "sales": "Sales & Invoicing",
+  "pos": "Point of Sale",
+  "recruitment": "Recruitment",
+  "fleet": "Fleet Management",
+  "helpdesk": "Helpdesk",
+  "business-flow": "Business Flow",
+  "documents": "Documents",
+  "approvals": "Approvals"
+}
