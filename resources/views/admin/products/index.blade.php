@@ -221,12 +221,14 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
     btn.classList.add('opacity-60');
 
     const formData = new FormData(this);
+    formData.delete('_token'); // Use header instead
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
     fetch(storeUrl, {
         method: 'POST',
-        redirect: 'error',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || formData.get('_token'),
+            'X-CSRF-TOKEN': csrfToken,
             'X-Requested-With': 'XMLHttpRequest',
             'Accept': 'application/json'
         },
