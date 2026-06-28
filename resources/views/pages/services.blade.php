@@ -7,6 +7,10 @@
 
     {{-- Page hero --}}
     <section class="hero-gradient relative pt-32 pb-20 overflow-hidden">
+        <div class="absolute inset-0 opacity-15">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80" alt="Technology circuit" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-br from-navy via-navy/90 to-purple/20"></div>
         <div class="absolute top-20 right-10 w-72 h-72 bg-purple/20 rounded-full blur-3xl"></div>
         <div class="absolute bottom-10 left-10 w-96 h-96 bg-crimson/10 rounded-full blur-3xl"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -148,6 +152,46 @@
                         <li class="flex items-start gap-2"><svg class="w-3.5 h-3.5 text-bronze mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Certification programs</li>
                         <li class="flex items-start gap-2"><svg class="w-3.5 h-3.5 text-bronze mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Skills transfer</li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Capabilities showcase with images --}}
+    <section class="py-20 bg-[#F2F2F2]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-bronze/10 text-bronze text-xs font-bold uppercase tracking-wider mb-4">Our Capabilities</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-black text-navy section-title section-title-center">Technology in Action</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="rounded-2xl overflow-hidden shadow-lg group relative aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80" alt="Data center" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy/90 to-transparent flex items-end p-6">
+                        <div>
+                            <h4 class="font-heading font-bold text-white text-lg">Data Centre Operations</h4>
+                            <p class="text-sm text-gray-200">Mission-critical server infrastructure</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="rounded-2xl overflow-hidden shadow-lg group relative aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80" alt="Control room" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy/90 to-transparent flex items-end p-6">
+                        <div>
+                            <h4 class="font-heading font-bold text-white text-lg">Network Operations Centre</h4>
+                            <p class="text-sm text-gray-200">24/7 monitoring &amp; support</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="rounded-2xl overflow-hidden shadow-lg group relative aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994da?w=600&q=80" alt="Network cabling" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy/90 to-transparent flex items-end p-6">
+                        <div>
+                            <h4 class="font-heading font-bold text-white text-lg">Infrastructure Deployment</h4>
+                            <p class="text-sm text-gray-200">Fibre &amp; network cabling</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
