@@ -1,72 +1,59 @@
-<section class="py-20 lg:py-28 bg-gray-50">
+<section class="py-20 lg:py-28 bg-[#F2F2F2]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-            <span class="inline-block px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-4">How It Works</span>
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight">
-                From Tender to Payment<br>
-                <span class="text-emerald-600">in 6 Simple Steps</span>
-            </h2>
-        </div>
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            {{-- Left: Content --}}
+            <div>
+                <span class="inline-block px-4 py-1.5 rounded-full bg-bronze/10 text-bronze text-xs font-bold uppercase tracking-wider mb-4">01 About ASYX</span>
+                <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-navy leading-tight section-title mb-6">
+                    Tanzania's Trusted Technology Partner
+                </h2>
+                <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                    Since 2009, ASYX Group has been the trusted technology partner behind Tanzania's most critical systems - from power utilities to public transport to financial regulation.
+                </p>
+                <p class="text-gray-600 leading-relaxed mb-8">
+                    We serve government bodies, parastatals and regulated enterprises with smart technology, secure infrastructure, and sustainable growth solutions. Our 16+ years of experience means we understand the unique challenges of mission-critical operations in the Tanzanian context.
+                </p>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {{-- Step 1 --}}
-            <div class="relative bg-white rounded-2xl p-7 border border-gray-100 shadow-sm card-hover">
-                <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-sm">1</div>
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-5">
-                    <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="text-center">
+                        <p class="font-heading text-3xl font-black text-navy">16+</p>
+                        <p class="text-xs text-gray-500 mt-1">Years of Service</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-heading text-3xl font-black text-bronze">50+</p>
+                        <p class="text-xs text-gray-500 mt-1">Enterprise Clients</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-heading text-3xl font-black text-purple">9</p>
+                        <p class="text-xs text-gray-500 mt-1">Service Pillars</p>
+                    </div>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Tender Management</h3>
-                <p class="text-sm text-gray-500">Track tenders, convert to leads, and generate professional quotations — all from one dashboard.</p>
+
+                <a href="{{ route('about') }}" class="btn-secondary inline-flex items-center justify-center gap-2 px-7 py-3 text-base">
+                    Learn More About Us
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </a>
             </div>
 
-            {{-- Step 2 --}}
-            <div class="relative bg-white rounded-2xl p-7 border border-gray-100 shadow-sm card-hover">
-                <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-sm">2</div>
-                <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center mb-5">
-                    <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            {{-- Right: Visual --}}
+            <div class="relative">
+                <div class="rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="aspect-[4/3] hero-gradient flex items-center justify-center p-12 relative">
+                        <div class="absolute inset-0 opacity-[0.04]" style="background-image: url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M0 0h60v60H0z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221%22/%3E%3C/svg%3E');"></div>
+                        <div class="relative text-center">
+                            <div class="w-24 h-24 mx-auto rounded-full cta-gradient flex items-center justify-center mb-6 shadow-xl">
+                                <span class="font-heading font-black text-3xl text-white">2009</span>
+                            </div>
+                            <p class="font-heading text-xl font-bold text-white mb-2">Since 2009</p>
+                            <p class="text-sm text-gray-300 max-w-xs">Powersing Tanzania's mission-critical systems for 16+ years</p>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">LPO Creation</h3>
-                <p class="text-sm text-gray-500">Generate Local Purchase Orders, track status from sent to received, and manage suppliers.</p>
-            </div>
-
-            {{-- Step 3 --}}
-            <div class="relative bg-white rounded-2xl p-7 border border-gray-100 shadow-sm card-hover">
-                <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-sm">3</div>
-                <div class="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center mb-5">
-                    <svg class="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                {{-- Floating badge --}}
+                <div class="absolute -bottom-4 -left-4 bg-white rounded-xl px-6 py-3 shadow-xl">
+                    <p class="font-heading text-sm font-bold text-navy">Mission-Critical Ready</p>
+                    <p class="text-xs text-gray-500">24/7 Support Available</p>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Goods Received</h3>
-                <p class="text-sm text-gray-500">Record GRNs, match against LPOs, flag discrepancies, and update stock automatically.</p>
-            </div>
-
-            {{-- Step 4 --}}
-            <div class="relative bg-white rounded-2xl p-7 border border-gray-100 shadow-sm card-hover">
-                <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-sm">4</div>
-                <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center mb-5">
-                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Vendor Invoices</h3>
-                <p class="text-sm text-gray-500">Process vendor invoices, verify against GRNs, and schedule payments with full audit trails.</p>
-            </div>
-
-            {{-- Step 5 --}}
-            <div class="relative bg-white rounded-2xl p-7 border border-gray-100 shadow-sm card-hover">
-                <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-sm">5</div>
-                <div class="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center mb-5">
-                    <svg class="w-6 h-6 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Payments & Receipts</h3>
-                <p class="text-sm text-gray-500">Pay vendors, collect from clients, and reconcile against bank accounts — all tracked in real-time.</p>
-            </div>
-
-            {{-- Step 6 --}}
-            <div class="relative bg-white rounded-2xl p-7 border border-gray-100 shadow-sm card-hover">
-                <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-sm">6</div>
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-5">
-                    <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Profit Analysis</h3>
-                <p class="text-sm text-gray-500">Analyze project profitability, track budgets vs actuals, and make data-driven decisions.</p>
             </div>
         </div>
     </div>
