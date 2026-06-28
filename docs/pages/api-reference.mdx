@@ -1,0 +1,155 @@
+# API Reference
+
+This section documents the internal route structure and key controller methods of the ASYX Group ERP.
+
+## Route Structure
+
+All admin routes are prefixed with `/admin` and require authentication.
+
+### Public Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/` | Landing page |
+| GET | `/login` | Login form |
+| POST | `/login` | Authenticate |
+| GET | `/careers/jobs` | Public job listings |
+| GET | `/careers/jobs/{id}/apply` | Application form |
+| POST | `/careers/jobs/{id}/apply` | Submit application |
+
+### Admin Dashboard
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/dashboard` | Main admin dashboard |
+| GET | `/admin/role-dashboard` | Role-specific dashboard |
+| GET | `/admin/reports` | Reports page |
+
+### User Management
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/users` | List users |
+| GET | `/admin/users/create` | Create user form |
+| POST | `/admin/users` | Store user |
+| GET | `/admin/users/{id}/edit` | Edit user |
+| PUT | `/admin/users/{id}` | Update user |
+| DELETE | `/admin/users/{id}` | Delete user |
+| GET | `/admin/roles` | List roles |
+| GET | `/admin/users/login-history` | Login history |
+
+### HRM Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/employees` | List employees |
+| POST | `/admin/employees` | Create employee |
+| GET | `/admin/employees/{id}` | View employee |
+| PUT | `/admin/employees/{id}` | Update employee |
+| GET | `/admin/attendance` | Attendance list |
+| POST | `/admin/attendance/clock` | Clock in/out |
+| GET | `/admin/payroll` | Payroll list |
+| POST | `/admin/payroll/generate` | Generate payroll |
+| GET | `/admin/leaves` | Leave list |
+| GET | `/admin/performance` | Performance reviews |
+| GET | `/admin/training` | Training programs |
+
+### Recruitment Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/job-postings` | List job postings |
+| POST | `/admin/job-postings` | Create posting |
+| GET | `/admin/applications` | List applications |
+| GET | `/admin/applications/create` | Create application form |
+| POST | `/admin/applications` | Store application |
+| GET | `/admin/applications/{id}` | View application |
+| POST | `/admin/applications/{id}/approve` | Approve/reject |
+
+### Finance Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/sales-invoices` | List sales invoices |
+| POST | `/admin/sales-invoices` | Create invoice |
+| GET | `/admin/purchase-invoices` | List purchase invoices |
+| GET | `/admin/expenses` | List expenses |
+| GET | `/admin/revenues` | List revenues |
+| GET | `/admin/bank-accounts` | Bank accounts |
+| GET | `/admin/acc-transfers` | Account transfers |
+| GET | `/admin/bills` | Bills list |
+| GET | `/admin/estimates` | Estimates list |
+
+### CRM Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/crm-leads` | List leads |
+| POST | `/admin/crm-leads` | Create lead |
+| GET | `/admin/crm-deals` | List deals |
+| GET | `/admin/crm-contracts` | List contracts |
+| GET | `/admin/crm-contacts` | List contacts |
+
+### Inventory Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/products` | Product list |
+| GET | `/admin/product-categories` | Categories |
+| GET | `/admin/suppliers` | Suppliers |
+| GET | `/admin/stock-movements` | Stock movements |
+| GET | `/admin/warehouses` | Warehouses |
+| GET | `/admin/transfers` | Warehouse transfers |
+
+### Sales Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/sales-dashboard` | Sales dashboard |
+| GET | `/admin/sales-proposals` | Quotations |
+| GET | `/admin/sales-invoices` | Invoices |
+| GET | `/admin/sales-returns` | Returns |
+| GET | `/admin/pos` | POS terminal |
+| GET | `/admin/pos/reports` | POS reports |
+
+### Multi-Company Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/companies` | Company list |
+| POST | `/admin/companies/switch/{id}` | Switch context |
+| GET | `/admin/companies/consolidated` | Consolidated view |
+| GET | `/admin/intercompany` | Intercompany transactions |
+
+### Support Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/admin/helpdesk-tickets` | Ticket list |
+| POST | `/admin/helpdesk-tickets` | Create ticket |
+| GET | `/admin/helpdesk-categories` | Categories |
+
+## Key Models
+
+| Model | Table | Description |
+|-------|-------|-------------|
+| User | users | System users |
+| Company | companies | Registered companies |
+| Employee | employees | Employee records |
+| Attendance | attendances | Attendance records |
+| Payroll | payrolls | Payroll entries |
+| Leave | leaves | Leave requests |
+| JobPosting | job_postings | Open positions |
+| JobApplication | job_applications | Candidate applications |
+| SalesInvoice | sales_invoices | Customer invoices |
+| PurchaseInvoice | purchase_invoices | Vendor invoices |
+| Expense | expenses | Expense records |
+| Revenue | revenues | Revenue records |
+| Product | products | Product catalog |
+| Project | projects | Project records |
+| CrmLead | crm_leads | Sales leads |
+| CrmDeal | crm_deals | Sales deals |
+| HelpdeskTicket | helpdesk_tickets | Support tickets |
+| PosSale | pos_sales | POS transactions |
+| Vehicle | vehicles | Fleet vehicles |
+| AuditLog | audit_logs | Activity logs |
