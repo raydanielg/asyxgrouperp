@@ -21,7 +21,7 @@
             <td class="px-5 py-3"><div class="flex items-center gap-2"><div class="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:{{ $p->progress }}%"></div></div><span class="text-[10px] text-gray-500">{{ $p->progress }}%</span></div></td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $p->due_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $c=['planning'=>'sky','in_progress'=>'amber','completed'=>'emerald','on_hold'=>'gray','cancelled'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$p->status] ?? 'gray' }}-50 text-{{ $c[$p->status] ?? 'gray' }}-700">{{ ucfirst(str_replace('_', ' ', $p->status)) }}</span></td>
-            <td class="px-5 py-3 flex items-center gap-2"><a href="{{ route('admin.projects.show', $p) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a><form id="del-prj-{{ $p->id }}" method="POST" action="{{ route('admin.projects.destroy', $p) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-prj-{{ $p->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
+            <td class="px-5 py-3 flex items-center gap-2"><a href="{{ route('admin.projects.show', $p) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a><button onclick="downloadPdf('{{ route('admin.projects.pdf', $p) }}', '{{ $p->project_number }}')" class="text-emerald-600 hover:text-emerald-700 text-xs">PDF</button><form id="del-prj-{{ $p->id }}" method="POST" action="{{ route('admin.projects.destroy', $p) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-prj-{{ $p->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>
         @empty
@@ -49,4 +49,18 @@
         </form>
     </div>
 </div>
+@push('scripts')
+<script>
+function downloadPdf(url, title) {
+  Swal.fire({
+    title: 'Downloading...',
+    text: 'Preparing ' + title,
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading(); },
+    timer: 800,
+    willClose: () => { window.open(url, '_blank'); }
+  });
+}
+</script>
+@endpush
 @endsection
