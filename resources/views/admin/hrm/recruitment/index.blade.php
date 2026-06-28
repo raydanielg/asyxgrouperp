@@ -21,7 +21,12 @@
             <td class="px-5 py-3 text-xs text-gray-700">{{ $j->vacancies }}</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $j->deadline?->format('d M Y') ?? 'No deadline' }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($j->status=='open') ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-600' }}">{{ ucfirst($j->status) }}</span></td>
-            <td class="px-5 py-3"><form id="del-job-{{ $j->id }}" method="POST" action="{{ route('admin.job-postings.destroy', $j) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-job-{{ $j->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
+            <td class="px-5 py-3 text-xs">
+                <a href="{{ route('admin.job-postings.applications', $j) }}" class="text-emerald-600 hover:text-emerald-700 mr-3">View Applications</a>
+                <form id="del-job-{{ $j->id }}" method="POST" action="{{ route('admin.job-postings.destroy', $j) }}" class="inline">@csrf @method('DELETE')
+                <button type="button" onclick="confirmDelete('del-job-{{ $j->id }}')" class="text-red-500 hover:text-red-700">Delete</button>
+                </form>
+            </td>
         
         </tr>
         @empty
