@@ -75,6 +75,7 @@ $roleCount = count($roles);
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">User</th>
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Email &amp; Phone</th>
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Roles</th>
+            <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Company</th>
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Status</th>
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider text-right">Actions</th>
           </tr>
