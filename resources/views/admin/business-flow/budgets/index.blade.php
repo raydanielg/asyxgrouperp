@@ -27,7 +27,11 @@
                 <form id="del-bud-{{ $b->id }}" method="POST" action="{{ route('admin.budgets.destroy', $b) }}">@csrf @method('DELETE')</form>
                 <button onclick="confirmDelete('del-bud-{{ $b->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
             </td>
-        </tr>@empty<tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No budgets found</td></tr>@endforelse</tbody>
+        </tr>
+        @empty
+        <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No budgets found</td></tr>
+        @endforelse
+        </tbody>
     </table></div>
     <div class="px-5 py-4 border-t">{{ $budgets->links() }}</div>
 </div>
