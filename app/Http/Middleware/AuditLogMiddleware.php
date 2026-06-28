@@ -28,7 +28,7 @@ class AuditLogMiddleware
 
     protected function shouldLog(Request $request): bool
     {
-        $route = $request->route()?getName() ?? '';
+        $route = $request->route()?->getName() ?? '';
 
         foreach ($this->skipRoutes as $pattern) {
             if (fnmatch($pattern, $route)) {
