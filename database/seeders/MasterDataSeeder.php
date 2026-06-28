@@ -491,7 +491,7 @@ class MasterDataSeeder extends Seeder
                 'insurance_expiry' => $now->addMonths(rand(1, 11)),
                 'assigned_to' => $employees[array_rand($employees)]->id,
             ]);
-            VehicleMaintenance::create(['vehicle_id'=>$v->id,'description'=>'Regular service','maintenance_date'=>$now->subDays(rand(5,60)),'cost'=>rand(200000,1500000),'vendor'=>'Auto Center','status'=>'completed']);
+            VehicleMaintenance::create(['vehicle_id'=>$v->id,'maintenance_type'=>'service','description'=>'Regular service','service_date'=>$now->subDays(rand(5,60)),'cost'=>rand(200000,1500000),'service_provider'=>'Auto Center','status'=>'completed']);
             FuelLog::create(['vehicle_id'=>$v->id,'fuel_date'=>$now->subDays(rand(1,14)),'liters'=>rand(20,80),'cost_per_liter'=>2950,'total_cost'=>rand(59000,236000),'driver_name'=>$employees[array_rand($employees)]->full_name]);
         }
 
@@ -501,10 +501,11 @@ class MasterDataSeeder extends Seeder
         foreach (['Contract','Invoice','Report','Proposal','Policy'] as $i => $dt) {
             Document::create([
                 'company_id' => $companies->random()->id,
-                'title' => $dt . ' ' . ($i+1), 'type' => $dt,
+                'document_number' => 'DOC-' . $now->format('Ymd') . '-' . str_pad($i+1, 3, '0', STR_PAD_LEFT),
+                'title' => $dt . ' ' . ($i+1), 'category' => strtolower($dt),
                 'status' => 'active', 'file_path' => '/documents/sample-' . ($i+1) . '.pdf',
-                'mime_type' => 'application/pdf', 'file_size' => rand(100000, 5000000),
-                'version' => 1, 'created_by' => $admin->id,
+                'file_type' => 'application/pdf', 'file_size' => rand(100000, 5000000),
+                'version' => '1.0', 'uploaded_by' => $admin->id,
             ]);
         }
 
