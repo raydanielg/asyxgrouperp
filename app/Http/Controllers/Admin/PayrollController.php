@@ -99,6 +99,17 @@ class PayrollController extends Controller
         return redirect()->route('admin.payroll.index')->with('success', 'Payroll deleted.');
     }
 
+    public function generateForm()
+    {
+        $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        $years = range(now()->year - 2, now()->year + 1);
+        $activeEmployees = Employee::where('status', 'active')->count();
+        $existingCounts = Payroll::selectRaw('month, year, count(*) as cnt')
+            ->groupBy('month', 'year')->orderBy('year', 'desc')->orderByRaw("CASE month WHEN 'January' THEN 1 WHEN 'February' THEN 2 WHEN 'March' THEN 3 WHEN 'April' THEN 4 WHEN 'May' THEN 5 WHEN 'June' THEN 6 WHEN 'July' THEN 7 WHEN 'August' THEN 8 WHEN 'September' THEN 9 WHEN 'October' THEN 10 WHEN 'November' THEN 11 WHEN 'December' THEN 12 END")->get();
+
+        return view('admin.hrm.payroll.generate', compact('months', 'years', 'activeEmployees', 'existingCounts'));
+    }
+
     public function generate(Request $request)
     {
         $request->validate([

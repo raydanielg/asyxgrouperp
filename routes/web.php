@@ -320,9 +320,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::post('/attendance', [$attCtrl, 'store'])->name('attendance.store');
     Route::delete('/attendance/{attendance}', [$attCtrl, 'destroy'])->name('attendance.destroy');
 
-    Route::get('/payroll', [$ext, 'payrollIndex'])->name('payroll.index');
-    Route::post('/payroll', [$ext, 'payrollStore'])->name('payroll.store');
-    Route::delete('/payroll/{payroll}', [$ext, 'payrollDestroy'])->name('payroll.destroy');
+    $payCtrl = App\Http\Controllers\Admin\PayrollController::class;
+    Route::get('/payroll', [$payCtrl, 'index'])->name('payroll.index');
+    Route::get('/payroll/generate', [$payCtrl, 'generateForm'])->name('payroll.generate-form');
+    Route::post('/payroll/generate', [$payCtrl, 'generate'])->name('payroll.generate');
+    Route::get('/payroll/{payroll}', [$payCtrl, 'show'])->name('payroll.show');
+    Route::post('/payroll', [$payCtrl, 'store'])->name('payroll.store');
+    Route::patch('/payroll/{payroll}', [$payCtrl, 'update'])->name('payroll.update');
+    Route::delete('/payroll/{payroll}', [$payCtrl, 'destroy'])->name('payroll.destroy');
+    Route::get('/payroll/{payroll}/pdf', [$payCtrl, 'pdf'])->name('payroll.pdf');
 
     Route::get('/leaves', [$ext, 'leaveIndex'])->name('leaves.index');
     Route::post('/leaves', [$ext, 'leaveStore'])->name('leaves.store');
