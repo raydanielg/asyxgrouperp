@@ -29,7 +29,7 @@
         <div class="space-y-2">
         @forelse($project->tasks as $t)
         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div class="flex-1"><p class="text-xs font-medium text-gray-900">{{ $t->title }}</p><p class="text-[10px] text-gray-400">{{ $t->assignee?->name ?? 'Unassigned' }} {{ ($t->due_date) ? '- Due {{ $t->due_date->format('d M') }}' : '' }}</p></div>
+            <div class="flex-1"><p class="text-xs font-medium text-gray-900">{{ $t->title }}</p><p class="text-[10px] text-gray-400">{{ $t->assignee?->name ?? 'Unassigned' }} {{ $t->due_date ? '- Due ' . $t->due_date->format('d M') : '' }}</p></div>
             <div class="flex items-center gap-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($t->status=='done') ? 'bg-emerald-50 text-emerald-700' : (($t->status=='in_progress') ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600') }}">{{ ucfirst(str_replace('_', ' ', $t->status)) }}</span><form id="del-task-{{ $t->id }}" method="POST" action="{{ route('admin.projects.tasks.destroy', $t) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-task-{{ $t->id }}')" class="text-red-500 hover:text-red-700 text-[10px]">Delete</button></div>
         
         </div>
