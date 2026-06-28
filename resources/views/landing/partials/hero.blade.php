@@ -1,4 +1,10 @@
 <section id="home" class="hero-gradient relative min-h-screen flex items-center pt-20 overflow-hidden">
+    {{-- Background image --}}
+    <div class="absolute inset-0 opacity-20">
+        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80" alt="Server room" class="w-full h-full object-cover">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-br from-navy via-navy/90 to-purple/30"></div>
+
     {{-- Decorative elements --}}
     <div class="absolute top-20 right-10 w-72 h-72 bg-purple/20 rounded-full blur-3xl animate-float"></div>
     <div class="absolute bottom-10 left-10 w-96 h-96 bg-crimson/10 rounded-full blur-3xl"></div>
