@@ -355,7 +355,7 @@ return new class extends Migration
             $table->integer('reorder_level')->default(0);
             $table->string('type')->default('product');
             $table->boolean('is_active')->default(true);
-            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->nullOnDelete();
+            $table->unsignedBigInteger('warehouse_id')->nullable()->index();
             $table->timestamps();
         });
 
@@ -374,7 +374,7 @@ return new class extends Migration
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->nullOnDelete();
+            $table->unsignedBigInteger('warehouse_id')->nullable()->index();
             $table->string('type');
             $table->integer('quantity');
             $table->integer('balance_after');
@@ -387,7 +387,7 @@ return new class extends Migration
         Schema::create('pos_sales', function (Blueprint $table) {
             $table->id();
             $table->string('sale_number')->unique();
-            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->nullOnDelete();
+            $table->unsignedBigInteger('warehouse_id')->nullable()->index();
             $table->decimal('subtotal', 12, 2)->default(0);
             $table->decimal('tax_amount', 12, 2)->default(0);
             $table->decimal('discount_amount', 12, 2)->default(0);
