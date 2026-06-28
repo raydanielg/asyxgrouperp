@@ -23,7 +23,7 @@ class ApprovalWorkflow extends Model
 
     public function requests()
     {
-        return $this->hasMany(ApprovalRequest::class);
+        return $this->hasMany(ApprovalRequest::class, 'workflow_id');
     }
 
     public function company()
