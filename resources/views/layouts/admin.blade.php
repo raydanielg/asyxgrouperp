@@ -583,6 +583,7 @@
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search employees by name, email or ID..." class="bg-transparent text-sm outline-none w-64 text-gray-600 placeholder-gray-400">
                     <button class="ml-2 px-2 py-1 text-xs bg-emerald-600 text-white rounded-md hover:bg-emerald-700">Search</button>
                 </form>
+                <a href="{{ route('admin.applications.index') }}" class="hidden md:inline-flex items-center px-3 py-1.5 rounded-lg border border-emerald-200 text-emerald-700 text-xs font-medium hover:bg-emerald-50">Applications</a>
 
                 {{-- Notifications Dropdown --}}
                 @php
