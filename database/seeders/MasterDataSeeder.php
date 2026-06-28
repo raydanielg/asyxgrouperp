@@ -414,14 +414,20 @@ class MasterDataSeeder extends Seeder
                 'end_date' => $now->subDays(rand(1, 30))->addDays(rand(1, 5)),
                 'days' => rand(1, 5), 'status' => ['pending','approved','rejected'][rand(0,2)],
             ]);
-            if ($i % 2 == 0) Payroll::create([
-                'employee_id' => $emp->id, 'payroll_number' => 'PAY-' . $now->format('Ym') . '-' . str_pad($i+1,4,'0',STR_PAD_LEFT),
-                'month' => $now->format('F'), 'year' => $now->year,
-                'basic_salary' => $emp->salary, 'allowances' => rand(100000, 500000),
-                'deductions' => rand(50000, 300000),
-                'net_salary' => $emp->salary + rand(100000, 500000) - rand(50000, 300000),
-                'status' => 'paid', 'created_by' => $admin->id,
-            ]);
+            if ($i % 2 == 0) {
+                $pnum = 'PAY-' . $now->format('Ym') . '-' . str_pad($i+1,4,'0',STR_PAD_LEFT);
+                Payroll::updateOrCreate(
+                    ['payroll_number' => $pnum],
+                    [
+                        'employee_id' => $emp->id,
+                        'month' => $now->format('F'), 'year' => $now->year,
+                        'basic_salary' => $emp->salary, 'allowances' => rand(100000, 500000),
+                        'deductions' => rand(50000, 300000),
+                        'net_salary' => $emp->salary + rand(100000, 500000) - rand(50000, 300000),
+                        'status' => 'paid', 'created_by' => $admin->id,
+                    ]
+                );
+            }
             PerformanceReview::create([
                 'employee_id' => $emp->id, 'review_period' => 'Q' . rand(1,4) . ' ' . $now->year,
                 'goals' => 'Achieve targets', 'achievements' => 'Exceeded expectations',
