@@ -543,9 +543,9 @@
                 </button>
                 <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX" class="lg:hidden w-7 h-7 object-contain">
                 <h1 class="text-lg font-bold text-gray-800">@yield('page_title', 'Dashboard')</h1>
-                <div class="ml-auto flex items-center gap-2">@yield('page_actions')</div>
             </div>
             <div class="flex items-center gap-4">
+                @yield('page_actions')
                 {{-- Company Context Switcher --}}
                 @php
                     $userCompany = auth()->user()->company;
