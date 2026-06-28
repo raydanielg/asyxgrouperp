@@ -39,7 +39,7 @@
             <div class="border rounded-lg p-4">
                 <div class="flex items-center gap-2 mb-3 pb-2 border-b">
                     @php
-                    $modulePermNames = $modulePerms->pluck('name')->toArray();
+                    $modulePermNames = array_column($modulePerms, 'name');
                     $checkedCount = count(array_intersect($modulePermNames, $rolePermissions));
                     $allChecked = $checkedCount === count($modulePermNames);
                     @endphp
