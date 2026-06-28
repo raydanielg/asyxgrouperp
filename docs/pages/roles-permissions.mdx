@@ -1,0 +1,124 @@
+# Roles & Permissions
+
+ASYX Group ERP uses a comprehensive role-based access control (RBAC) system.
+
+## Available Roles
+
+| Role | Description | Primary Access |
+|------|-------------|---------------|
+| **Administrator** | Full system access | Everything |
+| **Director** | Executive oversight | Reports, finances, projects |
+| **Admin Manager** | Administrative operations | Users, settings, all modules |
+| **Finance Officer** | Financial management | Invoices, expenses, revenues, bank accounts |
+| **Auditor** | Financial auditing | Read-only finance, reports |
+| **HR Officer** | Human resources | Employees, payroll, leaves, recruitment |
+| **Legal Officer** | Legal & compliance | Contracts, projects |
+| **Receptionist** | Front desk | Leads, contacts, tickets |
+| **Logistics Officer** | Supply chain | Products, warehouses, transfers |
+| **Technical Manager** | IT management | Helpdesk, projects, team |
+| **ICT Engineer** | Technical support | Helpdesk tickets, projects |
+| **ICT Officer** | IT operations | Helpdesk, assets |
+| **Technician** | Field technician | Own assigned tickets |
+| **Project Manager** | Project delivery | Projects, timesheets, deals |
+| **Operations Manager** | Ops oversight | Products, projects, employees |
+| **Call Center Agent** | Customer outreach | Leads, contacts, tickets |
+| **Cashier** | Point of sale | POS terminal, sales |
+| **Supervisor** | Team supervision | Attendance, leaves, POS |
+
+## Role-Based Dashboards
+
+Each role gets a tailored dashboard showing relevant KPIs, charts, quick actions, and recent items.
+
+### Example: HR Officer Dashboard
+- **KPIs**: Total Employees, Active, Pending Leaves, Present Today
+- **Chart**: Attendance trend (14 days)
+- **Quick Actions**: Employees, Attendance, Leaves
+- **Recent Items**: New employees, pending leave requests
+
+### Example: Finance Officer Dashboard
+- **KPIs**: Total Sales, Outstanding, Month Expenses, Overdue Invoices
+- **Chart**: Revenue vs Expenses (14 days)
+- **Quick Actions**: Sales Invoices, Expenses, Revenues
+- **Recent Items**: Recent sales, expenses, revenues
+
+## Permissions
+
+Permissions control access to specific features:
+
+| Permission | Controls |
+|-----------|----------|
+| view-dashboard | Access to dashboard |
+| view-users | User management |
+| view-roles | Role management |
+| view-employees | Employee records |
+| view-attendance | Attendance module |
+| view-payroll | Payroll access |
+| view-leaves | Leave management |
+| view-performance | Performance reviews |
+| view-training | Training programs |
+| view-recruitment | Job postings & applications |
+| view-assets | Asset management |
+| view-events | HR events |
+| view-policies | Company policies |
+| view-crm-leads | CRM leads |
+| view-crm-deals | CRM deals |
+| view-crm-contracts | CRM contracts |
+| view-crm-contacts | Contact management |
+| view-bank-accounts | Bank accounts |
+| view-acc-transfers | Account transfers |
+| view-expenses | Expense management |
+| view-revenues | Revenue management |
+| view-bills | Bills |
+| view-projects | Projects |
+| view-timesheets | Time tracking |
+| view-bugs | Bug tracking |
+| view-products | Product catalog |
+| view-product-categories | Product categories |
+| view-suppliers | Supplier management |
+| view-stock-movements | Inventory movements |
+| view-sales-invoices | Sales invoices |
+| view-purchase-invoices | Purchase invoices |
+| view-pos | POS terminal |
+| view-helpdesk-tickets | Support tickets |
+| view-reports | Reports |
+| view-settings | System settings |
+
+## Managing Roles
+
+### Creating a Role
+
+**Navigation:** Admin → User Management → Roles & Permissions
+
+1. Click "Create Role"
+2. Enter role name (snake_case) and display label
+3. Select permissions to assign
+4. Save
+
+### Assigning Roles to Users
+
+1. Go to Admin → User Management → Users
+2. Edit a user
+3. Select role from dropdown
+4. Save
+
+## Sidebar Menu Filtering
+
+The sidebar menu automatically shows/hides items based on the user's role and permissions. Non-admin users only see menu items they have permission to access.
+
+## Middleware Protection
+
+Routes are protected at multiple levels:
+
+1. **Authentication** — User must be logged in
+2. **Admin Check** — Certain routes require admin role
+3. **Permission Check** — Specific features require matching permission
+4. **Company Context** — Data is filtered by active company
+
+```php
+// Example route protection
+Route::middleware(['auth'])->group(function () {
+    // Only admins
+    Route::get('/admin/users', [UserController::class, 'index'])
+        ->middleware('can:view-users');
+});
+```
