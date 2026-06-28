@@ -231,7 +231,15 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
         },
         body: formData
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok && res.status === 422) {
+            return res.json().then(errData => {
+                const errors = errData.errors ? Object.values(errData.errors).flat().join('\n') : (errData.message || 'Validation error');
+                throw new Error(errors);
+            });
+        }
+        return res.json();
+    })
     .then(data => {
         if (data.success) {
             closeCreateModal();
@@ -267,7 +275,7 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
         btn.disabled = false;
         btnText.textContent = 'Create Product';
         btn.classList.remove('opacity-60');
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Network error. Please try again.', confirmButtonColor: '#024938' });
+        Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Network error. Please try again.', confirmButtonColor: '#024938' });
     });
 });
 
