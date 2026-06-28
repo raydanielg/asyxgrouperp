@@ -1,34 +1,5 @@
-# ============================================================
-# ASYX Group ERP System - Root .htaccess
-# Redirects to public/ directory and protects sensitive files
-# SSL is handled by cPanel AutoSSL — no need to force here
-# ============================================================
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # --- Redirect to public/ directory ---
-    # Skip redirect if already in public/
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteRule ^(.*)$ /public/$1 [L,QSA]
 </IfModule>
-
-# --- Protect sensitive files ---
-<FilesMatch "(?i)^(\.env|\.gitignore|\.gitattributes|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|README\.md|artisan|\.editorconfig)$">
-    Require all denied
-    <IfModule mod_rewrite.c>
-        RewriteEngine Off
-    </IfModule>
-</FilesMatch>
-
-# --- Protect sensitive directories ---
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)/(.*)$ - [F,L]
-</IfModule>
-
-# --- Disable directory listing ---
-Options -Indexes
-
-# --- Default charset ---
-AddDefaultCharset UTF-8
