@@ -30,9 +30,10 @@ Route::get('/hosting', function () {
     return view('pages.hosting');
 })->name('hosting');
 
-Route::get('/careers', function () {
-    return view('pages.careers');
-})->name('careers');
+// Public Careers
+Route::get('/careers', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersJobsIndex'])->name('careers.jobs');
+Route::get('/careers/{jobPosting}/apply', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersApplyForm'])->name('careers.apply');
+Route::post('/careers/{jobPosting}/apply', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersApplySubmit'])->name('careers.apply.submit');
 
 Auth::routes(['reset' => false, 'register' => false]);
 
