@@ -22,7 +22,15 @@
             <td class="px-5 py-3 text-xs text-gray-700">{{ $g->supplier?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $g->received_date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $g->delivery_note_number ?? '—' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($g->status==='received')bg-emerald-50 text-emerald-700@elseif($g->status==='discrepant')bg-amber-50 text-amber-700@else bg-red-50 text-red-700@endif">{{ ucfirst($g->status) }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px]
+                @if($g->status === 'received')
+                    bg-emerald-50 text-emerald-700
+                @elseif($g->status === 'discrepant')
+                    bg-amber-50 text-amber-700
+                @else
+                    bg-red-50 text-red-700
+                @endif
+            ">{{ ucfirst($g->status) }}</span></td>
             <td class="px-5 py-3 flex items-center gap-2">
                 <a href="{{ route('admin.grns.show', $g) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a>
                 <form id="del-grn-{{ $g->id }}" method="POST" action="{{ route('admin.grns.destroy', $g) }}">@csrf @method('DELETE')</form>
