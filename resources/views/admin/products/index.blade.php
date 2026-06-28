@@ -341,10 +341,12 @@ function deleteProduct(id, name) {
         cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('{{ route("admin.products.destroy", ":id") }}'.replace(':id', id), {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            const delUrl = '{{ route("admin.products.destroy", ":id") }}'.replace(':id', id);
+            fetch(delUrl, {
                 method: 'DELETE',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || document.querySelector('input[name="_token"]')?.value,
+                    'X-CSRF-TOKEN': csrfToken,
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json'
                 }
