@@ -498,16 +498,18 @@ class MasterDataSeeder extends Seeder
             ['mk'=>'Toyota','md'=>'Land Cruiser','reg'=>'T 456 DEF','y'=>2022,'ft'=>'diesel'],
             ['mk'=>'Isuzu','md'=>'D-Max','reg'=>'T 789 GHI','y'=>2020,'ft'=>'diesel'],
         ] as $vd) {
-            $v = Vehicle::create([
-                'company_id' => $companies->random()->id,
-                'vehicle_number' => 'VEH-' . strtoupper(Str::random(6)),
-                'registration_number' => $vd['reg'],
-                'make' => $vd['mk'], 'model' => $vd['md'],
-                'year' => $vd['y'], 'fuel_type' => $vd['ft'],
-                'status' => 'active', 'odometer_reading' => rand(5000, 80000),
-                'insurance_expiry' => $now->addMonths(rand(1, 11)),
-                'assigned_to' => $employees[array_rand($employees)]->id,
-            ]);
+            $v = Vehicle::updateOrCreate(
+                ['registration_number' => $vd['reg']],
+                [
+                    'company_id' => $companies->random()->id,
+                    'vehicle_number' => 'VEH-' . strtoupper(Str::random(6)),
+                    'make' => $vd['mk'], 'model' => $vd['md'],
+                    'year' => $vd['y'], 'fuel_type' => $vd['ft'],
+                    'status' => 'active', 'odometer_reading' => rand(5000, 80000),
+                    'insurance_expiry' => $now->addMonths(rand(1, 11)),
+                    'assigned_to' => $employees[array_rand($employees)]->id,
+                ]
+            );
             VehicleMaintenance::create(['vehicle_id'=>$v->id,'maintenance_type'=>'service','description'=>'Regular service','service_date'=>$now->subDays(rand(5,60)),'cost'=>rand(200000,1500000),'service_provider'=>'Auto Center','status'=>'completed']);
             FuelLog::create(['vehicle_id'=>$v->id,'fuel_date'=>$now->subDays(rand(1,14)),'litres'=>rand(20,80),'cost_per_litre'=>2950,'total_cost'=>rand(59000,236000),'fuel_station'=>'Total Energies']);
         }
