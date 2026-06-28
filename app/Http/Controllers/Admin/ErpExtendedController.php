@@ -552,7 +552,7 @@ class ErpExtendedController extends Controller
                 $extra[] = $f->store('applications/attachments', 'public');
             }
         }
-        \App\Models\JobApplication::create([
+        $app = JobApplication::create([
             'job_posting_id' => $jobPosting->id,
             'company_id' => $jobPosting->company_id ?? null,
             'full_name' => $data['full_name'],
@@ -564,6 +564,7 @@ class ErpExtendedController extends Controller
             'status' => 'submitted',
             'notes' => $data['notes'] ?? null,
         ]);
+        $this->notifyHrNewApplication($app);
         return redirect()->route('careers.jobs')->with('success', 'Application submitted successfully.');
     }
 
