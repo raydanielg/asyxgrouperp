@@ -7,12 +7,13 @@
             </a>
 
             {{-- Desktop Nav --}}
-            <div class="hidden lg:flex items-center gap-8">
+            <div class="hidden lg:flex items-center gap-6">
                 <a href="{{ route('home') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Home</a>
-                <a href="{{ route('about') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">About</a>
+                <a href="{{ route('about') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">About Us</a>
+                <a href="{{ route('hosting') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Hosting</a>
                 <a href="{{ route('services') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Services</a>
-                <a href="{{ route('sectors') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Sectors &amp; Clients</a>
-                <a href="{{ route('why-asyx') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Why ASYX</a>
+                <a href="{{ route('careers') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Careers</a>
+                <a href="{{ route('contact') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Contacts</a>
             </div>
 
             {{-- CTA Buttons --}}
