@@ -18,7 +18,7 @@
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $t->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $t->trainer ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $t->start_date?->format('d M Y') ?? '—' }} {{ ($t->end_date) ? '- {{ $t->end_date->format('d M Y') }}' : '' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($t->status=='completed') ? 'bg-emerald-50 text-emerald-700' : ($t->status=='scheduled') ? 'bg-sky-50 text-sky-700' : 'if($t->status=='in_progress')bg-amber-50 text-amber-700 @else bg-gray-50 text-gray-600' }}">{{ ucfirst(str_replace('_', ' ', $t->status)) }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($t->status=='completed') ? 'bg-emerald-50 text-emerald-700' : (($t->status=='scheduled') ? 'bg-sky-50 text-sky-700' : (($t->status=='in_progress') ? 'bg-amber-50 text-amber-700' : 'bg-gray-50 text-gray-600')) }}">{{ ucfirst(str_replace('_', ' ', $t->status)) }}</span></td>
             <td class="px-5 py-3"><form id="del-tr-{{ $t->id }}" method="POST" action="{{ route('admin.training.destroy', $t) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-tr-{{ $t->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>
