@@ -1,0 +1,68 @@
+# Helpdesk & Support
+
+A full ticketing system for internal IT support and customer service.
+
+## Tickets
+
+Create and manage support requests.
+
+**Features:**
+- Ticket creation with title and description
+- Priority levels: Low, Medium, High, Critical
+- Category assignment
+- Status workflow: Open → In Progress → Resolved → Closed
+- Assignment to technicians/agents
+- File attachments
+- Response/comment thread
+- SLA tracking
+
+**Navigation:** Admin → Support → Tickets
+
+## Ticket Lifecycle
+
+```
+Open → Assigned → In Progress → Resolved → Closed
+                              ↘ Reopened → In Progress
+```
+
+## Categories
+
+Organize tickets by type.
+
+**Common Categories:**
+- Hardware Issues
+- Software Issues
+- Network Problems
+- Account Access
+- General Inquiry
+- Feature Request
+
+**Navigation:** Admin → Support → Categories
+
+## Assignment
+
+Tickets can be assigned based on:
+- Category expertise
+- Current workload
+- Department
+- Manual assignment by managers
+
+## Dashboard Metrics
+
+The helpdesk dashboard shows:
+- Open tickets count
+- In-progress tickets
+- Average resolution time
+- Tickets by category (chart)
+- Agent performance metrics
+- Overdue tickets
+
+## Role Access
+
+| Role | Permissions |
+|------|------------|
+| Admin | Full access to all tickets |
+| Technical Manager | Manage all tickets, assign agents |
+| ICT Engineer | View and resolve assigned tickets |
+| Technician | View and resolve own tickets |
+| Any User | Create tickets, view own tickets |
