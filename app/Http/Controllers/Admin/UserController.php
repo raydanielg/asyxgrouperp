@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\LoginHistory;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
@@ -50,7 +51,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::orderBy('name')->get();
-        return view('admin.users.create', compact('roles'));
+        $companies = Company::orderBy('name')->get();
+        return view('admin.users.create', compact('roles', 'companies'));
     }
 
     public function store(Request $request)
@@ -88,7 +90,8 @@ class UserController extends Controller
     {
         $roles = Role::orderBy('name')->get();
         $userRoles = $user->roles->pluck('id')->toArray();
-        return view('admin.users.edit', compact('user', 'roles', 'userRoles'));
+        $companies = Company::orderBy('name')->get();
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'companies'));
     }
 
     public function update(Request $request, User $user)
