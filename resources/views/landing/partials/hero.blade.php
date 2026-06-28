@@ -4,7 +4,7 @@
     <div class="absolute bottom-10 left-10 w-96 h-96 bg-crimson/10 rounded-full blur-3xl"></div>
 
     {{-- Grid overlay --}}
-    <div class="absolute inset-0 opacity-[0.04]" style="background-image: url(''data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M0 0h60v60H0z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221%22/%3E%3C/svg%3E'');"></div>
+    <div class="absolute inset-0 opacity-[0.04]" style="background-image: url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M0 0h60v60H0z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221%22/%3E%3C/svg%3E');"></div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 w-full">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -22,7 +22,7 @@
                 </h1>
 
                 <p class="mt-6 text-lg text-gray-300 max-w-xl mx-auto lg:mx-0 animate-fade-up delay-200 leading-relaxed">
-                    16+ years powering Tanzania''s mission-critical systems. From power utilities to public transport to financial regulation - ASYX Group is the trusted technology partner behind the nation''s most critical infrastructure.
+                    16+ years powering Tanzania's mission-critical systems. From power utilities to public transport to financial regulation - ASYX Group is the trusted technology partner behind the nation's most critical infrastructure.
                 </p>
 
                 <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-up delay-300">
