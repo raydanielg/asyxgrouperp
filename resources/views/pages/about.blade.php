@@ -158,6 +158,81 @@
         </div>
     </section>
 
+    {{-- Team showcase --}}
+    <section class="py-20 lg:py-28 bg-[#F2F2F2]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-bronze/10 text-bronze text-xs font-bold uppercase tracking-wider mb-4">Our People</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-black text-navy section-title section-title-center">The Team Behind ASYX</h2>
+                <p class="mt-6 text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    Our strength lies in our people - experienced engineers, project managers, and technology professionals dedicated to delivering mission-critical solutions.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {{-- Team member 1 --}}
+                <div class="card-hover bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Executive leader" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5 text-center">
+                        <h4 class="font-heading font-bold text-navy">Managing Director</h4>
+                        <p class="text-sm text-bronze font-semibold mt-1">Leadership &amp; Strategy</p>
+                    </div>
+                </div>
+
+                {{-- Team member 2 --}}
+                <div class="card-hover bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1573497069938-5a6e5a6b4b3e?w=400&q=80" alt="Engineer" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5 text-center">
+                        <h4 class="font-heading font-bold text-navy">Chief Engineer</h4>
+                        <p class="text-sm text-bronze font-semibold mt-1">ICT Infrastructure</p>
+                    </div>
+                </div>
+
+                {{-- Team member 3 --}}
+                <div class="card-hover bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658ab059152?w=400&q=80" alt="Project manager" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5 text-center">
+                        <h4 class="font-heading font-bold text-navy">Project Manager</h4>
+                        <p class="text-sm text-bronze font-semibold mt-1">Delivery &amp; Operations</p>
+                    </div>
+                </div>
+
+                {{-- Team member 4 --}}
+                <div class="card-hover bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <div class="aspect-square overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a32d82e28f?w=400&q=80" alt="Technology specialist" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5 text-center">
+                        <h4 class="font-heading font-bold text-navy">Security Lead</h4>
+                        <p class="text-sm text-bronze font-semibold mt-1">Cybersecurity</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Office/gallery strip --}}
+            <div class="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80" alt="Office workspace" class="w-full h-full object-cover">
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&q=80" alt="Team collaboration" class="w-full h-full object-cover">
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&q=80" alt="Control room" class="w-full h-full object-cover">
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-md aspect-[4/3]">
+                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994da?w=400&q=80" alt="Network infrastructure" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
     @include('landing.partials.cta')
     @include('landing.partials.footer')
 @endsection
