@@ -33,6 +33,8 @@ use App\Models\Supplier;
 use App\Models\StockMovement;
 use App\Models\PosSale;
 use App\Models\PosSaleItem;
+use App\Models\SalesProposal;
+use App\Models\SalesInvoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Warehouse;
 use App\Models\Company;
