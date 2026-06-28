@@ -26,6 +26,7 @@ use App\Models\ChMessage;
 use App\Models\User;
 use App\Models\NotificationTemplate;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
