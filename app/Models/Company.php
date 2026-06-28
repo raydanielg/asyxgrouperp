@@ -91,4 +91,18 @@ class Company extends Model
     {
         return $query->where('is_group', false)->where('is_active', true);
     }
+
+    public static function current(): ?self
+    {
+        $id = session('current_company_id');
+        return $id ? self::find($id) : null;
+    }
+
+    public function scopeForCurrentUser($query)
+    {
+        if (auth()->check() && !auth()->user()->isAdmin()) {
+            return $query->where('id', session('current_company_id'));
+        }
+        return $query;
+    }
 }
