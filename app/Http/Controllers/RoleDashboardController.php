@@ -30,25 +30,49 @@ class RoleDashboardController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
-        $role = $this->getUserRole($user);
+        try {
+            $user = auth()->user();
+            $role = $this->getUserRole($user);
 
-        $stats = $this->getStatsForRole($role);
-        $recentItems = $this->getRecentItemsForRole($role);
-        $kpiCards = $this->getKpiCardsForRole($role, $stats);
-        $quickActions = $this->getQuickActionsForRole($role);
-        $chartData = $this->getChartDataForRole($role);
-        $roleLabel = $this->getRoleLabel($role);
-        $secondaryKpis = $this->getSecondaryKpisForRole($role, $stats);
+            $stats = $this->getSafeStatsForRole($role);
+            $recentItems = $this->getSafeRecentItemsForRole($role);
+            $kpiCards = $this->getSafeKpiCardsForRole($role, $stats);
+            $quickActions = $this->getQuickActionsForRole($role);
+            $chartData = $this->getSafeChartDataForRole($role);
+            $roleLabel = $this->getRoleLabel($role);
+            $secondaryKpis = $this->getSafeSecondaryKpisForRole($role, $stats);
+            $aiInsights = $this->getAiInsightsForRole($role, $stats);
 
+            $money = fn($n) => 'TZS ' . number_format($n);
+
+            $viewName = 'roles.' . str_replace('_', '-', $role) . '.dashboard';
+            if (view()->exists($viewName)) {
+                return view($viewName, compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights'));
+            }
+
+            return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights'));
+        } catch (\Throwable $e) {
+            // Fail-safe: ensure no company/user ever sees a broken dashboard
+            return $this->renderFallbackDashboard($e);
+        }
+    }
+
+    private function renderFallbackDashboard(\Throwable $e): \Illuminate\View\View
+    {
+        $role = 'user';
+        $roleLabel = 'Dashboard';
+        $stats = [];
+        $recentItems = [];
+        $kpiCards = [
+            ['label' => 'Dashboard', 'value' => 'Available', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'color' => 'emerald'],
+        ];
+        $quickActions = [];
+        $chartData = ['title' => 'Activity', 'labels' => [], 'values' => [], 'secondaryValues' => []];
+        $secondaryKpis = [];
+        $aiInsights = ['message' => 'Dashboard loaded in safe mode.', 'suggestions' => []];
         $money = fn($n) => 'TZS ' . number_format($n);
 
-        $viewName = 'roles.' . str_replace('_', '-', $role) . '.dashboard';
-        if (view()->exists($viewName)) {
-            return view($viewName, compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis'));
-        }
-
-        return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis'));
+        return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights'));
     }
 
     private function getUserRole($user): string
@@ -772,5 +796,132 @@ class RoleDashboardController extends Controller
                 ['label' => 'My Tasks', 'value' => $stats['myTasks'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
             ],
         };
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // Safe wrappers - ensure no database/model errors reach the UI
+    // ════════════════════════════════════════════════════════════
+
+    private function getSafeStatsForRole(string $role): array
+    {
+        try {
+            return $this->getStatsForRole($role);
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    private function getSafeRecentItemsForRole(string $role): array
+    {
+        try {
+            return $this->getRecentItemsForRole($role);
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    private function getSafeKpiCardsForRole(string $role, array $stats): array
+    {
+        try {
+            return $this->getKpiCardsForRole($role, $stats);
+        } catch (\Throwable $e) {
+            return [
+                ['label' => 'Dashboard', 'value' => 'Ready', 'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17', 'color' => 'emerald'],
+            ];
+        }
+    }
+
+    private function getSafeChartDataForRole(string $role): array
+    {
+        try {
+            return $this->getChartDataForRole($role);
+        } catch (\Throwable $e) {
+            return [
+                'title' => 'Activity',
+                'secondaryTitle' => '',
+                'labels' => [],
+                'values' => [],
+                'secondaryValues' => [],
+            ];
+        }
+    }
+
+    private function getSafeSecondaryKpisForRole(string $role, array $stats): array
+    {
+        try {
+            return $this->getSecondaryKpisForRole($role, $stats);
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // AI Insights for each role
+    // ════════════════════════════════════════════════════════════
+
+    private function getAiInsightsForRole(string $role, array $stats): array
+    {
+        $suggestions = [];
+        $message = 'No actionable insights at this time.';
+
+        try {
+            $sales = $stats['totalSales'] ?? 0;
+            $expenses = $stats['totalExpenses'] ?? 0;
+            $revenues = $stats['totalRevenues'] ?? 0;
+            $profit = $revenues - $expenses;
+            $outstanding = $stats['salesBalance'] ?? 0;
+            $lowStock = $stats['lowStockProducts'] ?? 0;
+            $pendingLeaves = $stats['pendingLeaves'] ?? 0;
+            $openTickets = $stats['openTickets'] ?? 0;
+            $overdue = $stats['overdueInvoices'] ?? 0;
+            $absent = $stats['absentToday'] ?? 0;
+
+            if (in_array($role, ['admin', 'administrator', 'admin_manager', 'director'])) {
+                $message = 'Executive overview: Monitor revenue, expenses, and project delivery.';
+                if ($outstanding > 0) $suggestions[] = 'Follow up on TZS ' . number_format($outstanding) . ' outstanding customer balance.';
+                if ($profit < 0) $suggestions[] = 'Profit margin is negative. Review expenses and pricing strategy.';
+                if ($lowStock > 0) $suggestions[] = "$lowStock products are low on stock. Review procurement.";
+                if ($openTickets > 10) $suggestions[] = 'Support backlog is high. Allocate more resources to helpdesk.';
+                if (empty($suggestions)) $suggestions[] = 'Overall metrics look healthy. Focus on growth initiatives.';
+            } elseif ($role === 'finance_officer') {
+                $message = 'Financial health: Track cash flow, outstanding receivables, and payables.';
+                if ($overdue > 0) $suggestions[] = "$overdue invoices are overdue. Send payment reminders.";
+                if ($expenses > $revenues) $suggestions[] = 'Expenses exceed revenue. Prepare cost-control report.';
+                if ($outstanding > 0) $suggestions[] = 'Prepare aging report for outstanding receivables.';
+                if (empty($suggestions)) $suggestions[] = 'Cash flow is positive. Consider reinvestment opportunities.';
+            } elseif ($role === 'hr_officer') {
+                $message = 'HR insights: Monitor attendance, leaves, and workforce trends.';
+                if ($pendingLeaves > 0) $suggestions[] = "Review and approve $pendingLeaves pending leave requests.";
+                if ($absent > 0) $suggestions[] = "Investigate $absent absent employees today.";
+                if (empty($suggestions)) $suggestions[] = 'Attendance and leave management are on track.';
+            } elseif (in_array($role, ['technical_manager', 'ict_engineer', 'technician', 'ict_officer'])) {
+                $message = 'IT/Technical: Track ticket resolution and project delivery.';
+                if ($openTickets > 0) $suggestions[] = 'Prioritize open tickets to reduce backlog.';
+                if (empty($suggestions)) $suggestions[] = 'Ticket resolution rate is healthy. Maintain SLA targets.';
+            } elseif ($role === 'cashier') {
+                $message = 'POS: Monitor daily sales, transaction count, and payment methods.';
+                $suggestions[] = 'Reconcile cash drawer before end of shift.';
+                if ($sales > 0) $suggestions[] = 'Daily sales are recorded. Check for any discrepancies.';
+            } elseif ($role === 'supervisor') {
+                $message = 'Operations: Monitor attendance, leaves, and on-floor activities.';
+                if ($absent > 0) $suggestions[] = 'Coordinate replacements for absent staff.';
+                if (empty($suggestions)) $suggestions[] = 'Operations are running smoothly.';
+            } elseif ($role === 'logistics_officer') {
+                $message = 'Logistics: Track stock levels, transfers, and warehouse efficiency.';
+                if ($lowStock > 0) $suggestions[] = "Reorder $lowStock products running low.";
+                if (empty($suggestions)) $suggestions[] = 'Inventory levels are healthy.';
+            } else {
+                $message = 'Dashboard loaded successfully. Review your quick actions.';
+                $suggestions[] = 'Check assigned tasks and pending approvals.';
+            }
+        } catch (\Throwable $e) {
+            $message = 'Insights temporarily unavailable.';
+            $suggestions = [];
+        }
+
+        return [
+            'message' => $message,
+            'suggestions' => $suggestions,
+        ];
     }
 }

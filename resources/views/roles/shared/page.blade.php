@@ -99,6 +99,29 @@ $hasActions = $canEdit || $canDelete || $canApprove;
 </div>
         @endif
 
+@if(!empty($aiInsights['message']) || !empty($aiInsights['suggestions']))
+<div class="bg-gradient-to-r from-indigo-600 to-violet-700 rounded-xl p-4 mb-6 text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-12 -mt-12"></div>
+    <div class="relative z-10">
+        <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span class="text-xs font-bold uppercase tracking-wider">AI Assistant</span>
+        </div>
+        <p class="text-sm text-white/95 mb-2">{{ $aiInsights['message'] ?? 'Welcome to your role page.' }}</p>
+        @if(!empty($aiInsights['suggestions']))
+        <ul class="space-y-1">
+            @foreach($aiInsights['suggestions'] as $suggestion)
+            <li class="flex items-start gap-2 text-xs text-white/90">
+                <span class="inline-block w-1.5 h-1.5 rounded-full bg-yellow-300 mt-1.5"></span>
+                {{ $suggestion }}
+            </li>
+            @endforeach
+        </ul>
+        @endif
+    </div>
+</div>
+@endif
+
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="px-5 py-4 border-b flex items-center justify-between">
         <h3 class="text-sm font-bold text-gray-900">{{ ucfirst(str_replace('-', ' ', $module)) }} List</h3>
