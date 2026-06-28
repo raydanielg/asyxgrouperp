@@ -120,6 +120,7 @@ class PayrollController extends Controller
 
         $month = $request->month;
         $year = $request->year;
+        $companyId = session('current_company_id') ?? (auth()->user()->company_id ?? null);
         $employees = Employee::where('status', 'active')->get();
         $count = 0;
 
@@ -154,7 +155,7 @@ class PayrollController extends Controller
             Payroll::withoutGlobalScopes()->updateOrCreate(
                 ['payroll_number' => $pnum],
                 [
-                    'company_id' => auth()->user()->company_id,
+                    'company_id' => $companyId,
                     'employee_id' => $emp->id,
                     'month' => $month,
                     'year' => $year,
