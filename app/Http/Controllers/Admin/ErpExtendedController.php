@@ -56,7 +56,7 @@ class ErpExtendedController extends Controller
     // ═══════════════════════════════════════════════════════
     public function employeeIndex(Request $request)
     {
-        $query = Employee::with(['department', 'manager']);
+        $query = Employee::with(['manager']);
 
         if ($request->filled('department')) {
             $query->where('department', $request->department);
