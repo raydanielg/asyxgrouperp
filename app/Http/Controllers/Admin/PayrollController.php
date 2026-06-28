@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Payroll;
+use App\Models\SalaryAdvance;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,21 @@ class PayrollController extends Controller
         if ($request->filled('month')) {
             $query->where('month', $request->month);
         }
+
+    private function computePAYE(float $taxable): float
+    {
+        // Example PAYE brackets (TZ). Adjust as per current official rates if needed.
+        // 0 - 270,000 => 0%
+        // 270,001 - 520,000 => 8% of excess over 270,000
+        // 520,001 - 760,000 => 20,000 + 20% of excess over 520,000
+        // 760,001 - 1,000,000 => 68,000 + 25% of excess over 760,000
+        // 1,000,001+ => 128,000 + 30% of excess over 1,000,000
+        if ($taxable <= 270000) return 0.0;
+        if ($taxable <= 520000) return round(0.08 * ($taxable - 270000), 2);
+        if ($taxable <= 760000) return round(20000 + 0.20 * ($taxable - 520000), 2);
+        if ($taxable <= 1000000) return round(68000 + 0.25 * ($taxable - 760000), 2);
+        return round(128000 + 0.30 * ($taxable - 1000000), 2);
+    }
         if ($request->filled('year')) {
             $query->where('year', $request->year);
         }
@@ -132,7 +148,21 @@ class PayrollController extends Controller
 
             $basic = $emp->salary ?? 0;
             $allowances = round($basic * 0.2);
-            $deductions = round($basic * 0.08);
+
+            // Statutory deductions (employee side)
+            $nssf_employee = round($basic * 0.10, 2);
+            $nhif_employee = $emp->nhif_opt_in ? max(round($basic * 0.03, 2), 40000) : 0; // min 40,000
+
+            // Compute PAYE on taxable income
+            $taxable = max($basic + $allowances - $nssf_employee - $nhif_employee, 0);
+            $paye = $this->computePAYE($taxable);
+
+            // Employee deductions
+            $studentLoan = ($emp->has_student_loan ?? false) ? round($taxable * (($emp->student_loan_rate ?? 15) / 100), 2) : 0;
+            $bankLoan = (float)($emp->bank_loan_deduction ?? 0);
+            $employerLoan = (float)($emp->employer_loan_deduction ?? 0);
+
+            $deductions = $nssf_employee + $nhif_employee + $paye + $studentLoan + $bankLoan + $employerLoan;
             $net = $basic + $allowances - $deductions;
 
             Payroll::create([
