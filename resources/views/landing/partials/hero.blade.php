@@ -60,73 +60,46 @@
 
             {{-- Right: Visual --}}
             <div class="relative animate-fade-up delay-300 hidden lg:block">
-                <div class="glass rounded-2xl p-6 shadow-2xl">
-                    {{-- Mock dashboard --}}
-                    <div class="flex items-center justify-between mb-5">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 rounded-full bg-crimson"></div>
-                            <div class="w-3 h-3 rounded-full bg-bronze"></div>
-                            <div class="w-3 h-3 rounded-full bg-purple"></div>
-                        </div>
-                        <div class="text-xs text-gray-400 font-mono">asyxgroup.co.tz/dashboard</div>
-                    </div>
+                {{-- Main image --}}
+                <div class="rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="aspect-[4/5] relative">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80" alt="ASYX Group technology professional" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent"></div>
 
-                    {{-- Stats cards --}}
-                    <div class="grid grid-cols-3 gap-3 mb-4">
-                        <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-                            <p class="text-[10px] text-gray-400 uppercase tracking-wide">Systems Online</p>
-                            <p class="text-lg font-heading font-black text-bronze">99.9%</p>
-                            <p class="text-[10px] text-bronze/70">Uptime</p>
-                        </div>
-                        <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-                            <p class="text-[10px] text-gray-400 uppercase tracking-wide">Clients</p>
-                            <p class="text-lg font-heading font-black text-white">50+</p>
-                            <p class="text-[10px] text-gray-400">Active</p>
-                        </div>
-                        <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-                            <p class="text-[10px] text-gray-400 uppercase tracking-wide">Years</p>
-                            <p class="text-lg font-heading font-black text-white">16+</p>
-                            <p class="text-[10px] text-gray-400">Since 2009</p>
-                        </div>
-                    </div>
-
-                    {{-- Chart mock --}}
-                    <div class="bg-white/5 rounded-xl p-4 border border-white/10 mb-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <p class="text-xs font-semibold text-gray-300">Network Performance</p>
-                            <span class="text-[10px] text-bronze bg-bronze/20 px-2 py-0.5 rounded-full">Live</span>
-                        </div>
-                        <div class="flex items-end gap-2 h-24">
-                            <div class="flex-1 bg-crimson/40 rounded-t" style="height: 40%"></div>
-                            <div class="flex-1 bg-crimson/50 rounded-t" style="height: 55%"></div>
-                            <div class="flex-1 bg-purple/50 rounded-t" style="height: 35%"></div>
-                            <div class="flex-1 bg-purple/60 rounded-t" style="height: 70%"></div>
-                            <div class="flex-1 bg-bronze/60 rounded-t" style="height: 60%"></div>
-                            <div class="flex-1 bg-bronze/70 rounded-t" style="height: 85%"></div>
-                            <div class="flex-1 bg-bronze rounded-t" style="height: 95%"></div>
-                        </div>
-                    </div>
-
-                    {{-- Activity feed --}}
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-3 bg-white/5 rounded-lg p-2.5 border border-white/10">
-                            <div class="w-8 h-8 rounded-lg bg-bronze/20 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-bronze" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        {{-- Name overlay --}}
+                        <div class="absolute bottom-0 left-0 right-0 p-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full cta-gradient flex items-center justify-center shadow-lg">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="font-heading font-bold text-white text-lg">Expert Engineering Team</p>
+                                    <p class="text-sm text-gray-300">Mission-Critical Systems Division</p>
+                                </div>
                             </div>
-                            <div class="flex-1"><p class="text-xs text-white font-medium">TANESCO grid monitoring active</p><p class="text-[10px] text-gray-500">Real-time</p></div>
-                        </div>
-                        <div class="flex items-center gap-3 bg-white/5 rounded-lg p-2.5 border border-white/10">
-                            <div class="w-8 h-8 rounded-lg bg-purple/20 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
-                            </div>
-                            <div class="flex-1"><p class="text-xs text-white font-medium">Precision Air telematics synced</p><p class="text-[10px] text-gray-500">2 min ago</p></div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Floating badge --}}
-                <div class="absolute -top-4 -right-4 glass rounded-xl px-4 py-2 shadow-xl animate-float">
-                    <p class="text-xs text-white font-bold">Mission-Critical Ready</p>
+                {{-- Floating stat card: Uptime --}}
+                <div class="absolute -top-5 -left-5 glass rounded-xl px-5 py-3 shadow-xl animate-float">
+                    <p class="text-[10px] text-gray-300 uppercase tracking-wide">Systems Online</p>
+                    <p class="font-heading text-2xl font-black text-bronze">99.9%</p>
+                    <p class="text-[10px] text-bronze/70">Uptime Guaranteed</p>
+                </div>
+
+                {{-- Floating stat card: Years --}}
+                <div class="absolute top-1/2 -right-5 glass rounded-xl px-5 py-3 shadow-xl animate-float" style="animation-delay: 1s;">
+                    <p class="text-[10px] text-gray-300 uppercase tracking-wide">Experience</p>
+                    <p class="font-heading text-2xl font-black text-white">16+</p>
+                    <p class="text-[10px] text-gray-400">Years Since 2009</p>
+                </div>
+
+                {{-- Floating stat card: Clients --}}
+                <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 glass rounded-xl px-5 py-3 shadow-xl animate-float" style="animation-delay: 2s;">
+                    <p class="text-[10px] text-gray-300 uppercase tracking-wide">Enterprise Clients</p>
+                    <p class="font-heading text-2xl font-black text-crimson">50+</p>
+                    <p class="text-[10px] text-gray-400">Active Partnerships</p>
                 </div>
             </div>
         </div>
