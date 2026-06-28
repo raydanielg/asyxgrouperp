@@ -91,61 +91,35 @@
                     <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Demo Quick Login</span>
                     <div class="flex-1 h-px bg-gray-200"></div>
                 </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button type="button" onclick="quickLogin('admin@djanproject.com', 'admin12345')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-emerald-100 group-hover:bg-emerald-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-emerald-700">Admin</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('director@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-violet-400 hover:bg-violet-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-violet-100 group-hover:bg-violet-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-violet-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-violet-700">Director</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('hr@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-sky-400 hover:bg-sky-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-sky-100 group-hover:bg-sky-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-sky-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-sky-700">HR</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('finance@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-amber-400 hover:bg-amber-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-amber-100 group-hover:bg-amber-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-amber-700">Finance</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('cashier@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-rose-400 hover:bg-rose-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-rose-100 group-hover:bg-rose-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-rose-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-rose-700">Cashier</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('tech.manager@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-indigo-100 group-hover:bg-indigo-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-indigo-700">Tech Mgr</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('auditor@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-teal-400 hover:bg-teal-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-teal-100 group-hover:bg-teal-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-teal-700">Auditor</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('logistics@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-cyan-400 hover:bg-cyan-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-cyan-100 group-hover:bg-cyan-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-cyan-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-cyan-700">Logistics</span>
-                    </button>
-                    <button type="button" onclick="quickLogin('receptionist@djanproject.com', 'password123')" class="group flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-gray-200 hover:border-pink-400 hover:bg-pink-50 transition-all">
-                        <span class="w-8 h-8 rounded-full bg-pink-100 group-hover:bg-pink-200 flex items-center justify-center transition-colors">
-                            <svg class="w-4 h-4 text-pink-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                        </span>
-                        <span class="text-[10px] font-semibold text-gray-600 group-hover:text-pink-700">Reception</span>
-                    </button>
+                <div class="grid grid-cols-4 gap-1.5">
+                    @php
+                        $quickRoles = [
+                            ['admin@djanproject.com', 'admin12345', 'Admin', 'emerald'],
+                            ['director@djanproject.com', 'password123', 'Director', 'violet'],
+                            ['admin.manager@djanproject.com', 'password123', 'Admin Mgr', 'slate'],
+                            ['administrator@djanproject.com', 'password123', 'Adminstr', 'gray'],
+                            ['finance@djanproject.com', 'password123', 'Finance', 'amber'],
+                            ['auditor@djanproject.com', 'password123', 'Auditor', 'teal'],
+                            ['hr@djanproject.com', 'password123', 'HR', 'sky'],
+                            ['legal@djanproject.com', 'password123', 'Legal', 'lime'],
+                            ['receptionist@djanproject.com', 'password123', 'Reception', 'pink'],
+                            ['logistics@djanproject.com', 'password123', 'Logistics', 'cyan'],
+                            ['tech.manager@djanproject.com', 'password123', 'Tech Mgr', 'indigo'],
+                            ['technician@djanproject.com', 'password123', 'Technician', 'blue'],
+                            ['ict.officer@djanproject.com', 'password123', 'ICT Off', 'fuchsia'],
+                            ['ict.engineer@djanproject.com', 'password123', 'ICT Eng', 'purple'],
+                            ['project.manager@djanproject.com', 'password123', 'Proj Mgr', 'orange'],
+                            ['operations@djanproject.com', 'password123', 'Ops Mgr', 'green'],
+                            ['callcenter@djanproject.com', 'password123', 'Call Center', 'red'],
+                            ['cashier@djanproject.com', 'password123', 'Cashier', 'rose'],
+                            ['supervisor@djanproject.com', 'password123', 'Supervisor', 'yellow'],
+                        ];
+                    @endphp
+                    @foreach($quickRoles as $r)
+                        <button type="button" onclick="quickLogin('{{ $r[0] }}', '{{ $r[1] }}')" class="px-2 py-1.5 rounded-md border border-gray-200 hover:border-{{ $r[3] }}-400 hover:bg-{{ $r[3] }}-50 text-[10px] font-semibold text-gray-600 hover:text-{{ $r[3] }}-700 transition-all">
+                            {{ $r[2] }}
+                        </button>
+                    @endforeach
                 </div>
                 <p class="mt-2 text-center text-[10px] text-gray-400">Click a role to auto-fill &amp; login instantly</p>
             </div>
