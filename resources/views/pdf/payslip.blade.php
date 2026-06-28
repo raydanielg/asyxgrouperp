@@ -1,309 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="sw">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Payslip - {{ $payroll->payroll_number }}</title>
-    <style>
-        @page { margin: 0; size: A4 portrait; }
-        body {
-            font-family: 'DejaVu Sans', sans-serif;
-            font-size: 9pt;
-            color: #1f2937;
-            line-height: 1.5;
-            margin: 0;
-            padding: 0;
-            width: 210mm;
-            min-height: 297mm;
-        }
-        .page { padding: 32px 36px; }
+<meta charset="UTF-8">
+<title>Payslip &mdash; {{ $payroll->payroll_number }}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
 
-        .header-gradient {
-            background: linear-gradient(135deg, #024938, #047857, #059669);
-            padding: 28px 36px;
-            margin: -32px -36px 0;
-        }
-        .header-table { width: 100%; }
-        .header-table td { vertical-align: top; }
-        .logo-box {
-            width: 48px; height: 48px;
-            background: rgba(255,255,255,0.12);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .header-title { font-size: 22pt; font-weight: 900; color: #ffffff; margin: 0; letter-spacing: 0.5px; }
-        .header-sub { font-size: 7.5pt; color: #a7f3d0; font-weight: 600; margin: 2px 0 0; }
-        .header-right { text-align: right; color: #ffffff; }
-        .header-right .name { font-size: 10pt; font-weight: 800; }
-        .header-right .meta { font-size: 6.5pt; color: #a7f3d0; margin-top: 2px; }
+  *{box-sizing:border-box;}
+  body{
+    margin:36px auto;
+    background:#EDE9DD;
+    color:#1C2321;
+    font-family:'Inter',sans-serif;
+    max-width:760px;
+  }
 
-        .section-title {
-            font-size: 7pt; font-weight: 700; color: #6b7280;
-            text-transform: uppercase; letter-spacing: 1.5px;
-        }
+  .sheet{
+    background:#fff;
+    border-radius:6px;
+    box-shadow:0 18px 40px -10px rgba(15,61,62,.25),0 0 0 1px #E3DDCB;
+    position:relative;
+    overflow:hidden;
+  }
+  .stamp{
+    position:absolute;top:26px;right:-46px;
+    font-size:12px;font-weight:700;letter-spacing:.12em;
+    padding:6px 62px;
+    transform:rotate(35deg);
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+    z-index:10;
+  }
+  .stamp-paid{background:#2F7A3D;color:#fff;}
+  .stamp-pending{background:#C9A227;color:#23270F;}
+  .stamp-cancelled{background:#B23A2E;color:#fff;}
 
-        .employee-card {
-            margin: 20px 0;
-        }
-        .employee-card .name {
-            font-size: 16pt; font-weight: 800; color: #111827;
-        }
-        .employee-card .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            background: #f3f4f6;
-            border-radius: 4px;
-            font-size: 7pt;
-            font-weight: 600;
-            color: #6b7280;
-            margin-right: 6px;
-        }
-        .employee-card .status-badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 8pt;
-            font-weight: 800;
-        }
-        .employee-card .status-paid { background: #d1fae5; color: #065f46; }
-        .employee-card .status-pending { background: #fef3c7; color: #92400e; }
-        .employee-card .status-cancelled { background: #fee2e2; color: #991b1b; }
+  .head{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    padding:38px 44px 26px;
+    border-bottom:1px solid #E3DDCB;
+  }
+  .co-mark{display:flex;align-items:center;gap:12px;}
+  .co-icon{
+    width:38px;height:38px;border-radius:10px;
+    background:conic-gradient(from 90deg,#C9A227,#8C5E2A,#0F3D3E,#C9A227);
+    flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  }
+  .co-icon img{width:30px;height:30px;object-fit:contain;border-radius:4px;}
+  .co-name{font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;}
+  .co-addr{font-size:11.5px;color:#6E7570;margin-top:3px;line-height:1.5;}
 
-        .salary-grid { margin: 20px 0; }
-        .salary-table {
-            width: 100%;
-            border-collapse: collapse;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .salary-table th {
-            padding: 8px 14px;
-            font-size: 6.5pt;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            text-align: left;
-        }
-        .salary-table td {
-            padding: 6px 14px;
-            font-size: 8pt;
-            border-bottom: 1px solid #f3f4f6;
-        }
-        .salary-table .amt { text-align: right; font-weight: 600; }
-        .salary-table .total td { font-weight: 900; font-size: 8.5pt; padding: 8px 14px; }
+  .doc-title{text-align:right;}
+  .doc-title h1{font-family:'Fraunces',serif;font-size:24px;margin:0 0 8px;color:#1C2321;}
+  .doc-title .meta{font-size:12px;color:#6E7570;line-height:1.6;}
+  .doc-title .meta b{color:#1C2321;}
 
-        .earnings-table { background: #f0fdf4; border: 1px solid #bbf7d0; }
-        .earnings-table th { background: #dcfce7; color: #166534; border-bottom: 1px solid #bbf7d0; }
-        .earnings-table .total { background: #dcfce7; color: #166534; }
-        .earnings-table .total td { border-top: 1px solid #bbf7d0; }
+  .body{padding:30px 44px;}
 
-        .deductions-table { background: #fef2f2; border: 1px solid #fecaca; }
-        .deductions-table th { background: #fee2e2; color: #991b1b; border-bottom: 1px solid #fecaca; }
-        .deductions-table .total { background: #fee2e2; color: #991b1b; }
-        .deductions-table .total td { border-top: 1px solid #fecaca; }
+  .bill-row{display:flex;justify-content:space-between;margin-bottom:28px;gap:24px;}
+  .bill-to .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6E7570;margin-bottom:6px;}
+  .bill-to b{display:block;font-size:14.5px;color:#1C2321;}
+  .bill-to .addr{font-size:12.5px;color:#6E7570;line-height:1.6;margin-top:2px;}
+  .bill-to.right{text-align:right;}
 
-        .net-salary-box {
-            background: linear-gradient(135deg, #059669, #047857, #024938);
-            border-radius: 10px;
-            padding: 18px 24px;
-            margin: 20px 0;
-        }
-        .net-salary-box .label {
-            font-size: 7pt; font-weight: 700; color: #a7f3d0;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .net-salary-box .sub-label { font-size: 7pt; color: #6ee7b7; }
-        .net-salary-box .amount {
-            font-size: 22pt; font-weight: 900; color: #ffffff; text-align: right;
-        }
-        .net-salary-box .period { font-size: 7pt; color: #6ee7b7; text-align: right; }
+  .cols{display:flex;gap:36px;margin-top:6px;}
+  .col{flex:1;}
 
-        .detail-grid { margin: 16px 0; }
-        .detail-box {
-            background: #f9fafb;
-            border: 1px solid #f3f4f6;
-            border-radius: 8px;
-            padding: 10px 14px;
-            display: inline-block;
-            width: 30%;
-            margin-right: 2%;
-            vertical-align: top;
-        }
-        .detail-box .lbl { font-size: 6pt; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
-        .detail-box .val { font-size: 8.5pt; font-weight: 700; color: #1f2937; margin-top: 2px; }
+  table.lines{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px;}
+  table.lines th{
+    text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;
+    color:#6E7570;border-bottom:1.5px solid #1C2321;padding:0 4px 10px;
+  }
+  table.lines th.r, table.lines td.r{text-align:right;}
+  table.lines td{padding:12px 4px;border-bottom:1px solid #E3DDCB;color:#1C2321;}
+  table.lines td.neg{color:#B23A2E;}
+  table.lines tr.subtotal td{font-weight:700;border-bottom:none;padding-top:14px;color:#0F3D3E;}
 
-        .signature-area { margin: 24px 0 16px; }
-        .signature-table { width: 100%; }
-        .signature-table td {
-            text-align: center;
-            padding-top: 8px;
-            width: 50%;
-        }
-        .signature-table .line {
-            width: 160px; height: 1px;
-            background: #9ca3af;
-            margin: 0 auto 8px;
-        }
-        .signature-table .name { font-size: 9pt; font-weight: 800; color: #374151; }
-        .signature-table .role { font-size: 6.5pt; color: #9ca3af; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .net-bar{
+    margin-top:24px;padding:18px 22px;border-radius:10px;
+    background:#E2F0E5;display:flex;justify-content:space-between;align-items:center;
+  }
+  .net-bar span{font-size:12px;color:#2F7A3D;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+  .net-bar b{font-family:'JetBrains Mono',monospace;font-size:18px;color:#2F7A3D;}
 
-        .footer {
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #f3f4f6;
-        }
-        .footer p { font-size: 6pt; color: #9ca3af; margin: 0; }
-        .footer .pull-right { text-align: right; }
-    </style>
+  .foot{
+    padding:18px 44px;border-top:1px solid #E3DDCB;
+    background:#FBF9F2;
+    font-size:11px;color:#6E7570;text-align:center;
+  }
+</style>
 </head>
 <body>
-    <div class="page">
-        {{-- Header --}}
-        <div class="header-gradient">
-            <table class="header-table">
-                <tr>
-                    <td style="width: 60%;">
-                        <table>
-                            <tr>
-                                <td style="vertical-align: middle; padding-right: 14px;">
-                                    <div class="logo-box">
-                                        <img src="{{ public_path('asyxgrouplogo.png') }}" alt="ASYX Group" style="width:30px;height:30px;object-fit:contain;border-radius:6px;">
-                                    </div>
-                                </td>
-                                <td style="vertical-align: middle;">
-                                    <h1 class="header-title">PAYSLIP</h1>
-                                    <p class="header-sub">{{ $payroll->month }} {{ $payroll->year }} &bull; {{ $payroll->payroll_number }}</p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td class="header-right">
-                        <div class="name">{{ config('app.name') }}</div>
-                        <div class="meta">{{ $company?->name ?? 'Enterprise ERP' }}<br>{{ now()->format('d/m/Y') }}</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+  <div class="sheet">
+    @php $s = $payroll->status @endphp
+    <div class="stamp stamp-{{ $s }}">{{ strtoupper($s) }}</div>
 
-        {{-- Employee Info --}}
-        <div class="employee-card">
-            <table style="width: 100%;">
-                <tr>
-                    <td style="width: 55%;">
-                        <div class="section-title">Employee</div>
-                        <div class="name">{{ $payroll->employee?->full_name ?? 'N/A' }}</div>
-                        <div style="margin-top: 6px;">
-                            <span class="badge">{{ $payroll->employee?->employee_id ?? 'N/A' }}</span>
-                            <span class="badge">{{ $payroll->employee?->department ?? 'N/A' }}</span>
-                        </div>
-                    </td>
-                    <td style="width: 25%;">
-                        <div class="section-title">Designation</div>
-                        <div style="font-size: 9pt; font-weight: 700; margin-top: 2px;">{{ $payroll->employee?->designation ?? 'N/A' }}</div>
-                    </td>
-                    <td style="width: 20%; text-align: right;">
-                        <div class="section-title">Status</div>
-                        <div style="margin-top: 4px;">
-                            @php $s = $payroll->status @endphp
-                            <span class="status-badge status-{{ $s }}">{{ strtoupper($s) }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+    <div class="head">
+      <div class="co-mark">
+        <div class="co-icon">
+          <img src="{{ public_path('asyxgrouplogo.png') }}" alt="ASYX">
         </div>
-
-        {{-- Salary Breakdown Grid --}}
-        <div class="salary-grid">
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                    <td style="width: 48%; vertical-align: top; padding-right: 2%;">
-                        <table class="salary-table earnings-table">
-                            <thead><tr><th>Earnings</th><th class="amt">Amount (TZS)</th></tr></thead>
-                            <tbody>
-                                <tr><td>Basic Salary</td><td class="amt">{{ number_format($payroll->basic_salary, 2) }}</td></tr>
-                                <tr><td>Housing Allowance</td><td class="amt">{{ number_format($payroll->allowances * 0.5, 2) }}</td></tr>
-                                <tr><td>Transport Allowance</td><td class="amt">{{ number_format($payroll->allowances * 0.3, 2) }}</td></tr>
-                                <tr><td>Medical Allowance</td><td class="amt">{{ number_format($payroll->allowances * 0.2, 2) }}</td></tr>
-                                <tr class="total"><td>Total Earnings</td><td class="amt">{{ number_format($payroll->basic_salary + $payroll->allowances, 2) }}</td></tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td style="width: 48%; vertical-align: top; padding-left: 2%;">
-                        <table class="salary-table deductions-table">
-                            <thead><tr><th>Deductions</th><th class="amt">Amount (TZS)</th></tr></thead>
-                            <tbody>
-                                <tr><td>PAYE Tax</td><td class="amt">{{ number_format($payroll->deductions * 0.6, 2) }}</td></tr>
-                                <tr><td>NSSF (Employee)</td><td class="amt">{{ number_format($payroll->deductions * 0.2, 2) }}</td></tr>
-                                <tr><td>NHIF / Health Insurance</td><td class="amt">{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
-                                <tr><td>Other Deductions</td><td class="amt">{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
-                                <tr class="total"><td>Total Deductions</td><td class="amt">{{ number_format($payroll->deductions, 2) }}</td></tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+        <div>
+          <div class="co-name">{{ config('app.name') }}</div>
+          <div class="co-addr">{{ $company?->name ?? 'ASYX Group' }}<br>Dar es Salaam, Tanzania</div>
         </div>
-
-        {{-- Net Salary Box --}}
-        <div class="net-salary-box">
-            <table style="width: 100%;">
-                <tr>
-                    <td style="width: 60%;">
-                        <div class="label">Net Salary</div>
-                        <div class="sub-label">Amount payable to employee</div>
-                    </td>
-                    <td style="width: 40%;">
-                        <div class="amount">TZS {{ number_format($payroll->net_salary, 2) }}</div>
-                        <div class="period">{{ ucfirst($payroll->month) }} {{ $payroll->year }}</div>
-                    </td>
-                </tr>
-            </table>
+      </div>
+      <div class="doc-title">
+        <h1>Payslip</h1>
+        <div class="meta">
+          Kipindi: <b>{{ $payroll->month }} {{ $payroll->year }}</b><br>
+          Tarehe ya Malipo: <b>{{ $payroll->created_at?->format('M d, Y') ?? now()->format('M d, Y') }}</b>
         </div>
-
-        {{-- Payment Details --}}
-        <div class="detail-grid">
-            <div class="detail-box">
-                <div class="lbl">Payment Method</div>
-                <div class="val">Bank Transfer</div>
-            </div>
-            <div class="detail-box">
-                <div class="lbl">Created By</div>
-                <div class="val">{{ $payroll->creator?->name ?? 'System' }}</div>
-            </div>
-            <div class="detail-box" style="margin-right: 0;">
-                <div class="lbl">Payment Date</div>
-                <div class="val">{{ $payroll->created_at?->format('d M Y') ?? now()->format('d M Y') }}</div>
-            </div>
-        </div>
-
-        {{-- Signatures --}}
-        <div class="signature-area">
-            <table class="signature-table">
-                <tr>
-                    <td>
-                        <div class="line"></div>
-                        <div class="name">{{ $payroll->employee?->full_name ?? 'N/A' }}</div>
-                        <div class="role">Employee Signature</div>
-                    </td>
-                    <td>
-                        <div class="line"></div>
-                        <div class="name">{{ $payroll->creator?->name ?? 'Authorized Signatory' }}</div>
-                        <div class="role">Authorized Signature</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        {{-- Footer --}}
-        <div class="footer">
-            <table style="width: 100%;">
-                <tr>
-                    <td><p>This is a computer-generated payslip. For discrepancies contact Finance/HR.</p></td>
-                    <td class="pull-right"><p>Generated {{ now()->format('d M Y H:i:s') }}</p></td>
-                </tr>
-            </table>
-        </div>
+      </div>
     </div>
+
+    <div class="body">
+      <div class="bill-row">
+        <div class="bill-to">
+          <div class="lbl">Mfanyakazi</div>
+          <b>{{ $payroll->employee?->full_name ?? 'N/A' }}</b>
+          <div class="addr">
+            {{ $payroll->employee?->designation ?? '' }} &mdash; {{ $payroll->employee?->department ?? '' }}<br>
+            Employee ID: {{ $payroll->employee?->employee_id ?? 'N/A' }}
+          </div>
+        </div>
+        <div class="bill-to right">
+          <div class="lbl">Mwajiri</div>
+          <b>{{ config('app.name') }}</b>
+          <div class="addr">
+            TIN: 109-XXX-XXX<br>
+            NSSF No: NS-{{ str_pad($payroll->employee_id ?? 0, 5, '0', STR_PAD_LEFT) }}<br>
+            PAYE No: PY-{{ str_pad($payroll->id, 5, '0', STR_PAD_LEFT) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="col">
+          <table class="lines">
+            <tr><th>Mapato</th><th class="r">Kiasi</th></tr>
+            <tr><td>Mshahara wa Msingi</td><td class="r">{{ number_format($payroll->basic_salary, 2) }} Tsh</td></tr>
+            <tr><td>Posho ya Usafiri</td><td class="r">{{ number_format($payroll->allowances * 0.5, 2) }} Tsh</td></tr>
+            <tr><td>Posho ya Mawasiliano</td><td class="r">{{ number_format($payroll->allowances * 0.3, 2) }} Tsh</td></tr>
+            <tr><td>Posho ya Matibabu</td><td class="r">{{ number_format($payroll->allowances * 0.2, 2) }} Tsh</td></tr>
+            <tr class="subtotal"><td>Jumla ya Mapato</td><td class="r">{{ number_format($payroll->basic_salary + $payroll->allowances, 2) }} Tsh</td></tr>
+          </table>
+        </div>
+        <div class="col">
+          <table class="lines">
+            <tr><th>Makato</th><th class="r">Kiasi</th></tr>
+            <tr><td>PAYE</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.6, 2) }} Tsh</td></tr>
+            <tr><td>NSSF (10%)</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.2, 2) }} Tsh</td></tr>
+            <tr><td>NHIF</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }} Tsh</td></tr>
+            <tr><td>WCF / Other</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }} Tsh</td></tr>
+            <tr class="subtotal" style="color:#B23A2E;"><td>Jumla ya Makato</td><td class="r neg">&minus;{{ number_format($payroll->deductions, 2) }} Tsh</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="net-bar">
+        <span>Net Pay</span>
+        <b>{{ number_format($payroll->net_salary, 2) }} Tsh</b>
+      </div>
+    </div>
+
+    <div class="foot">
+      Payslip Generated on {{ now()->format('l, F jS, Y') }} &middot; {{ config('app.name') }}
+    </div>
+  </div>
 </body>
 </html>
