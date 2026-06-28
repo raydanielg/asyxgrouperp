@@ -455,10 +455,11 @@ class MasterDataSeeder extends Seeder
         }
         $tCats = HelpdeskCategory::all();
         for ($i = 1; $i <= 20; $i++) {
+            $titles = ['Internet issue','Printer problem','Email setup','Software install','Access request','VPN issue','Server alert','Password reset','System error','Network slow'];
             HelpdeskTicket::create([
                 'company_id' => $companies->random()->id,
                 'ticket_id' => 'TKT-' . $now->format('Ymd') . '-' . str_pad($i,4,'0',STR_PAD_LEFT),
-                'title' => ['Internet issue','Printer problem','Email setup','Software install','Access request','VPN issue','Server alert','Password reset','System error','Network slow'][$i-1],
+                'title' => $titles[($i - 1) % count($titles)],
                 'description' => 'Issue description', 'category_id' => $tCats->random()->id,
                 'priority' => ['low','medium','high','urgent'][rand(0,3)],
                 'status' => ['open','in_progress','resolved','closed'][rand(0,3)],
