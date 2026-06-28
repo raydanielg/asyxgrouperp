@@ -131,12 +131,14 @@ class MasterDataSeeder extends Seeder
         // PRODUCTS & INVENTORY
         // ═══════════════════════════════════════
         foreach (['ICT Equipment','Software','Networking','Office Supplies','Furniture','Security Systems','Cabling'] as $cn) {
-            ProductCategory::create(['name' => $cn, 'slug' => Str::slug($cn)]);
+            ProductCategory::updateOrCreate(['slug' => Str::slug($cn)], ['name' => $cn, 'slug' => Str::slug($cn)]);
         }
         $cats = ProductCategory::all();
 
         foreach (['Main Warehouse - Dar','Parktech Warehouse','Motisha Storage','Terkmark Warehouse','Glovin Inventory'] as $i => $wn) {
-            Warehouse::create([
+            Warehouse::updateOrCreate([
+                'name' => $wn,
+            ], [
                 'company_id' => $companies->get($i % $companies->count())->id,
                 'name' => $wn, 'address' => 'Dar es Salaam', 'city' => 'Dar es Salaam', 'zip_code' => '14111',
                 'creator_id' => $admin->id, 'created_by' => $admin->id, 'is_active' => true,
@@ -159,10 +161,15 @@ class MasterDataSeeder extends Seeder
             ['name'=>'Cisco ISR 4321 Router','code'=>'CIS-ISR4321','cat'=>'Networking','sp'=>12500000,'pp'=>9200000,'q'=>8],
             ['name'=>'Staples A4 Paper 5000pk','code'=>'OFF-PAPER-A4','cat'=>'Office Supplies','sp'=>45000,'pp'=>32000,'q'=>500],
             ['name'=>'HP LaserJet M404dn','code'=>'HP-LJ-M404','cat'=>'ICT Equipment','sp'=>1800000,'pp'=>1200000,'q'=>18],
+            ['name'=>'Lenovo ThinkPad T14','code'=>'LEN-T14','cat'=>'ICT Equipment','sp'=>4200000,'pp'=>3300000,'q'=>20],
+            ['name'=>'MikroTik CRS328 Switch','code'=>'MT-CRS328','cat'=>'Networking','sp'=>2700000,'pp'=>2100000,'q'=>22],
+            ['name'=>'Brother HL-L2375DW','code'=>'BRO-HL2375','cat'=>'ICT Equipment','sp'=>650000,'pp'=>480000,'q'=>35],
         ];
         foreach ($prodData as $pd) {
             $cat = $cats->where('name', $pd['cat'])->first();
-            $products[] = Product::create([
+            $products[] = Product::updateOrCreate([
+                'product_code' => $pd['code'],
+            ], [
                 'company_id' => $companies->random()->id, 'category_id' => $cat->id,
                 'name' => $pd['name'], 'product_code' => $pd['code'],
                 'sale_price' => $pd['sp'], 'purchase_price' => $pd['pp'],
@@ -173,8 +180,12 @@ class MasterDataSeeder extends Seeder
         foreach ([
             ['n'=>'TechMart Tanzania Ltd','p'=>'255712100001','e'=>'info@techmart.co.tz'],
             ['n'=>'CompSys East Africa','p'=>'255712100002','e'=>'sales@compsys.co.tz'],
+            ['n'=>'ICT Solutions Ltd','p'=>'255712100003','e'=>'info@ictsolutions.co.tz'],
+            ['n'=>'Tanzania Office Supplies','p'=>'255712100004','e'=>'sales@tos.co.tz'],
         ] as $sd) {
-            $suppliers[] = Supplier::create([
+            $suppliers[] = Supplier::updateOrCreate([
+                'email' => $sd['e'],
+            ], [
                 'company_id' => $companies->random()->id, 'name' => $sd['n'],
                 'contact_person' => 'Contact', 'phone' => $sd['p'], 'email' => $sd['e'],
                 'address' => 'Dar es Salaam', 'is_active' => true,
@@ -299,7 +310,7 @@ class MasterDataSeeder extends Seeder
         // SALES INVOICES
         // ═══════════════════════════════════════
         $sOpts = ['draft','posted','paid','overdue','partial'];
-        for ($i = 1; $i <= 15; $i++) {
+        for ($i = 1; $i <= 30; $i++) {
             $st = $sOpts[array_rand($sOpts)]; $total = rand(500000, 50000000);
             $paid = $st === 'paid' ? $total : ($st === 'partial' ? $total * rand(1, 9) / 10 : 0);
             $inv = SalesInvoice::create([
@@ -319,7 +330,7 @@ class MasterDataSeeder extends Seeder
         }
 
         // PURCHASE INVOICES
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $st = $sOpts[array_rand($sOpts)]; $total = rand(300000, 30000000);
             $paid = $st === 'paid' ? $total : ($st === 'partial' ? $total * rand(1, 9) / 10 : 0);
             PurchaseInvoice::create([
@@ -335,7 +346,7 @@ class MasterDataSeeder extends Seeder
         }
 
         // SALES PROPOSALS
-        for ($i = 1; $i <= 8; $i++) {
+        for ($i = 1; $i <= 12; $i++) {
             $total = rand(1000000, 30000000);
             SalesProposal::create([
                 'company_id' => $companies->random()->id,
@@ -438,7 +449,7 @@ class MasterDataSeeder extends Seeder
             HelpdeskCategory::create(['name' => $cn, 'creator_id' => $admin->id, 'created_by' => $admin->id]);
         }
         $tCats = HelpdeskCategory::all();
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             HelpdeskTicket::create([
                 'company_id' => $companies->random()->id,
                 'ticket_id' => 'TKT-' . $now->format('Ymd') . '-' . str_pad($i,4,'0',STR_PAD_LEFT),
