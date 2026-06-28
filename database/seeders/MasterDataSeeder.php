@@ -365,7 +365,7 @@ class MasterDataSeeder extends Seeder
                 'revenue_number' => 'REV-' . $now->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
                 'amount' => rand(500000, 10000000), 'revenue_date' => $now->subDays(rand(0, 60)),
                 'category' => ['Services','Products','Consulting'][rand(0,2)], 'payer' => 'Client ' . $i,
-                'description' => 'Revenue ' . $i, 'created_by' => $admin->id,
+                'notes' => 'Revenue ' . $i, 'created_by' => $admin->id,
             ]);
             Bill::create([
                 'company_id' => $companies->random()->id,
