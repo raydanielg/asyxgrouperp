@@ -231,14 +231,18 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
         },
         body: formData
     })
-    .then(res => {
+    .then(async res => {
         if (!res.ok) {
-            return res.json().then(errData => {
-                const errors = errData.errors ? Object.values(errData.errors).flat().join('\n') : (errData.message || 'Server error');
-                throw new Error(errors);
-            }).catch(() => {
-                throw new Error('Server returned status ' + res.status + '. Please refresh the page and try again.');
-            });
+            let errMsg = 'Server returned status ' + res.status + '. Please refresh the page and try again.';
+            try {
+                const errData = await res.json();
+                if (errData.errors) {
+                    errMsg = Object.values(errData.errors).flat().join('\n');
+                } else if (errData.message) {
+                    errMsg = errData.message;
+                }
+            } catch (e) {}
+            throw new Error(errMsg);
         }
         return res.json();
     })
