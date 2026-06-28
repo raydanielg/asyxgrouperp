@@ -113,3 +113,33 @@
         </svg>
     </div>
 </section>
+
+@push('scripts')
+<script>
+(function() {
+    var words = [
+        'Smart Technology',
+        'Secure Infrastructure',
+        'Sustainable Growth',
+        'Mission-Critical Reliability',
+        'Government-Grade Security',
+        'Telematics & IoT Solutions',
+        'Enterprise Software Systems',
+        '24/7 Managed Services'
+    ];
+    var current = 0;
+    var el = document.querySelector('.rotator-text');
+    if (!el) return;
+
+    function rotate() {
+        el.classList.add('out');
+        setTimeout(function() {
+            current = (current + 1) % words.length;
+            el.textContent = words[current];
+            el.classList.remove('out');
+        }, 500);
+    }
+    setInterval(rotate, 2800);
+})();
+</script>
+@endpush

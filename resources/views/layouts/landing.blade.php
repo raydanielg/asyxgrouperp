@@ -61,6 +61,22 @@
         .btn-secondary:hover { background: #1B3A5C; color: #fff; }
         .logo-greyscale { filter: grayscale(100%); opacity:0.6; transition: all 0.3s ease; }
         .logo-greyscale:hover { filter: grayscale(0%); opacity:1; }
+        .rotator-wrap { min-height: 1.2em; overflow: hidden; vertical-align: bottom; }
+        .rotator-text {
+            display: inline-block;
+            animation: rotatorIn 0.6s cubic-bezier(0.4,0,0.2,1) both;
+        }
+        .rotator-text.out {
+            animation: rotatorOut 0.5s cubic-bezier(0.4,0,0.2,1) both;
+        }
+        @keyframes rotatorIn {
+            0% { opacity: 0; transform: translateY(100%) rotateX(90deg); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+        @keyframes rotatorOut {
+            0% { opacity: 1; transform: translateY(0) rotateX(0); }
+            100% { opacity: 0; transform: translateY(-100%) rotateX(-90deg); }
+        }
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
