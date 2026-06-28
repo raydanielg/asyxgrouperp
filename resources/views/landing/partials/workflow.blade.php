@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             {{-- Left: Content --}}
-            <div>
+            <div class="reveal-left">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-bronze/10 text-bronze text-xs font-bold uppercase tracking-wider mb-4">01 About ASYX</span>
                 <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-navy leading-tight section-title mb-6">
                     Tanzania's Trusted Technology Partner
@@ -36,7 +36,7 @@
             </div>
 
             {{-- Right: Visual --}}
-            <div class="relative">
+            <div class="relative reveal-right">
                 <div class="rounded-2xl overflow-hidden shadow-2xl">
                     <div class="aspect-[4/3] relative">
                         <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80" alt="ASYX Group professionals at work" class="w-full h-full object-cover">

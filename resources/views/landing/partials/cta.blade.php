@@ -2,7 +2,7 @@
     <div class="absolute top-0 right-0 w-96 h-96 bg-crimson/10 rounded-full blur-3xl"></div>
     <div class="absolute bottom-0 left-0 w-72 h-72 bg-purple/10 rounded-full blur-3xl"></div>
 
-    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal-scale">
         <p class="font-heading text-sm font-bold text-bronze uppercase tracking-wider mb-4">Let's Achieve Together</p>
         <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-6">
             Let's Build Something<br>
