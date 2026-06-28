@@ -482,6 +482,33 @@ class ErpExtendedController extends Controller
         return redirect()->route('admin.applications.index')->with('success', 'Application created.');
     }
 
+    private function notifyHrNewApplication(JobApplication $application): void
+    {
+        try {
+            $hrUsers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['hr_officer', 'administrator', 'admin_manager']);
+            })->pluck('email')->filter()->unique();
+
+            foreach ($hrUsers as $email) {
+                Mail::raw(
+                    "New job application received.\n\n"
+                    . "Applicant: {$application->full_name}\n"
+                    . "Email: {$application->email ?? 'N/A'}\n"
+                    . "Phone: {$application->phone ?? 'N/A'}\n"
+                    . "Job: " . ($application->jobPosting?->title ?? 'N/A') . "\n"
+                    . "Status: " . ucfirst($application->status) . "\n\n"
+                    . "Review at: " . url('/admin/applications/' . $application->id),
+                    function ($msg) use ($email, $application) {
+                        $msg->to($email)
+                            ->subject('New Job Application: ' . $application->full_name);
+                    }
+                );
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Failed to send HR application notification: ' . $e->getMessage());
+        }
+    }
+
     // ───────────────────────────────────────────────────────
     //  Public Careers
     // ───────────────────────────────────────────────────────
