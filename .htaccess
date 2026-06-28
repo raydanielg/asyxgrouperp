@@ -1,18 +1,11 @@
 # ============================================================
 # ASYX Group ERP System - Root .htaccess
-# Forces SSL, redirects to public/, and protects sensitive files
+# Redirects to public/ directory and protects sensitive files
+# SSL is handled by cPanel AutoSSL — no need to force here
 # ============================================================
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # --- Force HTTPS (SSL) ---
-    # Redirect all HTTP traffic to HTTPS
-    RewriteCond %{HTTPS} off
-    RewriteCond %{HTTP:X-Forwarded-Proto} !https
-    RewriteCond %{HTTP_HOST} !^localhost [NC]
-    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
-    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # --- Redirect to public/ directory ---
     # Skip redirect if already in public/
