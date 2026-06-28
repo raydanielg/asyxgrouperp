@@ -63,6 +63,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'phone' => 'nullable|string|max:20',
             'role' => 'required|in:admin,user',
+            'company_id' => 'nullable|exists:companies,id',
             'assigned_roles' => 'array',
             'assigned_roles.*' => 'exists:roles,id',
             'is_enable_login' => 'boolean',
@@ -74,6 +75,7 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
             'phone' => $validated['phone'] ?? null,
             'role' => $validated['role'],
+            'company_id' => $validated['company_id'] ?? null,
             'is_enable_login' => $request->boolean('is_enable_login', true),
         ]);
 
@@ -101,6 +103,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'role' => 'required|in:admin,user',
+            'company_id' => 'nullable|exists:companies,id',
             'assigned_roles' => 'array',
             'assigned_roles.*' => 'exists:roles,id',
             'is_enable_login' => 'boolean',
@@ -111,6 +114,7 @@ class UserController extends Controller
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
             'role' => $validated['role'],
+            'company_id' => $validated['company_id'] ?? null,
             'is_enable_login' => $request->boolean('is_enable_login', true),
         ]);
 
