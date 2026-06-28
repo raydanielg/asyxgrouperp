@@ -128,6 +128,39 @@ $money = fn($n) => 'TZS ' . number_format($n);
             <div class="bg-red-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Low Stock</p><p class="text-lg font-bold text-red-600">{{ $stats['lowStockProducts'] }}</p><p class="text-[10px] text-gray-400">need reorder</p></div>
         </div>
     </div>
+    {{-- Recruitment Insight --}}
+    <div class="bg-white rounded-xl border p-5">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-gray-900">Recruitment</h3>
+            <a href="{{ route('admin.applications.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-sky-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Open Positions</p><p class="text-lg font-bold text-sky-700">{{ $stats['openJobPostings'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['totalApplications'] }} applications</p></div>
+            <div class="bg-amber-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Pending Review</p><p class="text-lg font-bold text-amber-600">{{ $stats['pendingApplications'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['shortlistedApplications'] }} shortlisted</p></div>
+        </div>
+    </div>
+    {{-- Multi-Company Insight --}}
+    <div class="bg-white rounded-xl border p-5">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-gray-900">Multi-Company</h3>
+            <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-violet-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Companies</p><p class="text-lg font-bold text-violet-700">{{ $stats['totalCompanies'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeCompanies'] }} active</p></div>
+            <div class="bg-emerald-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Fleet</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalVehicles'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeVehicles'] }} active</p></div>
+        </div>
+    </div>
+    {{-- Financial Summary Insight --}}
+    <div class="bg-white rounded-xl border p-5">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-gray-900">Financial Summary</h3>
+            <a href="{{ route('admin.reports') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">Reports</a>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-{{ $stats['netProfit'] >= 0 ? 'emerald' : 'red' }}-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Net Profit (All)</p><p class="text-lg font-bold text-{{ $stats['netProfit'] >= 0 ? 'emerald-700' : 'red-600' }}">{{ $money($stats['netProfit']) }}</p><p class="text-[10px] text-gray-400">revenue - costs</p></div>
+            <div class="bg-{{ $stats['monthNetProfit'] >= 0 ? 'emerald' : 'red' }}-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Month Net</p><p class="text-lg font-bold text-{{ $stats['monthNetProfit'] >= 0 ? 'emerald-700' : 'red-600' }}">{{ $money($stats['monthNetProfit']) }}</p><p class="text-[10px] text-gray-400">this month</p></div>
+        </div>
+    </div>
 </div>
 
 {{-- ═══ Sales vs Purchase Chart + Invoice Status ═══ --}}
