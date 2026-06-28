@@ -12,6 +12,9 @@ auth()->login($user);
 
 $pass = 0; $fail = 0;
 
+// Share $errors like middleware does
+view()->share('errors', new Illuminate\Support\ViewErrorBag);
+
 // Test login history
 try {
   $histories = App\Models\LoginHistory::with('user')->latest()->paginate(15);

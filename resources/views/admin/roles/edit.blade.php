@@ -81,7 +81,7 @@
         @foreach($permissions as $module => $modulePerms)
         @php
           $moduleSlug = \Str::slug($module);
-          $modulePermNames = array_column($modulePerms, 'name');
+          $modulePermNames = $modulePerms->pluck('name')->toArray();
           $checkedCount = count(array_intersect($modulePermNames, $rolePermissions));
           $allChecked = $checkedCount === count($modulePermNames);
         @endphp
