@@ -224,6 +224,7 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
 
     fetch(storeUrl, {
         method: 'POST',
+        redirect: 'error',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || formData.get('_token'),
             'X-Requested-With': 'XMLHttpRequest',
