@@ -61,7 +61,7 @@
         @forelse($recentProposals as $p)
         <div class="px-5 py-3 hover:bg-gray-50/50 transition-colors">
                 <div class="flex items-center justify-between">
-                    <div><p class="text-xs font-mono text-gray-700">{{ $p->proposal_number }}</p><p class="text-[10px] text-gray-400">{{ $p->customer?->name ?? 'N/A' }} • {{ $p->proposal_date->format('d M Y') }}</p></div>
+                    <div><p class="text-xs font-mono text-gray-700">{{ $p->proposal_number }}</p><p class="text-[10px] text-gray-400">{{ $p->customer?->name ?? 'N/A' }} • {{ $p->proposal_date ? \Illuminate\Support\Carbon::parse($p->proposal_date)->format('d M Y') : '-' }}</p></div>
                     <div class="text-right"><p class="text-xs font-semibold text-gray-900">TZS {{ number_format($p->total_amount) }}</p>@php $c=['draft'=>'gray','sent'=>'sky','accepted'=>'emerald','rejected'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[9px] bg-{{ $c[$p->status] ?? 'gray' }}-50 text-{{ $c[$p->status] ?? 'gray' }}-700">{{ ucfirst($p->status) }}</span></div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
         @forelse($recentInvoices as $inv)
         <div class="px-5 py-3 hover:bg-gray-50/50 transition-colors">
                 <div class="flex items-center justify-between">
-                    <div><p class="text-xs font-mono text-gray-700">{{ $inv->invoice_number }}</p><p class="text-[10px] text-gray-400">{{ $inv->customer?->name ?? 'N/A' }} • {{ $inv->invoice_date->format('d M Y') }}</p></div>
+                    <div><p class="text-xs font-mono text-gray-700">{{ $inv->invoice_number }}</p><p class="text-[10px] text-gray-400">{{ $inv->customer?->name ?? 'N/A' }} • {{ $inv->invoice_date ? \Illuminate\Support\Carbon::parse($inv->invoice_date)->format('d M Y') : '-' }}</p></div>
                     <div class="text-right"><p class="text-xs font-semibold text-gray-900">TZS {{ number_format($inv->total_amount) }}</p>@php $c=['draft'=>'gray','posted'=>'sky','partial'=>'amber','paid'=>'emerald','overdue'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[9px] bg-{{ $c[$inv->status] ?? 'gray' }}-50 text-{{ $c[$inv->status] ?? 'gray' }}-700">{{ ucfirst($inv->status) }}</span></div>
                 </div>
             </div>
