@@ -87,6 +87,64 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::post('/intercompany/{intercompany}/eliminate', [$ictCtrl, 'eliminate'])->name('intercompany.eliminate');
     Route::delete('/intercompany/{intercompany}', [$ictCtrl, 'destroy'])->name('intercompany.destroy');
 
+    // ═══ Approval Workflow Engine ═══
+    $awCtrl = App\Http\Controllers\Admin\ApprovalWorkflowController::class;
+    Route::get('/approvals', [$awCtrl, 'index'])->name('approvals.index');
+    Route::get('/approvals/create', [$awCtrl, 'create'])->name('approvals.create');
+    Route::post('/approvals', [$awCtrl, 'store'])->name('approvals.store');
+    Route::get('/approvals/{workflow}', [$awCtrl, 'show'])->name('approvals.show');
+    Route::delete('/approvals/{workflow}', [$awCtrl, 'destroy'])->name('approvals.destroy');
+    Route::get('/approval-requests', [$awCtrl, 'requests'])->name('approvals.requests');
+    Route::post('/approval-requests/{approvalRequest}/approve', [$awCtrl, 'approve'])->name('approvals.approve');
+    Route::post('/approval-requests/{approvalRequest}/reject', [$awCtrl, 'reject'])->name('approvals.reject');
+
+    // ═══ Fleet Management ═══
+    $fleetCtrl = App\Http\Controllers\Admin\FleetController::class;
+    Route::get('/fleet', [$fleetCtrl, 'index'])->name('fleet.index');
+    Route::get('/fleet/create', [$fleetCtrl, 'create'])->name('fleet.create');
+    Route::post('/fleet', [$fleetCtrl, 'store'])->name('fleet.store');
+    Route::get('/fleet/{vehicle}', [$fleetCtrl, 'show'])->name('fleet.show');
+    Route::get('/fleet/{vehicle}/edit', [$fleetCtrl, 'edit'])->name('fleet.edit');
+    Route::patch('/fleet/{vehicle}', [$fleetCtrl, 'update'])->name('fleet.update');
+    Route::delete('/fleet/{vehicle}', [$fleetCtrl, 'destroy'])->name('fleet.destroy');
+    Route::post('/fleet/{vehicle}/maintenance', [$fleetCtrl, 'storeMaintenance'])->name('fleet.maintenance.store');
+    Route::post('/fleet/{vehicle}/fuel', [$fleetCtrl, 'storeFuel'])->name('fleet.fuel.store');
+
+    // ═══ Fixed Assets ═══
+    $faCtrl = App\Http\Controllers\Admin\FixedAssetController::class;
+    Route::get('/fixed-assets', [$faCtrl, 'index'])->name('fixed-assets.index');
+    Route::get('/fixed-assets/create', [$faCtrl, 'create'])->name('fixed-assets.create');
+    Route::post('/fixed-assets', [$faCtrl, 'store'])->name('fixed-assets.store');
+    Route::get('/fixed-assets/{fixedAsset}', [$faCtrl, 'show'])->name('fixed-assets.show');
+    Route::get('/fixed-assets/{fixedAsset}/edit', [$faCtrl, 'edit'])->name('fixed-assets.edit');
+    Route::patch('/fixed-assets/{fixedAsset}', [$faCtrl, 'update'])->name('fixed-assets.update');
+    Route::delete('/fixed-assets/{fixedAsset}', [$faCtrl, 'destroy'])->name('fixed-assets.destroy');
+    Route::post('/fixed-assets/{fixedAsset}/depreciate', [$faCtrl, 'runDepreciation'])->name('fixed-assets.depreciate');
+    Route::post('/fixed-assets/{fixedAsset}/dispose', [$faCtrl, 'dispose'])->name('fixed-assets.dispose');
+
+    // ═══ Document Management ═══
+    $docCtrl = App\Http\Controllers\Admin\DocumentController::class;
+    Route::get('/documents', [$docCtrl, 'index'])->name('documents.index');
+    Route::get('/documents/create', [$docCtrl, 'create'])->name('documents.create');
+    Route::post('/documents', [$docCtrl, 'store'])->name('documents.store');
+    Route::get('/documents/{document}', [$docCtrl, 'show'])->name('documents.show');
+    Route::get('/documents/{document}/download', [$docCtrl, 'download'])->name('documents.download');
+    Route::post('/documents/{document}/sign', [$docCtrl, 'sign'])->name('documents.sign');
+    Route::post('/documents/{document}/decline', [$docCtrl, 'decline'])->name('documents.decline');
+    Route::delete('/documents/{document}', [$docCtrl, 'destroy'])->name('documents.destroy');
+
+    // ═══ Call Center ═══
+    $ccCtrl = App\Http\Controllers\Admin\CallCenterController::class;
+    Route::get('/call-center', [$ccCtrl, 'index'])->name('call-center.index');
+    Route::post('/call-center/campaigns', [$ccCtrl, 'storeCampaign'])->name('call-center.campaigns.store');
+    Route::post('/call-center/calls', [$ccCtrl, 'storeCall'])->name('call-center.calls.store');
+    Route::get('/call-center/calls', [$ccCtrl, 'calls'])->name('call-center.calls');
+
+    // ═══ Audit Logs ═══
+    $alCtrl = App\Http\Controllers\Admin\AuditLogController::class;
+    Route::get('/audit-logs', [$alCtrl, 'index'])->name('audit-logs.index');
+    Route::get('/audit-logs/filter', [$alCtrl, 'filter'])->name('audit-logs.filter');
+
     // ERP Modules
     $erp = App\Http\Controllers\Admin\ErpController::class;
 
