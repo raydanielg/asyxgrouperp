@@ -441,7 +441,7 @@ class MasterDataSeeder extends Seeder
                 'ticket_id' => 'TKT-' . $now->format('Ymd') . '-' . str_pad($i,4,'0',STR_PAD_LEFT),
                 'title' => ['Internet issue','Printer problem','Email setup','Software install','Access request','VPN issue','Server alert','Password reset','System error','Network slow'][$i-1],
                 'description' => 'Issue description', 'category_id' => $tCats->random()->id,
-                'priority' => ['low','medium','high','critical'][rand(0,3)],
+                'priority' => ['low','medium','high','urgent'][rand(0,3)],
                 'status' => ['open','in_progress','resolved','closed'][rand(0,3)],
                 'created_by' => $users[array_rand($users)]->id,
             ]);
