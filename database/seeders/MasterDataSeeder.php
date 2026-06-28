@@ -324,6 +324,7 @@ class MasterDataSeeder extends Seeder
             $paid = $st === 'paid' ? $total : ($st === 'partial' ? $total * rand(1, 9) / 10 : 0);
             PurchaseInvoice::create([
                 'company_id' => $companies->random()->id,
+                'vendor_id' => $users->random()->id,
                 'invoice_number' => 'PINV-' . $now->format('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'invoice_date' => $now->subDays(rand(1, 45)),
                 'due_date' => $now->addDays(rand(1, 30)),
@@ -338,6 +339,7 @@ class MasterDataSeeder extends Seeder
             $total = rand(1000000, 30000000);
             SalesProposal::create([
                 'company_id' => $companies->random()->id,
+                'customer_id' => $users->random()->id,
                 'proposal_number' => 'PRO-' . $now->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
                 'proposal_date' => $now->subDays(rand(1, 30)),
                 'due_date' => $now->addDays(rand(7, 30)),
