@@ -479,6 +479,7 @@ class ErpExtendedController extends Controller
             'status' => 'submitted',
             'notes' => $data['notes'] ?? null,
         ]);
+        $this->notifyHrNewApplication($app);
         return redirect()->route('admin.applications.index')->with('success', 'Application created.');
     }
 
