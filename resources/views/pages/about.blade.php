@@ -7,6 +7,10 @@
 
     {{-- Page hero --}}
     <section class="hero-gradient relative pt-32 pb-20 overflow-hidden">
+        <div class="absolute inset-0 opacity-15">
+            <img src="https://images.unsplash.com/photo-1451187580459-9546f8937745?w=1920&q=80" alt="Technology infrastructure" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-br from-navy via-navy/90 to-purple/20"></div>
         <div class="absolute top-20 right-10 w-72 h-72 bg-purple/20 rounded-full blur-3xl"></div>
         <div class="absolute bottom-10 left-10 w-96 h-96 bg-crimson/10 rounded-full blur-3xl"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
