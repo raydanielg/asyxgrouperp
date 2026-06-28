@@ -35,7 +35,7 @@
                         @php $colors = ['draft'=>'gray','posted'=>'sky','partial'=>'amber','paid'=>'emerald','overdue'=>'red']; @endphp
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $colors[$invoice->status] ?? 'gray' }}-50 text-{{ $colors[$invoice->status] ?? 'gray' }}-700 border border-{{ $colors[$invoice->status] ?? 'gray' }}-100">{{ ucfirst($invoice->status) }}</span>
                     </td>
-                    <td class="px-5 py-3 text-xs text-gray-400">{{ $invoice->invoice_date->format('d M Y') }}</td>
+                    <td class="px-5 py-3 text-xs text-gray-400">{{ $invoice->invoice_date ? \Illuminate\Support\Carbon::parse($invoice->invoice_date)->format('d M Y') : '-' }}</td>
                     <td class="px-5 py-3 flex items-center gap-2">
                         <a href="{{ route('admin.purchase-invoices.edit', $invoice) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
         @if($invoice->status === 'draft')
