@@ -14,7 +14,9 @@
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
             <th class="px-5 py-3 font-medium">DN No.</th><th class="px-5 py-3 font-medium">LPO</th><th class="px-5 py-3 font-medium">Supplier</th><th class="px-5 py-3 font-medium">Delivery Date</th><th class="px-5 py-3 font-medium">Delivered By</th><th class="px-5 py-3 font-medium">Vehicle</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th>
         </tr></thead>
-        <tbody>@forelse($deliveryNotes as $d)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($deliveryNotes as $d)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $d->delivery_note_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $d->lpo?->lpo_number ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $d->supplier?->name ?? 'N/A' }}</td>
@@ -38,8 +40,16 @@
         <div class="flex items-center justify-between px-6 py-4 border-b"><h3 class="text-sm font-bold text-gray-900">Add Delivery Note</h3><button onclick="document.getElementById('dnModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">&times;</button></div>
         <form method="POST" action="{{ route('admin.delivery-notes.store') }}" class="p-6 space-y-4">@csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">LPO</label><select name="lpo_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No LPO</option>@foreach($lpos as $l)<option value="{{ $l->id }}">{{ $l->lpo_number }}</option>@endforeach</select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Supplier</label><select name="supplier_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select...</option>@foreach($suppliers as $s)<option value="{{ $s->id }}">{{ $s->name }}</option>@endforeach</select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">LPO</label><select name="lpo_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No LPO</option>
+        @foreach($lpos as $l)
+        <option value="{{ $l->id }}">{{ $l->lpo_number }}</option>
+        @endforeach
+        </select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Supplier</label><select name="supplier_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select...</option>
+        @foreach($suppliers as $s)
+        <option value="{{ $s->id }}">{{ $s->name }}</option>
+        @endforeach
+        </select></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">GRN</label><select name="grn_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No GRN</option></select></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Delivery Date *</label><input name="delivery_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Delivered By</label><input name="delivered_by" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>

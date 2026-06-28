@@ -8,7 +8,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Product</th><th class="px-5 py-3 font-medium">Warehouse</th><th class="px-5 py-3 font-medium">Type</th><th class="px-5 py-3 font-medium">Quantity</th><th class="px-5 py-3 font-medium">Balance After</th><th class="px-5 py-3 font-medium">Reference</th><th class="px-5 py-3 font-medium">Date</th></tr></thead>
-        <tbody>@forelse($movements as $m)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($movements as $m)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $m->product?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $m->warehouse?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @if($m->type=='in')bg-emerald-50 text-emerald-700 @elseif($m->type=='out')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($m->type) }}</span></td>

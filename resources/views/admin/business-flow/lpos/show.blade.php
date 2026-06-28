@@ -19,13 +19,17 @@
             <div class="flex justify-between border-t pt-2"><span class="font-semibold text-gray-900">Total</span><span class="font-bold text-emerald-700">TZS {{ number_format($lpo->total) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Status</span>@php $sc=['draft'=>'gray','sent'=>'sky','partially_received'=>'amber','received'=>'emerald','closed'=>'emerald','cancelled'=>'red']; $c=$sc[$lpo->status]??'gray'; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-{{ $c }}-50 text-{{ $c }}-700">{{ ucfirst(str_replace('_',' ',$lpo->status)) }}</span></div>
         </div>
-        @if($lpo->terms)<div class="mt-3 pt-3 border-t"><p class="text-[10px] text-gray-400 uppercase mb-1">Terms</p><p class="text-xs text-gray-600">{{ $lpo->terms }}</p></div>@endif
+        @if($lpo->terms)
+        <div class="mt-3 pt-3 border-t"><p class="text-[10px] text-gray-400 uppercase mb-1">Terms</p><p class="text-xs text-gray-600">{{ $lpo->terms }}</p></div>
+        @endif
         {{-- Status Update --}}
         <div class="mt-4">
             <form method="POST" action="{{ route('admin.lpos.status', $lpo) }}">@csrf @method('PATCH')
                 <select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs mb-2 outline-none">
-                    @foreach(['draft'=>'Draft','sent'=>'Sent','partially_received'=>'Partially Received','received'=>'Received','closed'=>'Closed','cancelled'=>'Cancelled'] as $k=>$v)<option value="{{ $k }}" @selected($lpo->status===$k)>{{ $v }}</option>@endforeach
-                </select>
+        @foreach(['draft'=>'Draft','sent'=>'Sent','partially_received'=>'Partially Received','received'=>'Received','closed'=>'Closed','cancelled'=>'Cancelled'] as $k=>$v)
+        <option value="{{ $k }}" @selected($lpo->status===$k)>{{ $v }}</option>
+        @endforeach
+        </select>
                 <button type="submit" class="w-full px-3 py-2 bg-sky-600 text-white text-xs font-medium rounded-lg hover:bg-sky-700">Update Status</button>
             </form>
         </div>
@@ -38,13 +42,17 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">LPO Items</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Description</th><th class="py-2">Ordered</th><th class="py-2">Received</th><th class="py-2">Unit Price</th><th class="py-2">Line Total</th></tr></thead>
-                <tbody>@foreach($lpo->items as $item)<tr class="border-t border-gray-100">
+                <tbody>
+        @foreach($lpo->items as $item)
+        <tr class="border-t border-gray-100">
                     <td class="py-2 text-gray-700">{{ $item->description }}</td>
                     <td class="py-2 text-gray-500">{{ $item->quantity_ordered }} {{ $item->unit ?? '' }}</td>
                     <td class="py-2 @if($item->quantity_received>=$item->quantity_ordered)text-emerald-600@elseif($item->quantity_received>0)text-amber-600@else text-gray-400@endif">{{ $item->quantity_received }}</td>
                     <td class="py-2 text-gray-500">TZS {{ number_format($item->unit_price) }}</td>
                     <td class="py-2 font-semibold text-gray-900">TZS {{ number_format($item->line_total) }}</td>
-                </tr>@endforeach</tbody>
+                </tr>
+        @endforeach
+        </tbody>
             </table></div>
         </div>
 
@@ -53,7 +61,9 @@
             <div class="flex items-center justify-between border-b pb-3 mb-3"><h3 class="text-sm font-bold text-gray-900">Goods Received Notes (GRN)</h3><a href="{{ route('admin.grns.index') }}" class="text-[10px] text-emerald-600">Create GRN</a></div>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">GRN No.</th><th class="py-2">Date</th><th class="py-2">Status</th><th class="py-2">Actions</th></tr></thead>
-                <tbody>@forelse($lpo->grns as $g)<tr class="border-t border-gray-100">
+                <tbody>
+        @forelse($lpo->grns as $g)
+        <tr class="border-t border-gray-100">
                     <td class="py-2 font-mono text-gray-700">{{ $g->grn_number }}</td>
                     <td class="py-2 text-gray-500">{{ $g->received_date->format('d M Y') }}</td>
                     <td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($g->status==='received')bg-emerald-50 text-emerald-700@else bg-amber-50 text-amber-700@endif">{{ ucfirst($g->status) }}</span></td>
@@ -72,7 +82,9 @@
             <div class="flex items-center justify-between border-b pb-3 mb-3"><h3 class="text-sm font-bold text-gray-900">Delivery Notes</h3><a href="{{ route('admin.delivery-notes.index') }}" class="text-[10px] text-emerald-600">Create DN</a></div>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">DN No.</th><th class="py-2">Date</th><th class="py-2">Delivered By</th><th class="py-2">Status</th></tr></thead>
-                <tbody>@forelse($lpo->deliveryNotes as $d)<tr class="border-t border-gray-100">
+                <tbody>
+        @forelse($lpo->deliveryNotes as $d)
+        <tr class="border-t border-gray-100">
                     <td class="py-2 font-mono text-gray-700">{{ $d->delivery_note_number }}</td>
                     <td class="py-2 text-gray-500">{{ $d->delivery_date->format('d M Y') }}</td>
                     <td class="py-2 text-gray-500">{{ $d->delivered_by ?? 'N/A' }}</td>
@@ -91,7 +103,9 @@
             <div class="flex items-center justify-between border-b pb-3 mb-3"><h3 class="text-sm font-bold text-gray-900">Vendor Invoices</h3><a href="{{ route('admin.vendor-invoices.index') }}" class="text-[10px] text-emerald-600">Create Invoice</a></div>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Invoice No.</th><th class="py-2">Date</th><th class="py-2">Total</th><th class="py-2">Paid</th><th class="py-2">Balance</th><th class="py-2">Status</th><th class="py-2">Actions</th></tr></thead>
-                <tbody>@forelse($lpo->vendorInvoices as $v)<tr class="border-t border-gray-100">
+                <tbody>
+        @forelse($lpo->vendorInvoices as $v)
+        <tr class="border-t border-gray-100">
                     <td class="py-2 font-mono text-gray-700">{{ $v->vendor_invoice_number }}</td>
                     <td class="py-2 text-gray-500">{{ $v->invoice_date->format('d M Y') }}</td>
                     <td class="py-2 font-semibold text-gray-900">TZS {{ number_format($v->total) }}</td>

@@ -12,7 +12,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Time</th><th class="px-5 py-3 font-medium">Location</th><th class="px-5 py-3 font-medium">Type</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($events as $e)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($events as $e)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $e->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $e->event_date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $e->event_time ?? '—' }}</td>

@@ -14,7 +14,9 @@
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
             <th class="px-5 py-3 font-medium">GRN No.</th><th class="px-5 py-3 font-medium">LPO</th><th class="px-5 py-3 font-medium">Supplier</th><th class="px-5 py-3 font-medium">Received Date</th><th class="px-5 py-3 font-medium">DN Ref</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th>
         </tr></thead>
-        <tbody>@forelse($grns as $g)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($grns as $g)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $g->grn_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $g->lpo?->lpo_number ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $g->supplier?->name ?? 'N/A' }}</td>
@@ -41,8 +43,16 @@
         <div class="flex items-center justify-between px-6 py-4 border-b"><h3 class="text-sm font-bold text-gray-900">Create GRN</h3><button onclick="document.getElementById('grnModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">&times;</button></div>
         <form method="POST" action="{{ route('admin.grns.store') }}" class="p-6 space-y-4">@csrf
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">LPO</label><select name="lpo_id" id="grnLpoSelect" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select LPO...</option>@foreach($lpos as $l)<option value="{{ $l->id }}">{{ $l->lpo_number }} ({{ $l->supplier?->name ?? 'N/A' }})</option>@endforeach</select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Supplier</label><select name="supplier_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select...</option>@foreach($suppliers as $s)<option value="{{ $s->id }}">{{ $s->name }}</option>@endforeach</select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">LPO</label><select name="lpo_id" id="grnLpoSelect" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select LPO...</option>
+        @foreach($lpos as $l)
+        <option value="{{ $l->id }}">{{ $l->lpo_number }} ({{ $l->supplier?->name ?? 'N/A' }})</option>
+        @endforeach
+        </select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Supplier</label><select name="supplier_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select...</option>
+        @foreach($suppliers as $s)
+        <option value="{{ $s->id }}">{{ $s->name }}</option>
+        @endforeach
+        </select></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Received Date *</label><input name="received_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Delivery Note No.</label><input name="delivery_note_number" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
             </div>

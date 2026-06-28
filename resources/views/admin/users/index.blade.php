@@ -22,10 +22,13 @@
             <input type="text" name="email" value="{{ request('email') }}" placeholder="Filter email..." class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none w-40">
             <select name="role" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
                 <option value="">All Roles</option>
-                @foreach($roles as $name => $label)<option value="{{ $name }}" @selected(request('role')===$name)>{{ $label }}</option>@endforeach
-            </select>
+        @foreach($roles as $name => $label)
+        <option value="{{ $name }}" @selected(request('role')===$name)>{{ $label }}</option>
+        @endforeach
+        </select>
             <button type="submit" class="px-3 py-1.5 bg-emerald-600 text-white text-xs rounded-lg hover:bg-emerald-700">Filter</button>
-            @if(request('name') || request('email') || request('role'))<a href="{{ route('admin.users.index') }}" class="text-xs text-gray-500 hover:text-gray-700">Clear</a>@endif
+        @if(request('name') || request('email') || request('role'))<a href="{{ route('admin.users.index') }}" class="text-xs text-gray-500 hover:text-gray-700">Clear</a>
+        @endif
         </form>
     </div>
     <div class="overflow-x-auto">
@@ -39,8 +42,8 @@
                 <th class="px-5 py-3 font-medium">Actions</th>
             </tr></thead>
             <tbody>
-                @forelse($users as $user)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($users as $user)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3">
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
@@ -51,31 +54,36 @@
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $user->phone ?? '—' }}</td>
                     <td class="px-5 py-3">
                         <div class="flex flex-wrap gap-1">
-                            @foreach($user->roles as $r)
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($r->name==='admin')bg-emerald-50 text-emerald-700 @elseif($r->name==='manager')bg-sky-50 text-sky-700 @else bg-gray-50 text-gray-600 @endif">{{ $r->label }}</span>
-                            @endforeach
-                            @if($user->roles->isEmpty())<span class="text-[10px] text-gray-400">No role</span>@endif
+        @foreach($user->roles as $r)
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($r->name==='admin')bg-emerald-50 text-emerald-700 @elseif($r->name==='manager')bg-sky-50 text-sky-700 @else bg-gray-50 text-gray-600 @endif">{{ $r->label }}</span>
+        @endforeach
+                            @if($user->roles->isEmpty())<span class="text-[10px] text-gray-400">No role</span>
+        @endif
                         </div>
                     </td>
                     <td class="px-5 py-3">
-                        @if($user->is_enable_login ?? true)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Enabled</span>@else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700">Disabled</span>@endif
+        @if($user->is_enable_login ?? true)
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Enabled</span>
+        @else
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700">Disabled</span>
+        @endif
                     </td>
                     <td class="px-5 py-3 flex items-center gap-2">
-                        @if($user->id !== auth()->id())
+        @if($user->id !== auth()->id())
                             <form method="POST" action="{{ route('admin.users.impersonate', $user) }}">@csrf<button class="text-violet-600 hover:text-violet-700 text-xs" title="Login as user">Login As</button></form>
-                        @endif
+        @endif
                         <a href="{{ route('admin.users.edit', $user) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
                         <button onclick="showChangePassword({{ $user->id }}, '{{ $user->name }}')" class="text-amber-600 hover:text-amber-700 text-xs">Password</button>
-                        @if($user->id !== auth()->id())
+        @if($user->id !== auth()->id())
                             <form id="del-user-{{ $user->id }}" method="POST" action="{{ route('admin.users.destroy', $user) }}">@csrf @method('DELETE')</form>
                             <button onclick="confirmDelete('del-user-{{ $user->id }}', 'Delete user?', 'This will permanently delete {{ $user->name }}.')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
-                        @endif
+        @endif
                     </td>
                 </tr>
-                @empty
+        @empty
         <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No users found</td></tr>
-                @endforelse
-            </tbody>
+        @endforelse
+        </tbody>
         </table>
     </div>
     <div class="px-5 py-4 border-t">{{ $users->links() }}</div>

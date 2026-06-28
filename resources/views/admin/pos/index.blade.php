@@ -9,13 +9,13 @@
             <input type="text" id="productSearch" placeholder="Search products..." class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none w-48">
         </div>
         <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto">
-            @foreach($products as $p)
-            <div class="product-card cursor-pointer border rounded-lg p-3 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all" data-id="{{ $p->id }}" data-name="{{ $p->name }}" data-price="{{ $p->sale_price }}" data-stock="{{ $p->stock_quantity }}" onclick="addToCart(this)">
+        @foreach($products as $p)
+        <div class="product-card cursor-pointer border rounded-lg p-3 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all" data-id="{{ $p->id }}" data-name="{{ $p->name }}" data-price="{{ $p->sale_price }}" data-stock="{{ $p->stock_quantity }}" onclick="addToCart(this)">
                 <div class="w-full h-16 bg-emerald-100 rounded mb-2 flex items-center justify-center"><svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
                 <p class="text-xs font-medium text-gray-900 truncate">{{ $p->name }}</p>
                 <div class="flex items-center justify-between mt-1"><span class="text-xs font-bold text-emerald-700">TZS {{ number_format($p->sale_price) }}</span><span class="text-[10px] text-gray-400">{{ $p->stock_quantity }} in stock</span></div>
             </div>
-            @endforeach
+        @endforeach
         </div>
     </div>
     <div class="bg-white rounded-xl border p-6 flex flex-col">

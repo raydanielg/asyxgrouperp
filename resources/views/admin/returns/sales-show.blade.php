@@ -20,12 +20,19 @@
             <div class="flex justify-between text-sm"><span class="text-gray-500">Tax</span><span class="font-medium text-gray-900">TZS {{ number_format($salesReturn->tax_amount) }}</span></div>
             <div class="flex justify-between text-base font-bold pt-2 border-t"><span class="text-gray-900">Total</span><span class="text-gray-900">TZS {{ number_format($salesReturn->total_amount) }}</span></div>
         </div>
-        @if($salesReturn->notes)<div class="mt-4 pt-4 border-t"><p class="text-xs text-gray-400 mb-1">Notes</p><p class="text-sm text-gray-600">{{ $salesReturn->notes }}</p></div>@endif
+        @if($salesReturn->notes)
+        <div class="mt-4 pt-4 border-t"><p class="text-xs text-gray-400 mb-1">Notes</p><p class="text-sm text-gray-600">{{ $salesReturn->notes }}</p></div>
+        @endif
     </div>
-    @if($salesReturn->items->count() > 0)
+        @if($salesReturn->items->count() > 0)
     <div class="bg-white rounded-xl border overflow-hidden"><div class="px-5 py-4 border-b"><h3 class="text-sm font-semibold text-gray-900">Items</h3></div>
         <table class="w-full text-sm"><thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-2 font-medium">Product</th><th class="px-5 py-2 font-medium">Qty</th><th class="px-5 py-2 font-medium">Unit Price</th><th class="px-5 py-2 font-medium">Total</th></tr></thead>
-        <tbody>@foreach($salesReturn->items as $item)<tr class="border-t border-gray-100"><td class="px-5 py-2 text-xs text-gray-700">{{ $item->product_name }}</td><td class="px-5 py-2 text-xs text-gray-500">{{ $item->quantity }}</td><td class="px-5 py-2 text-xs text-gray-500">TZS {{ number_format($item->unit_price) }}</td><td class="px-5 py-2 text-xs font-semibold text-gray-900">TZS {{ number_format($item->total_amount) }}</td></tr>@endforeach</tbody></table>
-    </div>@endif
+        <tbody>
+        @foreach($salesReturn->items as $item)
+        <tr class="border-t border-gray-100"><td class="px-5 py-2 text-xs text-gray-700">{{ $item->product_name }}</td><td class="px-5 py-2 text-xs text-gray-500">{{ $item->quantity }}</td><td class="px-5 py-2 text-xs text-gray-500">TZS {{ number_format($item->unit_price) }}</td><td class="px-5 py-2 text-xs font-semibold text-gray-900">TZS {{ number_format($item->total_amount) }}</td></tr>
+        @endforeach
+        </tbody></table>
+    </div>
+        @endif
 </div>
 @endsection

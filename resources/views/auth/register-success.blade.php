@@ -27,13 +27,12 @@
                 <p class="text-sm text-gray-600 leading-relaxed">
                     Your account has been successfully created. You can now log in and get started.
                 </p>
-
-                @if(session('registered_email'))
+        @if(session('registered_email'))
                 <div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg border border-gray-100">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                     <span class="text-xs text-gray-600 font-medium">{{ session('registered_email') }}</span>
                 </div>
-                @endif
+        @endif
 
                 {{-- Steps indicator --}}
                 <div class="flex items-center justify-center gap-3 py-2">

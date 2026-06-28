@@ -12,7 +12,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Name</th><th class="px-5 py-3 font-medium">Company</th><th class="px-5 py-3 font-medium">Position</th><th class="px-5 py-3 font-medium">Email</th><th class="px-5 py-3 font-medium">Phone</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($contacts as $c)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($contacts as $c)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $c->full_name }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $c->company ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $c->position ?? 'N/A' }}</td>

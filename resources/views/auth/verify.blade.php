@@ -19,7 +19,7 @@
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     A fresh verification link has been sent to your email address.
                 </div>
-            @endif
+        @endif
 
             <p class="text-sm text-gray-600 leading-relaxed mb-6">
                 Before proceeding, please check your email for a verification link. If you did not receive the email, click below to request another.

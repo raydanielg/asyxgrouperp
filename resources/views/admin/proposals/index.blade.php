@@ -14,7 +14,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Quotation #</th><th class="px-5 py-3 font-medium">Customer</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Due Date</th><th class="px-5 py-3 font-medium">Total</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($proposals as $proposal)<tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        <tbody>
+        @forelse($proposals as $proposal)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
             <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.sales-proposals.show', $proposal) }}" class="hover:text-emerald-600 font-medium">{{ $proposal->proposal_number }}</a></td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $proposal->customer?->name ?? 'N/A' }}<br><span class="text-[10px] text-gray-400">{{ $proposal->customer?->email ?? '' }}</span></td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $proposal->proposal_date->format('d M Y') }}</td>
@@ -24,7 +26,9 @@
             <td class="px-5 py-3 flex items-center gap-3">
                 <a href="{{ route('admin.sales-proposals.show', $proposal) }}" class="text-sky-600 hover:text-sky-700 text-xs font-medium">View</a>
                 <a href="{{ route('admin.sales-proposals.edit', $proposal) }}" class="text-emerald-600 hover:text-emerald-700 text-xs font-medium">Edit</a>
-                @if($proposal->status === 'accepted' && !$proposal->converted_to_invoice)<form method="POST" action="{{ route('admin.sales-proposals.convert', $proposal) }}">@csrf<button type="submit" class="text-amber-600 hover:text-amber-700 text-xs font-medium" onclick="return confirm('Convert this quotation to an invoice?')">→ Invoice</button></form>@endif
+        @if($proposal->status === 'accepted' && !$proposal->converted_to_invoice)
+        <form method="POST" action="{{ route('admin.sales-proposals.convert', $proposal) }}">@csrf<button type="submit" class="text-amber-600 hover:text-amber-700 text-xs font-medium" onclick="return confirm('Convert this quotation to an invoice?')">→ Invoice</button></form>
+        @endif
                 <form method="POST" action="{{ route('admin.sales-proposals.destroy', $proposal) }}" class="inline" onsubmit="return confirm('Delete this quotation?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
             </td>
         

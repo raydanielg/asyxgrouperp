@@ -12,14 +12,26 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Code</th><th class="px-5 py-3 font-medium">Name</th><th class="px-5 py-3 font-medium">Category</th><th class="px-5 py-3 font-medium">Purchase Price</th><th class="px-5 py-3 font-medium">Sale Price</th><th class="px-5 py-3 font-medium">Stock</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($products as $p)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($products as $p)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $p->product_code }}</td>
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $p->name }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $p->category?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">TZS {{ number_format($p->purchase_price) }}</td>
             <td class="px-5 py-3 text-xs font-semibold text-emerald-700">TZS {{ number_format($p->sale_price) }}</td>
-            <td class="px-5 py-3">@if($p->stock_quantity <= $p->reorder_level && $p->reorder_level > 0)<span class="text-xs font-bold text-red-600">{{ $p->stock_quantity }} {{ $p->unit }}</span><span class="ml-1 text-[9px] text-red-500">LOW</span>@else<span class="text-xs text-gray-700">{{ $p->stock_quantity }} {{ $p->unit }}</span>@endif</td>
-            <td class="px-5 py-3">@if($p->is_active)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>@else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>@endif</td>
+            <td class="px-5 py-3">
+        @if($p->stock_quantity <= $p->reorder_level && $p->reorder_level > 0)
+        <span class="text-xs font-bold text-red-600">{{ $p->stock_quantity }} {{ $p->unit }}</span><span class="ml-1 text-[9px] text-red-500">LOW</span>
+        @else
+        <span class="text-xs text-gray-700">{{ $p->stock_quantity }} {{ $p->unit }}</span>
+        @endif</td>
+            <td class="px-5 py-3">
+        @if($p->is_active)
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+        @else
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>
+        @endif</td>
             <td class="px-5 py-3"><form id="del-prod-{{ $p->id }}" method="POST" action="{{ route('admin.products.destroy', $p) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-prod-{{ $p->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>
@@ -36,7 +48,15 @@
         <form method="POST" action="{{ route('admin.products.store') }}" class="space-y-3">@csrf
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Name *</label><input name="name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
-            <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Category</label><select name="category_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>@foreach($categories as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach</select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Warehouse</label><select name="warehouse_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>@foreach($warehouses as $w)<option value="{{ $w->id }}">{{ $w->name }}</option>@endforeach</select></div></div>
+            <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Category</label><select name="category_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>
+        @foreach($categories as $c)
+        <option value="{{ $c->id }}">{{ $c->name }}</option>
+        @endforeach
+        </select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Warehouse</label><select name="warehouse_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>
+        @foreach($warehouses as $w)
+        <option value="{{ $w->id }}">{{ $w->name }}</option>
+        @endforeach
+        </select></div></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Purchase Price</label><input name="purchase_price" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Sale Price</label><input name="sale_price" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>
             <div class="grid grid-cols-3 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Stock Qty</label><input name="stock_quantity" type="number" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Reorder Level</label><input name="reorder_level" type="number" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Unit</label><input name="unit" value="piece" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Type</label><select name="type" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="product">Product</option><option value="service">Service</option></select></div>

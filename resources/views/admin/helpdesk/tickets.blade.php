@@ -23,30 +23,38 @@
                 <th class="px-5 py-3 font-medium">Created</th>
             </tr></thead>
             <tbody>
-                @forelse($tickets as $ticket)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($tickets as $ticket)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 text-xs font-mono text-emerald-700">{{ $ticket->ticket_id }}</td>
                     <td class="px-5 py-3 text-xs"><a href="{{ route('admin.helpdesk-tickets.show', $ticket) }}" class="text-gray-900 font-medium hover:text-emerald-600">{{ $ticket->title }}</a></td>
                     <td class="px-5 py-3">
-                        @if($ticket->priority === 'urgent')<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 border border-red-100">Urgent</span>
-                        @elseif($ticket->priority === 'high')<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-orange-50 text-orange-700 border border-orange-100">High</span>
-                        @elseif($ticket->priority === 'medium')<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Medium</span>
-                        @else<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100">Low</span>
-                        @endif
+        @if($ticket->priority === 'urgent')
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 border border-red-100">Urgent</span>
+        @elseif($ticket->priority === 'high')
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-orange-50 text-orange-700 border border-orange-100">High</span>
+        @elseif($ticket->priority === 'medium')
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Medium</span>
+        @else
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100">Low</span>
+        @endif
                     </td>
                     <td class="px-5 py-3">
-                        @if($ticket->status === 'open')<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Open</span>
-                        @elseif($ticket->status === 'in_progress')<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">In Progress</span>
-                        @elseif($ticket->status === 'resolved')<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700 border border-sky-100">Resolved</span>
-                        @else<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Closed</span>
-                        @endif
+        @if($ticket->status === 'open')
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Open</span>
+        @elseif($ticket->status === 'in_progress')
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">In Progress</span>
+        @elseif($ticket->status === 'resolved')
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700 border border-sky-100">Resolved</span>
+        @else
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Closed</span>
+        @endif
                     </td>
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $ticket->created_at->format('d M Y') }}</td>
                 </tr>
-                @empty
+        @empty
         <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No tickets found</td></tr>
-                @endforelse
-            </tbody>
+        @endforelse
+        </tbody>
         </table>
     </div>
     <div class="px-5 py-4 border-t">{{ $tickets->links() }}</div>
@@ -61,7 +69,11 @@
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Description *</label><textarea name="description" required rows="4" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
             <div class="grid grid-cols-2 gap-3">
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Priority *</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="urgent">Urgent</option></select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Category</label><select name="category_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>@foreach($categories as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach</select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Category</label><select name="category_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>
+        @foreach($categories as $c)
+        <option value="{{ $c->id }}">{{ $c->name }}</option>
+        @endforeach
+        </select></div>
             </div>
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>

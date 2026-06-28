@@ -12,10 +12,17 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Category</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($policies as $p)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($policies as $p)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $p->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $p->category ?? 'N/A' }}</td>
-            <td class="px-5 py-3">@if($p->is_active)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>@else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>@endif</td>
+            <td class="px-5 py-3">
+        @if($p->is_active)
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+        @else
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>
+        @endif</td>
             <td class="px-5 py-3"><form id="del-pol-{{ $p->id }}" method="POST" action="{{ route('admin.policies.destroy', $p) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-pol-{{ $p->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>

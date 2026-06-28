@@ -41,13 +41,13 @@
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3">Assign Roles & Permissions</h3>
         <p class="text-xs text-gray-500">Select roles to assign specific permissions to this user</p>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            @foreach($roles as $role)
-            <div class="flex items-center gap-2 p-3 border rounded-lg hover:bg-emerald-50/30 transition-colors">
+        @foreach($roles as $role)
+        <div class="flex items-center gap-2 p-3 border rounded-lg hover:bg-emerald-50/30 transition-colors">
                 <input type="checkbox" name="assigned_roles[]" value="{{ $role->id }}" id="role-{{ $role->id }}" class="rounded border-gray-300 text-emerald-600" {{ in_array($role->id, old('assigned_roles', $userRoles)) ? 'checked' : '' }}>
                 <label for="role-{{ $role->id }}" class="text-xs font-medium text-gray-700 cursor-pointer flex-1">{{ $role->label }}</label>
                 <span class="text-[10px] text-gray-400">{{ $role->permissions->count() }} perms</span>
             </div>
-            @endforeach
+        @endforeach
         </div>
     </div>
     <div class="flex gap-2">

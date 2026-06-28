@@ -24,8 +24,8 @@
                 <th class="px-5 py-3 font-medium">Actions</th>
             </tr></thead>
             <tbody>
-                @forelse($transfers as $transfer)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($transfers as $transfer)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $transfer->product_name ?? 'N/A' }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $transfer->fromWarehouse?->name ?? 'N/A' }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $transfer->toWarehouse?->name ?? 'N/A' }}</td>
@@ -38,10 +38,10 @@
                         </form>
                     </td>
                 </tr>
-                @empty
+        @empty
         <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No transfers found</td></tr>
-                @endforelse
-            </tbody>
+        @endforelse
+        </tbody>
         </table>
     </div>
     <div class="px-5 py-4 border-t">{{ $transfers->links() }}</div>
@@ -54,8 +54,16 @@
             @csrf
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Product Name *</label><input name="product_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">From *</label><select name="from_warehouse" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($warehouses as $w)<option value="{{ $w->id }}">{{ $w->name }}</option>@endforeach</select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">To *</label><select name="to_warehouse" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($warehouses as $w)<option value="{{ $w->id }}">{{ $w->name }}</option>@endforeach</select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">From *</label><select name="from_warehouse" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>
+        @foreach($warehouses as $w)
+        <option value="{{ $w->id }}">{{ $w->name }}</option>
+        @endforeach
+        </select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">To *</label><select name="to_warehouse" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>
+        @foreach($warehouses as $w)
+        <option value="{{ $w->id }}">{{ $w->name }}</option>
+        @endforeach
+        </select></div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Quantity *</label><input name="quantity" type="number" step="0.01" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>

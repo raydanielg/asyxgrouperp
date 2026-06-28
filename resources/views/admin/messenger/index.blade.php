@@ -7,12 +7,12 @@
     <div class="w-64 border-r flex flex-col">
         <div class="p-4 border-b"><h3 class="text-sm font-semibold text-gray-900">Contacts</h3></div>
         <div class="flex-1 overflow-y-auto">
-            @foreach($users as $user)
-            <div class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50" onclick="selectUser({{ $user->id }}, '{{ addslashes($user->name) }}')">
+        @foreach($users as $user)
+        <div class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50" onclick="selectUser({{ $user->id }}, '{{ addslashes($user->name) }}')">
                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-xs">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>
                 <div class="flex-1 min-w-0"><p class="text-xs font-medium text-gray-900 truncate">{{ $user->name }}</p><p class="text-xs text-gray-400 truncate">{{ $user->email }}</p></div>
             </div>
-            @endforeach
+        @endforeach
         </div>
     </div>
     {{-- Chat Area --}}

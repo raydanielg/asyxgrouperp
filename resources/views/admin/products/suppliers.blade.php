@@ -12,13 +12,20 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Name</th><th class="px-5 py-3 font-medium">Contact Person</th><th class="px-5 py-3 font-medium">Email</th><th class="px-5 py-3 font-medium">Phone</th><th class="px-5 py-3 font-medium">Payment Terms</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($suppliers as $s)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($suppliers as $s)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $s->name }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $s->contact_person ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $s->email ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $s->phone ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $s->payment_terms ?? 'N/A' }}</td>
-            <td class="px-5 py-3">@if($s->is_active)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>@else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>@endif</td>
+            <td class="px-5 py-3">
+        @if($s->is_active)
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+        @else
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>
+        @endif</td>
             <td class="px-5 py-3"><form id="del-sup-{{ $s->id }}" method="POST" action="{{ route('admin.suppliers.destroy', $s) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-sup-{{ $s->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
         
         </tr>

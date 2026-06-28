@@ -25,19 +25,19 @@
                 <th class="px-5 py-3 font-medium">Actions</th>
             </tr></thead>
             <tbody>
-                @forelse($coupons as $coupon)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($coupons as $coupon)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 text-xs font-mono font-semibold text-emerald-700">{{ $coupon->code }}</td>
                     <td class="px-5 py-3 text-xs text-gray-700">{{ $coupon->name }}</td>
                     <td class="px-5 py-3 text-xs font-semibold text-gray-900">{{ $coupon->type === 'percentage' ? $coupon->discount . '%' : '$' . number_format($coupon->discount, 2) }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst($coupon->type) }}</td>
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $coupon->expiry_date ? $coupon->expiry_date->format('d M Y') : 'No expiry' }}</td>
                     <td class="px-5 py-3">
-                        @if($coupon->status)
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
-                        @else
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Inactive</span>
-                        @endif
+        @if($coupon->status)
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
+        @else
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Inactive</span>
+        @endif
                     </td>
                     <td class="px-5 py-3 flex items-center gap-2">
                         <a href="{{ route('admin.coupons.edit', $coupon) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
@@ -47,10 +47,10 @@
                         </form>
                     </td>
                 </tr>
-                @empty
+        @empty
         <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No coupons found</td></tr>
-                @endforelse
-            </tbody>
+        @endforelse
+        </tbody>
         </table>
     </div>
     <div class="px-5 py-4 border-t">{{ $coupons->links() }}</div>

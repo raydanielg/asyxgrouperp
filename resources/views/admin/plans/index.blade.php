@@ -13,15 +13,23 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-    @forelse($plans as $plan)
-    <div class="bg-white rounded-xl border p-5 hover:shadow-lg transition-shadow">
+        @forelse($plans as $plan)
+        <div class="bg-white rounded-xl border p-5 hover:shadow-lg transition-shadow">
         <div class="flex items-start justify-between mb-3">
             <div>
                 <h3 class="text-sm font-bold text-gray-900">{{ $plan->name }}</h3>
-                @if($plan->free_plan)<span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Free</span>@endif
-                @if($plan->trial)<span class="inline-flex items-center mt-1 ml-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Trial: {{ $plan->trial_days }}d</span>@endif
+        @if($plan->free_plan)
+        <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Free</span>
+        @endif
+                @if($plan->trial)
+        <span class="inline-flex items-center mt-1 ml-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Trial: {{ $plan->trial_days }}d</span>
+        @endif
             </div>
-            @if($plan->status)<span class="w-2 h-2 bg-emerald-500 rounded-full mt-2"></span>@else<span class="w-2 h-2 bg-gray-300 rounded-full mt-2"></span>@endif
+        @if($plan->status)
+        <span class="w-2 h-2 bg-emerald-500 rounded-full mt-2"></span>
+        @else
+        <span class="w-2 h-2 bg-gray-300 rounded-full mt-2"></span>
+        @endif
         </div>
         <p class="text-xs text-gray-400 mb-3">{{ $plan->description ?? 'No description' }}</p>
         <div class="flex items-baseline gap-1 mb-3">
@@ -41,10 +49,10 @@
             </form>
         </div>
     </div>
-    @empty
-    <div class="col-span-full text-center py-8 text-gray-400 text-sm">No plans found</div>
-    @endforelse
-</div>
+        @empty
+        <div class="col-span-full text-center py-8 text-gray-400 text-sm">No plans found</div>
+        @endforelse
+        </div>
 <div class="px-1">{{ $plans->links() }}</div>
 
 <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">

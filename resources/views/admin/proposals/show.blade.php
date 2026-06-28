@@ -8,7 +8,9 @@
         <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs text-gray-500 hover:text-emerald-600 flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg> Back to Quotations</a>
         <div class="flex items-center gap-2">
             <a href="{{ route('admin.sales-proposals.edit', $salesProposal) }}" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Edit</a>
-            @if($salesProposal->status === 'accepted' && !$salesProposal->converted_to_invoice)<form method="POST" action="{{ route('admin.sales-proposals.convert', $salesProposal) }}">@csrf<button type="submit" class="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-700" onclick="return confirm('Convert to invoice?')">→ Convert to Invoice</button></form>@endif
+        @if($salesProposal->status === 'accepted' && !$salesProposal->converted_to_invoice)
+        <form method="POST" action="{{ route('admin.sales-proposals.convert', $salesProposal) }}">@csrf<button type="submit" class="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-700" onclick="return confirm('Convert to invoice?')">→ Convert to Invoice</button></form>
+        @endif
         </div>
     </div>
 
@@ -37,7 +39,9 @@
                 <thead><tr class="text-left text-xs text-gray-500 bg-gray-50 border-b">
                     <th class="px-4 py-3 font-medium">#</th><th class="px-4 py-3 font-medium">Description</th><th class="px-4 py-3 font-medium text-center">Qty</th><th class="px-4 py-3 font-medium text-right">Unit Price</th><th class="px-4 py-3 font-medium text-right">Discount</th><th class="px-4 py-3 font-medium text-right">Tax</th><th class="px-4 py-3 font-medium text-right">Total</th>
                 </tr></thead>
-                <tbody>@foreach($salesProposal->items as $i => $item)<tr class="border-b border-gray-100">
+                <tbody>
+        @foreach($salesProposal->items as $i => $item)
+        <tr class="border-b border-gray-100">
                     <td class="px-4 py-3 text-xs text-gray-400">{{ $i + 1 }}</td>
                     <td class="px-4 py-3 text-xs text-gray-700 font-medium">{{ $item->product_name }}</td>
                     <td class="px-4 py-3 text-xs text-gray-500 text-center">{{ $item->quantity }}</td>
@@ -45,7 +49,9 @@
                     <td class="px-4 py-3 text-xs text-red-500 text-right">TZS {{ number_format($item->discount_amount) }}</td>
                     <td class="px-4 py-3 text-xs text-gray-500 text-right">{{ $item->tax_percentage }}%</td>
                     <td class="px-4 py-3 text-xs font-semibold text-gray-900 text-right">TZS {{ number_format($item->total_amount) }}</td>
-                </tr>@endforeach</tbody>
+                </tr>
+        @endforeach
+        </tbody>
             </table>
         </div>
         @endif
@@ -65,8 +71,12 @@
         {{-- Terms & Notes --}}
         @if($salesProposal->payment_terms || $salesProposal->notes)
         <div class="px-8 py-6 border-t space-y-4">
-            @if($salesProposal->payment_terms)<div><p class="text-[10px] text-gray-400 uppercase mb-1">Payment Terms</p><p class="text-xs text-gray-600">{{ $salesProposal->payment_terms }}</p></div>@endif
-            @if($salesProposal->notes)<div><p class="text-[10px] text-gray-400 uppercase mb-1">Notes</p><p class="text-xs text-gray-600">{{ $salesProposal->notes }}</p></div>@endif
+        @if($salesProposal->payment_terms)
+        <div><p class="text-[10px] text-gray-400 uppercase mb-1">Payment Terms</p><p class="text-xs text-gray-600">{{ $salesProposal->payment_terms }}</p></div>
+        @endif
+            @if($salesProposal->notes)
+        <div><p class="text-[10px] text-gray-400 uppercase mb-1">Notes</p><p class="text-xs text-gray-600">{{ $salesProposal->notes }}</p></div>
+        @endif
         </div>
         @endif
     </div>

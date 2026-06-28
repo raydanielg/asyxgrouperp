@@ -19,7 +19,11 @@
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Quotation Number *</label><input name="proposal_number" value="{{ old('proposal_number', $salesProposal->proposal_number) }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm font-mono focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Date *</label><input name="proposal_date" type="date" value="{{ old('proposal_date', $salesProposal->proposal_date->format('Y-m-d')) }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Valid Until *</label><input name="due_date" type="date" value="{{ old('due_date', $salesProposal->due_date->format('Y-m-d')) }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Customer *</label><select name="customer_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">@foreach($customers as $c)<option value="{{ $c->id }}" {{ old('customer_id', $salesProposal->customer_id) == $c->id ? 'selected' : '' }}>{{ $c->name }} - {{ $c->email }}</option>@endforeach</select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Customer *</label><select name="customer_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+        @foreach($customers as $c)
+        <option value="{{ $c->id }}" {{ old('customer_id', $salesProposal->customer_id) == $c->id ? 'selected' : '' }}>{{ $c->name }} - {{ $c->email }}</option>
+        @endforeach
+        </select></div>
             </div>
         </div>
         {{-- Items --}}
@@ -40,9 +44,9 @@
                         <th class="px-3 py-2 w-10"></th>
                     </tr></thead>
                     <tbody id="itemsBody">
-                        @if($salesProposal->items->count() > 0)
+        @if($salesProposal->items->count() > 0)
                             @foreach($salesProposal->items as $i => $item)
-                            <tr class="border-t border-gray-100">
+        <tr class="border-t border-gray-100">
                                 <td class="px-3 py-2"><input name="items[{{ $i }}][product_name]" value="{{ old("items.{$i}.product_name", $item->product_name) }}" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
                                 <td class="px-3 py-2"><input name="items[{{ $i }}][quantity]" type="number" step="0.01" value="{{ old("items.{$i}.quantity", $item->quantity) }}" oninput="calcAll()" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
                                 <td class="px-3 py-2"><input name="items[{{ $i }}][unit_price]" type="number" step="0.01" value="{{ old("items.{$i}.unit_price", $item->unit_price) }}" oninput="calcAll()" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
@@ -51,9 +55,9 @@
                                 <td class="px-3 py-2 text-xs font-semibold text-gray-900">TZS {{ number_format($item->total_amount) }}</td>
                                 <td class="px-3 py-2"><button type="button" onclick="removeRow(this)" class="text-red-400 hover:text-red-600 text-xs">&times;</button></td>
                             </tr>
-                            @endforeach
+        @endforeach
                         @else
-                            <tr class="border-t border-gray-100">
+        <tr class="border-t border-gray-100">
                                 <td class="px-3 py-2"><input name="items[0][product_name]" placeholder="Product or service name" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
                                 <td class="px-3 py-2"><input name="items[0][quantity]" type="number" step="0.01" value="1" oninput="calcAll()" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
                                 <td class="px-3 py-2"><input name="items[0][unit_price]" type="number" step="0.01" value="0" oninput="calcAll()" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
@@ -62,7 +66,7 @@
                                 <td class="px-3 py-2 text-xs font-semibold text-gray-900">TZS 0</td>
                                 <td class="px-3 py-2"><button type="button" onclick="removeRow(this)" class="text-red-400 hover:text-red-600 text-xs">&times;</button></td>
                             </tr>
-                        @endif
+        @endif
                     </tbody>
                 </table>
             </div>

@@ -13,8 +13,8 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    @forelse($categories as $category)
-    <div class="bg-white rounded-xl border p-5 hover:shadow-lg transition-shadow">
+        @forelse($categories as $category)
+        <div class="bg-white rounded-xl border p-5 hover:shadow-lg transition-shadow">
         <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full" style="background: {{ $category->color }}"></span>
@@ -28,10 +28,10 @@
             <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>
         </form>
     </div>
-    @empty
-    <div class="col-span-full text-center py-8 text-gray-400 text-sm">No categories found</div>
-    @endforelse
-</div>
+        @empty
+        <div class="col-span-full text-center py-8 text-gray-400 text-sm">No categories found</div>
+        @endforelse
+        </div>
 <div class="px-1 mt-4">{{ $categories->links() }}</div>
 
 <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">

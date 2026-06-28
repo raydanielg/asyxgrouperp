@@ -25,8 +25,8 @@
                 <th class="px-5 py-3 font-medium">Actions</th>
             </tr></thead>
             <tbody>
-                @forelse($invoices as $invoice)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($invoices as $invoice)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.purchase-invoices.show', $invoice) }}" class="hover:text-emerald-600">{{ $invoice->invoice_number }}</a></td>
                     <td class="px-5 py-3 text-xs text-gray-700">{{ $invoice->vendor?->name ?? 'N/A' }}</td>
                     <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($invoice->total_amount) }}</td>
@@ -38,16 +38,16 @@
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $invoice->invoice_date->format('d M Y') }}</td>
                     <td class="px-5 py-3 flex items-center gap-2">
                         <a href="{{ route('admin.purchase-invoices.edit', $invoice) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
-                        @if($invoice->status === 'draft')
-                        <form method="POST" action="{{ route('admin.purchase-invoices.post', $invoice) }}" class="inline">@csrf<button class="text-sky-600 hover:text-sky-700 text-xs">Post</button></form>
-                        @endif
+        @if($invoice->status === 'draft')
+        <form method="POST" action="{{ route('admin.purchase-invoices.post', $invoice) }}" class="inline">@csrf<button class="text-sky-600 hover:text-sky-700 text-xs">Post</button></form>
+        @endif
                         <form method="POST" action="{{ route('admin.purchase-invoices.destroy', $invoice) }}" class="inline" onsubmit="return confirm('Delete?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
                     </td>
                 </tr>
-                @empty
+        @empty
         <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No invoices found</td></tr>
-                @endforelse
-            </tbody>
+        @endforelse
+        </tbody>
         </table>
     </div>
     <div class="px-5 py-4 border-t">{{ $invoices->links() }}</div>

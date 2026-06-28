@@ -12,7 +12,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Employee</th><th class="px-5 py-3 font-medium">Period</th><th class="px-5 py-3 font-medium">Rating</th><th class="px-5 py-3 font-medium">Feedback</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($reviews as $r)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($reviews as $r)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $r->employee?->full_name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $r->review_period ?? 'N/A' }}</td>
             <td class="px-5 py-3">@for($i=1;$i<=5;$i++)<span class="text-{{ $i <= $r->rating ? 'gold' : 'gray' }}-400">&#9733;</span>@endfor</td>
@@ -31,7 +33,11 @@
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Performance Review</h3>
         <form method="POST" action="{{ route('admin.performance.store') }}" class="space-y-3">@csrf
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Employee *</label><select name="employee_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($employees as $e)<option value="{{ $e->id }}">{{ $e->full_name }}</option>@endforeach</select></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Employee *</label><select name="employee_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>
+        @foreach($employees as $e)
+        <option value="{{ $e->id }}">{{ $e->full_name }}</option>
+        @endforeach
+        </select></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Review Period</label><input name="review_period" placeholder="e.g. Q1 2025" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Goals</label><textarea name="goals" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Achievements</label><textarea name="achievements" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>

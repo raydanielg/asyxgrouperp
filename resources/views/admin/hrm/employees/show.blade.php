@@ -48,7 +48,9 @@
             </div>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Task</th><th class="py-2">Project</th><th class="py-2">Priority</th><th class="py-2">Status</th><th class="py-2">Due Date</th></tr></thead>
-                <tbody>@forelse($assignedTasks as $t)<tr class="border-t border-gray-100">
+                <tbody>
+        @forelse($assignedTasks as $t)
+        <tr class="border-t border-gray-100">
                     <td class="py-2 text-gray-700 font-medium">{{ $t->title }}</td>
                     <td class="py-2 text-gray-500">{{ $t->project?->name ?? 'N/A' }}</td>
                     <td class="py-2">@php $pc=['low'=>'gray','medium'=>'amber','high'=>'red']; $pc=$pc[$t->priority]??'gray'; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-{{ $pc }}-50 text-{{ $pc }}-700">{{ ucfirst($t->priority) }}</span></td>
@@ -69,15 +71,17 @@
                 <h3 class="text-sm font-bold text-gray-900">Performance Reviews</h3>
                 <span class="text-[10px] text-gray-400">{{ $performanceReviews->count() }} reviews</span>
             </div>
-            <div class="space-y-3">@forelse($performanceReviews as $r)
-                <div class="border rounded-lg p-3">
+            <div class="space-y-3">
+        @forelse($performanceReviews as $r)
+        <div class="border rounded-lg p-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-medium text-gray-900">Review Period: {{ $r->review_period ?? 'N/A' }}</span>
                         <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-700">Rating: {{ $r->rating }}/5</span>
                     </div>
                     <p class="text-xs text-gray-500">{{ $r->comments ?? 'No comments' }}</p>
                 </div>
-            @empty<p class="text-xs text-gray-400 text-center py-4">No performance reviews</p>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No performance reviews</p>
         @endforelse
         </div>
         </div>
@@ -87,7 +91,9 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Recent Attendance</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Date</th><th class="py-2">Check In</th><th class="py-2">Check Out</th><th class="py-2">Status</th></tr></thead>
-                <tbody>@forelse($employee->attendances as $a)<tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ $a->date->format('d M Y') }}</td><td class="py-2 text-gray-500">{{ $a->check_in ?? '—' }}</td><td class="py-2 text-gray-500">{{ $a->check_out ?? '—' }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-700">{{ ucfirst($a->status) }}</span></td>
+                <tbody>
+        @forelse($employee->attendances as $a)
+        <tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ $a->date->format('d M Y') }}</td><td class="py-2 text-gray-500">{{ $a->check_in ?? '—' }}</td><td class="py-2 text-gray-500">{{ $a->check_out ?? '—' }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-700">{{ ucfirst($a->status) }}</span></td>
         </tr>
         @empty
         <tr><td colspan="4" class="py-4 text-center text-gray-400">No attendance records</td></tr>
@@ -101,7 +107,9 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Payroll History</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Number</th><th class="py-2">Month</th><th class="py-2">Net Salary</th><th class="py-2">Status</th></tr></thead>
-                <tbody>@forelse($employee->payrolls as $p)<tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $p->payroll_number }}</td><td class="py-2 text-gray-500">{{ $p->month }} {{ $p->year }}</td><td class="py-2 font-semibold text-gray-900">TZS {{ number_format($p->net_salary) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-amber-50 text-amber-700">{{ ucfirst($p->status) }}</span></td>
+                <tbody>
+        @forelse($employee->payrolls as $p)
+        <tr class="border-t border-gray-100"><td class="py-2 font-mono text-gray-700">{{ $p->payroll_number }}</td><td class="py-2 text-gray-500">{{ $p->month }} {{ $p->year }}</td><td class="py-2 font-semibold text-gray-900">TZS {{ number_format($p->net_salary) }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-amber-50 text-amber-700">{{ ucfirst($p->status) }}</span></td>
         </tr>
         @empty
         <tr><td colspan="4" class="py-4 text-center text-gray-400">No payroll records</td></tr>
@@ -115,7 +123,9 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Leave History</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Type</th><th class="py-2">Dates</th><th class="py-2">Days</th><th class="py-2">Status</th></tr></thead>
-                <tbody>@forelse($employee->leaves as $l)<tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ ucfirst($l->leave_type) }}</td><td class="py-2 text-gray-500">{{ $l->start_date->format('d M') }} - {{ $l->end_date->format('d M Y') }}</td><td class="py-2 text-gray-700">{{ $l->days }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($l->status=='approved')bg-emerald-50 text-emerald-700 @elseif($l->status=='rejected')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($l->status) }}</span></td>
+                <tbody>
+        @forelse($employee->leaves as $l)
+        <tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ ucfirst($l->leave_type) }}</td><td class="py-2 text-gray-500">{{ $l->start_date->format('d M') }} - {{ $l->end_date->format('d M Y') }}</td><td class="py-2 text-gray-700">{{ $l->days }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($l->status=='approved')bg-emerald-50 text-emerald-700 @elseif($l->status=='rejected')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($l->status) }}</span></td>
         </tr>
         @empty
         <tr><td colspan="4" class="py-4 text-center text-gray-400">No leave records</td></tr>
@@ -129,7 +139,9 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Assigned Assets</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Asset</th><th class="py-2">Serial</th><th class="py-2">Assigned Date</th><th class="py-2">Status</th></tr></thead>
-                <tbody>@forelse($employee->assets as $a)<tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ $a->name }}</td><td class="py-2 font-mono text-gray-500">{{ $a->serial_number ?? '—' }}</td><td class="py-2 text-gray-500">{{ $a->assigned_date?->format('d M Y') ?? '—' }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-sky-50 text-sky-700">{{ ucfirst($a->status ?? 'assigned') }}</span></td>
+                <tbody>
+        @forelse($employee->assets as $a)
+        <tr class="border-t border-gray-100"><td class="py-2 text-gray-700">{{ $a->name }}</td><td class="py-2 font-mono text-gray-500">{{ $a->serial_number ?? '—' }}</td><td class="py-2 text-gray-500">{{ $a->assigned_date?->format('d M Y') ?? '—' }}</td><td class="py-2"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-sky-50 text-sky-700">{{ ucfirst($a->status ?? 'assigned') }}</span></td>
         </tr>
         @empty
         <tr><td colspan="4" class="py-4 text-center text-gray-400">No assets assigned</td></tr>

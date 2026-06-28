@@ -20,7 +20,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     ];
     @endphp
     @foreach($kpis as $card)
-    <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-xl border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-xl border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden hover:shadow-lg transition-shadow">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
         <div class="absolute bottom-0 right-0 w-12 h-12 bg-white/5 rounded-full -mr-4 -mb-4"></div>
         <div class="relative z-10">
@@ -32,8 +32,8 @@ $money = fn($n) => 'TZS ' . number_format($n);
             <p class="text-[10px] {{ $card['sub_color'] }} font-medium mt-1">{{ $card['sub'] }}</p>
         </div>
     </div>
-    @endforeach
-</div>
+        @endforeach
+        </div>
 
 {{-- ═══ Secondary KPI Row ═══ --}}
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
@@ -48,7 +48,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     ];
     @endphp
     @foreach($subKpis as $kpi)
-    <a href="{{ $kpi['route'] }}" class="bg-white rounded-xl border p-3 hover:shadow-md transition-all hover:border-{{ $kpi['color'] }}-300 group">
+        <a href="{{ $kpi['route'] }}" class="bg-white rounded-xl border p-3 hover:shadow-md transition-all hover:border-{{ $kpi['color'] }}-300 group">
         <div class="flex items-center gap-2 mb-1">
             <div class="w-7 h-7 rounded-lg bg-{{ $kpi['color'] }}-50 flex items-center justify-center group-hover:bg-{{ $kpi['color'] }}-100 transition-colors">
                 <svg class="w-3.5 h-3.5 text-{{ $kpi['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $kpi['icon'] }}"/></svg>
@@ -57,8 +57,8 @@ $money = fn($n) => 'TZS ' . number_format($n);
         </div>
         <p class="text-lg font-bold text-gray-900">{{ $kpi['value'] }}</p>
     </a>
-    @endforeach
-</div>
+        @endforeach
+        </div>
 
 {{-- ═══ Departmental Insights ═══ --}}
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
@@ -149,7 +149,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
         $barWidth = 100 / count($monthlyLabels);
         @endphp
         <div class="flex items-end gap-3 h-48">
-            @foreach($monthlyLabels as $i => $label)
+        @foreach($monthlyLabels as $i => $label)
             @php
             $sPct = min(100, ($monthlySales[$i] / $maxMonthly) * 100);
             $pPct = min(100, ($monthlyPurchases[$i] / $maxMonthly) * 100);
@@ -165,7 +165,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                 </div>
                 <span class="text-[9px] text-gray-400 font-medium">{{ $label }}</span>
             </div>
-            @endforeach
+        @endforeach
         </div>
     </div>
 
@@ -178,7 +178,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
             $totalInvoices = max(array_sum($salesStatusBreakdown), 1);
             @endphp
             @foreach($salesStatusBreakdown as $status => $count)
-            <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-{{ $statusColors[$status] }}-100 flex items-center justify-center shrink-0">
                     <div class="w-2.5 h-2.5 rounded-full bg-{{ $statusColors[$status] }}-500"></div>
                 </div>
@@ -192,7 +192,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                     </div>
                 </div>
             </div>
-            @endforeach
+        @endforeach
         </div>
     </div>
 </div>
@@ -221,7 +221,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
             <span class="text-[8px] text-gray-400 font-medium">{{ explode(' ', $label)[0] }}</span>
         </div>
         @endforeach
-    </div>
+        </div>
 </div>
 
 {{-- ═══ Recent Activity Tables ═══ --}}
@@ -241,17 +241,17 @@ $money = fn($n) => 'TZS ' . number_format($n);
                     <th class="px-5 py-2.5 font-medium">Status</th>
                 </tr></thead>
                 <tbody>
-                    @forelse($recentSales as $invoice)
-                    <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($recentSales as $invoice)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                         <td class="px-5 py-2.5 text-xs font-mono text-emerald-700"><a href="{{ route('admin.sales-invoices.show', $invoice) }}">{{ $invoice->invoice_number }}</a></td>
                         <td class="px-5 py-2.5 text-xs text-gray-700">{{ $invoice->customer?->name ?? 'N/A' }}</td>
                         <td class="px-5 py-2.5 text-xs font-semibold text-gray-900">{{ $money($invoice->total_amount) }}</td>
                         <td class="px-5 py-2.5"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100 capitalize">{{ $invoice->status }}</span></td>
                     </tr>
-                    @empty
+        @empty
         <tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No sales invoices yet</td></tr>
-                    @endforelse
-                </tbody>
+        @endforelse
+        </tbody>
             </table>
         </div>
     </div>
@@ -271,17 +271,17 @@ $money = fn($n) => 'TZS ' . number_format($n);
                     <th class="px-5 py-2.5 font-medium">Status</th>
                 </tr></thead>
                 <tbody>
-                    @forelse($recentPurchases as $invoice)
-                    <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($recentPurchases as $invoice)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                         <td class="px-5 py-2.5 text-xs font-mono text-sky-700"><a href="{{ route('admin.purchase-invoices.show', $invoice) }}">{{ $invoice->invoice_number }}</a></td>
                         <td class="px-5 py-2.5 text-xs text-gray-700">{{ $invoice->vendor?->name ?? 'N/A' }}</td>
                         <td class="px-5 py-2.5 text-xs font-semibold text-gray-900">{{ $money($invoice->total_amount) }}</td>
                         <td class="px-5 py-2.5"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100 capitalize">{{ $invoice->status }}</span></td>
                     </tr>
-                    @empty
+        @empty
         <tr><td colspan="4" class="px-5 py-8 text-center text-gray-400 text-xs">No purchase invoices yet</td></tr>
-                    @endforelse
-                </tbody>
+        @endforelse
+        </tbody>
             </table>
         </div>
     </div>
@@ -296,8 +296,8 @@ $money = fn($n) => 'TZS ' . number_format($n);
             <a href="{{ route('admin.helpdesk-tickets.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="p-5 space-y-3">
-            @forelse($recentTickets as $ticket)
-            <div class="flex items-center gap-3">
+        @forelse($recentTickets as $ticket)
+        <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg @if($ticket->priority === 'urgent') bg-red-50 @elseif($ticket->priority === 'high') bg-orange-50 @elseif($ticket->priority === 'medium') bg-amber-50 @else bg-blue-50 @endif flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4 @if($ticket->priority === 'urgent') text-red-600 @elseif($ticket->priority === 'high') text-orange-600 @elseif($ticket->priority === 'medium') text-amber-600 @else text-blue-600 @endif" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
@@ -307,9 +307,9 @@ $money = fn($n) => 'TZS ' . number_format($n);
                 </div>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($ticket->status === 'open') bg-emerald-50 text-emerald-700 border border-emerald-100 @elseif($ticket->status === 'in_progress') bg-amber-50 text-amber-700 border border-amber-100 @else bg-gray-50 text-gray-600 border border-gray-100 @endif capitalize">{{ str_replace('_', ' ', $ticket->status) }}</span>
             </div>
-            @empty
-            <p class="text-sm text-gray-400 text-center py-4">No tickets yet</p>
-            @endforelse
+        @empty
+        <p class="text-sm text-gray-400 text-center py-4">No tickets yet</p>
+        @endforelse
         </div>
     </div>
 
@@ -320,8 +320,8 @@ $money = fn($n) => 'TZS ' . number_format($n);
             <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="p-5 space-y-3">
-            @forelse($recentProposals as $proposal)
-            <div class="flex items-center gap-3">
+        @forelse($recentProposals as $proposal)
+        <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
@@ -331,9 +331,9 @@ $money = fn($n) => 'TZS ' . number_format($n);
                 </div>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($proposal->status === 'accepted') bg-emerald-50 text-emerald-700 border border-emerald-100 @elseif($proposal->status === 'sent') bg-sky-50 text-sky-700 border border-sky-100 @elseif($proposal->status === 'rejected') bg-red-50 text-red-700 border border-red-100 @else bg-gray-50 text-gray-600 border border-gray-100 @endif capitalize">{{ $proposal->status }}</span>
             </div>
-            @empty
-            <p class="text-sm text-gray-400 text-center py-4">No proposals yet</p>
-            @endforelse
+        @empty
+        <p class="text-sm text-gray-400 text-center py-4">No proposals yet</p>
+        @endforelse
         </div>
     </div>
 </div>

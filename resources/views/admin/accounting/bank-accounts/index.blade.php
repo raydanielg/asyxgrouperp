@@ -10,13 +10,17 @@
     </button>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    @forelse($accounts as $a)
-    <div class="bg-white rounded-xl border p-5">
+        @forelse($accounts as $a)
+        <div class="bg-white rounded-xl border p-5">
         <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
                 <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
             </div>
-            @if($a->is_active)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>@else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>@endif
+        @if($a->is_active)
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+        @else
+        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>
+        @endif
         </div>
         <h3 class="text-sm font-bold text-gray-900">{{ $a->account_name }}</h3>
         <p class="text-xs text-gray-500 mb-1">{{ $a->bank_name }} @if($a->branch) - {{ $a->branch }}@endif</p>
@@ -31,10 +35,10 @@
             <button onclick="confirmDelete('del-bank-{{ $a->id }}', 'Delete bank account?')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
         </div>
     </div>
-    @empty
-    <div class="col-span-full text-center py-8 text-gray-400 text-sm">No bank accounts found</div>
-    @endforelse
-</div>
+        @empty
+        <div class="col-span-full text-center py-8 text-gray-400 text-sm">No bank accounts found</div>
+        @endforelse
+        </div>
 <div class="px-1 mt-4">{{ $accounts->links() }}</div>
 <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">

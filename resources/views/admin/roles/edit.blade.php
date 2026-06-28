@@ -13,7 +13,9 @@
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Name *</label>
                 <input name="name" required value="{{ old('name', $role->name) }}" {{ $role->editable ? '' : 'disabled' }} class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none {{ $role->editable ? '' : 'bg-gray-100' }}">
-                @if(!$role->editable)<p class="text-[10px] text-gray-400 mt-1">System role - name cannot be changed</p>@endif
+        @if(!$role->editable)
+        <p class="text-[10px] text-gray-400 mt-1">System role - name cannot be changed</p>
+        @endif
                 @error('name')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
@@ -32,7 +34,7 @@
             </div>
         </div>
         <div class="space-y-4 max-h-[60vh] overflow-y-auto">
-            @foreach($permissions as $module => $modulePerms)
+        @foreach($permissions as $module => $modulePerms)
             @php $moduleSlug = \Str::slug($module); @endphp
             <div class="border rounded-lg p-4">
                 <div class="flex items-center gap-2 mb-3 pb-2 border-b">
@@ -46,15 +48,15 @@
                     <span class="text-[10px] text-gray-400">({{ $checkedCount }}/{{ count($modulePerms) }})</span>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    @foreach($modulePerms as $perm)
-                    <div class="flex items-center gap-2">
+        @foreach($modulePerms as $perm)
+        <div class="flex items-center gap-2">
                         <input type="checkbox" name="permissions[]" value="{{ $perm->name }}" id="perm-{{ $perm->id }}" class="rounded border-gray-300 text-emerald-600 perm-checkbox module-{{ $moduleSlug }}" {{ in_array($perm->name, $rolePermissions) ? 'checked' : '' }}>
                         <label for="perm-{{ $perm->id }}" class="text-xs text-gray-600 cursor-pointer">{{ $perm->label }}</label>
                     </div>
-                    @endforeach
-                </div>
+        @endforeach
+        </div>
             </div>
-            @endforeach
+        @endforeach
         </div>
     </div>
     <div class="flex gap-2">

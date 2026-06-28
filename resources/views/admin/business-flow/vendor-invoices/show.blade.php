@@ -32,7 +32,9 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Payment History</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Payment No.</th><th class="py-2">Date</th><th class="py-2">Amount</th><th class="py-2">Method</th><th class="py-2">Reference</th></tr></thead>
-                <tbody>@forelse($invoice->payments as $p)<tr class="border-t border-gray-100">
+                <tbody>
+        @forelse($invoice->payments as $p)
+        <tr class="border-t border-gray-100">
                     <td class="py-2 font-mono text-gray-700">{{ $p->payment_number }}</td>
                     <td class="py-2 text-gray-500">{{ $p->payment_date->format('d M Y') }}</td>
                     <td class="py-2 font-semibold text-emerald-600">TZS {{ number_format($p->amount) }}</td>
@@ -56,7 +58,11 @@
             <input type="hidden" name="vendor_invoice_id" value="{{ $invoice->id }}">
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Payment Date *</label><input name="payment_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Amount *</label><input name="amount" type="number" step="0.01" required value="{{ $invoice->balance }}" max="{{ $invoice->balance }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Payment Method</label><select name="payment_method" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none">@foreach(['cash'=>'Cash','bank_transfer'=>'Bank Transfer','cheque'=>'Cheque','mobile_money'=>'Mobile Money'] as $k=>$v)<option value="{{ $k }}">{{ $v }}</option>@endforeach</select></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Payment Method</label><select name="payment_method" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none">
+        @foreach(['cash'=>'Cash','bank_transfer'=>'Bank Transfer','cheque'=>'Cheque','mobile_money'=>'Mobile Money'] as $k=>$v)
+        <option value="{{ $k }}">{{ $v }}</option>
+        @endforeach
+        </select></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Reference Number</label><input name="reference_number" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></textarea></div>
             <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('paymentModal').classList.add('hidden')" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Record Payment</button></div>

@@ -15,7 +15,9 @@
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
             <th class="px-5 py-3 font-medium">Tender No.</th><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Client</th><th class="px-5 py-3 font-medium">Est. Value</th><th class="px-5 py-3 font-medium">Closing Date</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th>
         </tr></thead>
-        <tbody>@forelse($tenders as $t)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($tenders as $t)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $t->tender_number }}</td>
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $t->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $t->client_name }}<br><span class="text-[10px] text-gray-400">{{ $t->client_organization }}</span></td>
@@ -24,7 +26,9 @@
             <td class="px-5 py-3">@php $sc=['received'=>'amber','under_review'=>'sky','converted'=>'emerald','rejected'=>'red']; $c=$sc[$t->status]??'gray'; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-{{ $c }}-50 text-{{ $c }}-700">{{ ucfirst(str_replace('_',' ',$t->status)) }}</span></td>
             <td class="px-5 py-3 flex items-center gap-2">
                 <a href="{{ route('admin.tenders.show', $t) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a>
-                @if($t->status==='received' || $t->status==='under_review')<form method="POST" action="{{ route('admin.tenders.convert-to-lead', $t) }}">@csrf<button type="submit" class="text-emerald-600 hover:text-emerald-700 text-xs" onclick="return confirm('Convert this tender to a Lead?')">→ Lead</button></form>@endif
+        @if($t->status==='received' || $t->status==='under_review')
+        <form method="POST" action="{{ route('admin.tenders.convert-to-lead', $t) }}">@csrf<button type="submit" class="text-emerald-600 hover:text-emerald-700 text-xs" onclick="return confirm('Convert this tender to a Lead?')">→ Lead</button></form>
+        @endif
                 <form id="del-tnd-{{ $t->id }}" method="POST" action="{{ route('admin.tenders.destroy', $t) }}">@csrf @method('DELETE')</form>
                 <button onclick="confirmDelete('del-tnd-{{ $t->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
             </td>

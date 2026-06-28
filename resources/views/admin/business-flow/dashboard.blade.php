@@ -26,9 +26,10 @@
                 <span class="font-medium text-{{ $stage[3] }}-700">{{ $stage[0] }}</span>
                 <span class="px-1.5 py-0.5 rounded-full bg-{{ $stage[3] }}-600 text-white text-[10px] font-bold">{{ $stage[2] }}</span>
             </a>
-            @if ($i < count($stages) - 1)<svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>@endif
+            @if ($i < count($stages) - 1)<svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        @endif
         @endforeach
-    </div>
+        </div>
 </div>
 
 {{-- Summary Cards --}}
@@ -43,12 +44,14 @@
     {{-- Recent Tenders --}}
     <div class="bg-white rounded-xl border p-5">
         <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-gray-900">Recent Tenders</h3><a href="{{ route('admin.tenders.index') }}" class="text-[10px] text-emerald-600">View All</a></div>
-        <div class="space-y-2">@forelse($recentTenders as $t)
-            <div class="flex items-center justify-between text-xs border-b pb-2">
+        <div class="space-y-2">
+        @forelse($recentTenders as $t)
+        <div class="flex items-center justify-between text-xs border-b pb-2">
                 <div><p class="font-medium text-gray-900">{{ $t->title }}</p><p class="text-[10px] text-gray-400">{{ $t->tender_number }} • {{ $t->client_name }}</p></div>
                 <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($t->status=='converted')bg-emerald-50 text-emerald-700 @elseif($t->status=='rejected')bg-red-50 text-red-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_',' ',$t->status)) }}</span>
             </div>
-        @empty<p class="text-xs text-gray-400 text-center py-4">No tenders yet</p>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No tenders yet</p>
         @endforelse
         </div>
     </div>
@@ -56,12 +59,14 @@
     {{-- Recent LPOs --}}
     <div class="bg-white rounded-xl border p-5">
         <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-gray-900">Recent LPOs</h3><a href="{{ route('admin.lpos.index') }}" class="text-[10px] text-emerald-600">View All</a></div>
-        <div class="space-y-2">@forelse($recentLpos as $l)
-            <div class="flex items-center justify-between text-xs border-b pb-2">
+        <div class="space-y-2">
+        @forelse($recentLpos as $l)
+        <div class="flex items-center justify-between text-xs border-b pb-2">
                 <div><p class="font-medium text-gray-900">{{ $l->lpo_number }}</p><p class="text-[10px] text-gray-400">{{ $l->supplier?->name ?? 'N/A' }} • {{ $l->project?->title ?? 'No Project' }}</p></div>
                 <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] @if($l->status=='received')bg-emerald-50 text-emerald-700 @elseif($l->status=='draft')bg-gray-50 text-gray-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_',' ',$l->status)) }}</span>
             </div>
-        @empty<p class="text-xs text-gray-400 text-center py-4">No LPOs yet</p>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No LPOs yet</p>
         @endforelse
         </div>
     </div>
@@ -69,12 +74,14 @@
     {{-- Recent Projects --}}
     <div class="bg-white rounded-xl border p-5">
         <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-gray-900">Recent Projects</h3><a href="{{ route('admin.projects.index') }}" class="text-[10px] text-emerald-600">View All</a></div>
-        <div class="space-y-2">@forelse($recentProjects as $p)
-            <div class="flex items-center justify-between text-xs border-b pb-2">
+        <div class="space-y-2">
+        @forelse($recentProjects as $p)
+        <div class="flex items-center justify-between text-xs border-b pb-2">
                 <div><p class="font-medium text-gray-900">{{ $p->title }}</p><p class="text-[10px] text-gray-400">{{ $p->project_number }} • Budget: TZS {{ number_format($p->budget) }}</p></div>
                 <a href="{{ route('admin.projects.profit', $p) }}" class="text-[10px] text-emerald-600 hover:underline">Profit</a>
             </div>
-        @empty<p class="text-xs text-gray-400 text-center py-4">No projects yet</p>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No projects yet</p>
         @endforelse
         </div>
     </div>

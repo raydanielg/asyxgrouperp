@@ -42,7 +42,7 @@
                 <p class="mt-5 text-center text-sm text-gray-500">
                     <a href="{{ route('password.request') }}" class="font-medium text-emerald-600 hover:text-emerald-700 transition-colors">Forgot your password?</a>
                 </p>
-            @endif
+        @endif
         </div>
     </div>
     <p class="mt-6 text-center text-xs text-gray-400">&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.</p>

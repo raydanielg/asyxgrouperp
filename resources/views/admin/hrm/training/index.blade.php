@@ -12,7 +12,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Trainer</th><th class="px-5 py-3 font-medium">Dates</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($trainings as $t)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($trainings as $t)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $t->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $t->trainer ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $t->start_date?->format('d M Y') ?? '—' }} @if($t->end_date) - {{ $t->end_date->format('d M Y') }}@endif</td>

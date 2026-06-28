@@ -16,12 +16,11 @@
         </div>
     </div>
 </div>
-
-@if(session('success'))
+        @if(session('success'))
 <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-lg mb-4 text-sm">
     {{ session('success') }}
 </div>
-@endif
+        @endif
 
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="px-5 py-4 border-b flex items-center justify-between">
@@ -53,26 +52,26 @@
                 <div class="border rounded-lg overflow-hidden">
                     <div class="px-4 py-3 bg-gray-50 border-b"><h4 class="text-xs font-bold text-gray-700">Recent Sales</h4></div>
                     <div class="divide-y divide-gray-100">
-                        @foreach(($recentSales ?? collect())->take(5) as $inv)
+        @foreach(($recentSales ?? collect())->take(5) as $inv)
                         <div class="px-4 py-2.5 flex justify-between text-xs"><span class="text-gray-700">{{ $inv->invoice_number }}</span><span class="font-semibold text-gray-900">TZS {{ number_format($inv->total_amount) }}</span></div>
-                        @endforeach
-                    </div>
+        @endforeach
+        </div>
                 </div>
                 <div class="border rounded-lg overflow-hidden">
                     <div class="px-4 py-3 bg-gray-50 border-b"><h4 class="text-xs font-bold text-gray-700">Recent Expenses</h4></div>
                     <div class="divide-y divide-gray-100">
-                        @foreach(($recentExpenses ?? collect())->take(5) as $exp)
+        @foreach(($recentExpenses ?? collect())->take(5) as $exp)
                         <div class="px-4 py-2.5 flex justify-between text-xs"><span class="text-gray-700">{{ $exp->description ?? $exp->category ?? 'Expense' }}</span><span class="font-semibold text-red-600">TZS {{ number_format($exp->amount) }}</span></div>
-                        @endforeach
-                    </div>
+        @endforeach
+        </div>
                 </div>
                 <div class="border rounded-lg overflow-hidden">
                     <div class="px-4 py-3 bg-gray-50 border-b"><h4 class="text-xs font-bold text-gray-700">Recent Revenues</h4></div>
                     <div class="divide-y divide-gray-100">
-                        @foreach(($recentRevenues ?? collect())->take(5) as $rev)
+        @foreach(($recentRevenues ?? collect())->take(5) as $rev)
                         <div class="px-4 py-2.5 flex justify-between text-xs"><span class="text-gray-700">{{ $rev->description ?? $rev->category ?? 'Revenue' }}</span><span class="font-semibold text-emerald-600">TZS {{ number_format($rev->amount) }}</span></div>
-                        @endforeach
-                    </div>
+        @endforeach
+        </div>
                 </div>
             </div>
         </div>
@@ -89,14 +88,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($projects ?? collect())->items() ?? [] as $project)
+        @foreach(($projects ?? collect())->items() ?? [] as $project)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $project->name }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($project->status === 'in_progress') bg-sky-50 text-sky-700 @elseif($project->status === 'completed') bg-emerald-50 text-emerald-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $project->due_date?->format('d M Y') ?? '-' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($projects ?? null)?->links() ?? '' }}</div>
@@ -114,15 +113,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($employees ?? collect())->items() ?? [] as $emp)
+        @foreach(($employees ?? collect())->items() ?? [] as $emp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->position ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->department ?? '-' }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if(($emp->status ?? '') === 'active') bg-emerald-50 text-emerald-700 @else bg-gray-50 text-gray-600 @endif">{{ ucfirst($emp->status ?? 'N/A') }}</span></td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($employees ?? null)?->links() ?? '' }}</div>
@@ -140,15 +139,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($invoices ?? collect())->items() ?? [] as $inv)
+        @foreach(($invoices ?? collect())->items() ?? [] as $inv)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $inv->invoice_number }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $inv->customer?->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($inv->total_amount) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $inv->invoice_date->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($invoices ?? null)?->links() ?? '' }}</div>
@@ -166,15 +165,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($invoices ?? collect())->items() ?? [] as $inv)
+        @foreach(($invoices ?? collect())->items() ?? [] as $inv)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $inv->invoice_number }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $inv->vendor?->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($inv->total_amount) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $inv->invoice_date->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($invoices ?? null)?->links() ?? '' }}</div>
@@ -192,15 +191,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($expenses ?? collect())->items() ?? [] as $exp)
+        @foreach(($expenses ?? collect())->items() ?? [] as $exp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $exp->description ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $exp->category ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-red-600">TZS {{ number_format($exp->amount) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $exp->expense_date?->format('d M Y') ?? '-' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($expenses ?? null)?->links() ?? '' }}</div>
@@ -218,15 +217,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($revenues ?? collect())->items() ?? [] as $rev)
+        @foreach(($revenues ?? collect())->items() ?? [] as $rev)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $rev->description ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $rev->category ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-emerald-600">TZS {{ number_format($rev->amount) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $rev->revenue_date?->format('d M Y') ?? '-' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($revenues ?? null)?->links() ?? '' }}</div>
@@ -244,15 +243,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($tickets ?? collect())->items() ?? [] as $ticket)
+        @foreach(($tickets ?? collect())->items() ?? [] as $ticket)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $ticket->subject ?? 'Ticket #' . $ticket->id }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($ticket->status === 'open') bg-rose-50 text-rose-700 @elseif($ticket->status === 'resolved') bg-emerald-50 text-emerald-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst(str_replace('_', ' ', $ticket->status ?? '')) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($ticket->priority ?? '-') }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $ticket->created_at->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($tickets ?? null)?->links() ?? '' }}</div>
@@ -270,15 +269,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($leads ?? collect())->items() ?? [] as $lead)
+        @foreach(($leads ?? collect())->items() ?? [] as $lead)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $lead->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $lead->company_name ?? '-' }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700">{{ ucfirst($lead->status ?? 'New') }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $lead->created_at->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($leads ?? null)?->links() ?? '' }}</div>
@@ -295,14 +294,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($contacts ?? collect())->items() ?? [] as $contact)
+        @foreach(($contacts ?? collect())->items() ?? [] as $contact)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $contact->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $contact->email ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $contact->phone ?? '-' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($contacts ?? null)?->links() ?? '' }}</div>
@@ -319,14 +318,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($deals ?? collect())->items() ?? [] as $deal)
+        @foreach(($deals ?? collect())->items() ?? [] as $deal)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $deal->title ?? 'Deal #' . $deal->id }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($deal->value ?? 0) }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700">{{ ucfirst($deal->status ?? 'Open') }}</span></td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($deals ?? null)?->links() ?? '' }}</div>
@@ -343,14 +342,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($contracts ?? collect())->items() ?? [] as $contract)
+        @foreach(($contracts ?? collect())->items() ?? [] as $contract)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $contract->title ?? 'Contract #' . $contract->id }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($contract->value ?? 0) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($contract->status ?? '-') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($contracts ?? null)?->links() ?? '' }}</div>
@@ -368,15 +367,16 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($products ?? collect())->items() ?? [] as $product)
+        @foreach(($products ?? collect())->items() ?? [] as $product)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $product->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $product->sku ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($product->price ?? 0) }}</td>
-                        <td class="px-4 py-3"><span class="text-xs @if(($product->stock_quantity ?? 0) < 10) text-rose-600 font-bold @else text-gray-700 @endif">{{ $product->stock_quantity ?? 0 }}</span></td>
+                        <td class="px-4 py-3"><span class="text-xs @if(($product->stock_quantity ?? 0)
+        < 10) text-rose-600 font-bold @else text-gray-700 @endif">{{ $product->stock_quantity ?? 0 }}</span></td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($products ?? null)?->links() ?? '' }}</div>
@@ -392,13 +392,13 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($warehouses ?? collect())->items() ?? [] as $wh)
+        @foreach(($warehouses ?? collect())->items() ?? [] as $wh)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $wh->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $wh->location ?? '-' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($warehouses ?? null)?->links() ?? '' }}</div>
@@ -416,15 +416,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($movements ?? collect())->items() ?? [] as $m)
+        @foreach(($movements ?? collect())->items() ?? [] as $m)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $m->product?->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($m->type ?? '-') }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">{{ $m->quantity ?? 0 }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $m->created_at->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($movements ?? null)?->links() ?? '' }}</div>
@@ -441,14 +441,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($suppliers ?? collect())->items() ?? [] as $s)
+        @foreach(($suppliers ?? collect())->items() ?? [] as $s)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $s->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $s->phone ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $s->email ?? '-' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($suppliers ?? null)?->links() ?? '' }}</div>
@@ -465,14 +465,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($transfers ?? collect())->items() ?? [] as $t)
+        @foreach(($transfers ?? collect())->items() ?? [] as $t)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">Transfer #{{ $t->id }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($t->status ?? '-') }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $t->created_at->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($transfers ?? null)?->links() ?? '' }}</div>
@@ -489,14 +489,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($records ?? collect())->items() ?? [] as $r)
+        @foreach(($records ?? collect())->items() ?? [] as $r)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $r->employee?->first_name ?? '' }} {{ $r->employee?->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $r->date?->format('d M Y') ?? '-' }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($r->status === 'present') bg-emerald-50 text-emerald-700 @elseif($r->status === 'absent') bg-rose-50 text-rose-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($r->status) }}</span></td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($records ?? null)?->links() ?? '' }}</div>
@@ -514,15 +514,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($leaves ?? collect())->items() ?? [] as $l)
+        @foreach(($leaves ?? collect())->items() ?? [] as $l)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $l->employee?->first_name ?? '' }} {{ $l->employee?->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $l->leave_type ?? '-' }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium @if($l->status === 'approved') bg-emerald-50 text-emerald-700 @elseif($l->status === 'rejected') bg-rose-50 text-rose-700 @else bg-amber-50 text-amber-700 @endif">{{ ucfirst($l->status ?? 'Pending') }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $l->start_date?->format('d M') ?? '' }} - {{ $l->end_date?->format('d M Y') ?? '' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($leaves ?? null)?->links() ?? '' }}</div>
@@ -540,15 +540,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($users ?? collect())->items() ?? [] as $u)
+        @foreach(($users ?? collect())->items() ?? [] as $u)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $u->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $u->email }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $u->roles()->first()?->label ?? $u->role ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $u->created_at->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($users ?? null)?->links() ?? '' }}</div>
@@ -565,14 +565,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($roles ?? collect()) as $r)
+        @foreach(($roles ?? collect()) as $r)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $r->label ?? ucfirst(str_replace('_', ' ', $r->name)) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $r->permissions()->count() }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $r->users()->count() }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         @break
@@ -589,15 +589,15 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($bills ?? collect())->items() ?? [] as $bill)
+        @foreach(($bills ?? collect())->items() ?? [] as $bill)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $bill->bill_number ?? 'Bill #' . $bill->id }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $bill->vendor?->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($bill->amount ?? 0) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $bill->due_date?->format('d M Y') ?? '-' }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($bills ?? null)?->links() ?? '' }}</div>
@@ -614,14 +614,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($accounts ?? collect())->items() ?? [] as $acc)
+        @foreach(($accounts ?? collect())->items() ?? [] as $acc)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $acc->bank_name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $acc->account_number ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-emerald-600">TZS {{ number_format($acc->balance ?? 0) }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($accounts ?? null)?->links() ?? '' }}</div>
@@ -638,14 +638,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($transfers ?? collect())->items() ?? [] as $t)
+        @foreach(($transfers ?? collect())->items() ?? [] as $t)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">Transfer #{{ $t->id }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($t->amount ?? 0) }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $t->created_at->format('d M Y') }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($transfers ?? null)?->links() ?? '' }}</div>
@@ -662,14 +662,14 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach(($employees ?? collect())->items() ?? [] as $emp)
+        @foreach(($employees ?? collect())->items() ?? [] as $emp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->position ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($emp->salary ?? 0) }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
+        @endforeach
+        </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($employees ?? null)?->links() ?? '' }}</div>
@@ -688,14 +688,14 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                @foreach(($products ?? collect())->take(12) as $product)
+        @foreach(($products ?? collect())->take(12) as $product)
                 <div class="border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer">
                     <p class="text-xs font-medium text-gray-900">{{ $product->name }}</p>
                     <p class="text-[10px] text-gray-400 mt-1">Stock: {{ $product->stock_quantity ?? 0 }}</p>
                     <p class="text-sm font-bold text-emerald-600 mt-1">TZS {{ number_format($product->price ?? 0) }}</p>
                 </div>
-                @endforeach
-            </div>
+        @endforeach
+        </div>
         </div>
         @break
 
@@ -721,14 +721,14 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @foreach(($sales ?? collect())->items() ?? [] as $sale)
+        @foreach(($sales ?? collect())->items() ?? [] as $sale)
                         <tr class="hover:bg-gray-50/50">
                             <td class="px-4 py-3 text-xs font-medium text-gray-900">Sale #{{ $sale->id }}</td>
                             <td class="px-4 py-3 text-xs font-semibold text-emerald-600">TZS {{ number_format($sale->total_amount) }}</td>
                             <td class="px-4 py-3 text-xs text-gray-500">{{ $sale->created_at->format('d M Y H:i') }}</td>
                         </tr>
-                        @endforeach
-                    </tbody>
+        @endforeach
+        </tbody>
                 </table>
             </div>
             <div class="px-5 py-3 border-t">{{ ($sales ?? null)?->links() ?? '' }}</div>
@@ -759,18 +759,18 @@
                 <div class="border rounded-lg overflow-hidden">
                     <div class="px-4 py-3 bg-gray-50 border-b"><h4 class="text-xs font-bold text-gray-700">Recent Proposals</h4></div>
                     <div class="divide-y divide-gray-100">
-                        @foreach(($recentProposals ?? collect())->take(5) as $prop)
+        @foreach(($recentProposals ?? collect())->take(5) as $prop)
                         <div class="px-4 py-2.5 flex justify-between text-xs"><span class="text-gray-700">{{ $prop->title ?? 'Proposal #' . $prop->id }}</span><span class="text-gray-500">{{ ucfirst($prop->status ?? '') }}</span></div>
-                        @endforeach
-                    </div>
+        @endforeach
+        </div>
                 </div>
                 <div class="border rounded-lg overflow-hidden">
                     <div class="px-4 py-3 bg-gray-50 border-b"><h4 class="text-xs font-bold text-gray-700">Recent Invoices</h4></div>
                     <div class="divide-y divide-gray-100">
-                        @foreach(($recentInvoices ?? collect())->take(5) as $inv)
+        @foreach(($recentInvoices ?? collect())->take(5) as $inv)
                         <div class="px-4 py-2.5 flex justify-between text-xs"><span class="text-gray-700">{{ $inv->invoice_number }}</span><span class="font-semibold text-gray-900">TZS {{ number_format($inv->total_amount) }}</span></div>
-                        @endforeach
-                    </div>
+        @endforeach
+        </div>
                 </div>
             </div>
         </div>
@@ -801,14 +801,14 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @foreach(($employees ?? ($projects ?? collect()))->take(10) as $item)
+        @foreach(($employees ?? ($projects ?? collect()))->take(10) as $item)
                         <tr class="hover:bg-gray-50/50">
                             <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $item->name ?? ($item->first_name ?? '') . ' ' . ($item->last_name ?? '') }}</td>
                             <td class="px-4 py-3 text-xs text-gray-500">{{ $item->position ?? $item->status ?? '-' }}</td>
                             <td class="px-4 py-3 text-xs text-gray-500">{{ ($item->created_at ?? now())->format('d M Y') }}</td>
                         </tr>
-                        @endforeach
-                    </tbody>
+        @endforeach
+        </tbody>
                 </table>
             </div>
         </div>

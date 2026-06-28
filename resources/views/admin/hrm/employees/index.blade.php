@@ -25,14 +25,19 @@
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name, email, ID..." class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none w-52">
             <select name="department" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
                 <option value="">All Departments</option>
-                @foreach($departments as $dept)<option value="{{ $dept }}" @selected(request('department')===$dept)>{{ $dept }}</option>@endforeach
-            </select>
+        @foreach($departments as $dept)
+        <option value="{{ $dept }}" @selected(request('department')===$dept)>{{ $dept }}</option>
+        @endforeach
+        </select>
             <select name="status" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
                 <option value="">All Status</option>
-                @foreach(['active','inactive','on_leave','terminated'] as $st)<option value="{{ $st }}" @selected(request('status')===$st)>{{ ucfirst(str_replace('_',' ',$st)) }}</option>@endforeach
-            </select>
+        @foreach(['active','inactive','on_leave','terminated'] as $st)
+        <option value="{{ $st }}" @selected(request('status')===$st)>{{ ucfirst(str_replace('_',' ',$st)) }}</option>
+        @endforeach
+        </select>
             <button type="submit" class="px-3 py-1.5 bg-emerald-600 text-white text-xs rounded-lg hover:bg-emerald-700">Filter</button>
-            @if(request('search')||request('department')||request('status'))<a href="{{ route('admin.employees.index') }}" class="text-xs text-gray-500 hover:text-gray-700">Clear</a>@endif
+        @if(request('search')||request('department')||request('status'))<a href="{{ route('admin.employees.index') }}" class="text-xs text-gray-500 hover:text-gray-700">Clear</a>
+        @endif
         </form>
     </div>
     {{-- Table --}}
@@ -49,8 +54,8 @@
                 <th class="px-5 py-3 font-medium">Actions</th>
             </tr></thead>
             <tbody>
-                @forelse($employees as $employee)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($employees as $employee)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $employee->employee_id }}</td>
                     <td class="px-5 py-3">
                         <div class="flex items-center gap-2">
@@ -73,10 +78,10 @@
                         <button onclick="confirmDelete('del-emp-{{ $employee->id }}', 'Delete employee?', 'This will permanently delete {{ $employee->full_name }}.')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
                     </td>
                 </tr>
-                @empty
+        @empty
         <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No employees found</td></tr>
-                @endforelse
-            </tbody>
+        @endforelse
+        </tbody>
         </table>
     </div>
     <div class="px-5 py-4 border-t">{{ $employees->links() }}</div>

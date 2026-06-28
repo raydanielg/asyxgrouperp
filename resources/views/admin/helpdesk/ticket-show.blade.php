@@ -36,10 +36,12 @@
                 <span class="text-xs text-gray-400">{{ $reply->created_at->format('d M Y H:i') }}</span>
             </div>
             <p class="text-sm text-gray-600">{{ $reply->message }}</p>
-            @if($reply->is_internal)<span class="inline-flex items-center mt-2 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Internal</span>@endif
+        @if($reply->is_internal)
+        <span class="inline-flex items-center mt-2 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Internal</span>
+        @endif
         </div>
         @endforeach
-    </div>
+        </div>
 
     <div class="bg-white rounded-xl border p-5">
         <h3 class="text-sm font-semibold text-gray-900 mb-3">Add Reply</h3>

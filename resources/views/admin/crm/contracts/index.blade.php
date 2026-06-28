@@ -12,7 +12,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Contract #</th><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Client</th><th class="px-5 py-3 font-medium">Value</th><th class="px-5 py-3 font-medium">Period</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($contracts as $c)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($contracts as $c)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $c->contract_number }}</td>
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $c->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $c->client_name }}</td>
@@ -34,7 +36,11 @@
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Contract</h3>
         <form method="POST" action="{{ route('admin.crm-contracts.store') }}" class="space-y-3">@csrf
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Deal</label><select name="deal_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>@foreach($deals as $d)<option value="{{ $d->id }}">{{ $d->title }} ({{ $d->deal_number }})</option>@endforeach</select></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Deal</label><select name="deal_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>
+        @foreach($deals as $d)
+        <option value="{{ $d->id }}">{{ $d->title }} ({{ $d->deal_number }})</option>
+        @endforeach
+        </select></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Client Name *</label><input name="client_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Value *</label><input name="value" type="number" step="0.01" required value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Start Date</label><input name="start_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">End Date</label><input name="end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>

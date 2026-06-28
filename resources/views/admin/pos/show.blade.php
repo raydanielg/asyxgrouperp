@@ -19,7 +19,11 @@
         </div>
         <table class="w-full text-sm mb-4">
             <thead><tr class="text-left text-xs text-gray-500 border-b"><th class="py-2">Item</th><th class="py-2 text-center">Qty</th><th class="py-2 text-right">Price</th><th class="py-2 text-right">Total</th></tr></thead>
-            <tbody>@foreach($posSale->items as $item)<tr class="border-b border-gray-50"><td class="py-2 text-xs text-gray-900">{{ $item->product_name }}</td><td class="py-2 text-center text-xs text-gray-500">{{ $item->quantity }}</td><td class="py-2 text-right text-xs text-gray-500">TZS {{ number_format($item->unit_price) }}</td><td class="py-2 text-right text-xs font-medium text-gray-900">TZS {{ number_format($item->total) }}</td></tr>@endforeach</tbody>
+            <tbody>
+        @foreach($posSale->items as $item)
+        <tr class="border-b border-gray-50"><td class="py-2 text-xs text-gray-900">{{ $item->product_name }}</td><td class="py-2 text-center text-xs text-gray-500">{{ $item->quantity }}</td><td class="py-2 text-right text-xs text-gray-500">TZS {{ number_format($item->unit_price) }}</td><td class="py-2 text-right text-xs font-medium text-gray-900">TZS {{ number_format($item->total) }}</td></tr>
+        @endforeach
+        </tbody>
         </table>
         <div class="space-y-1 text-xs">
             <div class="flex justify-between"><span class="text-gray-500">Subtotal</span><span class="text-gray-900">TZS {{ number_format($posSale->subtotal) }}</span></div>

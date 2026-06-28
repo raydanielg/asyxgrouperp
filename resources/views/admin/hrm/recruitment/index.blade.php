@@ -12,7 +12,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Department</th><th class="px-5 py-3 font-medium">Type</th><th class="px-5 py-3 font-medium">Vacancies</th><th class="px-5 py-3 font-medium">Deadline</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($jobs as $j)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($jobs as $j)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $j->title }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $j->department ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst(str_replace('_', ' ', $j->job_type)) }}</td>

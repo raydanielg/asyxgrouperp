@@ -248,11 +248,11 @@
             {{-- Top-level items --}}
             @if(auth()->user()->isAdmin())
             @foreach($navItems as $item)
-            <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+        <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
                 <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
-            @endforeach
+        @endforeach
             @else
             @php
                 // Role-specific sidebar menus - using role.page route
@@ -466,22 +466,22 @@
                 <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
-            @endforeach
+        @endforeach
             {{-- Hide grouped nav for non-admin users --}}
             @php $navGroups = []; @endphp
             @endif
 
             {{-- Grouped items --}}
             @foreach($navGroups as $group)
-            <div class="pt-3 pb-1">
+        <div class="pt-3 pb-1">
                 <p class="px-3 text-[10px] font-bold uppercase tracking-wider text-emerald-400/40">{{ $group['title'] }}</p>
             </div>
-            @foreach($group['items'] as $item)
-            <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-emerald-100/80 text-sm {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+        @foreach($group['items'] as $item)
+        <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-emerald-100/80 text-sm {{ request()->routeIs($item['match']) ? 'active' : '' }}">
                 <svg class="w-4 h-4 text-gold-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
-            @endforeach
+        @endforeach
             @endforeach
         </div>
 

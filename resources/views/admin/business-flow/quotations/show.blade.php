@@ -21,8 +21,10 @@
         <div class="mt-4">
             <form method="POST" action="{{ route('admin.quotations.status', $quotation) }}">@csrf @method('PATCH')
                 <select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs mb-2 outline-none">
-                    @foreach(['draft'=>'Draft','sent'=>'Sent','accepted'=>'Accepted','rejected'=>'Rejected','expired'=>'Expired'] as $k=>$v)<option value="{{ $k }}" @selected($quotation->status===$k)>{{ $v }}</option>@endforeach
-                </select>
+        @foreach(['draft'=>'Draft','sent'=>'Sent','accepted'=>'Accepted','rejected'=>'Rejected','expired'=>'Expired'] as $k=>$v)
+        <option value="{{ $k }}" @selected($quotation->status===$k)>{{ $v }}</option>
+        @endforeach
+        </select>
                 <button type="submit" class="w-full px-3 py-2 bg-sky-600 text-white text-xs font-medium rounded-lg hover:bg-sky-700">Update Status</button>
             </form>
         </div>
@@ -32,14 +34,18 @@
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Items</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Description</th><th class="py-2">Qty</th><th class="py-2">Unit Price</th><th class="py-2">Discount</th><th class="py-2">Tax %</th><th class="py-2">Total</th></tr></thead>
-                <tbody>@foreach($quotation->items as $item)<tr class="border-t border-gray-100">
+                <tbody>
+        @foreach($quotation->items as $item)
+        <tr class="border-t border-gray-100">
                     <td class="py-2 text-gray-700">{{ $item->description }}</td>
                     <td class="py-2 text-gray-500">{{ $item->quantity }} {{ $item->unit ?? '' }}</td>
                     <td class="py-2 text-gray-500">TZS {{ number_format($item->unit_price) }}</td>
                     <td class="py-2 text-red-500">TZS {{ number_format($item->discount_amount) }}</td>
                     <td class="py-2 text-gray-500">{{ $item->tax_percentage }}%</td>
                     <td class="py-2 font-semibold text-gray-900">TZS {{ number_format($item->line_total) }}</td>
-                </tr>@endforeach</tbody>
+                </tr>
+        @endforeach
+        </tbody>
             </table></div>
         </div>
     </div>

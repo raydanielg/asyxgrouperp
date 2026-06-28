@@ -12,7 +12,9 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Transfer #</th><th class="px-5 py-3 font-medium">From</th><th class="px-5 py-3 font-medium">To</th><th class="px-5 py-3 font-medium">Amount</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>@forelse($transfers as $t)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($transfers as $t)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $t->transfer_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $t->fromAccount?->account_name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $t->toAccount?->account_name ?? 'N/A' }}</td>
@@ -33,8 +35,16 @@
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Bank Transfer</h3>
         <form method="POST" action="{{ route('admin.acc-transfers.store') }}" class="space-y-3">@csrf
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">From Account *</label><select name="from_account_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($accounts as $a)<option value="{{ $a->id }}">{{ $a->account_name }} (TZS {{ number_format($a->current_balance) }})</option>@endforeach</select></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">To Account *</label><select name="to_account_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>@foreach($accounts as $a)<option value="{{ $a->id }}">{{ $a->account_name }}</option>@endforeach</select></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">From Account *</label><select name="from_account_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>
+        @foreach($accounts as $a)
+        <option value="{{ $a->id }}">{{ $a->account_name }} (TZS {{ number_format($a->current_balance) }})</option>
+        @endforeach
+        </select></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">To Account *</label><select name="to_account_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select...</option>
+        @foreach($accounts as $a)
+        <option value="{{ $a->id }}">{{ $a->account_name }}</option>
+        @endforeach
+        </select></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Amount *</label><input name="amount" type="number" step="0.01" required value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Transfer Date *</label><input name="transfer_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea name="notes" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>

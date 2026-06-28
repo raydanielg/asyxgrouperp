@@ -24,11 +24,15 @@
             <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save Settings</button>
         </form>
     </div>
-    @if($settings->count() > 0)
+        @if($settings->count() > 0)
     <div class="bg-white rounded-xl border p-6 mt-4">
         <h3 class="text-sm font-semibold text-gray-900 mb-4">All Settings</h3>
-        <div class="space-y-1">@foreach($settings as $setting)<div class="flex justify-between text-xs py-1.5 border-b border-gray-50"><span class="text-gray-500">{{ $setting->key }}</span><span class="text-gray-900 font-medium">{{ $setting->value }}</span></div>@endforeach</div>
+        <div class="space-y-1">
+        @foreach($settings as $setting)
+        <div class="flex justify-between text-xs py-1.5 border-b border-gray-50"><span class="text-gray-500">{{ $setting->key }}</span><span class="text-gray-900 font-medium">{{ $setting->value }}</span></div>
+        @endforeach
+        </div>
     </div>
-    @endif
+        @endif
 </div>
 @endsection

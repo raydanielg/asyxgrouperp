@@ -31,23 +31,23 @@
             </div>
         </div>
         <div class="space-y-4 max-h-[60vh] overflow-y-auto">
-            @foreach($permissions as $module => $modulePerms)
-            <div class="border rounded-lg p-4">
+        @foreach($permissions as $module => $modulePerms)
+        <div class="border rounded-lg p-4">
                 <div class="flex items-center gap-2 mb-3 pb-2 border-b">
                     <input type="checkbox" id="module-{{ \Str::slug($module) }}" class="rounded border-gray-300 text-emerald-600 module-checkbox" onchange="toggleModule(this, '{{ \Str::slug($module) }}')">
                     <label for="module-{{ \Str::slug($module) }}" class="text-xs font-bold text-gray-900 cursor-pointer">{{ $module }}</label>
                     <span class="text-[10px] text-gray-400">({{ count($modulePerms) }} permissions)</span>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    @foreach($modulePerms as $perm)
-                    <div class="flex items-center gap-2">
+        @foreach($modulePerms as $perm)
+        <div class="flex items-center gap-2">
                         <input type="checkbox" name="permissions[]" value="{{ $perm->name }}" id="perm-{{ $perm->id }}" class="rounded border-gray-300 text-emerald-600 perm-checkbox module-{{ \Str::slug($module) }}">
                         <label for="perm-{{ $perm->id }}" class="text-xs text-gray-600 cursor-pointer">{{ $perm->label }}</label>
                     </div>
-                    @endforeach
-                </div>
+        @endforeach
+        </div>
             </div>
-            @endforeach
+        @endforeach
         </div>
         @error('permissions')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
     </div>

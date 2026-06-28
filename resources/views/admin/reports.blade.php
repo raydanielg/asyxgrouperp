@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-    @foreach([
+        @foreach([
         ['label'=>'Total Users','value'=>number_format($stats['totalUsers']),'icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z','from'=>'emerald-600','to'=>'emerald-700','border'=>'emerald-500','text'=>'emerald-100','sub'=>'emerald-200'],
         ['label'=>'Active','value'=>number_format($stats['activeUsers']),'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'amber-400','to'=>'amber-500','border'=>'amber-300','text'=>'amber-50','sub'=>'amber-100'],
         ['label'=>'Inactive','value'=>number_format($stats['inactiveUsers']),'icon'=>'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'red-400','to'=>'red-500','border'=>'red-300','text'=>'red-50','sub'=>'red-100'],
@@ -21,8 +21,8 @@
             <p class="text-xl font-bold tracking-tight text-white">{{ $card['value'] }}</p>
         </div>
     </div>
-    @endforeach
-</div>
+        @endforeach
+        </div>
 
 <div class="bg-white rounded-xl border p-6">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">User Distribution</h3>

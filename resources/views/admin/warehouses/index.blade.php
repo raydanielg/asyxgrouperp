@@ -24,18 +24,18 @@
                 <th class="px-5 py-3 font-medium">Actions</th>
             </tr></thead>
             <tbody>
-                @forelse($warehouses as $warehouse)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+        @forelse($warehouses as $warehouse)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $warehouse->name }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $warehouse->city }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $warehouse->phone ?? 'N/A' }}</td>
                     <td class="px-5 py-3 text-xs text-gray-500">{{ $warehouse->email ?? 'N/A' }}</td>
                     <td class="px-5 py-3">
-                        @if($warehouse->is_active)
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
-                        @else
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Inactive</span>
-                        @endif
+        @if($warehouse->is_active)
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
+        @else
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Inactive</span>
+        @endif
                     </td>
                     <td class="px-5 py-3 flex items-center gap-2">
                         <a href="{{ route('admin.warehouses.edit', $warehouse) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
@@ -45,10 +45,10 @@
                         </form>
                     </td>
                 </tr>
-                @empty
+        @empty
         <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No warehouses found</td></tr>
-                @endforelse
-            </tbody>
+        @endforelse
+        </tbody>
         </table>
     </div>
     <div class="px-5 py-4 border-t">{{ $warehouses->links() }}</div>

@@ -14,7 +14,9 @@
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
             <th class="px-5 py-3 font-medium">Quotation No.</th><th class="px-5 py-3 font-medium">Client</th><th class="px-5 py-3 font-medium">Lead</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Total</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th>
         </tr></thead>
-        <tbody>@forelse($quotations as $q)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($quotations as $q)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $q->quotation_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $q->client_name }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $q->lead?->full_name ?? 'N/A' }}</td>
@@ -41,7 +43,11 @@
         <div class="flex items-center justify-between px-6 py-4 border-b"><h3 class="text-sm font-bold text-gray-900">Create Quotation</h3><button onclick="document.getElementById('quoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">&times;</button></div>
         <form method="POST" action="{{ route('admin.quotations.store') }}" class="p-6 space-y-4">@csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Lead</label><select name="lead_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No Lead</option>@foreach($leads as $l)<option value="{{ $l->id }}">{{ $l->full_name }} ({{ $l->company ?? 'N/A' }})</option>@endforeach</select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Lead</label><select name="lead_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No Lead</option>
+        @foreach($leads as $l)
+        <option value="{{ $l->id }}">{{ $l->full_name }} ({{ $l->company ?? 'N/A' }})</option>
+        @endforeach
+        </select></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Client Name *</label><input name="client_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Client Email</label><input name="client_email" type="email" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Quotation Date *</label><input name="quotation_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>

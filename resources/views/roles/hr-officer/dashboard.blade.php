@@ -56,13 +56,13 @@
     </div>
 </div>
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-    @foreach($secondaryKpis as $kpi)
-    <a href="{{ route($kpi['route']) }}" class="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow">
+        @foreach($secondaryKpis as $kpi)
+        <a href="{{ route($kpi['route']) }}" class="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow">
         <span class="text-[10px] font-medium text-gray-500">{{ $kpi['label'] }}</span>
         <p class="text-lg font-bold text-gray-900 mt-1">{{ $kpi['value'] }}</p>
     </a>
-    @endforeach
-</div>
+        @endforeach
+        </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
@@ -70,16 +70,16 @@
             <a href="{{ route('admin.employees.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
-            @if(!empty($recentItems['recentEmployees']))
+        @if(!empty($recentItems['recentEmployees']))
             @foreach($recentItems['recentEmployees']->take(5) as $emp)
             <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
                 <div><p class="text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</p><p class="text-[10px] text-gray-400">{{ $emp->position ?? $emp->department ?? '' }}</p></div>
                 <span class="text-[10px] text-gray-400">{{ $emp->created_at->format('d M Y') }}</span>
             </div>
-            @endforeach
+        @endforeach
             @else
-            <div class="px-5 py-8 text-center text-gray-400 text-xs">No employees</div>
-            @endif
+        <div class="px-5 py-8 text-center text-gray-400 text-xs">No employees</div>
+        @endif
         </div>
     </div>
     <div class="bg-white rounded-xl border overflow-hidden">
@@ -88,16 +88,16 @@
             <a href="{{ route('admin.leaves.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
-            @if(!empty($recentItems['pendingLeaves']))
+        @if(!empty($recentItems['pendingLeaves']))
             @foreach($recentItems['pendingLeaves']->take(5) as $leave)
             <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
                 <div><p class="text-xs font-medium text-gray-900">{{ $leave->employee?->first_name ?? '' }} {{ $leave->employee?->last_name ?? '' }}</p><p class="text-[10px] text-gray-400">{{ $leave->leave_type ?? '' }}</p></div>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700">Pending</span>
             </div>
-            @endforeach
+        @endforeach
             @else
-            <div class="px-5 py-8 text-center text-gray-400 text-xs">No pending leaves</div>
-            @endif
+        <div class="px-5 py-8 text-center text-gray-400 text-xs">No pending leaves</div>
+        @endif
         </div>
     </div>
 </div>

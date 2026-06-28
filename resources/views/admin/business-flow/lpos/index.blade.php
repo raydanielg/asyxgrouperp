@@ -15,7 +15,9 @@
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
             <th class="px-5 py-3 font-medium">LPO No.</th><th class="px-5 py-3 font-medium">Project</th><th class="px-5 py-3 font-medium">Supplier</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Total</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th>
         </tr></thead>
-        <tbody>@forelse($lpos as $l)<tr class="border-t border-gray-100 hover:bg-gray-50/50">
+        <tbody>
+        @forelse($lpos as $l)
+        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $l->lpo_number }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $l->project?->title ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $l->supplier?->name ?? $l->supplier_name ?? 'N/A' }}</td>
@@ -43,8 +45,16 @@
         <div class="flex items-center justify-between px-6 py-4 border-b"><h3 class="text-sm font-bold text-gray-900">Create LPO</h3><button onclick="document.getElementById('lpoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">&times;</button></div>
         <form method="POST" action="{{ route('admin.lpos.store') }}" class="p-6 space-y-4">@csrf
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Project</label><select name="project_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No Project</option>@foreach($projects as $p)<option value="{{ $p->id }}">{{ $p->title }}</option>@endforeach</select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Supplier</label><select name="supplier_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select Supplier...</option>@foreach($suppliers as $s)<option value="{{ $s->id }}">{{ $s->name }}</option>@endforeach</select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Project</label><select name="project_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No Project</option>
+        @foreach($projects as $p)
+        <option value="{{ $p->id }}">{{ $p->title }}</option>
+        @endforeach
+        </select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Supplier</label><select name="supplier_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Select Supplier...</option>
+        @foreach($suppliers as $s)
+        <option value="{{ $s->id }}">{{ $s->name }}</option>
+        @endforeach
+        </select></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">LPO Date *</label><input name="lpo_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Expected Delivery</label><input name="expected_delivery_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
             </div>
