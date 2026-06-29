@@ -174,8 +174,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(ctx);
+              final navigator = Navigator.of(context);
               await context.read<AuthProvider>().logout();
-              if (mounted) Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+              if (mounted) navigator.pushNamedAndRemoveUntil('/login', (route) => false);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
             child: const Text('Sign Out'),

@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme.dart';
 import '../../core/services/api_service.dart';
 import '../../core/utils/helpers.dart';
-import '../../core/widgets/kpi_card.dart';
-import '../../core/widgets/app_widgets.dart';
 
 class PosScreen extends StatefulWidget {
   const PosScreen({super.key});
@@ -226,7 +224,7 @@ class _PosScreenState extends State<PosScreen> {
                   child: ListView.separated(
                     controller: scrollController,
                     itemCount: _cart.length,
-                    separatorBuilder: (_, __) => const Divider(),
+                    separatorBuilder: (_, ___) => const Divider(),
                     itemBuilder: (context, index) {
                       final item = _cart[index];
                       return ListTile(

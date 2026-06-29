@@ -68,7 +68,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                   child: ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: _filteredProjects.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    separatorBuilder: (_, ___) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final project = _filteredProjects[index];
                       return _buildProjectCard(project);
