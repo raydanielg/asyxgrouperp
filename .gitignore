@@ -14,6 +14,7 @@
 /.zed
 /auth.json
 /node_modules
+/docs/node_modules
 /public/hot
 /storage/*.key
 /storage/pail
