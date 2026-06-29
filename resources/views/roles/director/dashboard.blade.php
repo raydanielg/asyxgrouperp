@@ -58,6 +58,8 @@
     </div>
 </div>
 
+@include('roles.shared.ai-insights')
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     <div class="lg:col-span-2 bg-white rounded-xl border p-5">
 
