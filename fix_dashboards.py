@@ -9,8 +9,8 @@ for file in dashboards:
 
     # Remove AI insights include from inside the chart column
     content = re.sub(
-        r'\n    <div class="lg:col-span-2 bg-white rounded-xl border p-5">\n\n@include\(\'roles\.shared\.ai-insights\'\)\n\n',
-        '\n    <div class="lg:col-span-2 bg-white rounded-xl border p-5">\n',
+        r'<div class="lg:col-span-2 bg-white rounded-xl border p-5">\n\n@include\(\'roles\.shared\.ai-insights\'\)\n\n',
+        '<div class="lg:col-span-2 bg-white rounded-xl border p-5">\n',
         content,
     )
 
