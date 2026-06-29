@@ -324,6 +324,14 @@
                 $iconTraining = 'M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z';
                 $iconRecruitment = 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z';
                 $iconSalesDash = 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z';
+                $iconVisitors = 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z';
+                $iconAppointments = 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z';
+                $iconCalls = 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z';
+                $iconCorrespondence = 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z';
+                $iconParcels = 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4';
+                $iconFrontDesk = 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2';
+                $iconDepartments = 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4';
+                $iconAnnouncements = 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.854M11 5.882A1.76 1.76 0 0111.962 4.2a1.76 1.76 0 012.396.82l3.943 6.58a1.76 1.76 0 010 1.8l-3.943 6.58a1.76 1.76 0 01-2.396.82 1.76 1.76 0 01-.962-1.682V5.882z';
 
                 $roleMenus = [
                     'director' => [
@@ -346,7 +354,9 @@
                         ['label' => 'Bills', 'module' => 'bills', 'icon' => $iconBills],
                         ['label' => 'Bank Accounts', 'module' => 'bank-accounts', 'icon' => $iconBank],
                         ['label' => 'Transfers', 'module' => 'transfers', 'icon' => $iconTransfers],
+                        ['label' => 'Salary Advance', 'module' => 'salary-advance', 'icon' => $iconPayroll],
                         ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
+                        ['label' => 'My Profile', 'route' => 'admin.profile', 'icon' => $iconUsers, 'match' => 'admin.profile*'],
                     ],
                     'hr_officer' => [
                         ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
@@ -449,9 +459,18 @@
                     ],
                     'receptionist' => [
                         ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Leads', 'module' => 'leads', 'icon' => $iconLeads],
-                        ['label' => 'Contacts', 'module' => 'contacts', 'icon' => $iconContacts],
-                        ['label' => 'Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
+                        ['label' => 'Visitors', 'module' => 'visitors', 'icon' => $iconVisitors],
+                        ['label' => 'Appointments', 'module' => 'appointments', 'icon' => $iconAppointments],
+                        ['label' => 'Calls', 'module' => 'calls', 'icon' => $iconCalls],
+                        ['label' => 'Correspondence', 'module' => 'correspondence', 'icon' => $iconCorrespondence],
+                        ['label' => 'Parcels', 'module' => 'parcels', 'icon' => $iconParcels],
+                        ['label' => 'Front Desk', 'module' => 'front-desk', 'icon' => $iconFrontDesk],
+                        ['label' => 'Departments', 'module' => 'departments', 'icon' => $iconDepartments],
+                        ['label' => 'Announcements', 'module' => 'announcements', 'icon' => $iconAnnouncements],
+                        ['label' => 'Messages', 'module' => 'messages', 'icon' => $iconContacts],
+                        ['label' => 'Salary Advance', 'module' => 'salary-advance', 'icon' => $iconPayroll],
+                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
+                        ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
                     ],
                     'call_center_agent' => [
                         ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
@@ -527,6 +546,9 @@
                     <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->first_name ? Auth::user()->first_name . ' ' . Auth::user()->last_name : (Auth::user()->name ?? 'Admin') }}</p>
                     <p class="text-xs text-emerald-300/60">{{ auth()->user()->isAdmin() ? 'Administrator' : (auth()->user()->roles()->first()?->label ?? 'User') }}</p>
                 </div>
+                <a href="{{ route('admin.profile') }}" class="text-emerald-300/60 hover:text-white transition-colors" title="My Profile">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </a>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('admin-logout').submit();" class="text-emerald-300/60 hover:text-white transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                 </a>
@@ -586,8 +608,6 @@
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search employees by name, email or ID..." class="bg-transparent text-sm outline-none w-64 text-gray-600 placeholder-gray-400">
                     <button class="ml-2 px-2 py-1 text-xs bg-emerald-600 text-white rounded-md hover:bg-emerald-700">Search</button>
                 </form>
-                <a href="{{ route('admin.applications.index') }}" class="hidden md:inline-flex items-center px-3 py-1.5 rounded-lg border border-emerald-200 text-emerald-700 text-xs font-medium hover:bg-emerald-50">Applications</a>
-
                 {{-- Notifications Dropdown --}}
                 @php
                     try {
@@ -595,18 +615,14 @@
                         $recentLogs = \App\Models\AuditLog::query()
                             ->when($sessionCompanyId, function($q) use ($sessionCompanyId) { $q->where('company_id', $sessionCompanyId); })
                             ->latest()->take(8)->get();
-                        $newApplicationsCount = \App\Models\JobApplication::query()
-                            ->when($sessionCompanyId, function($q) use ($sessionCompanyId) { $q->where('company_id', $sessionCompanyId); })
-                            ->where('status', 'submitted')->count();
                     } catch (\Throwable $e) {
                         $recentLogs = collect();
-                        $newApplicationsCount = 0;
                     }
                 @endphp
                 <div class="relative" id="notifWrap">
                     <button type="button" onclick="document.getElementById('notifMenu').classList.toggle('hidden')" class="relative p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                        @if($recentLogs->count() > 0 || $newApplicationsCount > 0)
+                        @if($recentLogs->count() > 0)
                         <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
                         @endif
                     </button>
@@ -616,15 +632,6 @@
                             <a href="{{ route('admin.audit-logs.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700">View all</a>
                         </div>
                         <div class="max-h-80 overflow-y-auto">
-                            @if($newApplicationsCount > 0)
-                            <a href="{{ route('admin.applications.index') }}" class="px-4 py-2 hover:bg-emerald-50 flex items-start gap-2 border-b border-emerald-100">
-                                <div class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-bold">N</div>
-                                <div class="flex-1">
-                                    <p class="text-xs text-gray-800">{{ $newApplicationsCount }} new application(s) submitted</p>
-                                    <p class="text-[10px] text-gray-400">Click to review</p>
-                                </div>
-                            </a>
-                            @endif
                             @forelse($recentLogs as $log)
                                 <div class="px-4 py-2 hover:bg-gray-50 flex items-start gap-2">
                                     <div class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-bold">{{ strtoupper(substr($log->action ?? 'A',0,1)) }}</div>

@@ -565,7 +565,7 @@ class ErpExtendedController extends Controller
             'notes' => $data['notes'] ?? null,
         ]);
         $this->notifyHrNewApplication($app);
-        return redirect()->route('careers.jobs')->with('success', 'Application submitted successfully.');
+        return redirect()->route('careers')->with('success', 'Application submitted successfully.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -816,9 +816,31 @@ class ErpExtendedController extends Controller
         return redirect()->route('admin.bank-accounts.index')->with('success', 'Bank account created.');
     }
 
-    public function bankAccountDestroy(BankAccount $bankAccount)
+    public function bankAccountUpdate(Request $request, BankAccount $bankAccount)
+    {
+        $data = $request->validate([
+            'account_name' => 'required|string|max:255',
+            'account_number' => 'required|string|max:50',
+            'bank_name' => 'required|string|max:255',
+            'branch' => 'nullable|string|max:255',
+            'currency' => 'nullable|string|max:10',
+            'current_balance' => 'nullable|numeric|min:0',
+            'is_active' => 'boolean',
+        ]);
+        $data['is_active'] = $request->boolean('is_active', true);
+        $bankAccount->update($data);
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Bank account updated.', 'item' => $bankAccount]);
+        }
+        return redirect()->route('admin.bank-accounts.index')->with('success', 'Bank account updated.');
+    }
+
+    public function bankAccountDestroy(BankAccount $bankAccount, Request $request)
     {
         $bankAccount->delete();
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Bank account deleted.']);
+        }
         return redirect()->route('admin.bank-accounts.index')->with('success', 'Bank account deleted.');
     }
 

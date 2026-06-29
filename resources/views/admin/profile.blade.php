@@ -1,118 +1,180 @@
+@php
+$title = 'My Profile';
+$description = 'Manage your profile, password and preferences.';
+@endphp
 @extends('layouts.admin')
-@section('title', 'Profile - ' . config('app.name'))
-@section('page_title', 'My Profile')
+@section('title', $title)
+@section('page_title', $title)
 @section('content')
-<div class="animate-fade max-w-5xl">
-  {{-- Profile Header --}}
-  <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden mb-5">
-    <div class="h-24 bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 relative">
-      <div class="absolute -bottom-10 left-8">
-        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg border-4 border-white">
-          @php $nameParts = explode(' ', trim($user->name ?? 'U')); $initials = strtoupper(substr($nameParts[0] ?? 'U', 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : '')); @endphp
-          {{ $initials }}
-        </div>
-      </div>
+<div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
+    <div class="relative z-10">
+        <h2 class="text-2xl font-bold">{{ $title }}</h2>
+        <p class="text-emerald-100 text-sm mt-1">{{ $description }}</p>
     </div>
-    <div class="pt-12 px-8 pb-6">
-      <div class="flex items-start justify-between">
-        <div>
-          <h2 class="text-lg font-bold text-gray-900">{{ $user->name }}</h2>
-          <p class="text-sm text-gray-500">{{ $user->email }}</p>
-          <div class="flex items-center gap-2 mt-2">
-            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100 capitalize">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              {{ $user->isAdmin() ? 'Administrator' : $user->role }}
-            </span>
-            @if($user->phone)
-            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700 border border-sky-100">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-              {{ $user->phone }}
-            </span>
-            @endif
-          </div>
-        </div>
-        <div class="text-right">
-          <p class="text-[10px] text-gray-400">Member since</p>
-          <p class="text-xs font-semibold text-gray-600">{{ $user->created_at->format('d M Y') }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
-    {{-- Profile Information --}}
-    <div class="lg:col-span-3 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-      <div class="px-6 py-4 bg-gradient-to-r from-emerald-50 to-white border-b border-gray-100">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center"><svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
-          <div><h3 class="text-sm font-bold text-gray-900">Profile Information</h3><p class="text-[11px] text-gray-500">Update your personal details</p></div>
-        </div>
-      </div>
-      <form method="POST" action="{{ route('admin.profile.update') }}" class="p-6 space-y-4">
-        @csrf @method('PATCH')
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Full Name <span class="text-red-400">*</span></label>
-            <div class="relative">
-              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-              <input name="name" value="{{ old('name', $user->name) }}" required class="w-full pl-9 pr-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all">
-            </div>
-            @error('name')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Email Address <span class="text-red-400">*</span></label>
-            <div class="relative">
-              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              <input name="email" type="email" value="{{ old('email', $user->email) }}" required class="w-full pl-9 pr-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all">
-            </div>
-            @error('email')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
-          </div>
-          <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Phone Number</label>
-            <div class="relative">
-              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-              <input name="phone" value="{{ old('phone', $user->phone) }}" placeholder="+255 712 345 678" class="w-full pl-9 pr-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all">
-            </div>
-          </div>
-        </div>
-        <div class="pt-4 border-t border-gray-50 flex justify-end">
-          <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-sm font-bold rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all shadow-sm shadow-emerald-200 inline-flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Save Changes
-          </button>
-        </div>
-      </form>
-    </div>
-
-    {{-- Change Password --}}
-    <div class="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-      <div class="px-6 py-4 bg-gradient-to-r from-amber-50 to-white border-b border-gray-100">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center"><svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
-          <div><h3 class="text-sm font-bold text-gray-900">Security</h3><p class="text-[11px] text-gray-500">Change your password</p></div>
-        </div>
-      </div>
-      <form method="POST" action="{{ route('admin.password.update') }}" class="p-6 space-y-4">
-        @csrf @method('PATCH')
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1.5">Current Password <span class="text-red-400">*</span></label>
-          <div class="relative"><input name="current_password" type="password" required class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none pr-10"><button type="button" onclick="const e=this.previousElementSibling;e.type=e.type==='password'?'text':'password'" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button></div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1.5">New Password <span class="text-red-400">*</span></label>
-          <input name="password" type="password" required minlength="6" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
-          @error('password')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1.5">Confirm New Password <span class="text-red-400">*</span></label>
-          <input name="password_confirmation" type="password" required minlength="6" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
-        </div>
-        <button type="submit" class="w-full px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-sm font-bold rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all shadow-sm shadow-emerald-200 inline-flex items-center justify-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          Update Password
-        </button>
-      </form>
-    </div>
-  </div>
 </div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl border p-6 text-center">
+            <div class="w-24 h-24 mx-auto rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-2xl font-bold mb-4">
+                {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+            </div>
+            <h3 class="text-lg font-bold text-gray-900">{{ $user->name ?? 'User' }}</h3>
+            <p class="text-sm text-gray-500">{{ $user->email ?? '-' }}</p>
+            <p class="text-xs text-emerald-600 mt-2 inline-flex items-center px-2 py-1 rounded-full bg-emerald-50 border border-emerald-200 capitalize">
+                {{ $user->isAdmin() ? 'Administrator' : $user->role }}
+            </p>
+            <p class="text-xs text-gray-400 mt-4">Member since {{ $user->created_at?->format('M d, Y') ?? '-' }}</p>
+        </div>
+    </div>
+
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl border p-6">
+            <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                Profile Information
+            </h3>
+            <form id="profileForm" onsubmit="saveProfile(event)">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Full Name <span class="text-rose-500">*</span></label>
+                        <input type="text" name="name" value="{{ $user->name ?? '' }}" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">First Name</label>
+                        <input type="text" name="first_name" value="{{ $user->first_name ?? '' }}" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Last Name</label>
+                        <input type="text" name="last_name" value="{{ $user->last_name ?? '' }}" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Email <span class="text-rose-500">*</span></label>
+                        <input type="email" name="email" value="{{ $user->email ?? '' }}" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Phone</label>
+                        <input type="text" name="phone" value="{{ $user->phone ?? '' }}" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center justify-end">
+                    <button type="submit" id="saveProfileBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors">Save Profile</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl border p-6">
+            <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Change Password
+            </h3>
+            <form id="passwordForm" onsubmit="changePassword(event)">
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Current Password <span class="text-rose-500">*</span></label>
+                        <input type="password" name="current_password" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">New Password <span class="text-rose-500">*</span></label>
+                        <input type="password" name="password" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Confirm New Password <span class="text-rose-500">*</span></label>
+                        <input type="password" name="password_confirmation" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center justify-end">
+                    <button type="submit" id="changePasswordBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+function saveProfile(e) {
+    e.preventDefault();
+    const form = document.getElementById('profileForm');
+    const btn = document.getElementById('saveProfileBtn');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    fetch('{{ route('admin.profile.update') }}', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        btn.disabled = false;
+        btn.textContent = 'Save Profile';
+        if (res.success) {
+            Swal.fire({ icon: 'success', title: 'Saved!', text: res.message, timer: 1500, showConfirmButton: false });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Error', text: res.message || 'Failed to update profile.', confirmButtonColor: '#024938' });
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Save Profile';
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Network error. Please try again.', confirmButtonColor: '#024938' });
+    });
+}
+
+function changePassword(e) {
+    e.preventDefault();
+    const form = document.getElementById('passwordForm');
+    const btn = document.getElementById('changePasswordBtn');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    if (data.password !== data.password_confirmation) {
+        Swal.fire({ icon: 'warning', title: 'Mismatch', text: 'New password and confirmation do not match.', confirmButtonColor: '#024938' });
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
+
+    fetch('{{ route('admin.profile.password') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(res => {
+        btn.disabled = false;
+        btn.textContent = 'Change Password';
+        if (res.success) {
+            form.reset();
+            Swal.fire({ icon: 'success', title: 'Updated!', text: res.message, timer: 1500, showConfirmButton: false });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Error', text: res.message || 'Failed to change password.', confirmButtonColor: '#024938' });
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Change Password';
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Network error. Please try again.', confirmButtonColor: '#024938' });
+    });
+}
+</script>
+@endpush
 @endsection

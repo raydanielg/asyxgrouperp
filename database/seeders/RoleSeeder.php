@@ -51,7 +51,21 @@ class RoleSeeder extends Seeder
             [
                 'name' => 'receptionist',
                 'label' => 'Receptionist',
-                'permissions' => ['view-dashboard', 'view-crm-leads', 'create-crm-leads', 'view-crm-contacts', 'create-crm-contacts', 'view-helpdesk-tickets', 'create-helpdesk-tickets'],
+                'permissions' => [
+                    'view-dashboard',
+                    'view-visitors', 'create-visitors', 'edit-visitors', 'delete-visitors',
+                    'view-appointments', 'create-appointments', 'edit-appointments', 'delete-appointments',
+                    'view-calls', 'create-calls', 'edit-calls', 'delete-calls',
+                    'view-correspondence', 'create-correspondence', 'edit-correspondence', 'delete-correspondence',
+                    'view-parcels', 'create-parcels', 'edit-parcels', 'delete-parcels',
+                    'view-front-desk', 'create-front-desk', 'edit-front-desk', 'delete-front-desk',
+                    'view-departments', 'create-departments', 'edit-departments', 'delete-departments',
+                    'view-announcements', 'create-announcements', 'edit-announcements', 'delete-announcements',
+                    'view-messages', 'create-messages', 'edit-messages', 'delete-messages',
+                    'view-reports',
+                    'view-my-account', 'create-my-account', 'edit-my-account', 'delete-my-account',
+                    'view-crm-leads', 'create-crm-leads', 'view-crm-contacts', 'create-crm-contacts', 'view-helpdesk-tickets', 'create-helpdesk-tickets',
+                ],
             ],
             [
                 'name' => 'logistics_officer',

@@ -31,7 +31,7 @@ Route::get('/hosting', function () {
 })->name('hosting');
 
 // Public Careers
-Route::get('/careers', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersJobsIndex'])->name('careers.jobs');
+Route::get('/careers', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersJobsIndex'])->name('careers');
 Route::get('/careers/{jobPosting}/apply', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersApplyForm'])->name('careers.apply');
 Route::post('/careers/{jobPosting}/apply', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersApplySubmit'])->name('careers.apply.submit');
 
@@ -61,10 +61,81 @@ Route::get('/dashboard/report-pdf', [App\Http\Controllers\RoleDashboardControlle
 
 Route::get('/role/{module}', [App\Http\Controllers\RolePageController::class, 'page'])->name('role.page')->middleware('auth');
 
+// Reception AJAX routes (used by receptionist role pages)
+Route::prefix('reception')->middleware('auth')->group(function () {
+    Route::get('visitors', [App\Http\Controllers\Reception\VisitorController::class, 'index'])->name('reception.visitors.index');
+    Route::post('visitors', [App\Http\Controllers\Reception\VisitorController::class, 'store'])->name('reception.visitors.store');
+    Route::put('visitors/{visitor}', [App\Http\Controllers\Reception\VisitorController::class, 'update'])->name('reception.visitors.update');
+    Route::delete('visitors/{visitor}', [App\Http\Controllers\Reception\VisitorController::class, 'destroy'])->name('reception.visitors.destroy');
+    Route::post('visitors/{visitor}/checkout', [App\Http\Controllers\Reception\VisitorController::class, 'checkOut'])->name('reception.visitors.checkout');
+
+    Route::get('appointments', [App\Http\Controllers\Reception\AppointmentController::class, 'index'])->name('reception.appointments.index');
+    Route::post('appointments', [App\Http\Controllers\Reception\AppointmentController::class, 'store'])->name('reception.appointments.store');
+    Route::put('appointments/{appointment}', [App\Http\Controllers\Reception\AppointmentController::class, 'update'])->name('reception.appointments.update');
+    Route::delete('appointments/{appointment}', [App\Http\Controllers\Reception\AppointmentController::class, 'destroy'])->name('reception.appointments.destroy');
+    Route::post('appointments/{appointment}/complete', [App\Http\Controllers\Reception\AppointmentController::class, 'complete'])->name('reception.appointments.complete');
+    Route::post('appointments/{appointment}/cancel', [App\Http\Controllers\Reception\AppointmentController::class, 'cancel'])->name('reception.appointments.cancel');
+
+    Route::get('calls', [App\Http\Controllers\Reception\CallController::class, 'index'])->name('reception.calls.index');
+    Route::post('calls', [App\Http\Controllers\Reception\CallController::class, 'store'])->name('reception.calls.store');
+    Route::put('calls/{call}', [App\Http\Controllers\Reception\CallController::class, 'update'])->name('reception.calls.update');
+    Route::delete('calls/{call}', [App\Http\Controllers\Reception\CallController::class, 'destroy'])->name('reception.calls.destroy');
+    Route::post('calls/{call}/status', [App\Http\Controllers\Reception\CallController::class, 'markStatus'])->name('reception.calls.status');
+
+    Route::get('correspondence', [App\Http\Controllers\Reception\CorrespondenceController::class, 'index'])->name('reception.correspondence.index');
+    Route::post('correspondence', [App\Http\Controllers\Reception\CorrespondenceController::class, 'store'])->name('reception.correspondence.store');
+    Route::put('correspondence/{correspondence}', [App\Http\Controllers\Reception\CorrespondenceController::class, 'update'])->name('reception.correspondence.update');
+    Route::delete('correspondence/{correspondence}', [App\Http\Controllers\Reception\CorrespondenceController::class, 'destroy'])->name('reception.correspondence.destroy');
+    Route::post('correspondence/{correspondence}/status', [App\Http\Controllers\Reception\CorrespondenceController::class, 'markStatus'])->name('reception.correspondence.status');
+
+    Route::get('parcels', [App\Http\Controllers\Reception\ParcelController::class, 'index'])->name('reception.parcels.index');
+    Route::post('parcels', [App\Http\Controllers\Reception\ParcelController::class, 'store'])->name('reception.parcels.store');
+    Route::put('parcels/{parcel}', [App\Http\Controllers\Reception\ParcelController::class, 'update'])->name('reception.parcels.update');
+    Route::delete('parcels/{parcel}', [App\Http\Controllers\Reception\ParcelController::class, 'destroy'])->name('reception.parcels.destroy');
+    Route::post('parcels/{parcel}/deliver', [App\Http\Controllers\Reception\ParcelController::class, 'markDelivered'])->name('reception.parcels.deliver');
+
+    Route::get('front-desk', [App\Http\Controllers\Reception\FrontDeskController::class, 'index'])->name('reception.front-desk.index');
+    Route::post('front-desk', [App\Http\Controllers\Reception\FrontDeskController::class, 'store'])->name('reception.front-desk.store');
+    Route::put('front-desk/{frontDesk}', [App\Http\Controllers\Reception\FrontDeskController::class, 'update'])->name('reception.front-desk.update');
+    Route::delete('front-desk/{frontDesk}', [App\Http\Controllers\Reception\FrontDeskController::class, 'destroy'])->name('reception.front-desk.destroy');
+    Route::post('front-desk/{frontDesk}/status', [App\Http\Controllers\Reception\FrontDeskController::class, 'markStatus'])->name('reception.front-desk.status');
+
+    Route::get('departments', [App\Http\Controllers\Reception\DepartmentController::class, 'index'])->name('reception.departments.index');
+    Route::post('departments', [App\Http\Controllers\Reception\DepartmentController::class, 'store'])->name('reception.departments.store');
+    Route::put('departments/{department}', [App\Http\Controllers\Reception\DepartmentController::class, 'update'])->name('reception.departments.update');
+    Route::delete('departments/{department}', [App\Http\Controllers\Reception\DepartmentController::class, 'destroy'])->name('reception.departments.destroy');
+
+    Route::get('announcements', [App\Http\Controllers\Reception\AnnouncementController::class, 'index'])->name('reception.announcements.index');
+    Route::post('announcements', [App\Http\Controllers\Reception\AnnouncementController::class, 'store'])->name('reception.announcements.store');
+    Route::put('announcements/{announcement}', [App\Http\Controllers\Reception\AnnouncementController::class, 'update'])->name('reception.announcements.update');
+    Route::delete('announcements/{announcement}', [App\Http\Controllers\Reception\AnnouncementController::class, 'destroy'])->name('reception.announcements.destroy');
+    Route::post('announcements/{announcement}/toggle', [App\Http\Controllers\Reception\AnnouncementController::class, 'toggleStatus'])->name('reception.announcements.toggle');
+
+    Route::get('reports', [App\Http\Controllers\Reception\ReportController::class, 'index'])->name('reception.reports.index');
+
+    Route::get('my-account', [App\Http\Controllers\Reception\MyAccountController::class, 'index'])->name('reception.my-account.index');
+    Route::put('my-account', [App\Http\Controllers\Reception\MyAccountController::class, 'update'])->name('reception.my-account.update');
+    Route::post('my-account/password', [App\Http\Controllers\Reception\MyAccountController::class, 'updatePassword'])->name('reception.my-account.password');
+
+    Route::get('messages', [App\Http\Controllers\Reception\MessageController::class, 'index'])->name('reception.messages.index');
+    Route::post('messages', [App\Http\Controllers\Reception\MessageController::class, 'store'])->name('reception.messages.store');
+    Route::get('messages/{message}', [App\Http\Controllers\Reception\MessageController::class, 'show'])->name('reception.messages.show');
+    Route::delete('messages/{message}', [App\Http\Controllers\Reception\MessageController::class, 'destroy'])->name('reception.messages.destroy');
+    Route::post('messages/{message}/status', [App\Http\Controllers\Reception\MessageController::class, 'markStatus'])->name('reception.messages.status');
+
+    Route::get('salary-advance', [App\Http\Controllers\SalaryAdvanceController::class, 'index'])->name('reception.salary-advance.index');
+    Route::post('salary-advance', [App\Http\Controllers\SalaryAdvanceController::class, 'store'])->name('reception.salary-advance.store');
+    Route::delete('salary-advance/{salaryAdvanceRequest}', [App\Http\Controllers\SalaryAdvanceController::class, 'destroy'])->name('reception.salary-advance.destroy');
+    Route::post('salary-advance/{salaryAdvanceRequest}/status', [App\Http\Controllers\SalaryAdvanceController::class, 'markStatus'])->name('reception.salary-advance.status');
+});
+
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+    Route::match(['put', 'patch'], '/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::get('/users', [App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users');
     Route::get('/reports', [App\Http\Controllers\Admin\DashboardController::class, 'reports'])->name('reports');
 
@@ -394,6 +465,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // ─── Accounting ───
     Route::get('/bank-accounts', [$ext, 'bankAccountIndex'])->name('bank-accounts.index');
     Route::post('/bank-accounts', [$ext, 'bankAccountStore'])->name('bank-accounts.store');
+    Route::put('/bank-accounts/{bankAccount}', [$ext, 'bankAccountUpdate'])->name('bank-accounts.update');
     Route::delete('/bank-accounts/{bankAccount}', [$ext, 'bankAccountDestroy'])->name('bank-accounts.destroy');
 
     Route::get('/acc-transfers', [$ext, 'accTransferIndex'])->name('acc-transfers.index');

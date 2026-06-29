@@ -45,7 +45,7 @@
       </div>
 
       <div class="pt-2 flex gap-3">
-        <a href="{{ route('careers.jobs') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</a>
+        <a href="{{ route('careers') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</a>
         <button class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Submit Application</button>
       </div>
     </form>

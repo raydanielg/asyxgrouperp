@@ -19,12 +19,22 @@ use App\Models\Product;
 use App\Models\Warehouse;
 use App\Models\PosSale;
 use App\Models\Attendance;
+use App\Models\Visitor;
+use App\Models\Appointment;
+use App\Models\Call;
+use App\Models\Correspondence;
+use App\Models\Parcel;
+use App\Models\FrontDesk;
+use App\Models\Department;
+use App\Models\Announcement;
+use App\Models\Message;
+use App\Models\SalaryAdvanceRequest;
 use App\Models\Supplier;
 use App\Models\StockMovement;
 use App\Models\Transfer;
 use App\Models\Bill;
 use App\Models\BankAccount;
-use App\Models\AccTransfer;
+use App\Models\BankTransferAcc;
 use Illuminate\Http\Request;
 
 class RolePageController extends Controller
@@ -63,11 +73,42 @@ class RolePageController extends Controller
         return str_replace('_', '-', $role);
     }
 
+    private function getAllowedModulesForRole(string $role): array
+    {
+        return match ($role) {
+            'director' => ['reports', 'projects', 'sales-dashboard', 'employees', 'sales-invoices', 'purchase-invoices', 'expenses', 'tickets'],
+            'finance_officer' => ['sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'bank-accounts', 'transfers', 'salary-advance', 'reports'],
+            'hr_officer' => ['employees', 'attendance', 'payroll', 'leaves', 'performance', 'training', 'recruitment', 'assets', 'policies'],
+            'auditor' => ['sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'bank-accounts', 'reports', 'warehouses', 'products', 'stock-movements', 'pos'],
+            'admin_manager' => ['users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings'],
+            'cashier' => ['pos', 'pos-reports', 'sales-invoices', 'products', 'revenues'],
+            'technical_manager' => ['tickets', 'projects', 'timesheets', 'bugs', 'employees'],
+            'technician' => ['tickets', 'projects', 'timesheets', 'bugs'],
+            'ict_officer' => ['tickets', 'projects', 'bugs', 'assets', 'employees'],
+            'ict_engineer' => ['tickets', 'projects', 'bugs', 'assets', 'settings'],
+            'project_manager' => ['projects', 'timesheets', 'bugs', 'deals', 'reports'],
+            'operations_manager' => ['products', 'warehouses', 'stock-movements', 'sales-invoices', 'purchase-invoices', 'projects', 'reports'],
+            'logistics_officer' => ['products', 'warehouses', 'stock-movements', 'suppliers', 'inventory-transfers', 'purchase-invoices'],
+            'receptionist' => ['visitors', 'appointments', 'calls', 'correspondence', 'parcels', 'front-desk', 'departments', 'announcements', 'messages', 'salary-advance', 'reports', 'my-account'],
+            'call_center_agent' => ['leads', 'contacts', 'tickets'],
+            'legal_officer' => ['contracts', 'contacts', 'projects', 'reports'],
+            'supervisor' => ['employees', 'attendance', 'leaves', 'projects', 'pos', 'products', 'reports'],
+            'administrator' => ['users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports'],
+            default => [],
+        };
+    }
+
     public function page(Request $request, string $module)
     {
         try {
             $user = auth()->user();
             $role = $this->getUserRole($user);
+
+            // Role-based access control: admin bypasses, all other roles are limited to their allowed modules
+            if (!$user->isAdmin() && !in_array($module, $this->getAllowedModulesForRole($role), true)) {
+                abort(403, 'You do not have permission to access this module.');
+            }
+
             $roleLabel = $this->getRoleLabel($role);
             $roleSlug = $this->roleSlug($role);
             $money = fn($n) => 'TZS ' . number_format($n);
@@ -185,6 +226,37 @@ class RolePageController extends Controller
                 $data['recentSales'] = SalesInvoice::latest()->take(10)->get();
                 $data['recentExpenses'] = Expense::latest()->take(10)->get();
                 $data['recentRevenues'] = Revenue::latest()->take(10)->get();
+                $data['from'] = now()->subDays(30)->toDateString();
+                $data['to'] = now()->toDateString();
+                break;
+
+            case 'my-account':
+                $user = auth()->user();
+                $data['user'] = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'role' => $user->role,
+                    'created_at' => $user->created_at?->toDateTimeString(),
+                ];
+                break;
+
+            case 'messages':
+                $user = auth()->user();
+                $data['unreadCount'] = Message::where('recipient_id', $user->id)->where('status', 'unread')->count();
+                $data['inboxCount'] = Message::where('recipient_id', $user->id)->count();
+                $data['sentCount'] = Message::where('sender_id', $user->id)->count();
+                $data['users'] = User::where('company_id', $user->company_id)->select('id', 'name')->orderBy('name')->get();
+                break;
+
+            case 'salary-advance':
+                $user = auth()->user();
+                $data['pendingCount'] = SalaryAdvanceRequest::where('user_id', $user->id)->where('status', 'pending')->count();
+                $data['approvedCount'] = SalaryAdvanceRequest::where('user_id', $user->id)->where('status', 'approved')->count();
+                $data['totalRequested'] = SalaryAdvanceRequest::where('user_id', $user->id)->sum('amount') ?? 0;
                 break;
 
             case 'projects':
@@ -233,7 +305,8 @@ class RolePageController extends Controller
                 break;
 
             case 'transfers':
-                $data['transfers'] = AccTransfer::latest()->paginate(10);
+                $data['transfers'] = BankTransferAcc::latest()->paginate(10);
+                $data['transferCount'] = BankTransferAcc::count();
                 break;
 
             case 'attendance':
@@ -361,6 +434,68 @@ class RolePageController extends Controller
 
             case 'recruitment':
                 $data['employees'] = Employee::latest()->paginate(10);
+                break;
+
+            case 'visitors':
+                $data['visitors'] = Visitor::latest()->paginate(15);
+                $data['todayCount'] = Visitor::whereDate('check_in_at', today())->count();
+                $data['weekCount'] = Visitor::whereBetween('check_in_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
+                $data['pendingCount'] = Visitor::whereNull('check_out_at')->where('status', 'checked_in')->count();
+                $data['totalCount'] = Visitor::count();
+                break;
+
+            case 'appointments':
+                $data['appointments'] = Appointment::orderBy('appointment_date', 'asc')->paginate(15);
+                $data['todayCount'] = Appointment::whereDate('appointment_date', today())->count();
+                $data['weekCount'] = Appointment::whereBetween('appointment_date', [now()->startOfWeek(), now()->endOfWeek()])->count();
+                $data['pendingCount'] = Appointment::where('status', 'scheduled')->where('appointment_date', '>=', now())->count();
+                $data['totalCount'] = Appointment::count();
+                break;
+
+            case 'calls':
+                $data['calls'] = Call::latest()->paginate(15);
+                $data['todayCount'] = Call::whereDate('call_time', today())->count();
+                $data['weekCount'] = Call::whereBetween('call_time', [now()->startOfWeek(), now()->endOfWeek()])->count();
+                $data['pendingCount'] = Call::where('status', 'follow_up')->count();
+                $data['totalCount'] = Call::count();
+                break;
+
+            case 'correspondence':
+                $data['correspondence'] = Correspondence::latest()->paginate(15);
+                $data['todayCount'] = Correspondence::whereDate('received_date', today())->orWhereDate('dispatched_date', today())->count();
+                $data['weekCount'] = Correspondence::whereBetween('received_date', [now()->startOfWeek(), now()->endOfWeek()])->orWhereBetween('dispatched_date', [now()->startOfWeek(), now()->endOfWeek()])->count();
+                $data['pendingCount'] = Correspondence::where('status', 'pending')->count();
+                $data['totalCount'] = Correspondence::count();
+                break;
+
+            case 'parcels':
+                $data['parcels'] = Parcel::latest()->paginate(15);
+                $data['todayCount'] = Parcel::whereDate('received_date', today())->orWhereDate('delivered_date', today())->count();
+                $data['weekCount'] = Parcel::whereBetween('received_date', [now()->startOfWeek(), now()->endOfWeek()])->orWhereBetween('delivered_date', [now()->startOfWeek(), now()->endOfWeek()])->count();
+                $data['pendingCount'] = Parcel::where('status', 'received')->count();
+                $data['totalCount'] = Parcel::count();
+                break;
+
+            case 'front-desk':
+                $data['front_desks'] = FrontDesk::orderBy('check_in_at', 'asc')->paginate(15);
+                $data['waitingCount'] = FrontDesk::where('status', 'waiting')->count();
+                $data['inProgressCount'] = FrontDesk::where('status', 'in_progress')->count();
+                $data['completedCount'] = FrontDesk::where('status', 'completed')->count();
+                $data['totalCount'] = FrontDesk::count();
+                break;
+
+            case 'departments':
+                $data['departments'] = Department::orderBy('name', 'asc')->paginate(15);
+                $data['activeCount'] = Department::where('status', 'active')->count();
+                $data['inactiveCount'] = Department::where('status', 'inactive')->count();
+                $data['totalCount'] = Department::count();
+                break;
+
+            case 'announcements':
+                $data['announcements'] = Announcement::latest()->paginate(15);
+                $data['activeCount'] = Announcement::where('status', 'active')->count();
+                $data['highPriorityCount'] = Announcement::where('priority', 'high')->where('status', 'active')->count();
+                $data['totalCount'] = Announcement::count();
                 break;
 
             default:
