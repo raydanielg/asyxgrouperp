@@ -17,6 +17,7 @@ class AuthProvider with ChangeNotifier {
   UserModel? get user => _user;
   String? get error => _error;
   Map<String, dynamic>? get dashboardData => _dashboardData;
+  Map<String, dynamic>? get aiInsights => _dashboardData?['aiInsights'];
   bool get isAuthenticated => _status == AuthStatus.authenticated;
 
   Future<void> init() async {

@@ -10,19 +10,30 @@ class DashboardController extends Controller
 {
     public function roleDashboard(Request $request)
     {
-        $user = $request->user();
-        $role = $this->getUserRole($user);
+        try {
+            $user = $request->user();
+            $role = $this->getUserRole($user);
+            $stats = $this->getStatsForRole($role, $user);
 
-        return response()->json([
-            'role' => $role,
-            'roleLabel' => $this->getRoleLabel($role),
-            'stats' => $this->getStatsForRole($role, $user),
-            'kpiCards' => $this->getKpiCardsForRole($role, $user),
-            'quickActions' => $this->getQuickActionsForRole($role),
-            'chartData' => $this->getChartDataForRole($role),
-            'recentActivity' => $this->getRecentActivity($role, $user),
-            'notifications' => $this->getNotifications($user),
-        ]);
+            return response()->json([
+                'success' => true,
+                'role' => $role,
+                'roleLabel' => $this->getRoleLabel($role),
+                'stats' => $stats,
+                'kpiCards' => $this->getKpiCardsForRole($role, $user),
+                'quickActions' => $this->getQuickActionsForRole($role),
+                'chartData' => $this->getChartDataForRole($role),
+                'recentActivity' => $this->getRecentActivity($role, $user),
+                'notifications' => $this->getNotifications($user),
+                'aiInsights' => $this->getAiInsightsForRole($role, $stats),
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => app()->environment('production') ? 'Dashboard data unavailable.' : $e->getMessage(),
+                'aiInsights' => ['message' => 'Insights unavailable.', 'suggestions' => []],
+            ], 500);
+        }
     }
 
     public function notifications(Request $request)
@@ -499,5 +510,71 @@ class DashboardController extends Controller
     private function getNotifications($user): array
     {
         return [];
+    }
+
+    private function getAiInsightsForRole(string $role, array $stats): array
+    {
+        $suggestions = [];
+        $message = 'No actionable insights at this time.';
+
+        try {
+            $sales = $stats['totalSales'] ?? 0;
+            $expenses = $stats['totalExpenses'] ?? 0;
+            $revenues = $stats['totalRevenues'] ?? 0;
+            $profit = is_numeric($revenues) && is_numeric($expenses) ? $revenues - $expenses : 0;
+            $outstanding = $stats['salesBalance'] ?? 0;
+            $lowStock = $stats['lowStockProducts'] ?? 0;
+            $pendingLeaves = $stats['pendingLeaves'] ?? 0;
+            $openTickets = $stats['openTickets'] ?? 0;
+            $overdue = $stats['overdueInvoices'] ?? 0;
+            $absent = $stats['absentToday'] ?? 0;
+
+            if (in_array($role, ['admin', 'administrator', 'admin_manager', 'director'])) {
+                $message = 'Executive overview: Monitor revenue, expenses, and project delivery.';
+                if ($outstanding > 0) $suggestions[] = 'Follow up on TZS ' . number_format($outstanding) . ' outstanding customer balance.';
+                if ($profit < 0) $suggestions[] = 'Profit margin is negative. Review expenses and pricing strategy.';
+                if ($lowStock > 0) $suggestions[] = "$lowStock products are low on stock. Review procurement.";
+                if ($openTickets > 10) $suggestions[] = 'Support backlog is high. Allocate more resources to helpdesk.';
+                if (empty($suggestions)) $suggestions[] = 'Overall metrics look healthy. Focus on growth initiatives.';
+            } elseif ($role === 'finance_officer') {
+                $message = 'Financial health: Track cash flow, outstanding receivables, and payables.';
+                if ($overdue > 0) $suggestions[] = "$overdue invoices are overdue. Send payment reminders.";
+                if ($expenses > $revenues) $suggestions[] = 'Expenses exceed revenue. Prepare cost-control report.';
+                if ($outstanding > 0) $suggestions[] = 'Prepare aging report for outstanding receivables.';
+                if (empty($suggestions)) $suggestions[] = 'Cash flow is positive. Consider reinvestment opportunities.';
+            } elseif ($role === 'hr_officer') {
+                $message = 'HR insights: Monitor attendance, leaves, and workforce trends.';
+                if ($pendingLeaves > 0) $suggestions[] = "Review and approve $pendingLeaves pending leave requests.";
+                if ($absent > 0) $suggestions[] = "Investigate $absent absent employees today.";
+                if (empty($suggestions)) $suggestions[] = 'Attendance and leave management are on track.';
+            } elseif (in_array($role, ['technical_manager', 'ict_engineer', 'technician', 'ict_officer'])) {
+                $message = 'IT/Technical: Track ticket resolution and project delivery.';
+                if ($openTickets > 0) $suggestions[] = 'Prioritize open tickets to reduce backlog.';
+                if (empty($suggestions)) $suggestions[] = 'Ticket resolution rate is healthy. Maintain SLA targets.';
+            } elseif ($role === 'cashier') {
+                $message = 'POS: Monitor daily sales, transaction count, and payment methods.';
+                $suggestions[] = 'Reconcile cash drawer before end of shift.';
+                if ($sales > 0) $suggestions[] = 'Daily sales are recorded. Check for any discrepancies.';
+            } elseif ($role === 'supervisor') {
+                $message = 'Operations: Monitor attendance, leaves, and on-floor activities.';
+                if ($absent > 0) $suggestions[] = 'Coordinate replacements for absent staff.';
+                if (empty($suggestions)) $suggestions[] = 'Operations are running smoothly.';
+            } elseif ($role === 'logistics_officer') {
+                $message = 'Logistics: Track stock levels, transfers, and warehouse efficiency.';
+                if ($lowStock > 0) $suggestions[] = "Reorder $lowStock products running low.";
+                if (empty($suggestions)) $suggestions[] = 'Inventory levels are healthy.';
+            } else {
+                $message = 'Dashboard loaded successfully. Review your quick actions.';
+                $suggestions[] = 'Check assigned tasks and pending approvals.';
+            }
+        } catch (\Throwable $e) {
+            $message = 'Insights temporarily unavailable.';
+            $suggestions = [];
+        }
+
+        return [
+            'message' => $message,
+            'suggestions' => $suggestions,
+        ];
     }
 }

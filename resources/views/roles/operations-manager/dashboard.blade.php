@@ -25,11 +25,10 @@
     </div>
         @endforeach
         </div>
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-    <div class="lg:col-span-2 bg-white rounded-xl border p-5">
-
 @include('roles.shared.ai-insights')
 
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="lg:col-span-2 bg-white rounded-xl border p-5">
         <h3 class="text-sm font-bold text-gray-900 mb-4">{{ $chartData['title'] }}</h3>
         <canvas id="roleChart" height="120"></canvas>
     </div>

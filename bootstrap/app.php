@@ -29,4 +29,21 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson() || $request->ajax(),
         );
+
+        // Ensure no company/user ever sees a raw error on any page
+        $exceptions->render(function (\Throwable $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => app()->environment('production') ? 'An unexpected error occurred.' : $e->getMessage(),
+                ], 500);
+            }
+
+            if (!app()->environment('local')) {
+                return response()->view('errors.safe', [
+                    'message' => 'We encountered an issue while loading this page. Our team has been notified.',
+                    'code' => method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500,
+                ], 500);
+            }
+        });
     })->create();

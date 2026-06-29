@@ -201,6 +201,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
+            // AI Insights
+            SliverToBoxAdapter(
+              child: _buildAiInsights(context),
+            ),
+
             // Quick Actions
             SliverToBoxAdapter(
               child: Padding(
@@ -373,6 +378,78 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (_) {
       return AppTheme.primaryColor;
     }
+  }
+
+  Widget _buildAiInsights(BuildContext context) {
+    if (_loading) return const SizedBox.shrink();
+
+    final insights = _dashboardData?['aiInsights'] as Map<String, dynamic>?;
+    if (insights == null) return const SizedBox.shrink();
+
+    final message = insights['message'] as String?;
+    final suggestions = (insights['suggestions'] as List?) ?? [];
+
+    if ((message == null || message.isEmpty) && suggestions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: const Color(0xFF4F46E5).withOpacity(0.2), blurRadius: 12, offset: const Offset(0, 4))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+                child: const Icon(Icons.lightbulb, color: Colors.white, size: 16),
+              ),
+              const SizedBox(width: 8),
+              Text('AI Insights', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)),
+            ],
+          ),
+          if (message != null && message.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(message, style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withOpacity(0.95))),
+          ],
+          if (suggestions.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            ...suggestions.map((s) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    width: 5,
+                    height: 5,
+                    decoration: const BoxDecoration(color: Color(0xFFFCD34D), shape: BoxShape.circle),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      s.toString(),
+                      style: GoogleFonts.inter(fontSize: 11, color: Colors.white.withOpacity(0.9)),
+                    ),
+                  ),
+                ],
+              ),
+            )),
+          ],
+        ],
+      ),
+    );
   }
 }
 
