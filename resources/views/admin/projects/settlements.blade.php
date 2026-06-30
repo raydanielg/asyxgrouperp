@@ -54,7 +54,7 @@
     </div>
 
     {{-- Cost Breakdown --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-white rounded-xl border p-4">
             <p class="text-xs font-semibold text-gray-500 mb-2">Vendor / Procurement Costs</p>
             <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['vendor_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
@@ -66,6 +66,10 @@
         <div class="bg-white rounded-xl border p-4">
             <p class="text-xs font-semibold text-gray-500 mb-2">Staff Costs ({{ number_format($totals['staff_hours'], 0) }} hrs)</p>
             <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['staff_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
+        </div>
+        <div class="bg-white rounded-xl border p-4">
+            <p class="text-xs font-semibold text-gray-500 mb-2">Staff Bonuses</p>
+            <p class="text-2xl font-bold text-amber-600">{{ number_format($totals['bonus_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
         </div>
     </div>
 
@@ -206,6 +210,7 @@
                     <li><strong>Vendor Costs</strong> = Procurement / supplier invoices for this project</li>
                     <li><strong>Office Expenses</strong> = Approved office expenses linked to this project</li>
                     <li><strong>Staff Costs</strong> = Calculated from timesheet hours × employee hourly rate (salary ÷ 160 hrs)</li>
+                    <li><strong>Bonuses</strong> = Approved/paid employee bonuses linked to this project</li>
                     <li><strong>Net</strong> = Received − Total Costs (actual profit for that month)</li>
                 </ul>
             </div>
