@@ -795,11 +795,12 @@
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         }
-        function toggleMenu(id) {
-            const menu = document.getElementById(id);
-            const arrow = document.getElementById('arrow-' + id.replace('menu-', ''));
-            menu.classList.toggle('open');
-            if (arrow) arrow.classList.toggle('rotate-180');
+        function toggleSidebarGroup(groupId) {
+            const submenu = document.getElementById(groupId);
+            const btn = document.getElementById('btn-' + groupId);
+            if (!submenu || !btn) return;
+            submenu.classList.toggle('open');
+            btn.classList.toggle('open');
         }
     </script>
     @stack('scripts')
