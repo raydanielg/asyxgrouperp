@@ -1050,8 +1050,13 @@ class ErpExtendedController extends Controller
             'manager_id' => 'nullable|exists:users,id',
             'progress' => 'nullable|integer|min:0|max:100',
             'budget' => 'nullable|numeric|min:0',
+            'recurring_invoicing' => 'nullable|boolean',
+            'billing_amount' => 'nullable|numeric|min:0',
+            'billing_day' => 'nullable|integer|min:1|max:28',
+            'invoicing_end_date' => 'nullable|date',
         ]);
         $data['project_number'] = 'PRJ-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+        $data['company_id'] = session('current_company_id');
         Project::create($data);
         return redirect()->route('admin.projects.index')->with('success', 'Project created.');
     }
