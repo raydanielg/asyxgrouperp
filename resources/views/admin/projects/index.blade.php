@@ -46,16 +46,39 @@
         </select></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="planning">Planning</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="on_hold">On Hold</option><option value="cancelled">Cancelled</option></select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Priority</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option></select></div></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Progress (%)</label><input name="progress" type="number" min="0" max="100" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Budget</label><input name="budget" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>
-            {{-- Recurring Invoicing --}}
+            {{-- Invoicing Type --}}
             <div class="pt-3 border-t">
-                <label class="flex items-center gap-2 text-xs font-medium text-gray-600 mb-2">
-                    <input type="checkbox" name="recurring_invoicing" value="1" class="rounded" onchange="document.getElementById('recurringFields').classList.toggle('hidden')">
-                    Enable Monthly Recurring Invoicing
-                </label>
+                <h4 class="text-sm font-bold text-gray-900 mb-2">Invoicing</h4>
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <label class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-gray-100 hover:border-emerald-200 cursor-pointer transition-all invoicing-option" data-type="recurring">
+                        <input type="radio" name="invoicing_type" value="recurring" class="sr-only" onchange="selectInvoicingType('recurring')">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        <span class="text-xs font-medium text-gray-600">Recurring</span>
+                        <span class="text-[10px] text-gray-400">Monthly auto</span>
+                    </label>
+                    <label class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-gray-100 hover:border-emerald-200 cursor-pointer transition-all invoicing-option" data-type="one_time">
+                        <input type="radio" name="invoicing_type" value="one_time" class="sr-only" onchange="selectInvoicingType('one_time')">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span class="text-xs font-medium text-gray-600">One-Time</span>
+                        <span class="text-[10px] text-gray-400">Single invoice</span>
+                    </label>
+                    <label class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-gray-100 hover:border-emerald-200 cursor-pointer transition-all invoicing-option" data-type="none">
+                        <input type="radio" name="invoicing_type" value="none" class="sr-only" onchange="selectInvoicingType('none')" checked>
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                        <span class="text-xs font-medium text-gray-600">None</span>
+                        <span class="text-[10px] text-gray-400">Manual only</span>
+                    </label>
+                </div>
+                {{-- Recurring Fields --}}
                 <div id="recurringFields" class="hidden grid grid-cols-2 gap-3">
-                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Monthly Amount</label><input name="billing_amount" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"></div>
-                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Billing Day (1-28)</label><input name="billing_day" type="number" min="1" max="28" value="1" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"></div>
-                    <div class="col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Invoicing End Date (optional)</label><input name="invoicing_end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Monthly Amount (TZS)</label><input name="billing_amount" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Billing Day (1-28)</label><input name="billing_day" type="number" min="1" max="28" value="1" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                    <div class="col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Invoicing End Date (optional)</label><input name="invoicing_end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                </div>
+                {{-- One-Time Fields --}}
+                <div id="oneTimeFields" class="hidden grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Invoice Amount (TZS)</label><input name="one_time_amount" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Generate After</label><select name="one_time_when" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="immediately">Immediately (on create)</option><option value="manual">Manual (from project page)</option><option value="completion">When project completes</option></select></div>
                 </div>
             </div>
             {{-- Staff Assignment --}}
