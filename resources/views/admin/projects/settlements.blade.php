@@ -86,6 +86,7 @@
                         <th class="px-4 py-3 font-medium text-right">Vendor Costs</th>
                         <th class="px-4 py-3 font-medium text-right">Office Exp.</th>
                         <th class="px-4 py-3 font-medium text-right">Staff (hrs)</th>
+                        <th class="px-4 py-3 font-medium text-right">Bonuses</th>
                         <th class="px-4 py-3 font-medium text-right">Total Costs</th>
                         <th class="px-4 py-3 font-medium text-right">Net</th>
                         <th class="px-4 py-3 font-medium text-center">Details</th>
@@ -101,6 +102,7 @@
                         <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $m['vendor_cost'] > 0 ? number_format($m['vendor_cost'], 0) : '—' }}</td>
                         <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $m['office_cost'] > 0 ? number_format($m['office_cost'], 0) : '—' }}</td>
                         <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $m['staff_hours'] > 0 ? number_format($m['staff_hours'], 0) . 'h (' . number_format($m['staff_cost'], 0) . ')' : '—' }}</td>
+                        <td class="px-4 py-3 text-xs text-right text-amber-600">{{ $m['bonus_cost'] > 0 ? number_format($m['bonus_cost'], 0) : '—' }}</td>
                         <td class="px-4 py-3 text-xs text-right text-red-600 font-medium">{{ $m['total_cost'] > 0 ? number_format($m['total_cost'], 0) : '—' }}</td>
                         <td class="px-4 py-3 text-xs text-right font-bold {{ $m['net'] >= 0 ? 'text-emerald-600' : 'text-red-600' }}">{{ $m['net'] != 0 ? number_format($m['net'], 0) : '—' }}</td>
                         <td class="px-4 py-3 text-center">
@@ -112,7 +114,7 @@
                         </td>
                     </tr>
                     <tr id="month-{{ $m['key'] }}" class="hidden bg-gray-50/30">
-                        <td colspan="10" class="px-4 py-4">
+                        <td colspan="11" class="px-4 py-4">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {{-- Invoices --}}
                                 <div>
@@ -169,7 +171,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="10" class="px-4 py-12 text-center text-gray-400 text-sm">No settlement data available for this project</td></tr>
+                    <tr><td colspan="11" class="px-4 py-12 text-center text-gray-400 text-sm">No settlement data available for this project</td></tr>
                     @endforelse
                 </tbody>
                 <tfoot>
@@ -181,6 +183,7 @@
                         <td class="px-4 py-3 text-xs text-right font-bold text-gray-700">{{ number_format($totals['vendor_cost'], 0) }}</td>
                         <td class="px-4 py-3 text-xs text-right font-bold text-gray-700">{{ number_format($totals['office_cost'], 0) }}</td>
                         <td class="px-4 py-3 text-xs text-right font-bold text-gray-700">{{ number_format($totals['staff_hours'], 0) }}h ({{ number_format($totals['staff_cost'], 0) }})</td>
+                        <td class="px-4 py-3 text-xs text-right font-bold text-amber-600">{{ number_format($totals['bonus_cost'], 0) }}</td>
                         <td class="px-4 py-3 text-xs text-right font-bold text-red-600">{{ number_format($totals['total_cost'], 0) }}</td>
                         <td class="px-4 py-3 text-xs text-right font-bold {{ $totals['net'] >= 0 ? 'text-emerald-600' : 'text-red-600' }}">{{ number_format($totals['net'], 0) }}</td>
                         <td class="px-4 py-3"></td>
