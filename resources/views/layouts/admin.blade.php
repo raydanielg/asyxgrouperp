@@ -197,6 +197,7 @@
                     'admin.vendor-invoices*' => 'view-dashboard',
                     'admin.office-expenses*' => 'view-expenses',
                     'admin.client-receipts*' => 'view-revenues',
+                    'admin.meetings*' => 'view-dashboard',
                     'admin.users*' => 'view-users',
                     'admin.roles*' => 'view-roles',
                     'admin.users.login-history*' => 'view-login-history',
