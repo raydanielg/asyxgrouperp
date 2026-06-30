@@ -97,7 +97,8 @@ class ErpExtendedController extends Controller
         $designations = ['Manager', 'Senior Officer', 'Officer', 'Team Lead', 'Supervisor', 'Executive', 'Assistant', 'Clerk', 'Technician', 'Director'];
         $employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Intern', 'Probation'];
         $managers = Employee::where('status', 'active')->get();
-        return view('admin.hrm.employees.create', compact('departments', 'designations', 'employmentTypes', 'managers'));
+        $projects = Project::whereIn('status', ['in_progress', 'planning', 'active'])->orderBy('title')->get();
+        return view('admin.hrm.employees.create', compact('departments', 'designations', 'employmentTypes', 'managers', 'projects'));
     }
 
     public function employeeStore(Request $request)
@@ -124,7 +125,20 @@ class ErpExtendedController extends Controller
             'work_location' => 'nullable|string',
         ]);
         $data['created_by'] = auth()->id();
-        Employee::create($data);
+        $projectIds = $request->input('project_ids', []);
+        $projectRoles = $request->input('project_roles', []);
+        $employee = Employee::create($data);
+        if (!empty($projectIds)) {
+            $syncData = [];
+            foreach ($projectIds as $pid) {
+                $syncData[$pid] = [
+                    'role' => $projectRoles[$pid] ?? null,
+                    'assigned_from' => now(),
+                    'is_active' => true,
+                ];
+            }
+            $employee->projects()->sync($syncData);
+        }
         return redirect()->route('admin.employees.index')->with('success', 'Employee added successfully.');
     }
 
@@ -134,7 +148,9 @@ class ErpExtendedController extends Controller
         $designations = ['Manager', 'Senior Officer', 'Officer', 'Team Lead', 'Supervisor', 'Executive', 'Assistant', 'Clerk', 'Technician', 'Director'];
         $employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Intern', 'Probation'];
         $managers = Employee::where('status', 'active')->where('id', '!=', $employee->id)->get();
-        return view('admin.hrm.employees.edit', compact('employee', 'departments', 'designations', 'employmentTypes', 'managers'));
+        $projects = Project::whereIn('status', ['in_progress', 'planning', 'active', 'completed'])->orderBy('title')->get();
+        $employee->load('projects');
+        return view('admin.hrm.employees.edit', compact('employee', 'departments', 'designations', 'employmentTypes', 'managers', 'projects'));
     }
 
     public function employeeUpdate(Request $request, Employee $employee)
@@ -162,6 +178,20 @@ class ErpExtendedController extends Controller
             'work_location' => 'nullable|string',
         ]);
         $employee->update($data);
+        $projectIds = $request->input('project_ids', []);
+        $projectRoles = $request->input('project_roles', []);
+        if (!empty($projectIds)) {
+            $syncData = [];
+            foreach ($projectIds as $pid) {
+                $syncData[$pid] = [
+                    'role' => $projectRoles[$pid] ?? null,
+                    'is_active' => true,
+                ];
+            }
+            $employee->projects()->sync($syncData);
+        } else {
+            $employee->projects()->detach();
+        }
         return redirect()->route('admin.employees.index')->with('success', 'Employee updated successfully.');
     }
 
