@@ -1185,7 +1185,37 @@ class ErpExtendedController extends Controller
         }
 
         if ($invoicingType === 'one_time' && $oneTimeWhen === 'immediately' && $oneTimeAmount > 0) {
-            $this->createProjectInvoice($project, $oneTimeAmount, 'One-time invoice for ' . $project->title);
+            $project->update(['budget' => $oneTimeAmount]);
+            $invoiceNumber = 'INV-P-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+            $invoice = SalesInvoice::create([
+                'invoice_number' => $invoiceNumber,
+                'invoice_date' => now(),
+                'due_date' => now()->copy()->addDays(14),
+                'customer_id' => $project->customer_id ?? null,
+                'subtotal' => $oneTimeAmount,
+                'tax_amount' => round($oneTimeAmount * 0.18, 2),
+                'discount_amount' => 0,
+                'total_amount' => round($oneTimeAmount * 1.18, 2),
+                'paid_amount' => 0,
+                'balance_amount' => round($oneTimeAmount * 1.18, 2),
+                'status' => 'draft',
+                'type' => 'service',
+                'payment_terms' => 'Due in 14 days',
+                'notes' => 'One-time invoice for ' . $project->title,
+                'creator_id' => auth()->id(),
+                'created_by' => auth()->id(),
+                'project_id' => $project->id,
+            ]);
+            $invoice->items()->create([
+                'product_name' => 'Project: ' . $project->title,
+                'quantity' => 1,
+                'unit_price' => $oneTimeAmount,
+                'discount_amount' => 0,
+                'discount_percentage' => 0,
+                'tax_percentage' => 18,
+                'tax_amount' => round($oneTimeAmount * 0.18, 2),
+                'total_amount' => round($oneTimeAmount * 1.18, 2),
+            ]);
         }
 
         $msg = 'Project created with ' . count($projectIds) . ' staff assigned.';
