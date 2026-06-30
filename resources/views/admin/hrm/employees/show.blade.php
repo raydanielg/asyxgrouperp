@@ -40,6 +40,71 @@
 
     {{-- Right Column --}}
     <div class="lg:col-span-2 space-y-4">
+        {{-- Project Assignments --}}
+        <div class="bg-white rounded-xl border p-6">
+            <div class="flex items-center justify-between border-b pb-3 mb-3">
+                <h3 class="text-sm font-bold text-gray-900">Project Assignments</h3>
+                <a href="{{ route('admin.bonuses.index') }}" class="text-xs text-bronze hover:underline font-semibold">+ Add Bonus</a>
+            </div>
+            <div class="space-y-2">
+                @forelse($employee->projects as $proj)
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        </div>
+                        <div>
+                            <a href="{{ route('admin.projects.show', $proj->id) }}" class="text-xs font-semibold text-gray-800 hover:text-bronze">{{ $proj->title }}</a>
+                            <p class="text-[10px] text-gray-400">{{ $proj->project_number }} | {{ $proj->pivot->role ?? 'No role' }} | Since {{ $proj->pivot->assigned_from?->format('d M Y') ?? '—' }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] text-gray-500 capitalize">{{ str_replace('_', ' ', $proj->status) }}</span>
+                        @if($proj->pivot->is_active)
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        @else
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 text-gray-500">Inactive</span>
+                        @endif
+                        <a href="{{ route('admin.projects.settlements', $proj->id) }}" class="text-[10px] text-bronze hover:underline">Settlements →</a>
+                    </div>
+                </div>
+                @empty
+                <p class="text-xs text-gray-400 text-center py-4">No project assignments. <a href="{{ route('admin.employees.edit', $employee) }}" class="text-bronze font-semibold">Assign projects →</a></p>
+                @endforelse
+            </div>
+        </div>
+
+        {{-- Bonuses --}}
+        <div class="bg-white rounded-xl border p-6">
+            <div class="flex items-center justify-between border-b pb-3 mb-3">
+                <h3 class="text-sm font-bold text-gray-900">Bonuses</h3>
+                <span class="text-[10px] text-gray-400">{{ $employee->bonuses->count() }} bonuses | Total: {{ number_format($employee->bonuses->where('status', '!=', 'rejected')->sum('amount'), 0) }} TZS</span>
+            </div>
+            <div class="overflow-x-auto"><table class="w-full text-xs">
+                <thead><tr class="text-left text-gray-500"><th class="py-2">Bonus #</th><th class="py-2">Project</th><th class="py-2">Type</th><th class="py-2">Amount</th><th class="py-2">Date</th><th class="py-2">Status</th></tr></thead>
+                <tbody>
+                @forelse($employee->bonuses as $b)
+                <tr class="border-t border-gray-100">
+                    <td class="py-2 font-mono text-gray-600">{{ $b->bonus_number }}</td>
+                    <td class="py-2 text-gray-500">{{ $b->project?->title ?? '—' }}</td>
+                    <td class="py-2 text-gray-600">{{ str_replace('_', ' ', ucfirst($b->type)) }}</td>
+                    <td class="py-2 font-semibold text-gray-900">{{ number_format($b->amount, 0) }} TZS</td>
+                    <td class="py-2 text-gray-500">{{ $b->bonus_date->format('d M Y') }}</td>
+                    <td class="py-2">
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium
+                            {{ $b->status === 'paid' ? 'bg-emerald-50 text-emerald-700' : '' }}
+                            {{ $b->status === 'approved' ? 'bg-blue-50 text-blue-700' : '' }}
+                            {{ $b->status === 'pending' ? 'bg-amber-50 text-amber-700' : '' }}
+                            {{ $b->status === 'rejected' ? 'bg-red-50 text-red-700' : '' }}">{{ ucfirst($b->status) }}</span>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="6" class="py-4 text-center text-gray-400">No bonuses yet</td></tr>
+                @endforelse
+                </tbody>
+            </table></div>
+        </div>
+
         {{-- Assigned Tasks --}}
         <div class="bg-white rounded-xl border p-6">
             <div class="flex items-center justify-between border-b pb-3 mb-3">
