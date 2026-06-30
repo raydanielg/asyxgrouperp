@@ -32,9 +32,9 @@
     <div class="px-5 py-4 border-t">{{ $projects->links() }}</div>
 </div>
 <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">New Project</h3>
-        <form method="POST" action="{{ route('admin.projects.store') }}" class="space-y-3">@csrf
+    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Create New Project</h3>
+        <form method="POST" action="{{ route('admin.projects.store') }}" class="space-y-4">@csrf
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Start Date</label><input name="start_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date</label><input name="due_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>
@@ -57,7 +57,33 @@
                     <div class="col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Invoicing End Date (optional)</label><input name="invoicing_end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"></div>
                 </div>
             </div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create</button></div>
+            {{-- Staff Assignment --}}
+            <div class="pt-3 border-t">
+                <div class="flex items-center justify-between mb-2">
+                    <h4 class="text-sm font-bold text-gray-900">Assign Staff to Project</h4>
+                    <span class="text-[10px] text-gray-400">Select employees & their roles</span>
+                </div>
+                <p class="text-xs text-gray-500 mb-3">Wafanyakazi waliokuchwa wataunganishwa na project hii. Salary costs zao zitatrackwa kwenye settlements.</p>
+                <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    @foreach($employees as $emp)
+                    <div class="flex items-center gap-3 p-2.5 rounded-lg border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all">
+                        <input type="checkbox" name="project_employee_ids[]" value="{{ $emp->id }}" id="emp-{{ $emp->id }}" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 flex-shrink-0">
+                        <label for="emp-{{ $emp->id }}" class="flex items-center gap-3 flex-1 cursor-pointer">
+                            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">{{ strtoupper(substr($emp->first_name, 0, 1) . substr($emp->last_name ?? '', 0, 1)) }}</div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-semibold text-gray-800 truncate">{{ $emp->full_name }}</p>
+                                <p class="text-[10px] text-gray-400">{{ $emp->department ?? 'N/A' }} \u00b7 {{ $emp->designation ?? 'N/A' }} \u00b7 Salary: {{ number_format($emp->salary ?? 0, 0) }} TZS</p>
+                            </div>
+                        </label>
+                        <input type="text" name="project_employee_roles[{{ $emp->id }}]" placeholder="Role" class="w-32 px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none flex-shrink-0" value="">
+                    </div>
+                    @endforeach
+                    @if($employees->isEmpty())
+                    <p class="text-xs text-gray-400 text-center py-4">No active employees. Add employees first.</p>
+                    @endif
+                </div>
+            </div>
+            <div class="flex gap-2 pt-3"><button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create Project</button></div>
         </form>
     </div>
 </div>
