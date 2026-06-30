@@ -11,13 +11,14 @@
 </div>
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Project #</th><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Manager</th><th class="px-5 py-3 font-medium">Progress</th><th class="px-5 py-3 font-medium">Due Date</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
+        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Project #</th><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Manager</th><th class="px-5 py-3 font-medium">Staff</th><th class="px-5 py-3 font-medium">Progress</th><th class="px-5 py-3 font-medium">Due Date</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
         @forelse($projects as $p)
         <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $p->project_number }}</td>
             <td class="px-5 py-3"><a href="{{ route('admin.projects.show', $p) }}" class="text-xs font-medium text-gray-900 hover:text-emerald-600">{{ $p->title }}</a></td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $p->manager?->name ?? 'N/A' }}</td>
+            <td class="px-5 py-3"><span class="inline-flex items-center gap-1 text-xs text-gray-600"><svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zM6 3v2m12-2v2M3 8h2m14 0h2"/></svg>{{ $p->employees_count ?? $p->employees->count() ?? 0 }}</span></td>
             <td class="px-5 py-3"><div class="flex items-center gap-2"><div class="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:{{ $p->progress }}%"></div></div><span class="text-[10px] text-gray-500">{{ $p->progress }}%</span></div></td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $p->due_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $c=['planning'=>'sky','in_progress'=>'amber','completed'=>'emerald','on_hold'=>'gray','cancelled'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$p->status] ?? 'gray' }}-50 text-{{ $c[$p->status] ?? 'gray' }}-700">{{ ucfirst(str_replace('_', ' ', $p->status)) }}</span></td>
@@ -72,7 +73,7 @@
                             <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">{{ strtoupper(substr($emp->first_name, 0, 1) . substr($emp->last_name ?? '', 0, 1)) }}</div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-semibold text-gray-800 truncate">{{ $emp->full_name }}</p>
-                                <p class="text-[10px] text-gray-400">{{ $emp->department ?? 'N/A' }} \u00b7 {{ $emp->designation ?? 'N/A' }} \u00b7 Salary: {{ number_format($emp->salary ?? 0, 0) }} TZS</p>
+                                <p class="text-[10px] text-gray-400">{{ $emp->department ?? 'N/A' }} · {{ $emp->designation ?? 'N/A' }} · Salary: {{ number_format($emp->salary ?? 0, 0) }} TZS</p>
                             </div>
                         </label>
                         <input type="text" name="project_employee_roles[{{ $emp->id }}]" placeholder="Role" class="w-32 px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none flex-shrink-0" value="">
