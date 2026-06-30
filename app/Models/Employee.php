@@ -66,4 +66,24 @@ class Employee extends Model
     {
         return $this->department ?? 'Unassigned';
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'employee_project')
+            ->withPivot(['role', 'assigned_from', 'assigned_until', 'is_active'])
+            ->withTimestamps();
+    }
+
+    public function activeProjects()
+    {
+        return $this->belongsToMany(Project::class, 'employee_project')
+            ->wherePivot('is_active', true)
+            ->withPivot(['role', 'assigned_from', 'assigned_until', 'is_active'])
+            ->withTimestamps();
+    }
+
+    public function bonuses()
+    {
+        return $this->hasMany(EmployeeBonus::class);
+    }
 }
