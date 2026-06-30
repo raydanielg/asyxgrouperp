@@ -1231,7 +1231,7 @@ class ErpExtendedController extends Controller
 
     public function projectShow(Project $project)
     {
-        $project->load(['tasks', 'bugs', 'timesheets', 'meetings', 'documents', 'employees', 'bonuses.employee']);
+        $project->load(['tasks', 'bugs', 'timesheets', 'meetings', 'documents', 'employees', 'bonuses.employee', 'invoices']);
         return view('admin.projects.show', compact('project'));
     }
 
