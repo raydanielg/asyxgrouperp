@@ -94,6 +94,22 @@
         </select></div>
         </div>
     </div>
+    <div class="bg-white rounded-xl border p-6 space-y-4">
+        <h3 class="text-sm font-bold text-gray-900 border-b pb-3">Project Assignments</h3>
+        <p class="text-xs text-gray-500">Assign this employee to one or more projects. This enables salary cost tracking per project and bonus management.</p>
+        <div class="space-y-2 max-h-64 overflow-y-auto">
+            @foreach($projects as $project)
+            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50">
+                <input type="checkbox" name="project_ids[]" value="{{ $project->id }}" id="proj-{{ $project->id }}" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" @checked(in_array($project->id, old('project_ids', [])))>
+                <label for="proj-{{ $project->id }}" class="flex-1 text-xs font-medium text-gray-700 cursor-pointer">{{ $project->title }} <span class="text-gray-400">({{ $project->project_number }})</span></label>
+                <input type="text" name="project_roles[{{ $project->id }}]" placeholder="Role (e.g. Developer)" class="w-40 px-2 py-1 rounded border border-gray-200 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none" value="{{ old('project_roles.' . $project->id) }}">
+            </div>
+            @endforeach
+            @if($projects->isEmpty())
+            <p class="text-xs text-gray-400 text-center py-4">No active projects available</p>
+            @endif
+        </div>
+    </div>
     <div class="flex gap-2">
         <a href="{{ route('admin.employees.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</a>
         <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create Employee</button>

@@ -390,6 +390,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::patch('/employees/{employee}', [$ext, 'employeeUpdate'])->name('employees.update');
     Route::delete('/employees/{employee}', [$ext, 'employeeDestroy'])->name('employees.destroy');
 
+    // Employee Bonuses
+    Route::get('/bonuses', [$ext, 'bonusIndex'])->name('bonuses.index');
+    Route::post('/bonuses', [$ext, 'bonusStore'])->name('bonuses.store');
+    Route::post('/bonuses/{bonus}/approve', [$ext, 'bonusApprove'])->name('bonuses.approve');
+    Route::post('/bonuses/{bonus}/reject', [$ext, 'bonusReject'])->name('bonuses.reject');
+    Route::post('/bonuses/{bonus}/paid', [$ext, 'bonusMarkPaid'])->name('bonuses.paid');
+    Route::delete('/bonuses/{bonus}', [$ext, 'bonusDestroy'])->name('bonuses.destroy');
+
     // Attendance
     $attCtrl = App\Http\Controllers\Admin\AttendanceController::class;
     Route::get('/attendance', [$attCtrl, 'index'])->name('attendance.index');

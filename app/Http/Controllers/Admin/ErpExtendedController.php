@@ -197,7 +197,14 @@ class ErpExtendedController extends Controller
 
     public function employeeShow(Employee $employee)
     {
-        $employee->load(['attendances' => fn($q) => $q->latest()->take(10), 'payrolls' => fn($q) => $q->latest()->take(5), 'leaves' => fn($q) => $q->latest()->take(5), 'assets' => fn($q) => $q->latest()->take(5)]);
+        $employee->load([
+            'attendances' => fn($q) => $q->latest()->take(10),
+            'payrolls' => fn($q) => $q->latest()->take(5),
+            'leaves' => fn($q) => $q->latest()->take(5),
+            'assets' => fn($q) => $q->latest()->take(5),
+            'projects' => fn($q) => $q->withPivot(['role', 'assigned_from', 'assigned_until', 'is_active']),
+            'bonuses' => fn($q) => $q->latest()->take(10),
+        ]);
         $assignedTasks = ProjectTask::where('assigned_to', $employee->user_id)->with('project')->latest()->take(10)->get();
         $performanceReviews = PerformanceReview::where('employee_id', $employee->id)->latest()->take(3)->get();
         return view('admin.hrm.employees.show', compact('employee', 'assignedTasks', 'performanceReviews'));
@@ -207,6 +214,64 @@ class ErpExtendedController extends Controller
     {
         $employee->delete();
         return redirect()->route('admin.employees.index')->with('success', 'Employee deleted.');
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  HRM — EMPLOYEE BONUSES
+    // ═══════════════════════════════════════════════════════
+    public function bonusIndex()
+    {
+        $bonuses = \App\Models\EmployeeBonus::with(['employee', 'project', 'approvedBy'])
+            ->latest()->paginate(20);
+        $employees = Employee::where('status', 'active')->orderBy('first_name')->get();
+        $projects = Project::whereIn('status', ['in_progress', 'planning', 'active', 'completed'])->orderBy('title')->get();
+        return view('admin.hrm.bonuses.index', compact('bonuses', 'employees', 'projects'));
+    }
+
+    public function bonusStore(Request $request)
+    {
+        $data = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'project_id' => 'nullable|exists:projects,id',
+            'type' => 'required|in:performance,project_completion,milestone,special',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'amount' => 'required|numeric|min:0',
+            'bonus_date' => 'required|date',
+        ]);
+        $data['bonus_number'] = 'BNS-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+        $data['status'] = 'pending';
+        $data['created_by'] = auth()->id();
+        \App\Models\EmployeeBonus::create($data);
+        return redirect()->route('admin.bonuses.index')->with('success', 'Bonus created successfully.');
+    }
+
+    public function bonusApprove(\App\Models\EmployeeBonus $bonus)
+    {
+        $bonus->update([
+            'status' => 'approved',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+        return redirect()->back()->with('success', 'Bonus approved.');
+    }
+
+    public function bonusReject(\App\Models\EmployeeBonus $bonus)
+    {
+        $bonus->update(['status' => 'rejected']);
+        return redirect()->back()->with('success', 'Bonus rejected.');
+    }
+
+    public function bonusMarkPaid(\App\Models\EmployeeBonus $bonus)
+    {
+        $bonus->update(['status' => 'paid']);
+        return redirect()->back()->with('success', 'Bonus marked as paid.');
+    }
+
+    public function bonusDestroy(\App\Models\EmployeeBonus $bonus)
+    {
+        $bonus->delete();
+        return redirect()->route('admin.bonuses.index')->with('success', 'Bonus deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
