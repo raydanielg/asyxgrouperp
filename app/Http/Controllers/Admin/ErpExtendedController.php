@@ -1347,6 +1347,10 @@ class ErpExtendedController extends Controller
 
     public function generateProjectInvoice(Project $project)
     {
+        if ($project->recurring_invoicing) {
+            return redirect()->back()->with('error', 'This project uses recurring invoicing. Use the recurring invoice generator instead.');
+        }
+
         if (!in_array($project->status, ['completed', 'in_progress', 'planning'])) {
             return redirect()->back()->with('error', 'Invalid project status for invoicing.');
         }
