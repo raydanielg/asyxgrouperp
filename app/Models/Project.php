@@ -14,6 +14,9 @@ class Project extends Model
     protected $casts = [
         'start_date' => 'date',
         'due_date' => 'date',
+        'invoicing_end_date' => 'date',
+        'last_invoiced_at' => 'datetime',
+        'recurring_invoicing' => 'boolean',
     ];
 
     public function tasks()
@@ -89,5 +92,26 @@ class Project extends Model
     public function profit()
     {
         return $this->totalRevenue() - $this->totalCost();
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(SalesInvoice::class);
+    }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function nextInvoiceDate()
+    {
+        if (!$this->recurring_invoicing) return null;
+        $base = $this->last_invoiced_at ? $this->last_invoiced_at->copy()->startOfMonth() : $this->start_date?->copy()->startOfMonth();
+        if (!$base) return null;
+        $next = $base->addMonth();
+        $next->day = min($this->billing_day, $next->daysInMonth);
+        if ($this->invoicing_end_date && $next->gt($this->invoicing_end_date)) return null;
+        return $next;
     }
 }
