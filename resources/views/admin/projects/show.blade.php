@@ -98,7 +98,7 @@
         <a href="{{ route('admin.meetings.create') }}?type=project&project_id={{ $project->id }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Schedule Meeting</a>
     </div>
     <div class="space-y-2">
-    @forelse($project->meetments ?? [] as $m)
+    @forelse($project->meetings ?? [] as $m)
         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-900">{{ $m->title }}</p>
