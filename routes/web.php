@@ -204,6 +204,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/documents/{document}/download', [$docCtrl, 'download'])->name('documents.download');
     Route::post('/documents/{document}/sign', [$docCtrl, 'sign'])->name('documents.sign');
     Route::post('/documents/{document}/decline', [$docCtrl, 'decline'])->name('documents.decline');
+    Route::post('/documents/{document}/archive', [$docCtrl, 'archive'])->name('documents.archive');
+    Route::post('/documents/{document}/upload-version', [$docCtrl, 'uploadVersion'])->name('documents.upload-version');
+    Route::get('/projects/{project}/documents', [$docCtrl, 'projectDocuments'])->name('projects.documents');
     Route::delete('/documents/{document}', [$docCtrl, 'destroy'])->name('documents.destroy');
 
     // ═══ Call Center ═══
