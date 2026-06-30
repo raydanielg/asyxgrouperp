@@ -27,8 +27,27 @@
         .sidebar-link { transition: all 0.2s ease; }
         .sidebar-link:hover { background: rgba(255,255,255,0.06); }
         .sidebar-link.active { background: rgba(255,255,255,0.08); color: #fff; }
-        .sidebar-submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-        .sidebar-submenu.open { max-height: 500px; }
+        .sidebar-submenu { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1); }
+        .sidebar-submenu.open { max-height: 600px; }
+        .sidebar-group-btn { transition: all 0.2s ease; }
+        .sidebar-group-btn:hover { background: rgba(255,255,255,0.04); }
+        .sidebar-group-btn .chevron { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+        .sidebar-group-btn.open .chevron { transform: rotate(90deg); }
+        .sidebar-group-btn.open { background: rgba(255,255,255,0.03); }
+        .sidebar-submenu-item { opacity: 0; transform: translateX(-8px); transition: opacity 0.25s ease, transform 0.25s ease; }
+        .sidebar-submenu.open .sidebar-submenu-item { opacity: 1; transform: translateX(0); }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(1) { transition-delay: 0.02s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(2) { transition-delay: 0.04s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(3) { transition-delay: 0.06s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(4) { transition-delay: 0.08s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(5) { transition-delay: 0.10s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(6) { transition-delay: 0.12s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(7) { transition-delay: 0.14s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(8) { transition-delay: 0.16s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(9) { transition-delay: 0.18s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(10) { transition-delay: 0.20s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(11) { transition-delay: 0.22s; }
+        .sidebar-submenu.open .sidebar-submenu-item:nth-child(12) { transition-delay: 0.24s; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #01241f; }
         ::-webkit-scrollbar-thumb { background: #024938; border-radius: 3px; }
@@ -524,17 +543,38 @@
             @php $navGroups = []; @endphp
             @endif
 
-            {{-- Grouped items --}}
-            @foreach($navGroups as $group)
-        <div class="pt-3 pb-1">
-                <p class="px-3 text-[10px] font-bold uppercase tracking-wider text-emerald-400/40">{{ $group['title'] }}</p>
+            {{-- Grouped items (collapsible dropdowns) --}}
+            @php
+                $currentRoute = request()->route() ? request()->route()->getName() : '';
+            @endphp
+            @foreach($navGroups as $gi => $group)
+                @php
+                    $groupHasActive = false;
+                    foreach ($group['items'] as $item) {
+                        if (request()->routeIs($item['match'])) { $groupHasActive = true; break; }
+                    }
+                    $groupId = 'grp-' . $gi;
+                @endphp
+            <div class="pt-2">
+                <button onclick="toggleSidebarGroup('{{ $groupId }}')" id="btn-{{ $groupId }}" class="sidebar-group-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-emerald-200 text-sm font-semibold {{ $groupHasActive ? 'open' : '' }}">
+                    <span class="flex items-center gap-2">
+                        <span class="text-[10px] uppercase tracking-wider text-emerald-400/50 font-bold">{{ $group['title'] }}</span>
+                    </span>
+                    <svg class="chevron w-3.5 h-3.5 text-emerald-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <div id="{{ $groupId }}" class="sidebar-submenu {{ $groupHasActive ? 'open' : '' }}">
+                    <div class="pt-1 space-y-0.5 pl-1">
+                        @foreach($group['items'] as $item)
+                        <div class="sidebar-submenu-item">
+                            <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-emerald-100/80 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+                                <svg class="w-4 h-4 text-gold-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
+                                <span>{{ $item['label'] }}</span>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
-        @foreach($group['items'] as $item)
-        <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
-                <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
-                <span>{{ $item['label'] }}</span>
-            </a>
-        @endforeach
             @endforeach
         </div>
 
