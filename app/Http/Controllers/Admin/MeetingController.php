@@ -7,6 +7,7 @@ use App\Models\Meeting;
 use App\Models\MeetingActionPoint;
 use App\Models\MeetingAttendee;
 use App\Models\Project;
+use App\Models\SalesInvoice;
 use App\Models\User;
 use Illuminate\Http\Request;
 

@@ -601,4 +601,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Project Profit
     Route::get('/projects/{project}/profit', [$bf, 'projectProfit'])->name('projects.profit');
+
+    // ═══ Meetings ═══
+    $mtgCtrl = App\Http\Controllers\Admin\MeetingController::class;
+    Route::get('/meetings', [$mtgCtrl, 'index'])->name('meetings.index');
+    Route::get('/meetings/create', [$mtgCtrl, 'create'])->name('meetings.create');
+    Route::post('/meetings', [$mtgCtrl, 'store'])->name('meetings.store');
+    Route::get('/meetings/{meeting}', [$mtgCtrl, 'show'])->name('meetings.show');
+    Route::get('/meetings/{meeting}/edit', [$mtgCtrl, 'edit'])->name('meetings.edit');
+    Route::patch('/meetings/{meeting}', [$mtgCtrl, 'update'])->name('meetings.update');
+    Route::delete('/meetings/{meeting}', [$mtgCtrl, 'destroy'])->name('meetings.destroy');
+    Route::post('/meetings/{meeting}/attendance', [$mtgCtrl, 'recordAttendance'])->name('meetings.attendance');
+    Route::patch('/meetings/action-points/{actionPoint}', [$mtgCtrl, 'updateActionPoint'])->name('meetings.action-points.update');
+
+    // Recurring Project Invoice
+    Route::post('/projects/{project}/generate-recurring-invoice', [$mtgCtrl, 'generateInvoice'])->name('projects.generate-recurring-invoice');
 });
