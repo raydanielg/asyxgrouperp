@@ -113,6 +113,22 @@
 </div>
 @push('scripts')
 <script>
+function selectInvoicingType(type) {
+    document.querySelectorAll('.invoicing-option').forEach(el => {
+        if (el.dataset.type === type) {
+            el.classList.add('border-emerald-500', 'bg-emerald-50');
+            el.querySelector('svg').classList.add('text-emerald-600');
+            el.querySelector('svg').classList.remove('text-gray-400');
+        } else {
+            el.classList.remove('border-emerald-500', 'bg-emerald-50');
+            el.querySelector('svg').classList.remove('text-emerald-600');
+            el.querySelector('svg').classList.add('text-gray-400');
+        }
+    });
+    document.getElementById('recurringFields').classList.toggle('hidden', type !== 'recurring');
+    document.getElementById('oneTimeFields').classList.toggle('hidden', type !== 'one_time');
+}
+
 function downloadPdf(url, title) {
   Swal.fire({
     title: 'Downloading...',
