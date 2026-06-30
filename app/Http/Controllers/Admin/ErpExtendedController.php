@@ -1070,6 +1070,101 @@ class ErpExtendedController extends Controller
         return view('admin.projects.show', compact('project'));
     }
 
+    public function projectSettlements(Project $project)
+    {
+        $project->load(['invoices', 'vendorInvoices', 'officeExpenses', 'clientReceipts', 'timesheets.employee']);
+
+        $startDate = $project->start_date ?? $project->created_at->copy()->startOfMonth();
+        $endDate = $project->due_date ?? now()->copy()->endOfMonth();
+        if ($endDate->gt(now())) $endDate = now()->copy()->endOfMonth();
+
+        $months = [];
+        $current = $startDate->copy()->startOfMonth();
+        while ($current->lte($endDate)) {
+            $monthKey = $current->format('Y-m');
+            $monthLabel = $current->format('M Y');
+
+            $invoiced = SalesInvoice::where('project_id', $project->id)
+                ->whereYear('invoice_date', $current->year)
+                ->whereMonth('invoice_date', $current->month)
+                ->get();
+            $invoicedTotal = $invoiced->sum('total_amount');
+            $invoicedPaid = $invoiced->sum('paid_amount');
+
+            $receipts = ClientReceipt::where('project_id', $project->id)
+                ->whereYear('receipt_date', $current->year)
+                ->whereMonth('receipt_date', $current->month)
+                ->get();
+            $receivedTotal = $receipts->sum('amount');
+
+            $vendorInvoices = VendorInvoice::where('project_id', $project->id)
+                ->whereYear('invoice_date', $current->year)
+                ->whereMonth('invoice_date', $current->month)
+                ->get();
+            $vendorCost = $vendorInvoices->sum('total');
+            $vendorPaid = $vendorInvoices->sum('amount_paid');
+
+            $officeExp = OfficeExpense::where('project_id', $project->id)
+                ->where('status', 'approved')
+                ->whereYear('expense_date', $current->year)
+                ->whereMonth('expense_date', $current->month)
+                ->sum('amount');
+
+            $timesheets = Timesheet::where('project_id', $project->id)
+                ->whereYear('date', $current->year)
+                ->whereMonth('date', $current->month)
+                ->with('employee')
+                ->get();
+            $staffHours = $timesheets->sum('hours');
+            $staffCost = 0;
+            foreach ($timesheets as $ts) {
+                if ($ts->employee && $ts->employee->salary > 0) {
+                    $hourlyRate = $ts->employee->salary / 160;
+                    $staffCost += $ts->hours * $hourlyRate;
+                }
+            }
+
+            $totalCost = $vendorCost + $officeExp + $staffCost;
+            $net = $receivedTotal - $totalCost;
+            $outstanding = $invoicedTotal - $invoicedPaid;
+
+            $months[] = [
+                'key' => $monthKey,
+                'label' => $monthLabel,
+                'invoiced' => $invoicedTotal,
+                'received' => $receivedTotal,
+                'outstanding' => $outstanding,
+                'vendor_cost' => $vendorCost,
+                'vendor_paid' => $vendorPaid,
+                'office_cost' => $officeExp,
+                'staff_hours' => $staffHours,
+                'staff_cost' => $staffCost,
+                'total_cost' => $totalCost,
+                'net' => $net,
+                'invoices' => $invoiced,
+                'receipts' => $receipts,
+                'vendor_invoices' => $vendorInvoices,
+            ];
+
+            $current->addMonth();
+        }
+
+        $totals = [
+            'invoiced' => array_sum(array_column($months, 'invoiced')),
+            'received' => array_sum(array_column($months, 'received')),
+            'outstanding' => array_sum(array_column($months, 'outstanding')),
+            'vendor_cost' => array_sum(array_column($months, 'vendor_cost')),
+            'office_cost' => array_sum(array_column($months, 'office_cost')),
+            'staff_cost' => array_sum(array_column($months, 'staff_cost')),
+            'staff_hours' => array_sum(array_column($months, 'staff_hours')),
+            'total_cost' => array_sum(array_column($months, 'total_cost')),
+            'net' => array_sum(array_column($months, 'net')),
+        ];
+        $totals['margin'] = $totals['received'] > 0 ? ($totals['net'] / $totals['received']) * 100 : 0;
+
+        return view('admin.projects.settlements', compact('project', 'months', 'totals'));
+    }
+
     public function generateProjectInvoice(Project $project)
     {
         if (!in_array($project->status, ['completed', 'in_progress', 'planning'])) {
