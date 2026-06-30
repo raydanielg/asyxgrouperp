@@ -45,6 +45,18 @@
         </select></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="planning">Planning</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="on_hold">On Hold</option><option value="cancelled">Cancelled</option></select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Priority</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option></select></div></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Progress (%)</label><input name="progress" type="number" min="0" max="100" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Budget</label><input name="budget" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>
+            {{-- Recurring Invoicing --}}
+            <div class="pt-3 border-t">
+                <label class="flex items-center gap-2 text-xs font-medium text-gray-600 mb-2">
+                    <input type="checkbox" name="recurring_invoicing" value="1" class="rounded" onchange="document.getElementById('recurringFields').classList.toggle('hidden')">
+                    Enable Monthly Recurring Invoicing
+                </label>
+                <div id="recurringFields" class="hidden grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Monthly Amount</label><input name="billing_amount" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Billing Day (1-28)</label><input name="billing_day" type="number" min="1" max="28" value="1" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"></div>
+                    <div class="col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Invoicing End Date (optional)</label><input name="invoicing_end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"></div>
+                </div>
+            </div>
             <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create</button></div>
         </form>
     </div>
