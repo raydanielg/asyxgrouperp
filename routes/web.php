@@ -496,6 +496,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::post('/projects', [$ext, 'projectStore'])->name('projects.store');
     Route::get('/projects/{project}', [$ext, 'projectShow'])->name('projects.show');
     Route::get('/projects/{project}/settlements', [$ext, 'projectSettlements'])->name('projects.settlements');
+    Route::get('/settlements', [$ext, 'projectSettlementsIndex'])->name('settlements.index');
     Route::post('/projects/{project}/generate-invoice', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'generateProjectInvoice'])->name('projects.generate-invoice');
     Route::get('/projects/{project}/pdf', [$ext, 'projectPdf'])->name('projects.pdf');
     Route::delete('/projects/{project}', [$ext, 'projectDestroy'])->name('projects.destroy');
