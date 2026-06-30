@@ -112,6 +112,36 @@
     @endforelse
     </div>
 </div>
+{{-- Project Documents --}}
+<div class="bg-white rounded-xl border p-6 mb-4">
+    <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold text-gray-900">Project Documents</h3>
+        <a href="{{ route('admin.documents.create', ['project_id' => $project->id]) }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Upload Document</a>
+    </div>
+    <div class="space-y-2">
+    @forelse($project->documents ?? [] as $doc)
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-3 flex-1">
+                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-900">{{ $doc->title }}</p>
+                    <p class="text-[10px] text-gray-400">{{ $doc->document_number }} - v{{ $doc->version }} - {{ strtoupper($doc->file_type) }} - {{ number_format($doc->file_size / 1024, 0) }}KB</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] text-gray-500 capitalize">{{ str_replace('_', ' ', $doc->category ?? '') }}</span>
+                <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($doc->status=='signed') ? 'bg-emerald-50 text-emerald-700' : (($doc->status=='pending_signature') ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600') }}">{{ str_replace('_', ' ', ucfirst($doc->status)) }}</span>
+                <a href="{{ route('admin.documents.show', $doc) }}" class="text-xs text-bronze hover:underline">View</a>
+                <a href="{{ route('admin.documents.download', $doc) }}" class="text-xs text-emerald-600 hover:underline">Download</a>
+            </div>
+        </div>
+    @empty
+        <p class="text-xs text-gray-400 text-center py-4">No documents uploaded for this project</p>
+    @endforelse
+    </div>
+</div>
 <div id="taskModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Add Task</h3>
