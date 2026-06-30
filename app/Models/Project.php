@@ -104,6 +104,11 @@ class Project extends Model
         return $this->hasMany(Meeting::class);
     }
 
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
     public function nextInvoiceDate()
     {
         if (!$this->recurring_invoicing) return null;
