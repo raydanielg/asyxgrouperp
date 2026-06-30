@@ -1219,7 +1219,13 @@ class ErpExtendedController extends Controller
                 }
             }
 
-            $totalCost = $vendorCost + $officeExp + $staffCost;
+            $bonusCost = \App\Models\EmployeeBonus::where('project_id', $project->id)
+                ->whereIn('status', ['approved', 'paid'])
+                ->whereYear('bonus_date', $current->year)
+                ->whereMonth('bonus_date', $current->month)
+                ->sum('amount');
+
+            $totalCost = $vendorCost + $officeExp + $staffCost + $bonusCost;
             $net = $receivedTotal - $totalCost;
             $outstanding = $invoicedTotal - $invoicedPaid;
 
@@ -1234,6 +1240,7 @@ class ErpExtendedController extends Controller
                 'office_cost' => $officeExp,
                 'staff_hours' => $staffHours,
                 'staff_cost' => $staffCost,
+                'bonus_cost' => $bonusCost,
                 'total_cost' => $totalCost,
                 'net' => $net,
                 'invoices' => $invoiced,
@@ -1252,6 +1259,7 @@ class ErpExtendedController extends Controller
             'office_cost' => array_sum(array_column($months, 'office_cost')),
             'staff_cost' => array_sum(array_column($months, 'staff_cost')),
             'staff_hours' => array_sum(array_column($months, 'staff_hours')),
+            'bonus_cost' => array_sum(array_column($months, 'bonus_cost')),
             'total_cost' => array_sum(array_column($months, 'total_cost')),
             'net' => array_sum(array_column($months, 'net')),
         ];
