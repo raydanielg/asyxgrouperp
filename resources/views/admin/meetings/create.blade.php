@@ -23,8 +23,8 @@
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Type *</label>
                     <select name="type" id="meetingType" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="toggleProject()">
-                        <option value="office">Office Meeting</option>
-                        <option value="project">Project Meeting</option>
+                        <option value="office" {{ request('type') === 'office' ? 'selected' : '' }}>Office Meeting</option>
+                        <option value="project" {{ request('type') === 'project' ? 'selected' : '' }}>Project Meeting</option>
                     </select>
                 </div>
                 <div>
@@ -34,12 +34,12 @@
                         <option value="online">Online</option>
                     </select>
                 </div>
-                <div id="projectField" style="display:none;">
+                <div id="projectField" style="display:{{ request('type') === 'project' ? '' : 'none' }};">
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Project</label>
                     <select name="project_id" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
                         <option value="">Select Project</option>
                         @foreach($projects as $project)
-                            <option value="{{ $project->id }}">{{ $project->title }}</option>
+                            <option value="{{ $project->id }}" {{ (string)request('project_id') === (string)$project->id ? 'selected' : '' }}>{{ $project->title }}</option>
                         @endforeach
                     </select>
                 </div>
