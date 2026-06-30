@@ -18,4 +18,5 @@ class SalesInvoice extends Model
     public function warehouse() { return $this->belongsTo(Warehouse::class); }
     public function items() { return $this->hasMany(SalesInvoiceItem::class, 'invoice_id'); }
     public function creator() { return $this->belongsTo(User::class, 'creator_id'); }
+    public function project() { return $this->belongsTo(Project::class); }
 }
