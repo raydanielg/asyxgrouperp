@@ -8,7 +8,11 @@ class SalesProposal extends Model
 {
     protected $fillable = ['proposal_number', 'proposal_date', 'due_date', 'customer_id', 'warehouse_id', 'subtotal', 'tax_amount', 'discount_amount', 'total_amount', 'status', 'converted_to_invoice', 'payment_terms', 'notes', 'creator_id', 'created_by'];
 
-    protected $casts = ['converted_to_invoice' => 'boolean'];
+    protected $casts = [
+        'converted_to_invoice' => 'boolean',
+        'proposal_date' => 'date',
+        'due_date' => 'date',
+    ];
 
     public function customer() { return $this->belongsTo(User::class, 'customer_id'); }
     public function warehouse() { return $this->belongsTo(Warehouse::class); }
