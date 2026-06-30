@@ -1109,7 +1109,8 @@ class ErpExtendedController extends Controller
     {
         $projects = Project::latest()->paginate(15);
         $managers = User::where('role', 'admin')->get();
-        return view('admin.projects.index', compact('projects', 'managers'));
+        $employees = Employee::where('status', 'active')->with('projects')->orderBy('first_name')->get();
+        return view('admin.projects.index', compact('projects', 'managers', 'employees'));
     }
 
     public function convertProposalToProject(SalesProposal $proposal)
@@ -1155,8 +1156,21 @@ class ErpExtendedController extends Controller
         ]);
         $data['project_number'] = 'PRJ-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['company_id'] = session('current_company_id');
-        Project::create($data);
-        return redirect()->route('admin.projects.index')->with('success', 'Project created.');
+        $projectIds = $request->input('project_employee_ids', []);
+        $projectRoles = $request->input('project_employee_roles', []);
+        $project = Project::create($data);
+        if (!empty($projectIds)) {
+            $syncData = [];
+            foreach ($projectIds as $eid) {
+                $syncData[$eid] = [
+                    'role' => $projectRoles[$eid] ?? null,
+                    'assigned_from' => now(),
+                    'is_active' => true,
+                ];
+            }
+            $project->employees()->sync($syncData);
+        }
+        return redirect()->route('admin.projects.index')->with('success', 'Project created with ' . count($projectIds) . ' staff assigned.');
     }
 
     public function projectShow(Project $project)
