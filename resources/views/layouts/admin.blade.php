@@ -235,6 +235,7 @@
                     'admin.assets*' => 'view-assets',
                     'admin.hr-events*' => 'view-events',
                     'admin.policies*' => 'view-policies',
+                    'admin.bonuses*' => 'view-employees',
                     'admin.crm-leads*' => 'view-crm-leads',
                     'admin.crm-deals*' => 'view-crm-deals',
                     'admin.crm-contracts*' => 'view-crm-contracts',
