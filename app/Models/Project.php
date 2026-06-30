@@ -109,6 +109,18 @@ class Project extends Model
         return $this->hasMany(Document::class);
     }
 
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_project')
+            ->withPivot(['role', 'assigned_from', 'assigned_until', 'is_active'])
+            ->withTimestamps();
+    }
+
+    public function bonuses()
+    {
+        return $this->hasMany(EmployeeBonus::class);
+    }
+
     public function nextInvoiceDate()
     {
         if (!$this->recurring_invoicing) return null;
