@@ -1153,7 +1153,20 @@ class ErpExtendedController extends Controller
             'billing_amount' => 'nullable|numeric|min:0',
             'billing_day' => 'nullable|integer|min:1|max:28',
             'invoicing_end_date' => 'nullable|date',
+            'invoicing_type' => 'nullable|in:recurring,one_time,none',
+            'one_time_amount' => 'nullable|numeric|min:0',
+            'one_time_when' => 'nullable|in:immediately,manual,completion',
         ]);
+        $invoicingType = $data['invoicing_type'] ?? 'none';
+        $data['recurring_invoicing'] = ($invoicingType === 'recurring');
+        if ($invoicingType !== 'recurring') {
+            $data['billing_amount'] = null;
+            $data['billing_day'] = null;
+        }
+        $oneTimeAmount = $data['one_time_amount'] ?? 0;
+        $oneTimeWhen = $data['one_time_when'] ?? 'manual';
+        unset($data['invoicing_type'], $data['one_time_amount'], $data['one_time_when']);
+
         $data['project_number'] = 'PRJ-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['company_id'] = session('current_company_id');
         $projectIds = $request->input('project_employee_ids', []);
@@ -1170,7 +1183,63 @@ class ErpExtendedController extends Controller
             }
             $project->employees()->sync($syncData);
         }
-        return redirect()->route('admin.projects.index')->with('success', 'Project created with ' . count($projectIds) . ' staff assigned.');
+
+        if ($invoicingType === 'one_time' && $oneTimeWhen === 'immediately' && $oneTimeAmount > 0) {
+            $this->createProjectInvoice($project, $oneTimeAmount, 'One-time invoice for ' . $project->title);
+        }
+
+        $msg = 'Project created with ' . count($projectIds) . ' staff assigned.';
+        if ($invoicingType === 'recurring') {
+            $msg .= ' Recurring invoicing enabled.';
+        } elseif ($invoicingType === 'one_time' && $oneTimeWhen === 'immediately') {
+            $msg .= ' One-time invoice generated.';
+        } elseif ($invoicingType === 'one_time') {
+            $msg .= ' One-time invoice will be generated ' . ($oneTimeWhen === 'completion' ? 'on completion.' : 'manually.');
+        }
+        return redirect()->route('admin.projects.index')->with('success', $msg);
+    }
+
+    public function projectGenerateInvoice(Project $project)
+    {
+        if ($project->recurring_invoicing) {
+            return redirect()->back()->with('error', 'This project uses recurring invoicing. Use the recurring invoice generator.');
+        }
+        $existing = SalesInvoice::where('project_id', $project->id)->where('type', 'project')->exists();
+        if ($existing) {
+            return redirect()->back()->with('error', 'An invoice already exists for this project. Create additional invoices from the Sales Invoices module.');
+        }
+        $amount = $project->budget > 0 ? $project->budget : 0;
+        if ($amount <= 0) {
+            return redirect()->back()->with('error', 'Please set a project budget or specify an invoice amount.');
+        }
+        $invoice = $this->createProjectInvoice($project, $amount, 'One-time invoice for ' . $project->title);
+        return redirect()->route('admin.sales-invoices.show', $invoice)
+            ->with('success', 'Invoice generated for ' . $project->title);
+    }
+
+    private function createProjectInvoice(Project $project, float $amount, string $description): SalesInvoice
+    {
+        $invoiceNumber = 'INV-' . now()->format('YmdHis') . '-' . strtoupper(Str::random(4));
+        return SalesInvoice::create([
+            'company_id' => $project->company_id,
+            'project_id' => $project->id,
+            'invoice_number' => $invoiceNumber,
+            'invoice_date' => now(),
+            'due_date' => now()->copy()->addDays(30),
+            'customer_id' => $project->customer_id,
+            'subtotal' => $amount,
+            'tax_amount' => 0,
+            'discount_amount' => 0,
+            'total_amount' => $amount,
+            'paid_amount' => 0,
+            'balance_amount' => $amount,
+            'status' => 'draft',
+            'type' => 'project',
+            'payment_terms' => $description,
+            'notes' => $description,
+            'creator_id' => auth()->id(),
+            'created_by' => auth()->id(),
+        ]);
     }
 
     public function projectShow(Project $project)
