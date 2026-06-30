@@ -178,7 +178,7 @@ class DashboardController extends Controller
 
         // ─── Multi-Company Stats ───
         $stats['totalCompanies'] = \App\Models\Company::count();
-        $stats['activeCompanies'] = \App\Models\Company::where('status', 'active')->count();
+        $stats['activeCompanies'] = \App\Models\Company::where('is_active', true)->count();
 
         // ─── Recruitment Stats ───
         $stats['openJobPostings'] = \App\Models\JobPosting::where('status', 'open')->count();
