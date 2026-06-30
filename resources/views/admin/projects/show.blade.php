@@ -31,6 +31,22 @@
     </a>
     </div>
 </div>
+@if($project->status === 'completed' && !$project->recurring_invoicing && !$project->invoices->where('type', 'service')->isNotEmpty())
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div>
+            <p class="text-sm font-semibold text-indigo-900">Project Completed — Generate Final Invoice</p>
+            <p class="text-xs text-indigo-600">This project is completed but has no invoice yet. Generate a tax invoice to bill the client.</p>
+        </div>
+    </div>
+    <form method="POST" action="{{ route('admin.projects.generate-invoice', $project) }}">@csrf
+        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700">Generate Invoice Now</button>
+    </form>
+</div>
+@endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
     <div class="bg-white rounded-xl border p-6">
         <h3 class="text-sm font-bold text-gray-900 mb-3">{{ $project->title }}</h3>
