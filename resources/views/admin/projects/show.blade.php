@@ -5,14 +5,20 @@
 <div class="mb-4 flex items-center justify-between">
     <a href="{{ route('admin.projects.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to Projects</a>
     <div class="flex items-center gap-2">
-    @if(in_array($project->status, ['completed','in_progress','planning']))
+    @if(in_array($project->status, ['completed','in_progress','planning']) && !$project->recurring_invoicing)
         <form method="POST" action="{{ route('admin.projects.generate-invoice', $project) }}">@csrf
-            <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700">Generate Tax Invoice</button>
+            <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Generate Tax Invoice
+            </button>
         </form>
     @endif
     @if($project->recurring_invoicing)
         <form method="POST" action="{{ route('admin.projects.generate-recurring-invoice', $project) }}">@csrf
-            <button type="submit" class="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded-lg hover:bg-purple-700">Generate Monthly Invoice</button>
+            <button type="submit" class="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded-lg hover:bg-purple-700 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Generate Monthly Invoice
+            </button>
         </form>
     @endif
     <button onclick="downloadPdf('{{ route('admin.projects.pdf', $project) }}', '{{ $project->project_number }}')" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-all flex items-center gap-1.5">
