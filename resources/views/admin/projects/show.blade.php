@@ -61,12 +61,18 @@
             <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></div>
             @if($project->recurring_invoicing)
             <div class="pt-2 mt-2 border-t">
-                <div class="flex justify-between"><span class="text-gray-400">Recurring Invoice</span><span class="text-purple-600 font-semibold">Active</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Invoicing Type</span><span class="text-purple-600 font-semibold">Recurring (Monthly)</span></div>
                 <div class="flex justify-between"><span class="text-gray-400">Billing Amount</span><span class="font-semibold text-gray-900">TZS {{ number_format($project->billing_amount) }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-400">Billing Day</span><span class="text-gray-700">{{ $project->billing_day }} of each month</span></div>
                 <div class="flex justify-between"><span class="text-gray-400">Last Invoiced</span><span class="text-gray-700">{{ $project->last_invoiced_at?->format('d M Y') ?? 'Never' }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-400">Next Invoice</span><span class="text-gray-700">{{ $project->nextInvoiceDate()?->format('d M Y') ?? '—' }}</span></div>
                 <div class="flex justify-between"><span class="text-gray-400">Invoicing Ends</span><span class="text-gray-700">{{ $project->invoicing_end_date?->format('d M Y') ?? 'No end date' }}</span></div>
+            </div>
+            @else
+            <div class="pt-2 mt-2 border-t">
+                <div class="flex justify-between"><span class="text-gray-400">Invoicing Type</span><span class="text-indigo-600 font-semibold">One-Time / Manual</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Invoices Generated</span><span class="text-gray-700">{{ $project->invoices->count() }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Total Invoiced</span><span class="font-semibold text-gray-900">TZS {{ number_format($project->invoices->sum('total_amount')) }}</span></div>
             </div>
             @endif
         </div>
