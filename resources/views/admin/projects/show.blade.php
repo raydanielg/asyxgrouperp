@@ -33,6 +33,16 @@
             <div class="flex justify-between"><span class="text-gray-400">Budget</span><span class="font-semibold text-gray-900">TZS {{ number_format($project->budget) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Priority</span><span class="text-gray-700">{{ ucfirst($project->priority) }}</span></div>
             <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></div>
+            @if($project->recurring_invoicing)
+            <div class="pt-2 mt-2 border-t">
+                <div class="flex justify-between"><span class="text-gray-400">Recurring Invoice</span><span class="text-purple-600 font-semibold">Active</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Billing Amount</span><span class="font-semibold text-gray-900">TZS {{ number_format($project->billing_amount) }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Billing Day</span><span class="text-gray-700">{{ $project->billing_day }} of each month</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Last Invoiced</span><span class="text-gray-700">{{ $project->last_invoiced_at?->format('d M Y') ?? 'Never' }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Next Invoice</span><span class="text-gray-700">{{ $project->nextInvoiceDate()?->format('d M Y') ?? '—' }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Invoicing Ends</span><span class="text-gray-700">{{ $project->invoicing_end_date?->format('d M Y') ?? 'No end date' }}</span></div>
+            </div>
+            @endif
         </div>
         <div class="mt-4"><div class="flex items-center justify-between mb-1"><span class="text-[10px] text-gray-400 uppercase">Progress</span><span class="text-xs font-bold text-emerald-700">{{ $project->progress }}%</span></div><div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:{{ $project->progress }}%"></div></div></div>
     </div>
@@ -79,6 +89,27 @@
         <p class="text-xs text-gray-400 text-center py-4">No timesheet entries</p>
         @endforelse
         </div>
+    </div>
+</div>
+{{-- Project Meetings --}}
+<div class="bg-white rounded-xl border p-6 mb-4">
+    <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold text-gray-900">Project Meetings</h3>
+        <a href="{{ route('admin.meetings.create') }}?type=project&project_id={{ $project->id }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Schedule Meeting</a>
+    </div>
+    <div class="space-y-2">
+    @forelse($project->meetments ?? [] as $m)
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex-1">
+                <p class="text-xs font-medium text-gray-900">{{ $m->title }}</p>
+                <p class="text-[10px] text-gray-400">{{ $m->meeting_date->format('d M Y') }} {{ $m->start_time }} {{ ucfirst($m->mode) }}</p>
+            </div>
+            <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($m->status=='completed') ? 'bg-emerald-50 text-emerald-700' : (($m->status=='scheduled') ? 'bg-blue-50 text-blue-700' : 'bg-red-50 text-red-700') }}">{{ ucfirst($m->status) }}</span>
+            <a href="{{ route('admin.meetings.show', $m) }}" class="text-xs text-bronze hover:underline ml-2">View</a>
+        </div>
+    @empty
+        <p class="text-xs text-gray-400 text-center py-4">No meetings scheduled for this project</p>
+    @endforelse
     </div>
 </div>
 <div id="taskModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
