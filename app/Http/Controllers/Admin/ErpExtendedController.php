@@ -1165,6 +1165,43 @@ class ErpExtendedController extends Controller
         return view('admin.projects.settlements', compact('project', 'months', 'totals'));
     }
 
+    public function projectSettlementsIndex()
+    {
+        $projects = Project::whereIn('status', ['in_progress', 'planning', 'active', 'completed'])
+            ->with(['invoices', 'clientReceipts', 'vendorInvoices', 'officeExpenses'])
+            ->orderBy('title')
+            ->get();
+
+        $projectSummaries = [];
+        foreach ($projects as $project) {
+            $invoiced = $project->invoices->sum('total_amount');
+            $received = $project->clientReceipts->sum('amount');
+            $vendorCost = $project->vendorInvoices->sum('total');
+            $officeCost = $project->officeExpenses->where('status', 'approved')->sum('amount');
+            $totalCost = $vendorCost + $officeCost;
+            $net = $received - $totalCost;
+
+            $projectSummaries[] = [
+                'id' => $project->id,
+                'title' => $project->title,
+                'project_number' => $project->project_number,
+                'status' => $project->status,
+                'recurring' => $project->recurring_invoicing,
+                'billing_amount' => $project->billing_amount ?? 0,
+                'invoiced' => $invoiced,
+                'received' => $received,
+                'outstanding' => $invoiced - $project->invoices->sum('paid_amount'),
+                'vendor_cost' => $vendorCost,
+                'office_cost' => $officeCost,
+                'total_cost' => $totalCost,
+                'net' => $net,
+                'margin' => $received > 0 ? ($net / $received) * 100 : 0,
+            ];
+        }
+
+        return view('admin.projects.settlements-index', compact('projectSummaries'));
+    }
+
     public function generateProjectInvoice(Project $project)
     {
         if (!in_array($project->status, ['completed', 'in_progress', 'planning'])) {
