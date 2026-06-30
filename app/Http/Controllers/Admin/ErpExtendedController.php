@@ -1107,7 +1107,7 @@ class ErpExtendedController extends Controller
     // ═══════════════════════════════════════════════════════
     public function projectIndex()
     {
-        $projects = Project::latest()->paginate(15);
+        $projects = Project::withCount('employees')->latest()->paginate(15);
         $managers = User::where('role', 'admin')->get();
         $employees = Employee::where('status', 'active')->with('projects')->orderBy('first_name')->get();
         return view('admin.projects.index', compact('projects', 'managers', 'employees'));

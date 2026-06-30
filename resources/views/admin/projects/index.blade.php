@@ -26,7 +26,7 @@
         
         </tr>
         @empty
-        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No projects found</td></tr>
+        <tr><td colspan="8" class="px-5 py-8 text-center text-gray-400 text-xs">No projects found</td></tr>
         @endforelse
         </tbody>
     </table></div>
