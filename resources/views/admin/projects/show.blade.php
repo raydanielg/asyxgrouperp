@@ -116,6 +116,67 @@
     @endforelse
     </div>
 </div>
+{{-- Assigned Staff --}}
+<div class="bg-white rounded-xl border p-6 mb-4">
+    <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold text-gray-900">Assigned Staff</h3>
+        <span class="text-[10px] text-gray-400">{{ $project->employees->count() }} employees</span>
+    </div>
+    <div class="space-y-2">
+    @forelse($project->employees as $emp)
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs">{{ strtoupper(substr($emp->first_name, 0, 1) . substr($emp->last_name ?? '', 0, 1)) }}</div>
+                <div>
+                    <a href="{{ route('admin.employees.show', $emp->id) }}" class="text-xs font-medium text-gray-900 hover:text-bronze">{{ $emp->full_name }}</a>
+                    <p class="text-[10px] text-gray-400">{{ $emp->department ?? 'N/A' }} | {{ $emp->pivot->role ?? 'No role' }} | Salary: {{ number_format($emp->salary ?? 0, 0) }} TZS</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                @if($emp->pivot->is_active)
+                <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                @else
+                <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 text-gray-500">Inactive</span>
+                @endif
+            </div>
+        </div>
+    @empty
+        <p class="text-xs text-gray-400 text-center py-4">No staff assigned to this project</p>
+    @endforelse
+    </div>
+</div>
+{{-- Project Bonuses --}}
+<div class="bg-white rounded-xl border p-6 mb-4">
+    <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold text-gray-900">Project Bonuses</h3>
+        <a href="{{ route('admin.bonuses.index') }}" class="text-xs text-bronze hover:underline font-medium">+ Add Bonus</a>
+    </div>
+    <div class="space-y-2">
+    @forelse($project->bonuses ?? [] as $bonus)
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8"/></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-medium text-gray-900">{{ $bonus->title }}</p>
+                    <p class="text-[10px] text-gray-400">{{ $bonus->employee?->full_name ?? 'N/A' }} | {{ str_replace('_', ' ', ucfirst($bonus->type)) }} | {{ $bonus->bonus_date->format('d M Y') }}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-gray-900">{{ number_format($bonus->amount, 0) }} TZS</span>
+                <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium
+                    {{ $bonus->status === 'paid' ? 'bg-emerald-50 text-emerald-700' : '' }}
+                    {{ $bonus->status === 'approved' ? 'bg-blue-50 text-blue-700' : '' }}
+                    {{ $bonus->status === 'pending' ? 'bg-amber-50 text-amber-700' : '' }}
+                    {{ $bonus->status === 'rejected' ? 'bg-red-50 text-red-700' : '' }}">{{ ucfirst($bonus->status) }}</span>
+            </div>
+        </div>
+    @empty
+        <p class="text-xs text-gray-400 text-center py-4">No bonuses for this project</p>
+    @endforelse
+    </div>
+</div>
 {{-- Project Documents --}}
 <div class="bg-white rounded-xl border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">
