@@ -12,7 +12,7 @@
                 <a href="{{ route('about') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">About Us</a>
                 <a href="{{ route('hosting') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Hosting</a>
                 <a href="{{ route('services') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Services</a>
-                <a href="{{ route('careers') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Careers</a>
+                <a href="{{ url('/careers') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Careers</a>
                 <a href="{{ route('contact') }}" class="nav-link text-sm font-semibold text-white hover:text-bronze transition-colors">Contacts</a>
             </div>
 
@@ -41,7 +41,7 @@
             <a href="{{ route('about') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">About Us</a>
             <a href="{{ route('hosting') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Hosting</a>
             <a href="{{ route('services') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Services</a>
-            <a href="{{ route('careers') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Careers</a>
+            <a href="{{ url('/careers') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Careers</a>
             <a href="{{ route('contact') }}" class="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:text-bronze rounded-lg transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contacts</a>
             <a href="{{ route('login') }}" class="block px-4 py-2.5 text-sm font-semibold text-white border border-white/20 rounded-lg text-center hover:bg-white/10 transition-colors">Login</a>
             <a href="{{ route('contact') }}" class="block px-4 py-2.5 text-sm font-bold text-white cta-gradient rounded-lg text-center mt-2">Contact Us</a>
