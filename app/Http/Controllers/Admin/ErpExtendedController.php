@@ -43,6 +43,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Models\JobApplication;
+use App\Models\VendorInvoice;
+use App\Models\OfficeExpense;
+use App\Models\ClientReceipt;
 
 class ErpExtendedController extends Controller
 {
