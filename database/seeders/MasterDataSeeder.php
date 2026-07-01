@@ -205,11 +205,11 @@ class MasterDataSeeder extends Seeder
         foreach ($titles as $i => $t) {
             Tender::create([
                 'company_id' => $companies->random()->id,
-                'tender_number' => 'TND-' . $now->format('Ymd') . '-' . strtoupper(Str::random(4)),
+                'tender_number' => 'TND-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                 'title' => $t, 'client_name' => 'Client ' . chr(65+$i),
                 'client_organization' => $orgs[$i], 'estimated_value' => rand(20000000, 500000000),
-                'submission_date' => $now->subDays(rand(10, 60)),
-                'closing_date' => $now->addDays(rand(5, 30)),
+                'submission_date' => now()->subDays(rand(10, 60)),
+                'closing_date' => now()->addDays(rand(5, 30)),
                 'status' => ['received','under_review','submitted','won','lost','converted'][$i],
                 'assigned_to' => $users[array_rand($users)]->id, 'created_by' => $admin->id,
             ]);
@@ -228,7 +228,7 @@ class MasterDataSeeder extends Seeder
         foreach ($leadData as $i => $ld) {
             $lead = CrmLead::create([
                 'company_id' => $companies->random()->id,
-                'lead_number' => 'LEAD-' . $now->format('Ymd') . '-' . strtoupper(Str::random(4)),
+                'lead_number' => 'LEAD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                 'first_name' => $ld['f'],'last_name' => $ld['l'],'email' => $ld['e'],'phone' => $ld['p'],
                 'company' => $ld['c'],'source' => ['Website','Referral','Tender'][rand(0,2)],
                 'status' => $i < 2 ? 'converted' : 'qualified',
@@ -247,11 +247,11 @@ class MasterDataSeeder extends Seeder
             if ($lead->status !== 'converted') continue;
             $deal = CrmDeal::create([
                 'company_id' => $lead->company_id,'lead_id' => $lead->id,
-                'deal_number' => 'DEAL-' . $now->format('Ymd') . '-' . strtoupper(Str::random(4)),
+                'deal_number' => 'DEAL-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                 'title' => 'Deal - ' . $lead->company,
                 'value' => $dealValues[$i],'stage' => $i < 1 ? 'closed_won' : 'negotiation',
                 'status' => $i < 1 ? 'won' : 'open',
-                'expected_close_date' => $now->addDays(rand(15, 60)),
+                'expected_close_date' => now()->addDays(rand(15, 60)),
                 'assigned_to' => $users[array_rand($users)]->id,
             ]);
             $deals[] = $deal;
@@ -259,9 +259,9 @@ class MasterDataSeeder extends Seeder
             if ($i < 2) {
                 CrmContract::create([
                     'company_id' => $deal->company_id,'deal_id' => $deal->id,
-                    'contract_number' => 'CTR-' . $now->format('Ymd') . '-' . strtoupper(Str::random(4)),
+                    'contract_number' => 'CTR-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                     'title' => 'Contract - ' . $lead->company,'client_name' => $lead->company,
-                    'value' => $dealValues[$i],'start_date' => $now,'end_date' => $now->addYear(),
+                    'value' => $dealValues[$i],'start_date' => now(),'end_date' => now()->addYear(),
                     'status' => 'active','terms' => 'Standard terms apply.',
                 ]);
             }
@@ -282,10 +282,10 @@ class MasterDataSeeder extends Seeder
         foreach ($projData as $i => $pd) {
             $proj = Project::create([
                 'company_id' => $companies->random()->id,
-                'project_number' => 'PRJ-' . $now->format('Ymd') . '-' . strtoupper(Str::random(4)),
+                'project_number' => 'PRJ-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                 'title' => $pd['t'], 'budget' => $pd['b'],
                 'description' => 'Project: ' . $pd['t'],
-                'start_date' => $now->subDays(rand(15, 90)), 'due_date' => $now->addDays(rand(30, 180)),
+                'start_date' => now()->subDays(rand(15, 90)), 'due_date' => now()->addDays(rand(30, 180)),
                 'status' => $pd['s'], 'priority' => ['high','medium','low'][rand(0,2)],
                 'manager_id' => $users[array_rand($users)]->id,
                 'deal_id' => isset($deals[$i]) ? $deals[$i]->id : null,
@@ -296,7 +296,7 @@ class MasterDataSeeder extends Seeder
                 ProjectTask::create([
                     'project_id' => $proj->id, 'title' => $taskNames[$tk],
                     'assigned_to' => $users[array_rand($users)]->id,
-                    'due_date' => $now->addDays(rand(5, 90)),
+                    'due_date' => now()->addDays(rand(5, 90)),
                     'priority' => ['high','medium','low'][rand(0,2)],
                     'status' => ['pending','in_progress','completed'][rand(0,2)],
                 ]);
@@ -305,7 +305,7 @@ class MasterDataSeeder extends Seeder
                 Timesheet::create([
                     'employee_id' => $employees[array_rand($employees)]->id,
                     'project_id' => $proj->id,
-                    'date' => $now->copy()->subDays($d)->format('Y-m-d'),
+                    'date' => now()->copy()->subDays($d)->format('Y-m-d'),
                     'hours' => rand(4, 10), 'description' => 'Work on ' . $pd['t'],
                 ]);
             }
