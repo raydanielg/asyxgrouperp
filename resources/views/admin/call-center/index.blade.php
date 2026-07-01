@@ -27,7 +27,7 @@
             <tbody>
             @forelse($recentCalls as $call)
             <tr class="border-t border-gray-100">
-                <td class="px-4 py-2 text-xs"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $call->call_direction === 'inbound' ? 'bg-sky-50 text-sky-700' : 'bg-emerald-50 text-emerald-700') }}">{{ $call->call_direction }}</span></td>
+                <td class="px-4 py-2 text-xs"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $call->call_direction === 'inbound' ? 'bg-sky-50 text-sky-700' : 'bg-emerald-50 text-emerald-700' }}">{{ $call->call_direction }}</span></td>
                 <td class="px-4 py-2 text-xs text-gray-600">{{ $call->caller_phone }}</td>
                 <td class="px-4 py-2 text-xs text-gray-600">{{ $call->duration_formatted }}</td>
                 <td class="px-4 py-2 text-xs"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $call->status === 'completed' ? 'bg-emerald-50 text-emerald-700' : ($call->status === 'missed' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700') }}">{{ $call->status }}</span></td>
