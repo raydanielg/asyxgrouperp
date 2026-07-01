@@ -385,10 +385,10 @@ class MasterDataSeeder extends Seeder
             ]);
             Bill::create([
                 'company_id' => $companies->random()->id,
-                'bill_number' => 'BILL-' . $now->format('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                'bill_number' => 'BILL-' . now()->format('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'vendor_name' => 'Vendor ' . $i, 'amount' => rand(200000, 3000000),
-                'paid_amount' => rand(0, 3000000), 'bill_date' => $now->subDays(rand(1, 30)),
-                'due_date' => $now->addDays(rand(1, 30)),
+                'paid_amount' => rand(0, 3000000), 'bill_date' => now()->subDays(rand(1, 30)),
+                'due_date' => now()->addDays(rand(1, 30)),
                 'status' => ['unpaid','partial','paid'][rand(0,2)],
             ]);
         }
