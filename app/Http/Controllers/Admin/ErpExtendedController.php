@@ -1391,11 +1391,16 @@ class ErpExtendedController extends Controller
             return redirect()->route('admin.sales-invoices.show', $existing)->with('info', 'Invoice for this project already exists.');
         }
 
+        $customerId = $project->customer_id ?? ($project->deal?->customer_id ?? null);
+        if (!$customerId) {
+            return redirect()->back()->with('error', 'This project has no linked customer. Please assign a customer to the project or its deal before generating an invoice.');
+        }
+
         $invoice = SalesInvoice::create([
             'invoice_number' => 'INV-P-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
             'invoice_date' => now(),
             'due_date' => now()->copy()->addDays(14),
-            'customer_id' => $project->customer_id ?? ($project->deal->customer_id ?? null),
+            'customer_id' => $customerId,
             'subtotal' => $project->budget,
             'tax_amount' => round($project->budget * 0.18, 2),
             'discount_amount' => 0,
