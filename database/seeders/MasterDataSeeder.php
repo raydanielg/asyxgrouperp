@@ -371,15 +371,15 @@ class MasterDataSeeder extends Seeder
         for ($i = 1; $i <= 12; $i++) {
             Expense::create([
                 'company_id' => $companies->random()->id,
-                'expense_number' => 'EXP-' . $now->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
-                'amount' => rand(50000, 5000000), 'expense_date' => $now->subDays(rand(0, 60)),
+                'expense_number' => 'EXP-' . now()->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                'amount' => rand(50000, 5000000), 'expense_date' => now()->subDays(rand(0, 60)),
                 'category' => ['Operations','Travel','Utilities','Maintenance'][rand(0,3)],
                 'payee' => 'Payee ' . $i, 'payment_method' => 'bank', 'created_by' => $admin->id,
             ]);
             Revenue::create([
                 'company_id' => $companies->random()->id,
-                'revenue_number' => 'REV-' . $now->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
-                'amount' => rand(500000, 10000000), 'revenue_date' => $now->subDays(rand(0, 60)),
+                'revenue_number' => 'REV-' . now()->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                'amount' => rand(500000, 10000000), 'revenue_date' => now()->subDays(rand(0, 60)),
                 'category' => ['Services','Products','Consulting'][rand(0,2)], 'payer' => 'Client ' . $i,
                 'notes' => 'Revenue ' . $i, 'created_by' => $admin->id,
             ]);
