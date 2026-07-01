@@ -464,7 +464,7 @@ class MasterDataSeeder extends Seeder
             $titles = ['Internet issue','Printer problem','Email setup','Software install','Access request','VPN issue','Server alert','Password reset','System error','Network slow'];
             HelpdeskTicket::create([
                 'company_id' => $companies->random()->id,
-                'ticket_id' => 'TKT-' . $now->format('Ymd') . '-' . str_pad($i,4,'0',STR_PAD_LEFT),
+                'ticket_id' => 'TKT-' . now()->format('Ymd') . '-' . str_pad($i,4,'0',STR_PAD_LEFT),
                 'title' => $titles[($i - 1) % count($titles)],
                 'description' => 'Issue description', 'category_id' => $tCats->random()->id,
                 'priority' => ['low','medium','high','urgent'][rand(0,3)],
@@ -526,7 +526,7 @@ class MasterDataSeeder extends Seeder
         foreach (['Contract','Invoice','Report','Proposal','Policy'] as $i => $dt) {
             Document::create([
                 'company_id' => $companies->random()->id,
-                'document_number' => 'DOC-' . $now->format('Ymd') . '-' . str_pad($i+1, 3, '0', STR_PAD_LEFT),
+                'document_number' => 'DOC-' . now()->format('Ymd') . '-' . str_pad($i+1, 3, '0', STR_PAD_LEFT),
                 'title' => $dt . ' ' . ($i+1), 'category' => strtolower($dt),
                 'status' => 'active', 'file_path' => '/documents/sample-' . ($i+1) . '.pdf',
                 'file_type' => 'application/pdf', 'file_size' => rand(100000, 5000000),
