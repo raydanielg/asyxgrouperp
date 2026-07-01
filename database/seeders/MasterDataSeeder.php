@@ -410,17 +410,17 @@ class MasterDataSeeder extends Seeder
         foreach ($employees as $i => $emp) {
             if ($i % 3 == 0) Leave::create([
                 'employee_id' => $emp->id, 'leave_type' => ['annual','sick','personal'][rand(0,2)],
-                'start_date' => $now->subDays(rand(1, 30)),
-                'end_date' => $now->subDays(rand(1, 30))->addDays(rand(1, 5)),
+                'start_date' => now()->subDays(rand(1, 30)),
+                'end_date' => now()->subDays(rand(1, 30))->addDays(rand(1, 5)),
                 'days' => rand(1, 5), 'status' => ['pending','approved','rejected'][rand(0,2)],
             ]);
             if ($i % 2 == 0) {
-                $pnum = 'PAY-' . $now->format('Ym') . '-' . str_pad($i+1,4,'0',STR_PAD_LEFT);
+                $pnum = 'PAY-' . now()->format('Ym') . '-' . str_pad($i+1,4,'0',STR_PAD_LEFT);
                 Payroll::updateOrCreate(
                     ['payroll_number' => $pnum],
                     [
                         'employee_id' => $emp->id,
-                        'month' => $now->format('F'), 'year' => $now->year,
+                        'month' => now()->format('F'), 'year' => now()->year,
                         'basic_salary' => $emp->salary, 'allowances' => rand(100000, 500000),
                         'deductions' => rand(50000, 300000),
                         'net_salary' => $emp->salary + rand(100000, 500000) - rand(50000, 300000),
@@ -429,7 +429,7 @@ class MasterDataSeeder extends Seeder
                 );
             }
             PerformanceReview::create([
-                'employee_id' => $emp->id, 'review_period' => 'Q' . rand(1,4) . ' ' . $now->year,
+                'employee_id' => $emp->id, 'review_period' => 'Q' . rand(1,4) . ' ' . now()->year,
                 'goals' => 'Achieve targets', 'achievements' => 'Exceeded expectations',
                 'rating' => rand(3, 5), 'reviewer_id' => $users[array_rand($users)]->id,
             ]);
