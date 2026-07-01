@@ -436,7 +436,7 @@ class MasterDataSeeder extends Seeder
         }
 
         foreach (['PMP Certification','Cisco CCNA','ITIL Foundation'] as $tn) {
-            Training::create(['title' => $tn, 'trainer' => 'External','start_date' => $now->subMonths(rand(1,3)), 'status' => 'completed']);
+            Training::create(['title' => $tn, 'trainer' => 'External','start_date' => now()->subMonths(rand(1,3)), 'status' => 'completed']);
         }
 
         foreach (['Senior Network Engineer','Project Manager','Sales Executive'] as $i => $jt) {
@@ -446,11 +446,11 @@ class MasterDataSeeder extends Seeder
                 'description' => 'Looking for an experienced professional',
                 'requirements' => "3+ years experience\nDegree required",
                 'location' => 'Dar es Salaam', 'job_type' => 'full_time',
-                'vacancies' => 2, 'deadline' => $now->addDays(30), 'status' => 'open',
+                'vacancies' => 2, 'deadline' => now()->addDays(30), 'status' => 'open',
             ]);
         }
 
-        HrEvent::create(['title'=>'Staff Meeting','description'=>'Annual meeting','event_date'=>$now->addDays(30),'location'=>'Dar es Salaam','type'=>'company']);
+        HrEvent::create(['title'=>'Staff Meeting','description'=>'Annual meeting','event_date'=>now()->addDays(30),'location'=>'Dar es Salaam','type'=>'company']);
         Policy::create(['title'=>'Code of Conduct','category'=>'HR','content'=>'All employees must adhere...','is_active'=>true]);
 
         // ═══════════════════════════════════════
