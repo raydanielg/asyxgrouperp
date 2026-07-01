@@ -50,7 +50,7 @@
             <tr class="border-t border-gray-100">
                 <td class="px-4 py-2 text-xs text-gray-700">{{ $camp->name }}</td>
                 <td class="px-4 py-2 text-xs text-gray-600">{{ $camp->call_logs_count }}</td>
-                <td class="px-4 py-2"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $camp->status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-500') }}">{{ $camp->status }}</span></td>
+                <td class="px-4 py-2"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $camp->status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-500' }}">{{ $camp->status }}</span></td>
             </tr>
             @empty
             <tr><td colspan="3" class="px-4 py-6 text-center text-gray-400 text-xs">No campaigns</td></tr>
