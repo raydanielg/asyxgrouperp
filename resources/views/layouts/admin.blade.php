@@ -219,7 +219,7 @@
                     'admin.office-expenses*' => 'view-expenses',
                     'admin.client-receipts*' => 'view-revenues',
                     'admin.meetings*' => 'view-dashboard',
-                    'settlements*' => 'view-projects',
+                    'admin.settlements*' => 'view-projects',
                     'admin.users*' => 'view-users',
                     'admin.roles*' => 'view-roles',
                     'admin.users.login-history*' => 'view-login-history',
