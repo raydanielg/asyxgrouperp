@@ -1763,7 +1763,7 @@ class ErpExtendedController extends Controller
 
     public function projectPdf(Project $project)
     {
-        $project->load(['tasks', 'bugs', 'timesheets', 'manager', 'deal']);
+        $project->load(['tasks', 'bugs', 'timesheets.employee', 'manager', 'deal', 'employees', 'bonuses', 'invoices']);
         $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
 
         $pdf = Pdf::loadView('pdf.project', compact('project', 'company'));
