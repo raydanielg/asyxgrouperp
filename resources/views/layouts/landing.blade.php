@@ -47,6 +47,13 @@
         .cta-gradient { background: linear-gradient(135deg, #C81E3A 0%, #5B2A6E 100%); }
         .text-gradient { background: linear-gradient(135deg, #C81E3A, #5B2A6E); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); }
+        .glass-light { background: rgba(255,255,255,0.12); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); }
+        .hero-bg-image { transition: opacity 1.2s ease-in-out; }
+        .hero-dot { transition: all 0.3s ease; cursor: pointer; }
+        .hero-dot-active { width: 24px !important; border-radius: 9999px; }
+        .header-scrolled { background: rgba(27,58,92,0.95); backdrop-filter: blur(20px); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3); }
+        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+        .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
         .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15); }
         .nav-link { position: relative; }
@@ -61,7 +68,7 @@
         .btn-secondary:hover { background: #1B3A5C; color: #fff; }
         .logo-greyscale { filter: grayscale(100%); opacity:0.6; transition: all 0.3s ease; }
         .logo-greyscale:hover { filter: grayscale(0%); opacity:1; }
-        .rotator-wrap { min-height: 1.2em; overflow: hidden; vertical-align: bottom; }
+        .rotator-wrap { min-height: 1.2em; overflow: hidden; vertical-align: bottom; display: inline-block; }
         .rotator-text {
             display: inline-block;
             animation: rotatorIn 0.6s cubic-bezier(0.4,0,0.2,1) both;
