@@ -26,75 +26,88 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
 
             {{-- Smart Technologies --}}
-            <div class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm reveal stagger-1 group">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-1 group" data-card="0">
                 <div class="aspect-[16/10] overflow-hidden relative">
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    {{-- Gradient overlay --}}
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent"></div>
-                    {{-- Icon badge with gradient --}}
+                    <div class="slide-track" data-track="0">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent pointer-events-none"></div>
                     <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #A8703A, #8f5e2e);">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
-                    {{-- Bottom label on image --}}
-                    <div class="absolute bottom-3 left-3 right-3">
+                    <div class="absolute bottom-3 left-3 right-3 pointer-events-none">
                         <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">IoT &amp; Automation</span>
                     </div>
                 </div>
-                <div class="p-5 sm:p-6">
+                <div class="p-5 sm:p-6 bg-white">
                     <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-bronze transition-colors">Smart Technologies</h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">IoT &amp; Smart Systems for intelligent automation and connected infrastructure.</p>
                 </div>
             </div>
 
             {{-- Cyber Security --}}
-            <div class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm reveal stagger-2 group">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-2 group" data-card="1">
                 <div class="aspect-[16/10] overflow-hidden relative">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-crimson/70 via-crimson/10 to-transparent"></div>
+                    <div class="slide-track" data-track="1">
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1614064641938-3b2ec4d0f4ad?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-crimson/70 via-crimson/10 to-transparent pointer-events-none"></div>
                     <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #C81E3A, #a81830);">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.062-.18-2.087-.514-3.056z"/></svg>
                     </div>
-                    <div class="absolute bottom-3 left-3 right-3">
+                    <div class="absolute bottom-3 left-3 right-3 pointer-events-none">
                         <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Enterprise Protection</span>
                     </div>
                 </div>
-                <div class="p-5 sm:p-6">
+                <div class="p-5 sm:p-6 bg-white">
                     <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-crimson transition-colors">Cyber Security</h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">Enterprise-grade protection for critical systems and government infrastructure.</p>
                 </div>
             </div>
 
             {{-- ICT Infrastructure --}}
-            <div class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm reveal stagger-3 group">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-3 group" data-card="2">
                 <div class="aspect-[16/10] overflow-hidden relative">
-                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-purple/70 via-purple/10 to-transparent"></div>
+                    <div class="slide-track" data-track="2">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1573164713988-8665fc963cef?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple/70 via-purple/10 to-transparent pointer-events-none"></div>
                     <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #5B2A6E, #4a2258);">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 6h14M5 12h14M5 18h14M7 6v12M11 6v12M15 6v12"/></svg>
                     </div>
-                    <div class="absolute bottom-3 left-3 right-3">
+                    <div class="absolute bottom-3 left-3 right-3 pointer-events-none">
                         <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Network &amp; Systems</span>
                     </div>
                 </div>
-                <div class="p-5 sm:p-6">
+                <div class="p-5 sm:p-6 bg-white">
                     <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-purple transition-colors">ICT Infrastructure</h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">Network &amp; systems deployment, server management and data center solutions.</p>
                 </div>
             </div>
 
             {{-- Software Solutions --}}
-            <div class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm reveal stagger-4 group">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-4 group" data-card="3">
                 <div class="aspect-[16/10] overflow-hidden relative">
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent"></div>
+                    <div class="slide-track" data-track="3">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1607799276869-737f2a56ca63?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent pointer-events-none"></div>
                     <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #1B3A5C, #163049);">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
                     </div>
-                    <div class="absolute bottom-3 left-3 right-3">
+                    <div class="absolute bottom-3 left-3 right-3 pointer-events-none">
                         <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Custom Development</span>
                     </div>
                 </div>
-                <div class="p-5 sm:p-6">
+                <div class="p-5 sm:p-6 bg-white">
                     <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-navy transition-colors">Software Solutions</h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">Custom software development for enterprise and government-grade applications.</p>
                 </div>
@@ -110,3 +123,33 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+<script>
+(function() {
+    var tracks = document.querySelectorAll('.slide-track');
+    var intervals = [];
+
+    tracks.forEach(function(track, i) {
+        var slides = track.children.length;
+        var current = 0;
+
+        function slide() {
+            current = (current + 1) % slides;
+            track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        }
+
+        intervals[i] = setInterval(slide, 3500 + i * 500);
+
+        {{-- Pause on hover --}}
+        var card = track.closest('.service-card');
+        card.addEventListener('mouseenter', function() {
+            clearInterval(intervals[i]);
+        });
+        card.addEventListener('mouseleave', function() {
+            intervals[i] = setInterval(slide, 3500 + i * 500);
+        });
+    });
+})();
+</script>
+@endpush
