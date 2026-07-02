@@ -51,48 +51,37 @@
                 {{-- Cards --}}
                 <div class="grid md:grid-cols-2 gap-6">
                     {{-- Mission Card --}}
-                    <div class="drag-card group relative rounded-2xl overflow-hidden h-72" id="mission-card">
-                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b42?w=800&q=80" alt="Our Mission" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-bronze via-bronze/70 to-bronze/20"></div>
-                        <div class="absolute inset-0 flex flex-col justify-end p-6 sm:p-8">
-                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <div class="card-hover bg-white rounded-2xl overflow-hidden shadow-lg reveal stagger-1 group">
+                        <div class="aspect-[16/9] overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b42?w=800&q=80" alt="Our Mission" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-navy/30 to-transparent"></div>
+                        </div>
+                        <div class="p-6 sm:p-8">
+                            <div class="w-12 h-12 rounded-xl bg-bronze/10 flex items-center justify-center mb-4">
+                                <svg class="w-7 h-7 text-bronze" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                             </div>
-                            <h4 class="font-heading text-xl sm:text-2xl font-bold text-white mb-2">Our Mission</h4>
-                            <p class="text-sm sm:text-base text-white/90 leading-relaxed">To introduce creative, innovative, and simplified technological solutions that are tailored to Africa's environmental and infrastructural challenges.</p>
+                            <h4 class="font-heading text-xl sm:text-2xl font-bold text-navy mb-3">Our Mission</h4>
+                            <p class="text-sm sm:text-base text-gray-600 leading-relaxed">To introduce creative, innovative, and simplified technological solutions that are tailored to Africa's environmental and infrastructural challenges.</p>
                         </div>
                     </div>
 
                     {{-- Vision Card --}}
-                    <div class="drag-card drag-card-2 group relative rounded-2xl overflow-hidden h-72" id="vision-card">
-                        <img src="https://images.unsplash.com/photo-1532012194066-903394ce0a91?w=800&q=80" alt="Our Vision" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-purple via-purple/70 to-purple/20"></div>
-                        <div class="absolute inset-0 flex flex-col justify-end p-6 sm:p-8">
-                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <div class="card-hover bg-white rounded-2xl overflow-hidden shadow-lg reveal stagger-2 group">
+                        <div class="aspect-[16/9] overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1532012194066-903394ce0a91?w=800&q=80" alt="Our Vision" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-purple/30 to-transparent"></div>
+                        </div>
+                        <div class="p-6 sm:p-8">
+                            <div class="w-12 h-12 rounded-xl bg-purple/10 flex items-center justify-center mb-4">
+                                <svg class="w-7 h-7 text-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </div>
-                            <h4 class="font-heading text-xl sm:text-2xl font-bold text-white mb-2">Our Vision</h4>
-                            <p class="text-sm sm:text-base text-white/90 leading-relaxed">To become the leading company in empowering African countries to realize the full potential of technology in driving sustainable economic growth.</p>
+                            <h4 class="font-heading text-xl sm:text-2xl font-bold text-navy mb-3">Our Vision</h4>
+                            <p class="text-sm sm:text-base text-gray-600 leading-relaxed">To become the leading company in empowering African countries to realize the full potential of technology in driving sustainable economic growth.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script>
-        (function() {
-            var missionCard = document.getElementById('mission-card');
-            var visionCard = document.getElementById('vision-card');
-            var observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('dragged-in');
-                    }
-                });
-            }, { threshold: 0.3 });
-            if (missionCard) observer.observe(missionCard);
-            if (visionCard) observer.observe(visionCard);
-        })();
-        </script>
 
         {{-- Core Values --}}
         <div class="text-center mb-12 reveal">
