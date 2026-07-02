@@ -26,78 +26,70 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
 
             {{-- Smart Technologies --}}
-            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-1 group" data-card="0">
-                <div class="aspect-[16/10] overflow-hidden relative">
-                    <div class="slide-track" data-track="0">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-1 group overflow-hidden h-80" data-card="0">
+                <div class="absolute inset-0">
+                    <div class="slide-track h-full" data-track="0">
                         <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover">
                     </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent pointer-events-none"></div>
-<div class="absolute bottom-3 left-3 right-3 pointer-events-none">
-                        <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">IoT &amp; Automation</span>
-                    </div>
                 </div>
-                <div class="p-5 sm:p-6 bg-white">
-                    <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-bronze transition-colors">Smart Technologies</h3>
-                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">IoT &amp; Smart Systems for intelligent automation and connected infrastructure.</p>
+                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 pointer-events-none">
+                    <span class="text-bronze text-xs font-bold uppercase tracking-wider mb-1">IoT &amp; Automation</span>
+                    <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1 group-hover:text-bronze transition-colors">Smart Technologies</h3>
+                    <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">IoT &amp; Smart Systems for intelligent automation and connected infrastructure.</p>
                 </div>
             </div>
 
             {{-- Cyber Security --}}
-            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-2 group" data-card="1">
-                <div class="aspect-[16/10] overflow-hidden relative">
-                    <div class="slide-track" data-track="1">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-2 group overflow-hidden h-80" data-card="1">
+                <div class="absolute inset-0">
+                    <div class="slide-track h-full" data-track="1">
                         <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1614064641938-3b2ec4d0f4ad?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover">
                     </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-crimson/70 via-crimson/10 to-transparent pointer-events-none"></div>
-<div class="absolute bottom-3 left-3 right-3 pointer-events-none">
-                        <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Enterprise Protection</span>
-                    </div>
                 </div>
-                <div class="p-5 sm:p-6 bg-white">
-                    <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-crimson transition-colors">Cyber Security</h3>
-                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">Enterprise-grade protection for critical systems and government infrastructure.</p>
+                <div class="absolute inset-0 bg-gradient-to-t from-crimson via-crimson/60 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 pointer-events-none">
+                    <span class="text-white/80 text-xs font-bold uppercase tracking-wider mb-1">Enterprise Protection</span>
+                    <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1 group-hover:text-white transition-colors">Cyber Security</h3>
+                    <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">Enterprise-grade protection for critical systems and government infrastructure.</p>
                 </div>
             </div>
 
             {{-- ICT Infrastructure --}}
-            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-3 group" data-card="2">
-                <div class="aspect-[16/10] overflow-hidden relative">
-                    <div class="slide-track" data-track="2">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-3 group overflow-hidden h-80" data-card="2">
+                <div class="absolute inset-0">
+                    <div class="slide-track h-full" data-track="2">
                         <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1573164713988-8665fc963cef?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover">
                     </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-purple/70 via-purple/10 to-transparent pointer-events-none"></div>
-<div class="absolute bottom-3 left-3 right-3 pointer-events-none">
-                        <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Network &amp; Systems</span>
-                    </div>
                 </div>
-                <div class="p-5 sm:p-6 bg-white">
-                    <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-purple transition-colors">ICT Infrastructure</h3>
-                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">Network &amp; systems deployment, server management and data center solutions.</p>
+                <div class="absolute inset-0 bg-gradient-to-t from-purple via-purple/60 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 pointer-events-none">
+                    <span class="text-white/80 text-xs font-bold uppercase tracking-wider mb-1">Network &amp; Systems</span>
+                    <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1 group-hover:text-white transition-colors">ICT Infrastructure</h3>
+                    <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">Network &amp; systems deployment, server management and data center solutions.</p>
                 </div>
             </div>
 
             {{-- Software Solutions --}}
-            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-4 group" data-card="3">
-                <div class="aspect-[16/10] overflow-hidden relative">
-                    <div class="slide-track" data-track="3">
+            <div class="service-card card-hover rounded-2xl shadow-sm reveal stagger-4 group overflow-hidden h-80" data-card="3">
+                <div class="absolute inset-0">
+                    <div class="slide-track h-full" data-track="3">
                         <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover">
                         <img src="https://images.unsplash.com/photo-1607799276869-737f2a56ca63?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover">
                     </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent pointer-events-none"></div>
-<div class="absolute bottom-3 left-3 right-3 pointer-events-none">
-                        <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Custom Development</span>
-                    </div>
                 </div>
-                <div class="p-5 sm:p-6 bg-white">
-                    <h3 class="font-heading text-base sm:text-lg font-bold text-navy mb-2 group-hover:text-navy transition-colors">Software Solutions</h3>
-                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">Custom software development for enterprise and government-grade applications.</p>
+                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 pointer-events-none">
+                    <span class="text-bronze text-xs font-bold uppercase tracking-wider mb-1">Custom Development</span>
+                    <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1 group-hover:text-bronze transition-colors">Software Solutions</h3>
+                    <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">Custom software development for enterprise and government-grade applications.</p>
                 </div>
             </div>
         </div>
