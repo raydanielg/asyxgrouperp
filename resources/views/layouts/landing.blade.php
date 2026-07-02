@@ -54,8 +54,41 @@
         .header-scrolled { background: rgba(27,58,92,0.95); backdrop-filter: blur(20px); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3); }
         .scroll-reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1); }
         .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
-        .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15); }
+        {{-- Animated rotating border on hover --}}
+        .service-card { position: relative; overflow: hidden; }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 1rem;
+            background: conic-gradient(from 0deg, transparent 0deg, #A8703A 60deg, #C81E3A 120deg, #5B2A6E 180deg, #1B3A5C 240deg, transparent 300deg, transparent 360deg);
+            opacity: 0;
+            z-index: 0;
+            animation: border-spin 3s linear infinite;
+            transition: opacity 0.4s ease;
+        }
+        .service-card:hover::before { opacity: 1; }
+        .service-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 0.875rem;
+            background: white;
+            z-index: 0;
+        }
+        .service-card > * { position: relative; z-index: 1; }
+        @keyframes border-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        {{-- Auto-sliding images --}}
+        .slide-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+        .slide-track > * { flex-shrink: 0; width: 100%; }
         .nav-link { position: relative; }
         .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:#A8703A; transition: width 0.3s ease; }
         .nav-link:hover::after { width:100%; }
