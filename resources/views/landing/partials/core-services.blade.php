@@ -1,6 +1,9 @@
 <section id="core-services" class="py-20 lg:py-28 bg-white relative overflow-hidden">
 
-    {{-- Decorative background --}}
+    {{-- WhatsApp-style icon pattern background --}}
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231B3A5C' stroke-width='1.5'%3E%3Cpath d='M60 20L40 50h40L60 20zM60 50v40M30 90h60M20 70l20 20M100 70l-20 20'/%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3Ccircle cx='90' cy='30' r='5'/%3E%3Crect x='50' y='80' width='20' height='20' rx='3'/%3E%3Cpath d='M15 55l10 5 10-5M85 55l10 5 10-5'/%3E%3C/g%3E%3C/svg%3E&quot;); background-size: 120px 120px;"></div>
+
+    {{-- Decorative glows --}}
     <div class="absolute top-0 right-0 w-96 h-96 bg-bronze/5 rounded-full blur-3xl"></div>
     <div class="absolute bottom-0 left-0 w-96 h-96 bg-navy/5 rounded-full blur-3xl"></div>
 
@@ -27,10 +30,10 @@
                 <div class="aspect-[16/10] overflow-hidden relative">
                     <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80" alt="Smart Technologies" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                     {{-- Gradient overlay --}}
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent"></div>
-                    {{-- Icon badge --}}
-                    <div class="absolute top-3 right-3 w-11 h-11 rounded-xl bg-bronze flex items-center justify-center shadow-lg shadow-bronze/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent"></div>
+                    {{-- Icon badge with gradient --}}
+                    <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #A8703A, #8f5e2e);">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 19l2-2m12 2l-2-2M9 21l1-2m5 2l-1-2" opacity="0.5"/></svg>
                     </div>
                     {{-- Bottom label on image --}}
                     <div class="absolute bottom-3 left-3 right-3">
@@ -47,9 +50,9 @@
             <div class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm reveal stagger-2 group">
                 <div class="aspect-[16/10] overflow-hidden relative">
                     <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80" alt="Cyber Security" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-crimson/60 via-transparent to-transparent"></div>
-                    <div class="absolute top-3 right-3 w-11 h-11 rounded-xl bg-crimson flex items-center justify-center shadow-lg shadow-crimson/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.062-.18-2.087-.514-3.056z"/></svg>
+                    <div class="absolute inset-0 bg-gradient-to-t from-crimson/70 via-crimson/10 to-transparent"></div>
+                    <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #C81E3A, #a81830);">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.062-.18-2.087-.514-3.056z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l2 2" opacity="0.5"/></svg>
                     </div>
                     <div class="absolute bottom-3 left-3 right-3">
                         <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Enterprise Protection</span>
@@ -65,9 +68,9 @@
             <div class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm reveal stagger-3 group">
                 <div class="aspect-[16/10] overflow-hidden relative">
                     <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80" alt="ICT Infrastructure" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-purple/60 via-transparent to-transparent"></div>
-                    <div class="absolute top-3 right-3 w-11 h-11 rounded-xl bg-purple flex items-center justify-center shadow-lg shadow-purple/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple/70 via-purple/10 to-transparent"></div>
+                    <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #5B2A6E, #4a2258);">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 6h14M5 12h14M5 18h14M7 6v12M11 6v12M15 6v12M19 6v12"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 4l2 2M21 4l-2 2M3 20l2-2M21 20l-2-2" opacity="0.5"/></svg>
                     </div>
                     <div class="absolute bottom-3 left-3 right-3">
                         <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Network &amp; Systems</span>
@@ -83,9 +86,9 @@
             <div class="card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm reveal stagger-4 group">
                 <div class="aspect-[16/10] overflow-hidden relative">
                     <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80" alt="Software Solutions" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent"></div>
-                    <div class="absolute top-3 right-3 w-11 h-11 rounded-xl bg-navy flex items-center justify-center shadow-lg shadow-navy/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                    <div class="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent"></div>
+                    <div class="absolute top-3 right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" style="background: linear-gradient(135deg, #1B3A5C, #163049);">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 6l1 1M16 18l1 1M8 18l1-1M16 6l1 1" opacity="0.5"/></svg>
                     </div>
                     <div class="absolute bottom-3 left-3 right-3">
                         <span class="text-white text-xs font-bold uppercase tracking-wider drop-shadow-lg">Custom Development</span>
