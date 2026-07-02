@@ -88,27 +88,6 @@
             transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
         }
         .slide-track > * { flex-shrink: 0; width: 100%; }
-        {{-- Animated dotted background --}}
-        .animated-dots-bg {
-            background-image: radial-gradient(rgba(168,112,58,0.15) 2px, transparent 2px);
-            background-size: 30px 30px;
-            animation: dots-move 20s linear infinite;
-        }
-        @keyframes dots-move {
-            from { background-position: 0 0; }
-            to { background-position: 300px 300px; }
-        }
-        {{-- Drag-down card animation --}}
-        .drag-card {
-            opacity: 0;
-            transform: translateY(-60px) scale(0.9);
-            transition: opacity 0.7s cubic-bezier(0.34,1.56,0.64,1), transform 0.7s cubic-bezier(0.34,1.56,0.64,1);
-        }
-        .drag-card.dragged-in {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .drag-card-2 { transition-delay: 0.2s; }
         .nav-link { position: relative; }
         .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:#A8703A; transition: width 0.3s ease; }
         .nav-link:hover::after { width:100%; }
