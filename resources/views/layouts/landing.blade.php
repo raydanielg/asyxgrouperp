@@ -75,7 +75,6 @@
             position: absolute;
             inset: 2px;
             border-radius: 0.875rem;
-            background: white;
             z-index: 0;
         }
         .service-card > * { position: relative; z-index: 1; }
