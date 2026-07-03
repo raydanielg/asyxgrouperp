@@ -22,10 +22,23 @@
             <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700">{{ ucfirst(str_replace('_', ' ', $d->stage)) }}</span></td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $d->expected_close_date?->format('d M Y') ?? '—' }}</td>
             <td class="px-5 py-3">@php $c=['open'=>'emerald','won'=>'emerald','lost'=>'red','cancelled'=>'gray']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$d->status] ?? 'gray' }}-50 text-{{ $c[$d->status] ?? 'gray' }}-700">{{ ucfirst($d->status) }}</span></td>
-            <td class="px-5 py-3 flex items-center gap-2">
-        @if($d->status==='open' && !$d->project_id)
-        <form method="POST" action="{{ route('admin.crm-deals.convert-to-project', $d) }}">@csrf<button type="submit" class="text-emerald-600 hover:text-emerald-700 text-xs" onclick="return confirm('Convert this deal to a Project?')">→ Project</button></form>
-        @endif<button onclick="downloadPdf('{{ route('admin.crm-deals.pdf', $d) }}', '{{ $d->deal_number }}')" class="text-emerald-600 hover:text-emerald-700 text-xs">PDF</button><form id="del-deal-{{ $d->id }}" method="POST" action="{{ route('admin.crm-deals.destroy', $d) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-deal-{{ $d->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
+            <td class="px-5 py-3">
+                <div class="flex items-center gap-2">
+                    @if($d->status==='open' && !$d->project_id)
+                    <button onclick="convertDealToProject({{ $d->id }}, '{{ $d->deal_number }}', '{{ $d->title }}')" class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-all" title="Convert to Project">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </button>
+                    <form id="convert-deal-{{ $d->id }}" method="POST" action="{{ route('admin.crm-deals.convert-to-project', $d) }}" class="hidden">@csrf</form>
+                    @endif
+                    <button onclick="downloadPdf('{{ route('admin.crm-deals.pdf', $d) }}', '{{ $d->deal_number }}')" class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 flex items-center justify-center transition-all" title="Download PDF">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </button>
+                    <form id="del-deal-{{ $d->id }}" method="POST" action="{{ route('admin.crm-deals.destroy', $d) }}" class="hidden">@csrf @method('DELETE')</form>
+                    <button onclick="confirmDelete('del-deal-{{ $d->id }}', 'Delete Deal?', 'Deal {{ $d->deal_number }} will be permanently removed.')" class="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center transition-all" title="Delete">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
+            </td>
         
         </tr>
         @empty
