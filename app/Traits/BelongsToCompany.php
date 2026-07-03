@@ -4,14 +4,16 @@ namespace App\Traits;
 
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Schema;
 
 trait BelongsToCompany
 {
     public static function bootBelongsToCompany(): void
     {
         static $applyingScope = false;
+        static $hasColumnCache = [];
 
-        static::addGlobalScope('company', function (Builder $builder) use (&$applyingScope) {
+        static::addGlobalScope('company', function (Builder $builder) use (&$applyingScope, &$hasColumnCache) {
             if ($applyingScope) return;
 
             $table = $builder->getQuery()->from;
@@ -20,12 +22,15 @@ trait BelongsToCompany
             // auth()->check() → retrieveById → User query → applyScopes → auth()->check() ...
             if ($table === 'users') return;
 
-            // Skip if table doesn't have company_id column
-            try {
-                if (!\Schema::hasColumn($table, 'company_id')) return;
-            } catch (\Throwable $e) {
-                return;
+            // Skip if table doesn't have company_id column (cached)
+            if (!isset($hasColumnCache[$table])) {
+                try {
+                    $hasColumnCache[$table] = Schema::hasColumn($table, 'company_id');
+                } catch (\Throwable $e) {
+                    $hasColumnCache[$table] = false;
+                }
             }
+            if (!$hasColumnCache[$table]) return;
 
             if (!auth()->check()) return;
 
