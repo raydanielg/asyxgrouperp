@@ -82,10 +82,15 @@ function openContactModal() {
     document.getElementById('contactModalTitle').textContent = 'New Contact';
     document.getElementById('contactForm').reset();
     document.getElementById('contactId').value = '';
-    document.getElementById('contactModal').classList.remove('hidden');
+    document.getElementById('contactSidebarOverlay').classList.remove('hidden');
+    document.getElementById('contactSidebar').classList.remove('translate-x-full');
 }
 function closeContactModal() {
-    document.getElementById('contactModal').classList.add('hidden');
+    const sidebar = document.getElementById('contactSidebar');
+    sidebar.classList.add('translate-x-full');
+    setTimeout(() => {
+        document.getElementById('contactSidebarOverlay').classList.add('hidden');
+    }, 300);
 }
 
 function fullName(contact) {
