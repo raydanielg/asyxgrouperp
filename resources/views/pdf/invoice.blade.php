@@ -153,6 +153,20 @@
 </style>
 </head>
 <body>
+  <div class="page-header">
+    <img src="{{ public_path('asyxgrouplogo.png') }}" class="h-logo" alt="{{ config('app.name') }}">
+    <div class="h-text">{{ config('app.name') }} &middot; {{ $company?->address ?? 'Dar es Salaam, Tanzania' }}</div>
+  </div>
+
+  <div class="page-footer">
+    <span>{{ config('app.name') }}</span>
+    <span>Page 1 of 1</span>
+  </div>
+
+  <div class="watermark">
+    <img src="{{ public_path('asyxgrouplogo.png') }}" alt="">
+  </div>
+
   <div class="sheet">
     @php $s = $invoice->status @endphp
     <div class="stamp stamp-{{ $s }}">{{ strtoupper($s) }}</div>
@@ -246,14 +260,6 @@
         <div class="title">Thank You For Your Business</div>
         <div class="contact">For inquiries contact: {{ $company?->email ?? 'billing@asyxgroup.tz' }}</div>
       </div>
-
-      <div class="watermark">
-        <img src="{{ public_path('asyxgrouplogo.png') }}" alt="">
-      </div>
-    </div>
-
-    <div class="foot">
-      PDF Generated on {{ now()->format('l, F jS, Y') }} &middot; {{ config('app.name') }}
     </div>
   </div>
 </body>
