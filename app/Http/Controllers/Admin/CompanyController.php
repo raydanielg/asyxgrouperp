@@ -168,14 +168,27 @@ class CompanyController extends Controller
 
     public function switchCompany(Request $request)
     {
+        $user = auth()->user();
         $company = $request->get('company', 'all');
 
         if ($company === 'all') {
             session(['switched_company_id' => null]);
-        } else {
-            session(['switched_company_id' => (int) $company]);
+            return redirect()->back()->with('success', 'Group view enabled.');
         }
 
-        return redirect()->back()->with('success', 'Company context switched.');
+        $companyId = (int) $company;
+        $companyModel = Company::find($companyId);
+
+        if (!$companyModel || !$companyModel->is_active) {
+            return redirect()->back()->with('error', 'Company not found or inactive.');
+        }
+
+        // Regular users can only switch to their own company
+        if (!$user->isAdmin() && !$user->isSuperAdmin() && $user->company_id !== $companyId) {
+            return redirect()->back()->with('error', 'You do not have access to that company.');
+        }
+
+        session(['switched_company_id' => $companyId]);
+        return redirect()->back()->with('success', 'Switched to ' . $companyModel->name . '.');
     }
 }
