@@ -144,6 +144,23 @@
                 <p style="font-size:12.5px;color:#1C2321;margin:0;line-height:1.5;">{{ $salesInvoice->notes }}</p>
             </div>
             @endif
+
+            {{-- Terms & Conditions --}}
+            <div style="margin-top:24px;padding:18px 20px;background:#F5F7F6;border-radius:10px;border:1px solid #D8E3DE;">
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#0F3D3E;font-weight:700;margin-bottom:8px;">Terms & Conditions</div>
+                <div style="font-size:12px;color:#1C2321;line-height:1.7;white-space:pre-line;">{{ $salesInvoice->terms_and_conditions ?? "1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of " . config('app.name') . " until fully paid\n\nThank You For Your Business." }}</div>
+            </div>
+
+            {{-- Thank You Card --}}
+            <div style="margin-top:24px;padding:16px 20px;border-radius:10px;background:linear-gradient(135deg,#0F3D3E 0%,#1A5A5B 100%);color:#fff;text-align:center;">
+                <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;letter-spacing:.02em;">Thank You For Your Business</div>
+                <div style="font-size:11px;opacity:.85;margin-top:4px;">For inquiries contact: {{ $salesInvoice->company?->email ?? 'billing@asyxgroup.tz' }}</div>
+            </div>
+
+            {{-- Watermark --}}
+            <div class="invoice-watermark" style="position:absolute;bottom:120px;left:50%;transform:translateX(-50%) rotate(-30deg);opacity:.06;pointer-events:none;z-index:0;">
+                <img src="{{ asset('asyxgrouplogo.png') }}" alt="" style="height:180px;object-fit:contain;filter:grayscale(100%);">
+            </div>
         </div>
 
         {{-- Footer --}}
@@ -154,7 +171,7 @@
 </div>
 
 <style>
-#invoice-a4 { font-family: 'Inter','Nunito',system-ui,sans-serif; }
+#invoice-a4 { font-family: 'Inter','Nunito',system-ui,sans-serif; position: relative; }
 #invoice-a4 h1 { font-family: 'Fraunces','Georgia',serif; }
 @media print {
     @page { margin: 0; size: A4; }
@@ -162,6 +179,7 @@
     body * { visibility: hidden; }
     #invoice-a4, #invoice-a4 * { visibility: visible; }
     #invoice-a4 { position: absolute; left: 0; top: 0; width: 210mm; min-height: 297mm; box-shadow: none !important; border-radius: 0 !important; }
+    .invoice-watermark { opacity: .05 !important; }
     .no-print { display: none !important; }
     nav, header, .sidebar, .no-print { display: none !important; }
 }
