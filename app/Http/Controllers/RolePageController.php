@@ -386,7 +386,7 @@ class RolePageController extends Controller
 
             case 'bank-accounts':
                 $data['accounts'] = BankAccount::latest()->paginate(10);
-                $data['totalBalance'] = BankAccount::sum('balance') ?? 0;
+                $data['totalBalance'] = BankAccount::sum('current_balance') ?? 0;
                 break;
 
             case 'transfers':
