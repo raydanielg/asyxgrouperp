@@ -855,7 +855,7 @@ class RoleDashboardController extends Controller
         $money = fn($n) => 'TZS ' . number_format($n);
 
         return match ($role) {
-            'admin', 'administrator', 'admin_manager' => [
+            'admin', 'administrator', 'admin_manager', 'erp_super_administrator', 'erp_administrator' => [
                 ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'admin.employees.index'],
                 ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'violet', 'route' => 'admin.projects.index'],
                 ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'amber', 'route' => 'admin.leaves.index'],
@@ -910,14 +910,14 @@ class RoleDashboardController extends Controller
                 ['label' => 'Warehouses', 'value' => $stats['totalWarehouses'] ?? 0, 'color' => 'sky', 'route' => 'admin.warehouses.index'],
                 ['label' => 'Pending Transfers', 'value' => $stats['pendingTransfers'] ?? 0, 'color' => 'rose', 'route' => 'admin.transfers.index'],
             ],
-            'technical_manager', 'ict_engineer' => [
+            'technical_manager', 'ict_engineer', 'ict_administrator', 'network_engineer', 'software_engineer', 'cybersecurity_engineer' => [
                 ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
                 ['label' => 'In Progress', 'value' => $stats['inProgressTickets'] ?? 0, 'color' => 'amber', 'route' => 'admin.helpdesk-tickets.index'],
                 ['label' => 'Resolved', 'value' => $stats['resolvedTickets'] ?? 0, 'color' => 'emerald', 'route' => 'admin.helpdesk-tickets.index'],
                 ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
                 ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'violet', 'route' => 'admin.employees.index'],
             ],
-            'technician' => [
+            'technician', 'field_technician' => [
                 ['label' => 'My Tickets', 'value' => $stats['myTickets'] ?? 0, 'color' => 'emerald', 'route' => 'admin.helpdesk-tickets.index'],
                 ['label' => 'Open', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
                 ['label' => 'In Progress', 'value' => $stats['inProgressTickets'] ?? 0, 'color' => 'amber', 'route' => 'admin.helpdesk-tickets.index'],
