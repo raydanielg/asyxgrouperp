@@ -1,70 +1,182 @@
-<section id="clients" class="py-16 bg-[#F2F2F2] border-y border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10 reveal">
-            <p class="font-heading text-sm font-bold text-bronze uppercase tracking-wider mb-2">Trusted By Tanzania's Most Critical Institutions</p>
-            <h3 class="font-heading text-2xl font-bold text-navy">Our Clients &amp; Partners</h3>
+<section id="clients" class="py-20 lg:py-28 relative overflow-hidden clients-section bg-[#F8F9FB]">
+    {{-- Background decorations --}}
+    <div class="absolute inset-0 opacity-5 dot-grid-clients"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-navy/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-bronze/5 rounded-full blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {{-- Header --}}
+        <div class="text-center max-w-3xl mx-auto mb-12 reveal">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bronze/10 text-bronze text-xs font-bold uppercase tracking-wider mb-4">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+                Trusted Partnerships
+            </span>
+            <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-navy leading-tight mb-4">
+                Our Clients
+            </h2>
+            <p class="text-gray-600 text-lg leading-relaxed">
+                Proudly trusted by Tanzania's most critical institutions and regulated enterprises to deliver mission-critical technology solutions.
+            </p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
-            {{-- TANESCO --}}
-            <div class="flex items-center justify-center logo-greyscale">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto rounded-full bg-navy/10 flex items-center justify-center mb-2">
-                        <svg class="w-8 h-8 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <p class="font-heading text-xs font-bold text-navy">TANESCO</p>
-                </div>
+        {{-- Stats strip --}}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-14 reveal">
+            <div class="bg-white rounded-2xl p-5 text-center shadow-lg shadow-navy/5 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+                <p class="font-heading text-3xl font-black text-bronze">50+</p>
+                <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">Enterprise Clients</p>
             </div>
-
-            {{-- TRA --}}
-            <div class="flex items-center justify-center logo-greyscale">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto rounded-full bg-navy/10 flex items-center justify-center mb-2">
-                        <svg class="w-8 h-8 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                    </div>
-                    <p class="font-heading text-xs font-bold text-navy">TRA</p>
-                </div>
+            <div class="bg-white rounded-2xl p-5 text-center shadow-lg shadow-navy/5 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+                <p class="font-heading text-3xl font-black text-navy">16+</p>
+                <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">Years Experience</p>
             </div>
-
-            {{-- NSSF --}}
-            <div class="flex items-center justify-center logo-greyscale">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto rounded-full bg-navy/10 flex items-center justify-center mb-2">
-                        <svg class="w-8 h-8 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    </div>
-                    <p class="font-heading text-xs font-bold text-navy">NSSF</p>
-                </div>
+            <div class="bg-white rounded-2xl p-5 text-center shadow-lg shadow-navy/5 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+                <p class="font-heading text-3xl font-black text-purple">15+</p>
+                <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">Government Bodies</p>
             </div>
-
-            {{-- Precision Air --}}
-            <div class="flex items-center justify-center logo-greyscale">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto rounded-full bg-navy/10 flex items-center justify-center mb-2">
-                        <svg class="w-8 h-8 text-navy" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-                    </div>
-                    <p class="font-heading text-xs font-bold text-navy">Precision Air</p>
-                </div>
+            <div class="bg-white rounded-2xl p-5 text-center shadow-lg shadow-navy/5 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+                <p class="font-heading text-3xl font-black text-crimson">99%</p>
+                <p class="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wide">Client Retention</p>
             </div>
+        </div>
 
-            {{-- BOT --}}
-            <div class="flex items-center justify-center logo-greyscale">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto rounded-full bg-navy/10 flex items-center justify-center mb-2">
-                        <svg class="w-8 h-8 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                    </div>
-                    <p class="font-heading text-xs font-bold text-navy">BOT</p>
-                </div>
+        {{-- Logo grid --}}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 reveal" id="clientGrid">
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/tanesco.png') }}" alt="TANESCO" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">TANESCO</p>
             </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/tra.png') }}" alt="TRA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">TRA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/nssf.gif') }}" alt="NSSF" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">NSSF</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/tcra.jfif') }}" alt="TCRA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">TCRA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/tcaa.png') }}" alt="TCAA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">TCAA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/tarura.png') }}" alt="TARURA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">TARURA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/latra.jfif') }}" alt="LATRA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">LATRA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/ewuralogo.png') }}" alt="EWURA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">EWURA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/gpsa.jfif') }}" alt="GPSA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">GPSA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/nectalogo.png') }}" alt="NECTA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">NECTA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/preccsionair.jfif') }}" alt="Precision Air" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">Precision Air</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/udsmlogo.png') }}" alt="UDSM" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">UDSM</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/veta.png') }}" alt="VETA" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">VETA</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/psbtb logo.jfif') }}" alt="PSBTB" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">PSBTB</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/download.jfif') }}" alt="Client" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">Partner</p>
+            </div>
+            <div class="client-card group bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-36 sm:h-40">
+                <img src="{{ asset('clients/download (1).jfif') }}" alt="Client" class="h-12 sm:h-14 w-auto object-contain mb-2 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                <p class="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-navy transition-colors">Partner</p>
+            </div>
+        </div>
 
-            {{-- DAWASA --}}
-            <div class="flex items-center justify-center logo-greyscale">
-                <div class="text-center">
-                    <div class="w-16 h-16 mx-auto rounded-full bg-navy/10 flex items-center justify-center mb-2">
-                        <svg class="w-8 h-8 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
-                    </div>
-                    <p class="font-heading text-xs font-bold text-navy">DAWASA</p>
-                </div>
+        {{-- Infinite marquee of client names --}}
+        <div class="mt-16 overflow-hidden reveal" id="clientsMarquee">
+            <div class="clients-track flex gap-8 items-center font-heading font-bold text-navy/10 text-2xl sm:text-3xl uppercase whitespace-nowrap">
+                <span>TANESCO</span><span class="text-bronze/30">•</span>
+                <span>TRA</span><span class="text-purple/30">•</span>
+                <span>NSSF</span><span class="text-crimson/30">•</span>
+                <span>TCRA</span><span class="text-bronze/30">•</span>
+                <span>TCAA</span><span class="text-purple/30">•</span>
+                <span>TARURA</span><span class="text-crimson/30">•</span>
+                <span>LATRA</span><span class="text-bronze/30">•</span>
+                <span>EWURA</span><span class="text-purple/30">•</span>
+                <span>GPSA</span><span class="text-crimson/30">•</span>
+                <span>NECTA</span><span class="text-bronze/30">•</span>
+                <span>Precision Air</span><span class="text-purple/30">•</span>
+                <span>UDSM</span><span class="text-crimson/30">•</span>
+                <span>VETA</span><span class="text-bronze/30">•</span>
+                <span>PSBTB</span><span class="text-purple/30">•</span>
+                <span>TANESCO</span><span class="text-bronze/30">•</span>
+                <span>TRA</span><span class="text-purple/30">•</span>
+                <span>NSSF</span><span class="text-crimson/30">•</span>
+                <span>TCRA</span><span class="text-bronze/30">•</span>
+                <span>TCAA</span><span class="text-purple/30">•</span>
+                <span>TARURA</span><span class="text-crimson/30">•</span>
+                <span>LATRA</span><span class="text-bronze/30">•</span>
+                <span>EWURA</span><span class="text-purple/30">•</span>
+                <span>GPSA</span><span class="text-crimson/30">•</span>
+                <span>NECTA</span><span class="text-bronze/30">•</span>
+                <span>Precision Air</span><span class="text-purple/30">•</span>
+                <span>UDSM</span><span class="text-crimson/30">•</span>
+                <span>VETA</span><span class="text-bronze/30">•</span>
+                <span>PSBTB</span><span class="text-purple/30">•</span>
             </div>
         </div>
     </div>
 </section>
+
+@push('scripts')
+<script>
+(function() {
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    {{-- Staggered reveal for client cards --}}
+    var cards = document.querySelectorAll('#clientGrid .client-card');
+    if (cards.length) {
+        cards.forEach(function(card, i) {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px) scale(0.95)';
+            card.style.transition = 'opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1)';
+        });
+
+        var gridObserver = new IntersectionObserver(function(entries) {
+            if (entries[0].isIntersecting) {
+                cards.forEach(function(card, i) {
+                    setTimeout(function() {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0) scale(1)';
+                    }, i * 80);
+                });
+                gridObserver.disconnect();
+            }
+        }, { threshold: 0.15 });
+        gridObserver.observe(document.getElementById('clientGrid'));
+    }
+
+    {{-- Infinite marquee for clients --}}
+    var track = document.querySelector('.clients-track');
+    if (track && !reduceMotion) {
+        var duration = 40;
+        track.style.animation = 'clientsMarquee ' + duration + 's linear infinite';
+    }
+})();
+</script>
+@endpush
