@@ -928,12 +928,18 @@ class RoleDashboardController extends Controller
                 ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
                 ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'admin.employees.index'],
             ],
-            'project_manager' => [
+            'project_manager', 'team_leader' => [
                 ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
                 ['label' => 'Completed', 'value' => $stats['completedProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
                 ['label' => 'Open Deals', 'value' => $stats['openDeals'] ?? 0, 'color' => 'amber', 'route' => 'admin.crm-deals.index'],
                 ['label' => 'Deal Value', 'value' => $money($stats['totalDealValue'] ?? 0), 'color' => 'emerald', 'route' => 'admin.crm-deals.index'],
                 ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'violet', 'route' => 'admin.employees.index'],
+            ],
+            'employee_self_service', 'manager_self_service' => [
+                ['label' => 'Pending Leaves', 'value' => $stats['myPendingLeaves'] ?? 0, 'color' => 'amber', 'route' => 'admin.leaves.index'],
+                ['label' => 'Approved Leaves', 'value' => $stats['myApprovedLeaves'] ?? 0, 'color' => 'emerald', 'route' => 'admin.leaves.index'],
+                ['label' => 'Attendance (Month)', 'value' => $stats['myAttendanceThisMonth'] ?? 0, 'color' => 'sky', 'route' => 'admin.attendance.index'],
+                ['label' => 'My Tasks', 'value' => $stats['myTasks'] ?? 0, 'color' => 'violet', 'route' => 'admin.projects.index'],
             ],
             'operations_manager' => [
                 ['label' => 'Products', 'value' => $stats['totalProducts'] ?? 0, 'color' => 'emerald', 'route' => 'admin.products.index'],
