@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('sales_invoices', function (Blueprint $table) {
-            //
+            $table->text('terms_and_conditions')->nullable()->after('notes');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('sales_invoices', function (Blueprint $table) {
-            //
+            $table->dropColumn('terms_and_conditions');
         });
     }
 };
