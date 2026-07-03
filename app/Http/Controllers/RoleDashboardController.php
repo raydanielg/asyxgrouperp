@@ -368,6 +368,8 @@ class RoleDashboardController extends Controller
             case 'administrator':
             case 'admin_manager':
             case 'director':
+            case 'erp_super_administrator':
+            case 'erp_administrator':
                 $items['recentUsers'] = User::latest()->take(5)->get();
                 $items['recentSales'] = SalesInvoice::with('customer')->latest()->take(5)->get();
                 $items['recentTickets'] = HelpdeskTicket::latest()->take(5)->get();
