@@ -34,9 +34,9 @@
 
         {{-- Head --}}
         <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:38px 44px 26px;border-bottom:1px solid #E3DDCB;">
-            <div style="display:flex;align-items:center;gap:12px;">
-                <div style="width:38px;height:38px;border-radius:10px;background:conic-gradient(from 90deg,#C9A227,#8C5E2A,#0F3D3E,#C9A227);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-                    <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX" style="width:30px;height:30px;object-fit:contain;border-radius:4px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+                <div style="flex-shrink:0;">
+                    <img src="{{ asset('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}" style="height:46px;max-width:160px;object-fit:contain;">
                 </div>
                 <div>
                     <div style="font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;">{{ config('app.name') }}</div>
