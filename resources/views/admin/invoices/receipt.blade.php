@@ -30,20 +30,22 @@
             <div style="position:absolute;top:22px;right:-44px;background:#2F7A3D;color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.12em;padding:5px 58px;transform:rotate(35deg);box-shadow:0 4px 10px rgba(0,0,0,.15);z-index:10;">PAID</div>
 
             <div style="text-align:center;padding:34px 36px 22px;border-bottom:1px dashed #E3DDCB;">
-                <div style="width:40px;height:40px;border-radius:11px;margin:0 auto 12px;background:conic-gradient(from 90deg,#C9A227,#8C5E2A,#0F3D3E,#C9A227);overflow:hidden;display:flex;align-items:center;justify-content:center;">
-                    <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX" style="width:32px;height:32px;object-fit:contain;border-radius:6px;">
+                <div style="width:48px;height:48px;border-radius:12px;margin:0 auto 12px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:transparent;">
+                    <img src="{{ asset('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}" style="width:100%;height:100%;object-fit:contain;">
                 </div>
-                <div style="font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;">{{ config('app.name') }}</div>
-                <div style="font-size:11px;color:#6E7570;margin-top:4px;line-height:1.5;">
-                    {{ $salesInvoice->company?->name ?? 'ASYX Group' }}<br>
-                    Dar es Salaam, Tanzania
+                <div style="font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;">{{ $salesInvoice->company?->name ?? config('app.name') }}</div>
+                <div style="font-size:10px;color:#6E7570;margin-top:4px;line-height:1.5;">
+                    {{ $salesInvoice->company?->address ?? 'Dar es Salaam, Tanzania' }}<br>
+                    @if($salesInvoice->company?->tax_id)TIN: {{ $salesInvoice->company->tax_id }}@endif
+                    @if($salesInvoice->company?->tax_id && $salesInvoice->company?->vrn) &middot; @endif
+                    @if($salesInvoice->company?->vrn)VRN: {{ $salesInvoice->company->vrn }}@endif
                 </div>
             </div>
 
             <div style="text-align:center;padding:22px 36px 6px;">
-                <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;color:#6E7570;">Kiasi Kilicholipwa</div>
+                <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;color:#6E7570;">Amount Received</div>
                 <div style="font-family:'Fraunces',serif;font-size:34px;color:#2F7A3D;margin:6px 0 2px;">{{ number_format($receipt['paid_amount'], 0) }} Tsh</div>
-                <div style="font-size:12px;color:#6E7570;">Imelipwa kikamilifu &mdash; {{ $receipt['payment_date'] }}</div>
+                <div style="font-size:12px;color:#6E7570;">Paid in full &mdash; {{ $receipt['payment_date'] }}</div>
             </div>
 
             <div style="padding:24px 36px 6px;">
@@ -56,11 +58,11 @@
                     <b style="color:#1C2321;font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px;">{{ $salesInvoice->invoice_number }}</b>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed #E3DDCB;">
-                    <span style="color:#6E7570;">Imelipwa na</span>
+                    <span style="color:#6E7570;">Received From</span>
                     <b style="color:#1C2321;font-weight:600;">{{ $salesInvoice->customer?->name ?? 'N/A' }}</b>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed #E3DDCB;">
-                    <span style="color:#6E7570;">Njia ya Malipo</span>
+                    <span style="color:#6E7570;">Payment Method</span>
                     <b style="color:#1C2321;font-weight:600;">{{ $receipt['payments'][0]['method'] ?? 'Bank Transfer' }}</b>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed #E3DDCB;">
@@ -68,11 +70,11 @@
                     <b style="color:#1C2321;font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px;">{{ $receipt['payments'][0]['transaction_id'] ?? 'N/A' }}</b>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed #E3DDCB;">
-                    <span style="color:#6E7570;">Tarehe ya Malipo</span>
+                    <span style="color:#6E7570;">Payment Date</span>
                     <b style="color:#1C2321;font-weight:600;">{{ $receipt['payment_date'] }}, {{ $receipt['payment_time'] }}</b>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:13px;padding:9px 0;">
-                    <span style="color:#6E7570;">Maelezo</span>
+                    <span style="color:#6E7570;">Description</span>
                     <b style="color:#1C2321;font-weight:600;text-align:right;">{{ $salesInvoice->items->first()?->product_name ?? 'Invoice Payment' }}</b>
                 </div>
             </div>
@@ -80,10 +82,10 @@
             <div style="height:14px;width:100%;background:linear-gradient(135deg,#F2F1ED 25%,transparent 25%) 0 0/10px 10px,linear-gradient(225deg,#F2F1ED 25%,transparent 25%) 0 0/10px 10px,#fff;margin-top:6px;"></div>
 
             <div style="padding:20px 36px 30px;text-align:center;background:#FBF9F2;">
-                <div style="font-family:'Fraunces',serif;font-size:14px;color:#0F3D3E;margin-bottom:6px;">Asante kwa malipo yako</div>
+                <div style="font-family:'Fraunces',serif;font-size:14px;color:#0F3D3E;margin-bottom:6px;">Thank You For Your Payment</div>
                 <div style="font-size:11px;color:#6E7570;line-height:1.6;">
-                    Risiti hii ni uthibitisho rasmi wa malipo.<br>
-                    Iwapo una swali lolote, wasiliana nasi: billing@asyxgroup.tz
+                    This receipt is an official proof of payment.<br>
+                    If you have any questions, contact us: {{ $salesInvoice->company?->email ?? 'billing@asyxgroup.tz' }}
                 </div>
             </div>
         </div>
