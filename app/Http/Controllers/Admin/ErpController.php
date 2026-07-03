@@ -271,8 +271,9 @@ class ErpController extends Controller
 
     public function helpdeskTicketShow(HelpdeskTicket $ticket)
     {
-        $ticket->load(['category', 'creator', 'replies.creator']);
-        return view('admin.helpdesk.ticket-show', compact('ticket'));
+        $ticket->load(['category', 'creator', 'assignee', 'replies.creator']);
+        $assignees = User::orderBy('name')->get(['id', 'name']);
+        return view('admin.helpdesk.ticket-show', compact('ticket', 'assignees'));
     }
 
     public function helpdeskTicketStore(Request $request)
