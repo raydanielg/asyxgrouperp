@@ -830,6 +830,17 @@ class RoleDashboardController extends Controller
                 }
                 break;
 
+            case 'employee_self_service':
+            case 'manager_self_service':
+                $data['title'] = 'My Attendance Trend (14 days)';
+                $data['values'] = [];
+                $emp = Employee::where('user_id', auth()->id())->first();
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = $emp ? Attendance::where('employee_id', $emp->id)->whereDate('date', $date)->where('status', 'present')->count() : 0;
+                }
+                break;
+
             default:
                 $data['title'] = 'Activity (14 days)';
                 $data['values'] = array_fill(0, 14, 0);
