@@ -9,7 +9,7 @@ class SalesInvoice extends Model
 {
     use BelongsToCompany;
 
-    protected $fillable = ['company_id', 'invoice_number', 'invoice_date', 'due_date', 'customer_id', 'warehouse_id', 'subtotal', 'tax_amount', 'discount_amount', 'total_amount', 'paid_amount', 'balance_amount', 'status', 'type', 'payment_terms', 'notes', 'creator_id', 'created_by'];
+    protected $fillable = ['company_id', 'invoice_number', 'invoice_date', 'due_date', 'customer_id', 'warehouse_id', 'subtotal', 'tax_amount', 'discount_amount', 'total_amount', 'paid_amount', 'balance_amount', 'status', 'type', 'payment_terms', 'notes', 'terms_and_conditions', 'creator_id', 'created_by'];
 
     protected $casts = [
         'invoice_date' => 'date',
