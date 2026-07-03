@@ -44,8 +44,10 @@ class UserController extends Controller
 
         $users = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->except('page'));
         $roles = Role::orderBy('name')->pluck('label', 'name')->toArray();
+        $disabledCount = User::where('is_enable_login', false)->count();
+        $activeSessions = \Illuminate\Support\Facades\DB::table('sessions')->where('last_activity', '>', now()->subMinutes(30)->getTimestamp())->count();
 
-        return view('admin.users.index', compact('users', 'roles'));
+        return view('admin.users.index', compact('users', 'roles', 'disabledCount', 'activeSessions'));
     }
 
     public function create()
