@@ -201,6 +201,13 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'logistics_officer':
+            case 'procurement_manager':
+            case 'procurement_officer':
+            case 'tender_officer':
+            case 'store_manager':
+            case 'storekeeper':
+            case 'inventory_controller':
+            case 'asset_officer':
                 $stats = [
                     'totalProducts' => Product::count(),
                     'lowStockProducts' => Product::whereColumn('stock_quantity', '<=', 'reorder_level')->where('reorder_level', '>', 0)->count(),
@@ -212,6 +219,13 @@ class RoleDashboardController extends Controller
 
             case 'technical_manager':
             case 'ict_engineer':
+            case 'senior_systems_engineer':
+            case 'systems_engineer':
+            case 'support_engineer':
+            case 'noc_engineer':
+            case 'service_desk_manager':
+            case 'helpdesk_supervisor':
+            case 'helpdesk_officer':
                 $stats = [
                     'openTickets' => HelpdeskTicket::where('status', 'open')->count(),
                     'inProgressTickets' => HelpdeskTicket::where('status', 'in_progress')->count(),
@@ -258,6 +272,8 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'operations_manager':
+            case 'operations_officer':
+            case 'fleet_manager':
                 $stats = [
                     'totalProducts' => Product::count(),
                     'lowStockProducts' => Product::whereColumn('stock_quantity', '<=', 'reorder_level')->where('reorder_level', '>', 0)->count(),
