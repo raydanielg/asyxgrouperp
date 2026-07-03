@@ -19,11 +19,20 @@
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Quotation Number *</label><input name="proposal_number" value="PROP-{{ date('Ymd') }}-{{ strtoupper(\Illuminate\Support\Str::random(4)) }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm font-mono focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Date *</label><input name="proposal_date" type="date" value="{{ date('Y-m-d') }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Valid Until *</label><input name="due_date" type="date" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Customer *</label><select name="customer_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select Customer...</option>
-        @foreach($customers as $c)
-        <option value="{{ $c->id }}">{{ $c->name }} - {{ $c->email }}</option>
-        @endforeach
-        </select></div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Customer *</label>
+                    <div class="flex gap-2">
+                        <select id="customerSelect" name="customer_id" required class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                            <option value="">Select Customer...</option>
+                            @foreach($customers as $c)
+                            <option value="{{ $c->id }}">{{ $c->name }} - {{ $c->email }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" onclick="openCustomerModal()" class="px-3 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-all flex items-center gap-1" title="Add New Customer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         {{-- Items Card --}}
