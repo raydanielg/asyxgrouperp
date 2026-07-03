@@ -27,6 +27,7 @@ class UserRoleSeeder extends Seeder
             'hr_manager', 'hr_officer', 'recruitment_officer', 'training_officer', 'time_and_attendance_officer',
             'operations_officer', 'fleet_manager', 'logistics_officer',
             'employee_self_service', 'manager_self_service',
+            'finance_officer',
             'receptionist', 'legal_officer', 'admin_manager', 'auditor', 'ict_officer', 'ict_engineer', 'supervisor', 'director', 'administrator', 'technician',
         ];
 

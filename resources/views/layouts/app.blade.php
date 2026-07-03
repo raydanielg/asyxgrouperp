@@ -43,6 +43,9 @@
 </head>
 <body class="font-['Nunito',sans-serif] antialiased text-slate-800 min-h-screen">
 
+    {{-- Loading Screen --}}
+    @include('partials.loading-screen', ['variant' => 'auth'])
+
     {{-- Auth Background --}}
     <div class="fixed inset-0 z-0 bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
         <div class="absolute inset-0" style="background-image: radial-gradient(rgba(2,73,56,0.18) 2px, transparent 2.5px); background-size: 18px 18px;"></div>

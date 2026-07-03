@@ -15,11 +15,13 @@ class RolePermissionSeeder extends Seeder
         $permissionSets = [
             'Dashboard' => ['view-dashboard'],
             'Reports' => ['view-reports'],
+            'System Administration' => ['view-users', 'create-users', 'edit-users', 'delete-users', 'view-roles', 'manage-roles', 'view-settings', 'view-companies', 'switch-companies', 'view-login-history', 'view-audit-logs'],
             'Approvals' => ['view-approvals', 'approve-final', 'approve-finance', 'approve-hr', 'approve-technical', 'approve-procurement'],
             'Companies' => ['view-companies', 'switch-companies'],
             'Tenders' => ['view-tenders', 'create-tenders', 'edit-tenders', 'delete-tenders'],
             'Contracts' => ['view-crm-contracts', 'create-crm-contracts', 'edit-crm-contracts', 'delete-crm-contracts'],
             'HR Overview' => ['view-employees', 'view-attendance', 'view-leaves', 'view-payroll', 'view-performance', 'view-training', 'view-recruitment'],
+            'HR Actions' => ['create-employees', 'edit-employees', 'create-attendance', 'approve-leaves', 'create-performance', 'create-recruitment', 'view-disciplinary', 'view-events', 'create-events', 'view-policies', 'create-policies', 'view-job-postings', 'create-job-postings', 'view-applications'],
             'Company Dashboard' => ['view-dashboard'],
             'Department Reports' => ['view-reports'],
             'Departmental Approvals' => ['view-approvals', 'approve-finance', 'approve-hr', 'approve-technical', 'approve-procurement'],
@@ -30,7 +32,9 @@ class RolePermissionSeeder extends Seeder
             'Operations' => ['view-fleet', 'view-vehicles', 'view-fuel-logs', 'view-maintenance', 'view-helpdesk-tickets', 'view-inventory', 'view-products', 'view-warehouses'],
             'Service Desk' => ['view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets'],
             'Inventory' => ['view-products', 'view-warehouses', 'view-stock-movements', 'view-suppliers', 'view-transfers'],
+            'Inventory Actions' => ['create-products', 'edit-products', 'view-product-categories', 'create-warehouses', 'create-stock-movements', 'edit-suppliers', 'delete-suppliers'],
             'Finance' => ['view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-bills', 'view-bank-accounts', 'view-acc-transfers', 'view-reports'],
+            'Finance Actions' => ['create-sales-invoices', 'edit-sales-invoices', 'create-purchase-invoices', 'edit-purchase-invoices', 'create-expenses', 'create-revenues', 'create-bills', 'create-bank-accounts', 'create-acc-transfers', 'view-cost-centres'],
             'GL' => ['view-journal-entries', 'create-journal-entries'],
             'Bank' => ['view-bank-reconciliation', 'create-bank-reconciliation'],
             'Tax' => ['view-tax-management', 'create-tax-management'],
@@ -59,10 +63,11 @@ class RolePermissionSeeder extends Seeder
             'Logistics' => ['view-deliveries', 'create-deliveries', 'view-shipments', 'create-shipments'],
             'Self Service' => ['view-self-service', 'view-my-payslips', 'apply-leave', 'view-my-attendance', 'view-my-timesheets', 'create-my-timesheets', 'view-announcements'],
             'Manager Self Service' => ['view-team-overview', 'approve-team-leaves', 'view-team-attendance', 'approve-team-timesheets'],
-            'Reception' => ['view-visitors', 'create-visitors', 'view-appointments', 'create-appointments', 'view-calls', 'create-calls', 'view-correspondence', 'create-correspondence', 'view-parcels', 'create-parcels', 'view-front-desk', 'view-departments', 'view-announcements'],
+            'Reception' => ['view-visitors', 'create-visitors', 'edit-visitors', 'delete-visitors', 'view-appointments', 'create-appointments', 'edit-appointments', 'delete-appointments', 'view-calls', 'create-calls', 'edit-calls', 'delete-calls', 'view-correspondence', 'create-correspondence', 'edit-correspondence', 'delete-correspondence', 'view-parcels', 'create-parcels', 'edit-parcels', 'delete-parcels', 'view-front-desk', 'create-front-desk', 'edit-front-desk', 'delete-front-desk', 'view-departments', 'create-departments', 'edit-departments', 'delete-departments', 'view-announcements', 'create-announcements', 'edit-announcements', 'delete-announcements', 'view-messages', 'create-messages', 'edit-messages', 'delete-messages'],
             'Documents' => ['view-documents', 'create-documents', 'edit-documents', 'delete-documents'],
             'Meetings' => ['view-meetings', 'create-meetings', 'edit-meetings'],
             'Audit' => ['view-audit-logs', 'view-login-history'],
+            'POS' => ['view-pos', 'create-pos'],
         ];
 
         $allPermissions = [];
@@ -89,8 +94,8 @@ class RolePermissionSeeder extends Seeder
         $permMap = DB::table('permissions')->pluck('id', 'name')->toArray();
 
         $roles = [
-            // System Administration
-            ['name' => 'erp_super_administrator', 'label' => 'ERP Super Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'delete-users', 'view-roles', 'manage-roles', 'view-companies', 'switch-companies', 'view-settings', 'view-reports', 'view-login-history', 'view-approvals', 'approve-final', 'view-employees', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
+            // System Administration — Super Admin gets ALL permissions
+            ['name' => 'erp_super_administrator', 'label' => 'ERP Super Administrator', 'perms' => array_keys($allPermissions)],
             ['name' => 'erp_administrator', 'label' => 'ERP Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'view-roles', 'manage-roles', 'view-settings', 'view-reports', 'view-employees', 'view-attendance', 'view-leaves', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'ict_administrator', 'label' => 'ICT Administrator', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-settings', 'view-projects', 'view-employees', 'view-self-service', 'view-my-payslips']],
 
@@ -182,6 +187,11 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'supervisor', 'label' => 'Supervisor', 'perms' => ['view-dashboard', 'view-employees', 'view-attendance', 'create-attendance', 'view-leaves', 'view-projects', 'view-timesheets', 'view-sales-invoices', 'view-pos', 'view-products', 'view-warehouses', 'view-reports', 'view-self-service', 'view-my-payslips']],
             ['name' => 'administrator', 'label' => 'Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'delete-users', 'view-roles', 'manage-roles', 'view-settings', 'view-reports', 'view-employees', 'view-attendance', 'view-payroll', 'view-leaves', 'approve-leaves', 'view-performance', 'view-training', 'view-recruitment', 'view-assets', 'view-events', 'view-policies', 'view-crm-leads', 'view-crm-deals', 'view-crm-contracts', 'view-crm-contacts', 'view-bank-accounts', 'view-acc-transfers', 'view-expenses', 'create-expenses', 'view-revenues', 'create-revenues', 'view-bills', 'view-projects', 'view-timesheets', 'view-bugs', 'view-products', 'view-product-categories', 'view-suppliers', 'view-stock-movements', 'view-pos', 'view-sales-invoices', 'view-purchase-invoices', 'view-warehouses', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'director', 'label' => 'Director', 'perms' => ['view-dashboard', 'view-reports', 'view-projects', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-employees', 'view-helpdesk-tickets', 'view-products', 'view-warehouses', 'view-pos', 'view-crm-leads', 'view-crm-deals', 'view-self-service', 'view-my-payslips']],
+            // Technician (legacy/shared)
+            ['name' => 'technician', 'label' => 'Technician', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-projects', 'view-timesheets', 'create-timesheets', 'view-bugs', 'create-bugs', 'view-self-service', 'view-my-payslips']],
+            // Admin & Superadmin (used by AdminUserSeeder) — ALL permissions
+            ['name' => 'admin', 'label' => 'System Admin', 'perms' => array_keys($allPermissions)],
+            ['name' => 'superadmin', 'label' => 'Super Admin', 'perms' => array_keys($allPermissions)],
         ];
 
         foreach ($roles as $roleData) {

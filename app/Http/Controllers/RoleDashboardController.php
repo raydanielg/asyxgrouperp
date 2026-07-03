@@ -373,6 +373,7 @@ class RoleDashboardController extends Controller
                 $items['recentUsers'] = User::latest()->take(5)->get();
                 $items['recentSales'] = SalesInvoice::with('customer')->latest()->take(5)->get();
                 $items['recentTickets'] = HelpdeskTicket::latest()->take(5)->get();
+                $items['activeProjects'] = Project::where('status', 'in_progress')->latest()->take(5)->get();
                 break;
 
             case 'finance_officer':

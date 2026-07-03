@@ -60,6 +60,9 @@
 </head>
 <body class="font-['Nunito',sans-serif] antialiased bg-gray-50 text-slate-800">
 
+    {{-- Loading Screen --}}
+    @include('partials.loading-screen', ['variant' => 'admin'])
+
     {{-- Mobile Overlay --}}
     <div id="mobileOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
