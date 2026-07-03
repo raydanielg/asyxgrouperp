@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class CrmDeal extends Model
 {
+    use BelongsToCompany;
     protected $guarded = ['id'];
 
     protected $casts = ['expected_close_date' => 'date'];

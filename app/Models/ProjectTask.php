@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class ProjectTask extends Model
 {
+    use BelongsToCompany;
+
     protected $guarded = ['id'];
 
     protected $casts = ['due_date' => 'date'];
