@@ -591,6 +591,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Delivery Notes
     Route::get('/delivery-notes', [$bf, 'deliveryNoteIndex'])->name('delivery-notes.index');
     Route::post('/delivery-notes', [$bf, 'deliveryNoteStore'])->name('delivery-notes.store');
+    Route::get('/delivery-notes/{deliveryNote}', [$bf, 'deliveryNoteShow'])->name('delivery-notes.show');
     Route::delete('/delivery-notes/{deliveryNote}', [$bf, 'deliveryNoteDestroy'])->name('delivery-notes.destroy');
 
     // Vendor Invoices

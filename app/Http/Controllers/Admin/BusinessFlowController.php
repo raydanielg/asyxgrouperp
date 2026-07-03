@@ -551,6 +551,13 @@ class BusinessFlowController extends Controller
         return redirect()->route('admin.delivery-notes.index')->with('success', 'Delivery Note created.');
     }
 
+    public function deliveryNoteShow(DeliveryNote $deliveryNote)
+    {
+        $deliveryNote->load(['lpo', 'supplier', 'grn', 'createdBy']);
+        $company = $deliveryNote->company ?? auth()->user()->company ?? null;
+        return view('admin.business-flow.delivery-notes.show', compact('deliveryNote', 'company'));
+    }
+
     public function deliveryNoteDestroy(DeliveryNote $deliveryNote)
     {
         $deliveryNote->delete();
