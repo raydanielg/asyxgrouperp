@@ -9,23 +9,31 @@ $enabledCount = $users->filter(fn($u) => $u->is_enable_login ?? true)->count();
 $roleCount = count($roles);
 @endphp
 <div class="animate-fade">
-  {{-- Stats Cards --}}
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-    <div class="bg-white rounded-xl border p-4 flex items-center gap-3">
-      <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $totalUsers }}</p><p class="text-[11px] text-gray-500">Total Users</p></div>
+  {{-- KPI Cards --}}
+  <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 mb-5">
+    <div class="bg-white rounded-xl border p-4 flex items-center gap-3 hover:shadow-md transition-shadow">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm"><svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $totalUsers }}</p><p class="text-[11px] text-gray-500 font-medium">Total Users</p></div>
     </div>
-    <div class="bg-white rounded-xl border p-4 flex items-center gap-3">
-      <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $adminCount }}</p><p class="text-[11px] text-gray-500">Admins</p></div>
+    <div class="bg-white rounded-xl border p-4 flex items-center gap-3 hover:shadow-md transition-shadow">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center flex-shrink-0 shadow-sm"><svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $adminCount }}</p><p class="text-[11px] text-gray-500 font-medium">Admins</p></div>
     </div>
-    <div class="bg-white rounded-xl border p-4 flex items-center gap-3">
-      <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
-      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $enabledCount }}</p><p class="text-[11px] text-gray-500">Active Logins</p></div>
+    <div class="bg-white rounded-xl border p-4 flex items-center gap-3 hover:shadow-md transition-shadow">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-50 to-sky-100 flex items-center justify-center flex-shrink-0 shadow-sm"><svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $enabledCount }}</p><p class="text-[11px] text-gray-500 font-medium">Active Logins</p></div>
     </div>
-    <div class="bg-white rounded-xl border p-4 flex items-center gap-3">
-      <div class="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center flex-shrink-0"><svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $roleCount }}</p><p class="text-[11px] text-gray-500">Roles</p></div>
+    <div class="bg-white rounded-xl border p-4 flex items-center gap-3 hover:shadow-md transition-shadow">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center flex-shrink-0 shadow-sm"><svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg></div>
+      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $disabledCount }}</p><p class="text-[11px] text-gray-500 font-medium">Blocked</p></div>
+    </div>
+    <div class="bg-white rounded-xl border p-4 flex items-center gap-3 hover:shadow-md transition-shadow">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-50 to-violet-100 flex items-center justify-center flex-shrink-0 shadow-sm"><svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></div>
+      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $activeSessions }}</p><p class="text-[11px] text-gray-500 font-medium">Active Sessions</p></div>
+    </div>
+    <div class="bg-white rounded-xl border p-4 flex items-center gap-3 hover:shadow-md transition-shadow">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100 flex items-center justify-center flex-shrink-0 shadow-sm"><svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <div><p class="text-2xl font-bold text-gray-900 font-['Fraunces',serif]">{{ $roleCount }}</p><p class="text-[11px] text-gray-500 font-medium">Roles</p></div>
     </div>
   </div>
 
