@@ -25,7 +25,17 @@
         <div class="flex items-center gap-3 mt-3 text-xs text-gray-400">
             <span>By: {{ $ticket->creator?->name ?? 'Unknown' }}</span>
             <span>{{ $ticket->created_at->format('d M Y H:i') }}</span>
+            <span>Assigned to: <span class="font-medium text-gray-600">{{ $ticket->assignee?->name ?? 'Unassigned' }}</span></span>
         </div>
+        <form method="POST" action="{{ route('admin.helpdesk-tickets.assign', $ticket) }}" class="flex items-center gap-2 mt-3">
+            @csrf @method('PATCH')
+            <select name="assigned_to" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none">
+                <option value="">Assign to...</option>
+                @foreach($assignees as $user)
+                <option value="{{ $user->id }}" {{ $ticket->assigned_to == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                @endforeach
+            </select>
+        </form>
     </div>
 
     <div class="space-y-3 mb-4">
