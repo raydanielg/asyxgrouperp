@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class VehicleMaintenance extends Model
 {
+    use BelongsToCompany;
     use HasFactory;
 
     protected $table = 'vehicle_maintenance';
