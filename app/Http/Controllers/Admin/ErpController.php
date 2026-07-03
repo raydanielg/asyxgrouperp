@@ -312,6 +312,17 @@ class ErpController extends Controller
         return redirect()->back()->with('success', 'Ticket status updated.');
     }
 
+    public function helpdeskTicketAssign(Request $request, HelpdeskTicket $ticket)
+    {
+        $data = $request->validate(['assigned_to' => 'required|exists:users,id']);
+        $assignee = User::findOrFail($data['assigned_to']);
+        $ticket->assignTo($assignee);
+        if ($ticket->status === 'open') {
+            $ticket->update(['status' => 'in_progress']);
+        }
+        return redirect()->back()->with('success', 'Ticket assigned to ' . $assignee->name . '.');
+    }
+
     // ─── Purchase Invoices ───
     public function purchaseInvoiceIndex()
     {
