@@ -41,8 +41,16 @@
     <div class="top">
       <h1>Quotation</h1>
       <div class="co-mark">
-        <div class="co-icon"><img src="{{ public_path('asyxgrouplogo.png') }}" alt="ASYX"></div>
-        <div class="co-word">Asyx</div>
+        <div class="co-icon"><img src="{{ public_path('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}"></div>
+        <div>
+          <div class="co-word">{{ $company?->name ?? config('app.name') }}</div>
+          <div class="co-meta">
+            {{ $company?->address ?? 'Dar es Salaam, Tanzania' }}<br>
+            @if($company?->tax_id)TIN: {{ $company->tax_id }}@endif
+            @if($company?->tax_id && $company?->vrn) &middot; @endif
+            @if($company?->vrn)VRN: {{ $company->vrn }}@endif
+          </div>
+        </div>
       </div>
     </div>
     <div class="meta">
