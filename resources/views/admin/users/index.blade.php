@@ -152,14 +152,14 @@ $roleCount = count($roles);
               <span class="text-[10px] text-gray-400 italic">—</span>
               @endif
             </td>
-            <td class="px-5 py-3.5">
+            <td class="px-5 py-3.5 user-status-cell">
               @if($user->is_enable_login ?? true)
-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200">
+              <span id="user-status-{{ $user->id }}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 Enabled
               </span>
               @else
-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 ring-1 ring-red-200">
+              <span id="user-status-{{ $user->id }}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 ring-1 ring-red-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                 Disabled
               </span>
