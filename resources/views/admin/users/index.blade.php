@@ -105,12 +105,19 @@ $roleCount = count($roles);
         </thead>
         <tbody>
           @forelse($users as $user)
-          <tr class="border-t border-gray-50 hover:bg-amber-50/20 transition-colors group">
+          <tr class="border-t border-gray-50 hover:bg-amber-50/20 transition-colors group" id="user-row-{{ $user->id }}">
+            <td class="px-4 py-3.5">
+              <input type="checkbox" class="user-checkbox w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" value="{{ $user->id }}" @if($user->id === auth()->id()) disabled @endif>
+            </td>
             <td class="px-5 py-3.5">
               <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br {{ $user->isAdmin() ? 'from-emerald-400 to-emerald-600' : 'from-sky-400 to-sky-600' }} flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                @if($user->avatar)
+                <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
+                @else
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ $user->isAdmin() ? 'from-emerald-400 to-emerald-600' : 'from-sky-400 to-sky-600' }} flex items-center justify-center text-white font-bold text-sm shadow-sm ring-2 ring-white">
                   {{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
+                @endif
                 <div>
                   <p class="text-sm font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">{{ $user->name }}</p>
                   <div class="flex items-center gap-1.5 mt-0.5">
