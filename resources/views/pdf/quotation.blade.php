@@ -11,10 +11,10 @@
   .stamp{position:absolute;top:28px;right:-40px;background:#0F3D3E;color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;padding:4px 56px;transform:rotate(35deg);box-shadow:0 4px 10px rgba(0,0,0,.12);z-index:10;opacity:.85;}
   .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;}
   .top h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin:0;color:#0F3D3E;letter-spacing:-.02em;}
-  .top .co-mark{display:flex;align-items:center;gap:10px;}
-  .top .co-icon{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 90deg,#C9A227,#8C5E2A,#0F3D3E,#C9A227);display:flex;align-items:center;justify-content:center;}
-  .top .co-icon img{width:22px;height:22px;object-fit:contain;border-radius:5px;}
+  .top .co-mark{display:flex;align-items:center;gap:12px;}
+  .top .co-icon img{height:42px;max-width:140px;object-fit:contain;}
   .top .co-word{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:#0F3D3E;}
+  .top .co-meta{font-size:10px;color:#6E7570;line-height:1.55;margin-top:4px;}
   .meta{font-size:13px;margin-bottom:28px;}
   .meta-row{display:flex;gap:8px;padding:3px 0;}
   .meta-row .k{width:130px;color:#6E7570;}
