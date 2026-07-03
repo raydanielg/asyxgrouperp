@@ -108,11 +108,16 @@
     <div class="head">
       <div class="co-mark">
         <div class="co-icon">
-          <img src="{{ public_path('asyxgrouplogo.png') }}" alt="ASYX">
+          <img src="{{ public_path('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}">
         </div>
         <div>
-          <div class="co-name">{{ config('app.name') }}</div>
-          <div class="co-addr">{{ $company?->name ?? 'ASYX Group' }}<br>Dar es Salaam, Tanzania</div>
+          <div class="co-name">{{ $company?->name ?? config('app.name') }}</div>
+          <div class="co-addr">{{ $company?->address ?? 'Dar es Salaam, Tanzania' }}</div>
+          <div class="co-tin">
+            @if($company?->tax_id)TIN: {{ $company->tax_id }}@endif
+            @if($company?->tax_id && $company?->vrn) &middot; @endif
+            @if($company?->vrn)VRN: {{ $company->vrn }}@endif
+          </div>
         </div>
       </div>
       <div class="doc-title">
