@@ -53,6 +53,8 @@
             <th class="px-5 py-3 font-medium text-right">Revenue</th>
             <th class="px-5 py-3 font-medium text-right">Expenses</th>
             <th class="px-5 py-3 font-medium text-right">Net Profit</th>
+            <th class="px-5 py-3 font-medium text-right">Receivables</th>
+            <th class="px-5 py-3 font-medium text-right">Cash Position</th>
             <th class="px-5 py-3 font-medium text-center">Projects</th>
             <th class="px-5 py-3 font-medium text-center">Employees</th>
         </tr></thead>
@@ -66,6 +68,8 @@
             <td class="px-5 py-3 text-xs text-right font-medium text-emerald-600">{{ number_format($row['revenue'], 0) }}</td>
             <td class="px-5 py-3 text-xs text-right font-medium text-red-600">{{ number_format($row['expenses'], 0) }}</td>
             <td class="px-5 py-3 text-xs text-right font-medium {{ $row['profit'] >= 0 ? 'text-emerald-600' : 'text-red-600' }}">{{ number_format($row['profit'], 0) }}</td>
+            <td class="px-5 py-3 text-xs text-right font-medium text-sky-600">{{ number_format($row['receivables'], 0) }}</td>
+            <td class="px-5 py-3 text-xs text-right font-medium text-violet-600">{{ number_format($row['cash_position'], 0) }}</td>
             <td class="px-5 py-3 text-xs text-center text-gray-600">{{ $row['projects'] }}</td>
             <td class="px-5 py-3 text-xs text-center text-gray-600">{{ $row['employees'] }}</td>
         </tr>
@@ -75,6 +79,8 @@
             <td class="px-5 py-3 text-xs text-right font-bold text-emerald-700">{{ number_format($totalRevenue, 0) }}</td>
             <td class="px-5 py-3 text-xs text-right font-bold text-red-700">{{ number_format($totalExpenses, 0) }}</td>
             <td class="px-5 py-3 text-xs text-right font-bold {{ $totalRevenue - $totalExpenses >= 0 ? 'text-emerald-700' : 'text-red-700' }}">{{ number_format($totalRevenue - $totalExpenses, 0) }}</td>
+            <td class="px-5 py-3 text-xs text-right font-bold text-sky-700">{{ number_format($totalReceivables, 0) }}</td>
+            <td class="px-5 py-3 text-xs text-right font-bold text-violet-700">{{ number_format($totalCashPosition, 0) }}</td>
             <td class="px-5 py-3 text-xs text-center font-bold text-gray-700">{{ $totalProjects }}</td>
             <td class="px-5 py-3 text-xs text-center font-bold text-gray-700">{{ $totalEmployees }}</td>
         </tr>
