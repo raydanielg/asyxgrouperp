@@ -619,11 +619,14 @@
                 @yield('page_actions')
                 {{-- Company Context Switcher --}}
                 @php
-                    $userCompany = auth()->user()->company;
-                    $allCompanies = $userCompany && $userCompany->is_group
-                        ? \App\Models\Company::orderBy('is_group', 'desc')->orderBy('name')->get()
-                        : collect([$userCompany]);
-                    $sessionCompanyId = session('switched_company_id', auth()->user()->company_id);
+                    $user = auth()->user();
+                    $userCompany = $user->company;
+                    $canSwitch = $user->isAdmin() || $user->isSuperAdmin() || ($userCompany && $userCompany->is_group);
+                    $allCompanies = $canSwitch
+                        ? \App\Models\Company::where('is_active', true)->orderBy('is_group', 'desc')->orderBy('name')->get()
+                        : collect([$userCompany])->filter();
+                    $sessionCompanyId = session('switched_company_id');
+                    $currentCompany = $sessionCompanyId ? $allCompanies->firstWhere('id', $sessionCompanyId) : ($userCompany ?? $allCompanies->first());
                 @endphp
                 @if($allCompanies->count() > 1)
                 <div class="relative" id="companySwitcher">
