@@ -889,7 +889,7 @@
                     $groupId = 'grp-' . $gi;
                 @endphp
             <div class="pt-2">
-                <button onclick="toggleSidebarGroup('{{ $groupId }}')" id="btn-{{ $groupId }}" class="sidebar-group-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-emerald-200 text-sm font-semibold {{ $groupHasActive ? 'open' : '' }}">
+                <button onclick="toggleSidebarGroup('{{ $groupId }}')" id="btn-{{ $groupId }}" class="sidebar-group-btn font-menu w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-emerald-200 text-sm font-semibold {{ $groupHasActive ? 'open' : '' }}">
                     <span class="flex items-center gap-2">
                         <span class="text-[10px] uppercase tracking-wider text-emerald-400/50 font-bold">{{ $group['title'] }}</span>
                     </span>
@@ -1140,4 +1140,5 @@
         }
     </script>
     @stack('scripts')
-</body
+</body>
+</html>
