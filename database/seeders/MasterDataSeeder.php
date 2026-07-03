@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\Attendance;
 use App\Models\Payroll;
