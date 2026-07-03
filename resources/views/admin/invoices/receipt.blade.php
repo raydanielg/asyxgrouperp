@@ -10,10 +10,10 @@
             Receipt <b style="color:#1C2321;">{{ $receipt['receipt_number'] }}</b> &middot; {{ config('app.name') }}
         </div>
         <div class="flex items-center gap-2">
-            <a href="{{ route('admin.sales-invoices.receipt-pdf', $salesInvoice) }}" target="_blank" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all inline-flex items-center gap-2" style="background:#C9A227;color:#23270F;" onmouseover="this.style.background='#B8941F'" onmouseout="this.style.background='#C9A227'">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Download PDF
-            </a>
+            <button onclick="printReceiptPdf()" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all inline-flex items-center gap-2" style="background:#C9A227;color:#23270F;" onmouseover="this.style.background='#B8941F'" onmouseout="this.style.background='#C9A227'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                Print
+            </button>
             <a href="{{ route('admin.sales-invoices.show', $salesInvoice) }}" class="px-4 py-2.5 text-xs font-bold rounded-lg border transition-all" style="border-color:#E3DDCB;color:#6E7570;" onmouseover="this.style.background='#FBF9F2'" onmouseout="this.style.background='transparent'">Back to Invoice</a>
         </div>
     </div>
@@ -237,6 +237,14 @@
 
 @push('scripts')
 <script>
+function printReceiptPdf() {
+    const w = window.open('{{ route('admin.sales-invoices.receipt-pdf', $salesInvoice) }}', '_blank');
+    if (w) {
+        w.addEventListener('load', function() {
+            w.print();
+        });
+    }
+}
 function showView(type) {
     var c = document.getElementById('receipt-compact');
     var f = document.getElementById('receipt-full');
