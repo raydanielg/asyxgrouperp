@@ -66,12 +66,35 @@ $roleCount = count($roles);
     </div>
   </div>
 
+  {{-- Bulk Actions Toolbar --}}
+  <div id="bulkToolbar" class="hidden bg-white rounded-xl border mb-3 px-4 py-3 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-3">
+      <span class="text-sm font-semibold text-gray-700"><span id="selectedCount">0</span> selected</span>
+      <div class="h-4 w-px bg-gray-200"></div>
+      <button onclick="bulkEnable(true)" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        Enable Login
+      </button>
+      <button onclick="bulkEnable(false)" class="px-3 py-1.5 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 transition-colors flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+        Disable Login
+      </button>
+    </div>
+    <button onclick="clearSelection()" class="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      Clear
+    </button>
+  </div>
+
   {{-- Users Table --}}
   <div class="bg-white rounded-xl border overflow-hidden shadow-sm">
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
           <tr class="text-left text-[11px] text-gray-500 bg-gray-50/80 border-b border-gray-100">
+            <th class="px-4 py-3.5 w-10">
+              <input type="checkbox" id="selectAll" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+            </th>
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">User</th>
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Email &amp; Phone</th>
             <th class="px-5 py-3.5 font-semibold uppercase tracking-wider">Roles</th>
