@@ -810,6 +810,23 @@
                         ['label' => 'Trip Scheduling', 'module' => 'trip-schedule', 'icon' => $iconAppointments],
                         ['label' => 'My Profile', 'route' => 'admin.profile', 'icon' => $iconUsers, 'match' => 'admin.profile*'],
                     ],
+                    'logistics_officer' => [
+                        ['label' => 'Delivery Schedules', 'module' => 'deliveries', 'icon' => $iconAppointments],
+                        ['label' => 'Shipment Tracking', 'module' => 'shipments', 'icon' => $iconTransfers],
+                        ['label' => 'Route Planning', 'module' => 'route-planning', 'icon' => $iconStock],
+                        ['label' => 'My Profile', 'route' => 'admin.profile', 'icon' => $iconUsers, 'match' => 'admin.profile*'],
+                    ],
+                    'operations_officer' => [
+                        ['label' => 'Daily Operations Log', 'module' => 'operations-log', 'icon' => $iconBills],
+                        ['label' => 'Task Assignments', 'module' => 'operations-tasks', 'icon' => $iconTimesheets],
+                        ['label' => 'My Profile', 'route' => 'admin.profile', 'icon' => $iconUsers, 'match' => 'admin.profile*'],
+                    ],
+                    'team_leader' => [
+                        ['label' => 'Team Task Board', 'module' => 'team-tasks', 'icon' => $iconTimesheets],
+                        ['label' => 'Team Attendance', 'module' => 'team-attendance', 'icon' => $iconAttendance],
+                        ['label' => 'Team Timesheets', 'module' => 'team-timesheets', 'icon' => $iconTimesheets],
+                        ['label' => 'My Profile', 'route' => 'admin.profile', 'icon' => $iconUsers, 'match' => 'admin.profile*'],
+                    ],
                     'employee_self_service' => [
                         ['label' => 'My Profile', 'route' => 'admin.profile', 'icon' => $iconUsers, 'match' => 'admin.profile*'],
                         ['label' => 'My Payslips', 'module' => 'payslips', 'icon' => $iconPayroll],
