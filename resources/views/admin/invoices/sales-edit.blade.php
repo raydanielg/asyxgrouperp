@@ -62,7 +62,68 @@
         </div>
     </form>
 </div>
+<div id="customerModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-md w-full">
+        <div class="flex items-center justify-between px-6 py-4 border-b">
+            <h3 class="text-sm font-bold text-gray-900">Add New Customer</h3>
+            <button type="button" onclick="closeCustomerModal()" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+        </div>
+        <form id="customerForm" class="p-6 space-y-4">
+            @csrf
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">First Name *</label><input name="first_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Last Name</label><input name="last_name" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+            </div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Email</label><input name="email" type="email" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Phone</label><input name="phone" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Company</label><input name="company" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="closeCustomerModal()" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save Customer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+function openCustomerModal() {
+    document.getElementById('customerModal').classList.remove('hidden');
+}
+function closeCustomerModal() {
+    document.getElementById('customerModal').classList.add('hidden');
+    document.getElementById('customerForm').reset();
+}
+
+document.getElementById('customerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    fetch('{{ route('admin.crm-contacts.store') }}', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success && data.contact) {
+            const select = document.getElementById('customerSelect');
+            const option = document.createElement('option');
+            const name = (data.contact.first_name + ' ' + (data.contact.last_name || '')).trim();
+            option.value = data.contact.id;
+            option.text = name + (data.contact.email ? ' - ' + data.contact.email : '');
+            select.add(option);
+            select.value = data.contact.id;
+            closeCustomerModal();
+            Swal.fire({ icon: 'success', title: 'Customer Added', text: name + ' has been added.', confirmButtonColor: '#024938', timer: 2000 });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Could not add customer.', confirmButtonColor: '#024938' });
+        }
+    })
+    .catch(err => {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong.', confirmButtonColor: '#024938' });
+    });
+});
+
 function setDefaultTerms() {
     const defaultTerms = `TERMS & CONDITIONS:\n1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of {{ config('app.name') }} until fully paid\n\nThank You For Your Business.`;
     document.getElementById('termsField').value = defaultTerms;
