@@ -610,6 +610,7 @@ class ErpController extends Controller
         }
         $invoice = SalesInvoice::create([
             'invoice_number' => 'INV-S-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(4)),
+            'company_id' => $salesProposal->company_id,
             'invoice_date' => now(),
             'due_date' => $salesProposal->due_date,
             'customer_id' => $salesProposal->customer_id,
