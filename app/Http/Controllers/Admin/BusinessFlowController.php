@@ -248,6 +248,7 @@ class BusinessFlowController extends Controller
 
         $deal = CrmDeal::create([
             'deal_number' => 'DEAL-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'company_id' => $lead->company_id,
             'title' => 'Deal from Lead: ' . $lead->full_name,
             'lead_id' => $lead->id,
             'value' => 0,
@@ -273,6 +274,7 @@ class BusinessFlowController extends Controller
 
         $project = Project::create([
             'project_number' => 'PRJ-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'company_id' => $deal->company_id,
             'title' => $deal->title,
             'description' => $deal->notes,
             'status' => 'planning',
