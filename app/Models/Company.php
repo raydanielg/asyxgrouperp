@@ -16,6 +16,7 @@ class Company extends Model
         'short_code',
         'registration_number',
         'tax_id',
+        'vrn',
         'address',
         'city',
         'country',
