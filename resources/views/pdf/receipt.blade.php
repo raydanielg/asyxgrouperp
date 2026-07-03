@@ -58,19 +58,11 @@
 </style>
 </head>
 <body>
-  <div class="page-header">
-    <img src="{{ public_path('asyxgrouplogo.png') }}" class="h-logo" alt="{{ config('app.name') }}">
-    <div class="h-text">{{ config('app.name') }} &middot; {{ $company?->address ?? 'Dar es Salaam, Tanzania' }}</div>
-  </div>
-  <div class="page-footer">
-    <span>{{ config('app.name') }}</span>
-    <span>Receipt {{ $receipt['receipt_number'] }}</span>
-  </div>
-  <div class="watermark">
-    <img src="{{ public_path('asyxgrouplogo.png') }}" alt="">
-  </div>
-
   <div class="sheet">
+    <div class="watermark">
+      <img src="{{ public_path('asyxgrouplogo.png') }}" alt="">
+    </div>
+
     <div class="top">
       <div class="co-mark">
         <div class="co-icon">
