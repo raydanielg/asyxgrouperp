@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class Transfer extends Model
 {
+    use BelongsToCompany;
     protected $fillable = ['from_warehouse', 'to_warehouse', 'product_name', 'quantity', 'date', 'creator_id', 'created_by'];
 
     public function fromWarehouse() { return $this->belongsTo(Warehouse::class, 'from_warehouse'); }

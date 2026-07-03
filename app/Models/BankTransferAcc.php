@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class BankTransferAcc extends Model
 {
+    use BelongsToCompany;
     protected $guarded = ['id'];
 
     protected $casts = ['transfer_date' => 'date'];
