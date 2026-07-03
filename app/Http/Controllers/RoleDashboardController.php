@@ -1047,7 +1047,7 @@ class RoleDashboardController extends Controller
             $overdue = $stats['overdueInvoices'] ?? 0;
             $absent = $stats['absentToday'] ?? 0;
 
-            if (in_array($role, ['admin', 'administrator', 'admin_manager', 'director'])) {
+            if (in_array($role, ['admin', 'administrator', 'admin_manager', 'director', 'erp_super_administrator', 'erp_administrator', 'managing_director', 'general_manager'])) {
                 $message = 'Executive overview: Monitor revenue, expenses, and project delivery.';
                 if ($outstanding > 0) $suggestions[] = 'Follow up on TZS ' . number_format($outstanding) . ' outstanding customer balance.';
                 if ($profit < 0) $suggestions[] = 'Profit margin is negative. Review expenses and pricing strategy.';
@@ -1065,7 +1065,7 @@ class RoleDashboardController extends Controller
                 if ($pendingLeaves > 0) $suggestions[] = "Review and approve $pendingLeaves pending leave requests.";
                 if ($absent > 0) $suggestions[] = "Investigate $absent absent employees today.";
                 if (empty($suggestions)) $suggestions[] = 'Attendance and leave management are on track.';
-            } elseif (in_array($role, ['technical_manager', 'ict_engineer', 'technician', 'ict_officer'])) {
+            } elseif (in_array($role, ['technical_manager', 'ict_engineer', 'technician', 'ict_officer', 'ict_administrator', 'network_engineer', 'software_engineer', 'cybersecurity_engineer', 'field_technician'])) {
                 $message = 'IT/Technical: Track ticket resolution and project delivery.';
                 if ($openTickets > 0) $suggestions[] = 'Prioritize open tickets to reduce backlog.';
                 if (empty($suggestions)) $suggestions[] = 'Ticket resolution rate is healthy. Maintain SLA targets.';
