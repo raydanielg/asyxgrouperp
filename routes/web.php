@@ -265,6 +265,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/helpdesk-tickets/{ticket}', [$erp, 'helpdeskTicketShow'])->name('helpdesk-tickets.show');
     Route::post('/helpdesk-tickets/{ticket}/replies', [$erp, 'helpdeskReplyStore'])->name('helpdesk-replies.store');
     Route::patch('/helpdesk-tickets/{ticket}/status', [$erp, 'helpdeskTicketUpdateStatus'])->name('helpdesk-tickets.status');
+    Route::patch('/helpdesk-tickets/{ticket}/assign', [$erp, 'helpdeskTicketAssign'])->name('helpdesk-tickets.assign');
 
     // Purchase Invoices
     Route::get('/purchase-invoices', [$erp, 'purchaseInvoiceIndex'])->name('purchase-invoices.index');
