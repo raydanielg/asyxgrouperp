@@ -127,6 +127,11 @@ class CompanyController extends Controller
             ->with('success', 'Company deleted successfully.');
     }
 
+    /**
+     * Group Executive Dashboard (SRS 2.1): revenue by company, profitability by
+     * company, group revenue, group profitability, receivables by company, cash
+     * position by company, and company comparisons — all in one place.
+     */
     public function consolidated()
     {
         $companies = Company::operating()->withCount(['users', 'employees', 'projects', 'tenders'])->get();
@@ -136,11 +141,15 @@ class CompanyController extends Controller
         $totalExpenses = 0;
         $totalProjects = 0;
         $totalEmployees = 0;
+        $totalReceivables = 0;
+        $totalCashPosition = 0;
 
         foreach ($companies as $company) {
             $revenue = Revenue::withoutGlobalScope('company')->where('company_id', $company->id)->whereYear('revenue_date', date('Y'))->sum('amount');
             $expenses = Expense::withoutGlobalScope('company')->where('company_id', $company->id)->whereYear('expense_date', date('Y'))->sum('amount');
             $profit = $revenue - $expenses;
+            $receivables = \App\Models\SalesInvoice::withoutGlobalScope('company')->where('company_id', $company->id)->sum('balance_amount');
+            $cashPosition = \App\Models\BankAccount::withoutGlobalScope('company')->where('company_id', $company->id)->sum('current_balance');
 
             $consolidated[] = [
                 'company' => $company,
@@ -149,12 +158,16 @@ class CompanyController extends Controller
                 'profit' => $profit,
                 'projects' => $company->projects_count,
                 'employees' => $company->employees_count,
+                'receivables' => $receivables,
+                'cash_position' => $cashPosition,
             ];
 
             $totalRevenue += $revenue;
             $totalExpenses += $expenses;
             $totalProjects += $company->projects_count;
             $totalEmployees += $company->employees_count;
+            $totalReceivables += $receivables;
+            $totalCashPosition += $cashPosition;
         }
 
         $intercompanyPending = IntercompanyTransaction::where('status', 'pending')->count();
@@ -162,7 +175,7 @@ class CompanyController extends Controller
 
         return view('admin.companies.consolidated', compact(
             'consolidated', 'companies', 'totalRevenue', 'totalExpenses', 'totalProjects', 'totalEmployees',
-            'intercompanyPending', 'intercompanyAmount'
+            'totalReceivables', 'totalCashPosition', 'intercompanyPending', 'intercompanyAmount'
         ));
     }
 
