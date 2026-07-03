@@ -14,7 +14,7 @@
                 <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.238A7.995 7.995 0 0010 16c.5 0 1-.037 1.484-.109a1 1 0 01.89.89 11.115 11.115 0 00-.25 3.762 1 1 0 01-1.115.748 8.967 8.967 0 01-4.27-1.458 1 1 0 01-.633-1.54l.748-1.475z"/></svg>
                 ASYX Group Limited
             </span>
-            <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-navy leading-tight section-title section-title-center">
+            <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-navy leading-tight section-title section-title-center shake-title">
                 Established 2009
             </h2>
             <p class="mt-6 text-gray-600 text-lg leading-relaxed">
