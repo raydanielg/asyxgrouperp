@@ -119,6 +119,7 @@ class MasterDataSeeder extends Seeder
             );
             $employees[] = $emp;
 
+            $roleName = $designationToRole[$e['sig']] ?? 'employee_self_service';
             $user = User::updateOrCreate(
                 ['email' => $e['e']],
                 [
@@ -129,9 +130,18 @@ class MasterDataSeeder extends Seeder
                     'phone' => $e['p'],
                     'password' => Hash::make('password123'),
                     'email_verified_at' => $now,
-                    'role' => 'user',
+                    'role' => $roleName,
                 ]
             );
+
+            $role = \App\Models\Role::where('name', $roleName)->first();
+            if ($role) {
+                DB::table('role_user')->updateOrInsert(
+                    ['user_id' => $user->id, 'role_id' => $role->id],
+                    ['created_at' => $now, 'updated_at' => $now]
+                );
+            }
+
             $users[] = $user;
 
             Attendance::create([
