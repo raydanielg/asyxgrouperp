@@ -914,10 +914,10 @@
         {{-- Bottom User --}}
         <div class="p-4 border-t border-emerald-800/50">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-white font-bold text-xs">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-white font-bold text-xs font-menu">
                     {{ strtoupper(substr(Auth::user()->first_name ?? Auth::user()->name ?? 'A', 0, 1)) }}
                 </div>
-                <div class="flex-1 min-w-0">
+                <div class="flex-1 min-w-0 font-menu">
                     <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->first_name ? Auth::user()->first_name . ' ' . Auth::user()->last_name : (Auth::user()->name ?? 'Admin') }}</p>
                     <p class="text-xs text-emerald-300/60">{{ auth()->user()->isAdmin() ? 'Administrator' : (auth()->user()->roles()->first()?->label ?? 'User') }}</p>
                 </div>
@@ -941,6 +941,9 @@
                 <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
+                <div class="lg:hidden font-brand text-xl font-bold text-emerald-900 leading-none">
+                    <span>ASYX</span><span class="text-gold-500">GROUP</span>
+                </div>
                 <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX" class="lg:hidden w-7 h-7 object-contain">
                 <h1 class="text-lg font-bold text-gray-800">@yield('page_title', 'Dashboard')</h1>
             </div>
