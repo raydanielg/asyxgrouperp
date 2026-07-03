@@ -57,6 +57,25 @@ class MasterDataSeeder extends Seeder
         $now = now();
         $employees = []; $users = []; $products = []; $suppliers = []; $projects = [];
 
+        // Map display designations to system roles
+        $designationToRole = [
+            'Managing Director' => 'managing_director',
+            'Finance Manager' => 'finance_manager',
+            'Technical Manager' => 'technical_manager',
+            'HR Officer' => 'hr_officer',
+            'Project Manager' => 'project_manager',
+            'Accountant' => 'accountant',
+            'Sales Executive' => 'sales_executive',
+            'Support Engineer' => 'support_engineer',
+            'Technician' => 'technician',
+            'Receptionist' => 'receptionist',
+            'Call Center Agent' => 'call_center_agent',
+            'Procurement Officer' => 'procurement_officer',
+            'Logistics Officer' => 'logistics_officer',
+            'Payroll Officer' => 'payroll_officer',
+            'Systems Engineer' => 'systems_engineer',
+        ];
+
         // ═══════════════════════════════════════
         // EMPLOYEES & USERS
         // ═══════════════════════════════════════
