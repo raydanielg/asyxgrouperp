@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class PurchaseReturn extends Model
 {
+    use BelongsToCompany;
     protected $fillable = ['return_number', 'return_date', 'vendor_id', 'warehouse_id', 'original_invoice_id', 'reason', 'subtotal', 'tax_amount', 'discount_amount', 'total_amount', 'status', 'notes', 'creator_id', 'created_by'];
 
     public function vendor() { return $this->belongsTo(User::class, 'vendor_id'); }

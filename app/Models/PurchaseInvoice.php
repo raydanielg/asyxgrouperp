@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class PurchaseInvoice extends Model
 {
+    use BelongsToCompany;
     protected $fillable = ['invoice_number', 'invoice_date', 'due_date', 'vendor_id', 'warehouse_id', 'subtotal', 'tax_amount', 'discount_amount', 'total_amount', 'paid_amount', 'balance_amount', 'status', 'payment_terms', 'notes', 'creator_id', 'created_by'];
 
     protected $casts = [

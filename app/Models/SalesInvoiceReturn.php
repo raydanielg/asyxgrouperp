@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class SalesInvoiceReturn extends Model
 {
+    use BelongsToCompany;
     protected $fillable = ['return_number', 'return_date', 'customer_id', 'warehouse_id', 'original_invoice_id', 'reason', 'subtotal', 'tax_amount', 'discount_amount', 'total_amount', 'status', 'notes', 'creator_id', 'created_by'];
 
     public function customer() { return $this->belongsTo(User::class, 'customer_id'); }
