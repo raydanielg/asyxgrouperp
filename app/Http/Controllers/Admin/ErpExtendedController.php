@@ -884,9 +884,39 @@ class ErpExtendedController extends Controller
         return redirect()->route('admin.crm-contacts.index')->with('success', 'Contact added.');
     }
 
+    public function crmContactEdit(CrmContact $contact)
+    {
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json(['contact' => $contact]);
+        }
+        return view('admin.crm.contacts.edit', compact('contact'));
+    }
+
+    public function crmContactUpdate(Request $request, CrmContact $contact)
+    {
+        $data = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string|max:20',
+            'company' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'address' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+        $contact->update($data);
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'contact' => $contact]);
+        }
+        return redirect()->route('admin.crm-contacts.index')->with('success', 'Contact updated.');
+    }
+
     public function crmContactDestroy(CrmContact $contact)
     {
         $contact->delete();
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
         return redirect()->route('admin.crm-contacts.index')->with('success', 'Contact deleted.');
     }
 
