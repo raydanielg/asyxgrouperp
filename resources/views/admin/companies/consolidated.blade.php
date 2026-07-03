@@ -31,6 +31,17 @@
     </div>
 </div>
 
+<div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="bg-white rounded-xl border p-5">
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Group Receivables</p>
+        <p class="text-2xl font-bold text-sky-600">{{ number_format($totalReceivables, 0) }} TZS</p>
+    </div>
+    <div class="bg-white rounded-xl border p-5">
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Group Cash Position</p>
+        <p class="text-2xl font-bold text-violet-600">{{ number_format($totalCashPosition, 0) }} TZS</p>
+    </div>
+</div>
+
 {{-- Per-Company Breakdown --}}
 <div class="bg-white rounded-xl border overflow-hidden mb-6">
     <div class="px-5 py-3 border-b bg-gray-50/50">
