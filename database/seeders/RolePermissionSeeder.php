@@ -143,6 +143,10 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'systems_engineer', 'label' => 'Systems Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-maintenance', 'view-self-service', 'view-my-payslips']],
             ['name' => 'support_engineer', 'label' => 'Support Engineer / Field Technician', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-site-reports', 'create-site-reports', 'view-assets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'noc_engineer', 'label' => 'NOC Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'network_engineer', 'label' => 'Network Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-projects', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'software_engineer', 'label' => 'Software Engineer', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-bugs', 'create-bugs', 'view-timesheets', 'create-timesheets', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'cybersecurity_engineer', 'label' => 'Cybersecurity Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-login-history', 'view-audit-logs', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'field_technician', 'label' => 'Field Technician', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-site-reports', 'create-site-reports', 'view-assets', 'view-maintenance', 'view-self-service', 'view-my-payslips']],
 
             // Service Desk
             ['name' => 'service_desk_manager', 'label' => 'Service Desk Manager', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-reports', 'view-call-logs', 'view-self-service', 'view-my-payslips']],
