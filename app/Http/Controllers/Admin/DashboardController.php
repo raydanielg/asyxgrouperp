@@ -117,6 +117,9 @@ class DashboardController extends Controller
         $recentProposals = SalesProposal::with('customer')->latest()->take(5)->get();
         $recentUsers = User::where('role', 'user')->orderBy('created_at', 'desc')->take(5)->get();
 
+        $stats['currentCompanyName'] = $currentCompany ? $currentCompany->name : 'All Companies';
+        $stats['currentCompanyShortCode'] = $currentCompany ? $currentCompany->short_code : 'GRP';
+
         // ─── Charts ───
         $dailyLabels = [];
         $dailySales = [];
