@@ -407,17 +407,30 @@ class RoleDashboardController extends Controller
             case 'technical_manager':
             case 'ict_officer':
             case 'ict_engineer':
+            case 'ict_administrator':
+            case 'network_engineer':
+            case 'software_engineer':
+            case 'cybersecurity_engineer':
                 $items['openTickets'] = HelpdeskTicket::where('status', 'open')->latest()->take(5)->get();
                 $items['activeProjects'] = Project::where('status', 'in_progress')->latest()->take(5)->get();
                 break;
 
             case 'technician':
+            case 'field_technician':
                 $items['myTickets'] = HelpdeskTicket::where('assigned_to', auth()->id())->latest()->take(5)->get();
                 break;
 
             case 'project_manager':
+            case 'team_leader':
                 $items['activeProjects'] = Project::where('status', 'in_progress')->latest()->take(5)->get();
                 $items['openDeals'] = CrmDeal::where('status', 'open')->latest()->take(5)->get();
+                break;
+
+            case 'employee_self_service':
+            case 'manager_self_service':
+                $emp = Employee::where('user_id', auth()->id())->first();
+                $items['myLeaves'] = $emp ? Leave::where('employee_id', $emp->id)->latest()->take(5)->get() : collect();
+                $items['myAttendance'] = $emp ? Attendance::where('employee_id', $emp->id)->latest()->take(5)->get() : collect();
                 break;
 
             case 'cashier':
@@ -438,7 +451,7 @@ class RoleDashboardController extends Controller
         $money = fn($n) => 'TZS ' . number_format($n);
 
         return match ($role) {
-            'admin', 'administrator', 'admin_manager', 'managing_director', 'general_manager' => [
+            'admin', 'administrator', 'admin_manager', 'managing_director', 'general_manager', 'erp_super_administrator', 'erp_administrator' => [
                 ['label' => 'Total Users', 'value' => $stats['totalUsers'] ?? 0, 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'color' => 'emerald'],
                 ['label' => 'Total Sales', 'value' => $money($stats['totalSales'] ?? 0), 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'color' => 'sky'],
                 ['label' => 'Total Expenses', 'value' => $money($stats['totalExpenses'] ?? 0), 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', 'color' => 'amber'],
