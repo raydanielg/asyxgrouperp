@@ -39,10 +39,12 @@
                     <img src="{{ asset('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}" style="height:46px;max-width:160px;object-fit:contain;">
                 </div>
                 <div>
-                    <div style="font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;">{{ config('app.name') }}</div>
-                    <div style="font-size:11.5px;color:#6E7570;margin-top:3px;line-height:1.5;">
-                        {{ $salesInvoice->company?->name ?? 'ASYX Group' }}<br>
-                        Dar es Salaam, Tanzania
+                    <div style="font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;">{{ $salesInvoice->company?->name ?? config('app.name') }}</div>
+                    <div style="font-size:11.5px;color:#6E7570;margin-top:3px;line-height:1.55;">
+                        {{ $salesInvoice->company?->address ?? 'Dar es Salaam, Tanzania' }}<br>
+                        @if($salesInvoice->company?->tax_id)<span>TIN: {{ $salesInvoice->company->tax_id }}</span>@endif
+                        @if($salesInvoice->company?->tax_id && $salesInvoice->company?->vrn) &middot; @endif
+                        @if($salesInvoice->company?->vrn)<span>VRN: {{ $salesInvoice->company->vrn }}</span>@endif
                     </div>
                 </div>
             </div>
