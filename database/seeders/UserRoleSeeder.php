@@ -26,7 +26,7 @@ class UserRoleSeeder extends Seeder
             'hr_manager', 'hr_officer', 'recruitment_officer', 'training_officer', 'time_and_attendance_officer',
             'operations_officer', 'fleet_manager', 'logistics_officer',
             'employee_self_service', 'manager_self_service',
-            'receptionist', 'legal_officer', 'admin_manager', 'auditor', 'ict_officer', 'ict_engineer', 'supervisor', 'cashier', 'director', 'administrator', 'finance_officer', 'technician',
+            'receptionist', 'legal_officer', 'admin_manager', 'auditor', 'ict_officer', 'ict_engineer', 'supervisor', 'director', 'administrator', 'technician',
         ];
 
         $companies = \App\Models\Company::where('is_active', true)->get();
