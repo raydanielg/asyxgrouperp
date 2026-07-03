@@ -21,10 +21,15 @@
             }
         }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         .animate-fade { animation: fadeIn 0.3s ease-out both; }
         .sidebar-link { transition: all 0.2s ease; }
+        .font-brand { font-family: 'Fraunces','Georgia',serif; }
+        .font-menu { font-family: 'Inter','Nunito',sans-serif; }
         .sidebar-link:hover { background: rgba(255,255,255,0.06); }
         .sidebar-link.active { background: rgba(255,255,255,0.08); color: #fff; }
         .sidebar-submenu { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1); }
