@@ -77,6 +77,73 @@
         .value-card-v2:hover img { transform: scale(1.1); }
         .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15); }
+
+        {{-- Animated company profile section --}}
+        .profile-animated .dot-grid-drift {
+            background-image: radial-gradient(#A8703A 1.2px, transparent 1.2px);
+            background-size: 28px 28px;
+            animation: gridDrift 24s linear infinite;
+        }
+        @keyframes gridDrift { from { background-position: 0 0; } to { background-position: 56px 56px; } }
+        .profile-animated .orb { position:absolute; border-radius:9999px; filter:blur(60px); opacity:.14; animation: orbFloat 14s ease-in-out infinite; }
+        .profile-animated .orb-2 { animation-delay:-5s; animation-duration:18s; }
+        .profile-animated .orb-3 { animation-delay:-9s; animation-duration:22s; }
+        @keyframes orbFloat { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(40px,-50px) scale(1.15); } 66% { transform: translate(-30px,40px) scale(.9); } }
+        .profile-animated .profile-particle { position:absolute; font-family:monospace; font-weight:700; opacity:0; animation: particleRise linear infinite; pointer-events:none; user-select:none; }
+        @keyframes particleRise { 0% { transform: translateY(40px) rotate(0deg); opacity:0; } 12% { opacity:.5; } 88% { opacity:.5; } 100% { transform: translateY(-90vh) rotate(20deg); opacity:0; } }
+        .profile-animated .shimmer-title {
+            background: linear-gradient(110deg,#1B3A5C 35%, #A8703A 50%, #1B3A5C 65%);
+            background-size: 220% 100%;
+            -webkit-background-clip:text; background-clip:text; color:transparent;
+            animation: shimmer 4.5s ease-in-out infinite;
+        }
+        @keyframes shimmer { 0%{background-position:120% 0} 100%{background-position:-120% 0} }
+        .profile-animated .title-underline { width:0; height:5px; border-radius:99px; background:linear-gradient(90deg,#A8703A,#C81E3A,#5B2A6E); margin:14px auto 0; transition:width 1.1s cubic-bezier(.7,0,.2,1) .3s; }
+        .profile-animated .rv-profile.in-view .title-underline { width:120px; }
+        .profile-animated .badge-wrap { position:relative; }
+        .profile-animated .badge-ring { position:absolute; inset:-14px; border-radius:9999px; border:2.5px dashed rgba(168,112,58,.55); animation: spin 16s linear infinite; }
+        .profile-animated .badge-ring2 { position:absolute; inset:-28px; border-radius:9999px; border:1.5px dashed rgba(91,42,110,.35); animation: spin 26s linear infinite reverse; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .profile-animated .badge-core { animation: badgePulse 3.2s ease-in-out infinite; }
+        @keyframes badgePulse { 0%,100% { box-shadow:0 22px 50px -12px rgba(27,58,92,.45), 0 0 0 0 rgba(168,112,58,.35); } 50% { box-shadow:0 22px 50px -12px rgba(27,58,92,.45), 0 0 0 22px rgba(168,112,58,0); } }
+        .profile-animated .badge-orbit-dot { position:absolute; inset:-14px; animation: spin 8s linear infinite; }
+        .profile-animated .badge-orbit-dot::after { content:''; position:absolute; top:-6px; left:50%; width:12px; height:12px; border-radius:99px; background:linear-gradient(135deg,#A8703A,#C81E3A); transform:translateX(-50%); box-shadow:0 0 14px rgba(200,30,58,.8); }
+        .profile-animated .rv-profile { opacity:0; transform: translateY(46px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+        .profile-animated .rv-profile.in-view { opacity:1; transform:none; }
+        .profile-animated .chip-pop { opacity:0; transform:scale(.6); transition:opacity .6s, transform .6s cubic-bezier(.34,1.56,.64,1); }
+        .profile-animated .rv-profile.in-view .chip-pop { opacity:1; transform:scale(1); }
+        .profile-animated .mv-card-tilt { opacity:0; transition: opacity 1s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1); will-change:transform; }
+        .profile-animated .mv-card-tilt:nth-child(1) { transform: translateX(-90px) rotate(-2deg) scale(.96); }
+        .profile-animated .mv-card-tilt:nth-child(2) { transform: translateX(90px) rotate(2deg) scale(.96); }
+        .profile-animated .rv-profile.in-view ~ .mv-card-tilt, .profile-animated .mv-card-tilt.in-view { opacity:1; transform:none; }
+        .profile-animated .mv-card-tilt::before { content:''; position:absolute; inset:0; border-radius:1rem; padding:2px; background:linear-gradient(120deg,#A8703A,#C81E3A,#5B2A6E,#1B3A5C); background-size:300% 300%; -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0; transition:opacity .5s; animation:borderMove 6s linear infinite; pointer-events:none; z-index:5; }
+        .profile-animated .mv-card-tilt:hover::before { opacity:1; }
+        @keyframes borderMove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .profile-animated .kenburns { animation: kenburns 16s ease-in-out infinite alternate; }
+        @keyframes kenburns { from { transform: scale(1) translate(0,0);} to { transform: scale(1.18) translate(-2%,2%);} }
+        .profile-animated .marquee-strip { overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent); mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent); }
+        .profile-animated .marquee-track { display:flex; gap:3.5rem; width:max-content; animation: marquee 26s linear infinite; }
+        .profile-animated .marquee-strip:hover .marquee-track { animation-play-state:paused; }
+        @keyframes marquee { to { transform: translateX(-50%); } }
+        .profile-animated .vs-img { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transform:scale(1.12); transition:opacity 1s ease, transform 1.4s ease; clip-path: circle(0% at 30% 50%); }
+        .profile-animated .vs-img.active { opacity:1; transform:scale(1); clip-path: circle(150% at 30% 50%); transition:opacity .9s ease, transform 6s linear, clip-path 1.1s cubic-bezier(.7,0,.2,1); z-index:1; }
+        .profile-animated .vs-img.leaving { opacity:0; transform:scale(1.08); clip-path: circle(150% at 30% 50%); z-index:0; }
+        .profile-animated .vs-anim { display:block; }
+        .profile-animated .vs-out .vs-anim { animation: vsTextOut .35s ease forwards; }
+        .profile-animated .vs-in .vs-anim { animation: vsTextIn .6s cubic-bezier(.2,.7,.2,1) both; }
+        .profile-animated #vsDesc.vs-anim { animation-delay:.08s; }
+        @keyframes vsTextOut { to { opacity:0; transform:translateY(-26px); } }
+        @keyframes vsTextIn { from { opacity:0; transform:translateY(34px); } to { opacity:1; transform:none; } }
+        .profile-animated .vs-pill { padding:.45rem 1rem; border-radius:99px; font-size:.78rem; font-weight:700; border:1.5px solid rgba(255,255,255,.22); color:rgba(255,255,255,.75); transition:all .35s cubic-bezier(.2,.7,.2,1); cursor:pointer; background:transparent; }
+        .profile-animated .vs-pill:hover { border-color:rgba(255,255,255,.55); color:#fff; transform:translateY(-2px); }
+        .profile-animated .vs-pill.active { background:linear-gradient(135deg,#A8703A,#C81E3A); border-color:transparent; color:#fff; box-shadow:0 8px 20px -6px rgba(200,30,58,.55); transform:translateY(-2px); }
+        .profile-animated #vsProgress { transition:width .1s linear; }
+        .profile-animated #vsGhostNum.switching { transform:translateY(30px); opacity:0; }
+        .profile-animated #vsIconChip.switching { transform:rotate(-14deg) scale(.6); opacity:0; }
+        @media (prefers-reduced-motion: reduce) {
+            .profile-animated *, .profile-animated *::before, .profile-animated *::after { animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+        }
+
         {{-- Animated rotating border on hover --}}
         .service-card { position: relative; overflow: hidden; }
         .service-card::before {
