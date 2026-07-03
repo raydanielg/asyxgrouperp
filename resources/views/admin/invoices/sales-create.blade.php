@@ -131,5 +131,9 @@ function calcAll() {
     document.getElementById('discountInput').value = discount.toFixed(2);
     document.getElementById('totalInput').value = total.toFixed(2);
 }
+function setDefaultTerms() {
+    const defaultTerms = `TERMS & CONDITIONS:\n1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of {{ config('app.name') }} until fully paid\n\nThank You For Your Business.`;
+    document.getElementById('termsField').value = defaultTerms;
+}
 </script>
 @endsection
