@@ -681,6 +681,13 @@ class RoleDashboardController extends Controller
             'fleet_manager' => 'Fleet Manager',
             'employee_self_service' => 'Employee Self-Service',
             'manager_self_service' => 'Manager Self-Service',
+            'erp_super_administrator' => 'ERP Super Administrator',
+            'erp_administrator' => 'ERP Administrator',
+            'ict_administrator' => 'ICT Administrator',
+            'network_engineer' => 'Network Engineer',
+            'software_engineer' => 'Software Engineer',
+            'cybersecurity_engineer' => 'Cybersecurity Engineer',
+            'field_technician' => 'Field Technician',
         ];
         return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
     }
@@ -778,6 +785,11 @@ class RoleDashboardController extends Controller
             case 'ict_officer':
             case 'ict_engineer':
             case 'technician':
+            case 'ict_administrator':
+            case 'network_engineer':
+            case 'software_engineer':
+            case 'cybersecurity_engineer':
+            case 'field_technician':
                 $data['title'] = 'Tickets Created (14 days)';
                 $data['values'] = [];
                 for ($i = 13; $i >= 0; $i--) {
