@@ -891,7 +891,7 @@
             <div class="pt-2">
                 <button onclick="toggleSidebarGroup('{{ $groupId }}')" id="btn-{{ $groupId }}" class="sidebar-group-btn font-menu w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-emerald-200 text-sm font-semibold {{ $groupHasActive ? 'open' : '' }}">
                     <span class="flex items-center gap-2">
-                        <span class="text-[10px] uppercase tracking-wider text-emerald-400/50 font-bold">{{ $group['title'] }}</span>
+                        <span class="font-brand text-[13px] tracking-wide text-emerald-300/80 font-semibold">{{ $group['title'] }}</span>
                     </span>
                     <svg class="chevron w-3.5 h-3.5 text-emerald-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                 </button>
