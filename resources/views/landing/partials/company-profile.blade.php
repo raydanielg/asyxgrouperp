@@ -31,29 +31,49 @@
             <p class="text-xs text-gray-400 mt-3">Leading technological innovation across Africa</p>
         </div>
 
-        {{-- Mission & Vision with Images --}}
-        <div class="grid md:grid-cols-2 gap-6 mb-16">
-            {{-- Mission --}}
-            <div class="mission-card group relative overflow-hidden rounded-2xl h-96 reveal-left">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Our Mission" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/70 to-navy/30"></div>
-                <div class="absolute inset-0 flex flex-col justify-end p-8 sm:p-10">
-                    <span class="text-bronze text-xs font-bold uppercase tracking-wider mb-2">What drives us</span>
-                    <h3 class="font-heading text-2xl sm:text-3xl font-black text-white mb-3">Our Mission</h3>
-                    <p class="text-gray-200 leading-relaxed text-sm sm:text-base">To introduce creative, innovative, and simplified technological solutions that are tailored to Africa's environmental and infrastructural challenges.</p>
+        {{-- Mission & Vision - Stacked 2-column cards with scroll transitions --}}
+        <div class="mv-stack mb-16">
+
+            {{-- Mission Card: image left, text right --}}
+            <div class="mv-card mv-mission group relative overflow-hidden rounded-2xl bg-white shadow-xl" data-mv="0">
+                <div class="grid md:grid-cols-2 h-full">
+                    <div class="relative h-64 md:h-auto overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Our Mission" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-navy/20"></div>
+                    </div>
+                    <div class="flex flex-col justify-center p-8 sm:p-10 md:p-12 relative">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-bronze/10 rounded-full blur-2xl"></div>
+                        <span class="text-bronze text-xs font-bold uppercase tracking-wider mb-2">What drives us</span>
+                        <h3 class="font-heading text-2xl sm:text-3xl font-black text-navy mb-4">Our Mission</h3>
+                        <p class="text-gray-600 leading-relaxed text-sm sm:text-base mb-6">To introduce creative, innovative, and simplified technological solutions that are tailored to Africa's environmental and infrastructural challenges.</p>
+                        <div class="flex items-center gap-3 text-sm text-navy font-semibold">
+                            <span class="w-8 h-1 bg-bronze rounded-full"></span>
+                            <span>Tailored for Africa</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {{-- Vision --}}
-            <div class="vision-card group relative overflow-hidden rounded-2xl h-96 reveal-right">
-                <img src="https://images.unsplash.com/photo-1451187580459-9546f8937745?w=800&q=80" alt="Our Vision" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple via-purple/70 to-purple/30"></div>
-                <div class="absolute inset-0 flex flex-col justify-end p-8 sm:p-10">
-                    <span class="text-white/80 text-xs font-bold uppercase tracking-wider mb-2">Where we're headed</span>
-                    <h3 class="font-heading text-2xl sm:text-3xl font-black text-white mb-3">Our Vision</h3>
-                    <p class="text-gray-200 leading-relaxed text-sm sm:text-base">To become the leading company in empowering African countries to realize the full potential of technology in driving sustainable economic growth.</p>
+            {{-- Vision Card: text left, image right --}}
+            <div class="mv-card mv-vision group relative overflow-hidden rounded-2xl bg-white shadow-xl" data-mv="1">
+                <div class="grid md:grid-cols-2 h-full">
+                    <div class="flex flex-col justify-center p-8 sm:p-10 md:p-12 relative order-2 md:order-1">
+                        <div class="absolute top-0 left-0 w-32 h-32 bg-purple/10 rounded-full blur-2xl"></div>
+                        <span class="text-purple text-xs font-bold uppercase tracking-wider mb-2">Where we're headed</span>
+                        <h3 class="font-heading text-2xl sm:text-3xl font-black text-navy mb-4">Our Vision</h3>
+                        <p class="text-gray-600 leading-relaxed text-sm sm:text-base mb-6">To become the leading company in empowering African countries to realize the full potential of technology in driving sustainable economic growth.</p>
+                        <div class="flex items-center gap-3 text-sm text-navy font-semibold">
+                            <span class="w-8 h-1 bg-purple rounded-full"></span>
+                            <span>Leading Across Africa</span>
+                        </div>
+                    </div>
+                    <div class="relative h-64 md:h-auto overflow-hidden order-1 md:order-2">
+                        <img src="https://images.unsplash.com/photo-1451187580459-9546f8937745?w=800&q=80" alt="Our Vision" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-purple/20"></div>
+                    </div>
                 </div>
             </div>
+
         </div>
 
         {{-- Core Values --}}
