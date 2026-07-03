@@ -9,11 +9,17 @@ trait BelongsToCompany
 {
     public static function bootBelongsToCompany(): void
     {
-        static::addGlobalScope('company', function (Builder $builder) {
+        static $applyingScope = false;
+
+        static::addGlobalScope('company', function (Builder $builder) use (&$applyingScope) {
+            if ($applyingScope) return;
             if (!auth()->check()) return;
 
             $user = auth()->user();
             $table = $builder->getQuery()->from;
+
+            // Skip scope for users table itself to prevent infinite recursion
+            if ($table === 'users') return;
 
             // Superadmin / ERP admin sees all unless a company is explicitly switched
             if ($user->isAdmin() || $user->isSuperAdmin()) {
