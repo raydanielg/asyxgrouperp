@@ -85,50 +85,69 @@
             <h3 class="font-heading text-2xl sm:text-3xl font-black text-navy">The Principles That Guide Everything We Do</h3>
         </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
-            <div class="value-card group relative overflow-hidden rounded-2xl h-64 reveal-scale stagger-1">
-                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80" alt="Professionalism" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-transparent"></div>
-                <div class="absolute inset-0 flex flex-col items-center justify-end p-4 text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full cta-gradient flex items-center justify-center mb-2 text-white font-heading font-black text-sm">01</div>
-                    <h4 class="font-heading text-sm sm:text-base font-bold text-white mb-1">Professionalism</h4>
-                    <p class="text-xs text-gray-200 leading-relaxed">Competence, accountability, and excellence.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {{-- Professionalism --}}
+            <div class="value-card-v2 group relative overflow-hidden rounded-2xl h-80 shadow-lg reveal-scale stagger-1">
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=700&q=80" alt="Professionalism" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/80 to-navy/30 transition-opacity duration-500 group-hover:via-navy/90"></div>
+                <div class="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                        <span class="text-white font-heading font-black text-lg">01</span>
+                    </div>
+                    <h4 class="font-heading text-lg sm:text-xl font-bold text-white mb-2">Professionalism</h4>
+                    <p class="text-sm text-gray-200 leading-relaxed">Delivering services with competence, accountability, and excellence in every engagement.</p>
                 </div>
             </div>
-            <div class="value-card group relative overflow-hidden rounded-2xl h-64 reveal-scale stagger-2">
-                <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=600&q=80" alt="Integrity" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple via-purple/60 to-transparent"></div>
-                <div class="absolute inset-0 flex flex-col items-center justify-end p-4 text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full cta-gradient flex items-center justify-center mb-2 text-white font-heading font-black text-sm">02</div>
-                    <h4 class="font-heading text-sm sm:text-base font-bold text-white mb-1">Integrity</h4>
-                    <p class="text-xs text-gray-200 leading-relaxed">Honest, transparent, and ethical always.</p>
+
+            {{-- Integrity --}}
+            <div class="value-card-v2 group relative overflow-hidden rounded-2xl h-80 shadow-lg reveal-scale stagger-2">
+                <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=700&q=80" alt="Integrity" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-purple via-purple/80 to-purple/30 transition-opacity duration-500 group-hover:via-purple/90"></div>
+                <div class="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                        <span class="text-white font-heading font-black text-lg">02</span>
+                    </div>
+                    <h4 class="font-heading text-lg sm:text-xl font-bold text-white mb-2">Integrity</h4>
+                    <p class="text-sm text-gray-200 leading-relaxed">Acting honestly, transparently, and ethically at all times with every stakeholder.</p>
                 </div>
             </div>
-            <div class="value-card group relative overflow-hidden rounded-2xl h-64 reveal-scale stagger-3">
-                <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80" alt="Innovation" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-crimson via-crimson/60 to-transparent"></div>
-                <div class="absolute inset-0 flex flex-col items-center justify-end p-4 text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full cta-gradient flex items-center justify-center mb-2 text-white font-heading font-black text-sm">03</div>
-                    <h4 class="font-heading text-sm sm:text-base font-bold text-white mb-1">Innovation</h4>
-                    <p class="text-xs text-gray-200 leading-relaxed">Creativity, continuous improvement.</p>
+
+            {{-- Innovation --}}
+            <div class="value-card-v2 group relative overflow-hidden rounded-2xl h-80 shadow-lg reveal-scale stagger-3">
+                <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=700&q=80" alt="Innovation" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-crimson via-crimson/80 to-crimson/30 transition-opacity duration-500 group-hover:via-crimson/90"></div>
+                <div class="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                        <span class="text-white font-heading font-black text-lg">03</span>
+                    </div>
+                    <h4 class="font-heading text-lg sm:text-xl font-bold text-white mb-2">Innovation</h4>
+                    <p class="text-sm text-gray-200 leading-relaxed">Embracing creativity, continuous improvement, and practical technology solutions.</p>
                 </div>
             </div>
-            <div class="value-card group relative overflow-hidden rounded-2xl h-64 reveal-scale stagger-4">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80" alt="Teamwork" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-transparent"></div>
-                <div class="absolute inset-0 flex flex-col items-center justify-end p-4 text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full cta-gradient flex items-center justify-center mb-2 text-white font-heading font-black text-sm">04</div>
-                    <h4 class="font-heading text-sm sm:text-base font-bold text-white mb-1">Teamwork</h4>
-                    <p class="text-xs text-gray-200 leading-relaxed">Collaborating for shared success.</p>
+
+            {{-- Teamwork --}}
+            <div class="value-card-v2 group relative overflow-hidden rounded-2xl h-80 shadow-lg sm:col-span-2 lg:col-span-1 reveal-scale stagger-4">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&q=80" alt="Teamwork" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-navy via-navy/80 to-navy/30 transition-opacity duration-500 group-hover:via-navy/90"></div>
+                <div class="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                        <span class="text-white font-heading font-black text-lg">04</span>
+                    </div>
+                    <h4 class="font-heading text-lg sm:text-xl font-bold text-white mb-2">Teamwork</h4>
+                    <p class="text-sm text-gray-200 leading-relaxed">Collaborating effectively across teams to achieve shared goals and mission success.</p>
                 </div>
             </div>
-            <div class="value-card group relative overflow-hidden rounded-2xl h-64 reveal-scale stagger-5">
-                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&q=80" alt="Compliance" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                <div class="absolute inset-0 bg-gradient-to-t from-bronze via-bronze/60 to-transparent"></div>
-                <div class="absolute inset-0 flex flex-col items-center justify-end p-4 text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full cta-gradient flex items-center justify-center mb-2 text-white font-heading font-black text-sm">05</div>
-                    <h4 class="font-heading text-sm sm:text-base font-bold text-white mb-1">Compliance</h4>
-                    <p class="text-xs text-gray-200 leading-relaxed">Laws, standards, and governance.</p>
+
+            {{-- Compliance --}}
+            <div class="value-card-v2 group relative overflow-hidden rounded-2xl h-80 shadow-lg sm:col-span-2 lg:col-span-2 reveal-scale stagger-5">
+                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=700&q=80" alt="Compliance" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-bronze via-bronze/80 to-bronze/30 transition-opacity duration-500 group-hover:via-bronze/90"></div>
+                <div class="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end sm:max-w-md">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                        <span class="text-white font-heading font-black text-lg">05</span>
+                    </div>
+                    <h4 class="font-heading text-lg sm:text-xl font-bold text-white mb-2">Compliance</h4>
+                    <p class="text-sm text-gray-200 leading-relaxed">Adhering to applicable laws, international standards, and governance requirements in every solution we deliver.</p>
                 </div>
             </div>
         </div>
