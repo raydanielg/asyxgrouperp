@@ -83,6 +83,30 @@ function downloadPdf(url, title) {
     willClose: () => { window.open(url, '_blank'); }
   });
 }
+
+function convertDealToProject(id, number, title) {
+  Swal.fire({
+    title: 'Convert Deal to Project?',
+    text: 'Deal ' + number + ' (' + title + ') will be converted into a project.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#059669',
+    cancelButtonColor: '#6b7280',
+    confirmButtonText: 'Yes, convert it',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Converting...',
+        text: 'Please wait',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+      document.getElementById('convert-deal-' + id).submit();
+    }
+  });
+}
 </script>
 @endpush
 @endsection
