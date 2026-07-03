@@ -241,6 +241,12 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'project_manager':
+            case 'project_director':
+            case 'technical_projects_manager':
+            case 'project_coordinator':
+            case 'project_engineer':
+            case 'site_supervisor':
+            case 'project_accountant':
                 $stats = [
                     'totalProjects' => Project::count(),
                     'activeProjects' => Project::where('status', 'in_progress')->count(),
@@ -265,6 +271,12 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'call_center_agent':
+            case 'sales_manager':
+            case 'business_development_manager':
+            case 'sales_executive':
+            case 'crm_officer':
+            case 'marketing_officer':
+            case 'call_center_supervisor':
                 $stats = [
                     'totalLeads' => CrmLead::count(),
                     'newLeads' => CrmLead::where('status', 'new')->count(),
