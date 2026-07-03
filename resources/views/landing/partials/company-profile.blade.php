@@ -223,81 +223,85 @@
 (function() {
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    {{-- Floating tech particles --}}
+    {{-- Particles --}}
     if (!reduceMotion) {
-        var symbols = ['</>','{ }','01','#','∆','⚡','◆','101','&&','=>'];
+        var symbols = ['</>','{ }','01','#','&&','=>','101','::'];
         var colors = ['#A8703A','#5B2A6E','#C81E3A','#1B3A5C'];
         var box = document.getElementById('profileParticles');
         if (box) {
             for (var i = 0; i < 16; i++) {
                 var p = document.createElement('span');
-                p.className = 'profile-particle';
+                p.className = 'profile-particle-v3';
                 p.textContent = symbols[i % symbols.length];
-                p.style.left = (Math.random() * 100) + '%';
+                p.style.left = (Math.random()*100)+'%';
                 p.style.bottom = '-40px';
-                p.style.fontSize = (12 + Math.random() * 16) + 'px';
+                p.style.fontSize = (12+Math.random()*16)+'px';
                 p.style.color = colors[i % colors.length];
-                p.style.animationDuration = (12 + Math.random() * 14) + 's';
-                p.style.animationDelay = (Math.random() * 14) + 's';
+                p.style.animationDuration = (12+Math.random()*14)+'s';
+                p.style.animationDelay = (Math.random()*14)+'s';
                 box.appendChild(p);
             }
         }
     }
 
-    {{-- Reveal on scroll (with stagger) --}}
+    {{-- Quote word-by-word setup --}}
+    document.querySelectorAll('.mission-quote, .vision-quote').forEach(function(q) {
+        var words = q.textContent.trim().split(/\s+/);
+        q.innerHTML = words.map(function(w,i){
+            return '<span class="qword-v3" style="transition-delay:'+(0.35 + i*0.045)+'s">'+w+'</span>';
+        }).join(' ');
+    });
+
+    {{-- Reveal on scroll --}}
     var observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (!entry.isIntersecting) return;
             var el = entry.target;
             var stagger = parseInt(el.dataset.stagger || 0);
-            setTimeout(function(){ el.classList.add('in-view'); }, stagger * 130);
+            setTimeout(function(){ el.classList.add('in-view'); }, stagger*130);
             observer.unobserve(el);
         });
-    }, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
-
-    document.querySelectorAll('.rv-profile').forEach(function(el){ observer.observe(el); });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('[data-rv]').forEach(function(el){ observer.observe(el); });
 
     {{-- 16+ Counter --}}
     var counterEl = document.getElementById('yearsCounter');
     if (counterEl) {
         var counted = false;
-        var counterObs = new IntersectionObserver(function(entries) {
+        new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting && !counted) {
                     counted = true;
                     var target = 16, dur = 1600, start = null;
-                    function step(ts) {
+                    (function step(ts) {
                         if (!start) start = ts;
-                        var prog = Math.min((ts - start) / dur, 1);
-                        var eased = 1 - Math.pow(1 - prog, 3);
-                        counterEl.textContent = Math.round(eased * target);
+                        var prog = Math.min((ts-start)/dur, 1);
+                        counterEl.textContent = Math.round((1-Math.pow(1-prog,3))*target);
                         if (prog < 1) requestAnimationFrame(step);
-                    }
-                    requestAnimationFrame(step);
+                    })(performance.now());
                 }
             });
-        }, { threshold: 0.5 });
-        counterObs.observe(counterEl);
+        }, { threshold: 0.5 }).observe(counterEl);
     }
 
     {{-- Core Values Showcase --}}
     var VALUES = [
-        { title:'Professionalism', desc:'We deliver every project with competence, accountability, and an uncompromising standard of excellence.', tag:'Core Value · 01', color:'#A8703A', veil:'rgba(27,58,92,.45)',
+        { title:'Professionalism', desc:'We deliver every project with competence, accountability, and an uncompromising standard of excellence.', tag:'Core Value · 01', color:'#A8703A', veil:'rgba(14,42,74,.45)',
           icon:'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
-        { title:'Integrity', desc:'We are honest, transparent, and ethical in every engagement — with clients, partners, and each other.', tag:'Core Value · 02', color:'#5B2A6E', veil:'rgba(91,42,110,.45)',
+        { title:'Integrity', desc:'We are honest, transparent, and ethical in every engagement — with clients, partners, and each other.', tag:'Core Value · 02', color:'#b48ae8', veil:'rgba(107,63,160,.45)',
           icon:'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
-        { title:'Innovation', desc:'We embrace creativity and continuous improvement, building solutions shaped for Africa\u2019s realities.', tag:'Core Value · 03', color:'#C81E3A', veil:'rgba(200,30,58,.45)',
+        { title:'Innovation', desc:'We embrace creativity and continuous improvement, building solutions shaped for Africa\u2019s realities.', tag:'Core Value · 03', color:'#ff8fa0', veil:'rgba(192,52,75,.45)',
           icon:'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
-        { title:'Teamwork', desc:'We collaborate across disciplines and borders, because shared success is the only success that lasts.', tag:'Core Value · 04', color:'#1B3A5C', veil:'rgba(27,58,92,.45)',
+        { title:'Teamwork', desc:'We collaborate across disciplines and borders, because shared success is the only success that lasts.', tag:'Core Value · 04', color:'#6dd3e8', veil:'rgba(14,116,144,.45)',
           icon:'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' },
-        { title:'Compliance', desc:'We operate within laws, standards, and strong governance — earning trust in mission-critical environments.', tag:'Core Value · 05', color:'#A8703A', veil:'rgba(168,112,58,.45)',
+        { title:'Compliance', desc:'We operate within laws, standards, and strong governance — earning trust in mission-critical environments.', tag:'Core Value · 05', color:'#ffc47a', veil:'rgba(168,112,58,.45)',
           icon:'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z' }
     ];
 
     var showcase = document.getElementById('valuesShowcase');
     if (showcase) {
-        var imgs = showcase.querySelectorAll('.vs-img');
-        var pills = showcase.querySelectorAll('.vs-pill');
+        var imgs = showcase.querySelectorAll('.vs-img-v3');
+        var pills = showcase.querySelectorAll('.vs-pill-v3');
         var elTitle = document.getElementById('vsTitle');
         var elDesc = document.getElementById('vsDesc');
         var elNum = document.getElementById('vsNum');
@@ -307,25 +311,23 @@
         var elGlow = document.getElementById('vsGlow');
         var elChip = document.getElementById('vsIconChip');
         var elProg = document.getElementById('vsProgress');
-        var textSide = showcase.querySelector('.relative.flex');
+        var textSide = showcase.querySelector('.vs-textside-v3');
 
         var current = 0, DURATION = 5200, elapsed = 0, last = null, paused = false, switching = false;
-
         function pad(n){ return (n<10?'0':'')+n; }
 
         function goTo(next) {
-            if (switching || next === current) return;
-            switching = true;
+            if (switching) return;
             var idx = (next + VALUES.length) % VALUES.length;
+            if (idx === current) return;
+            switching = true;
             var v = VALUES[idx];
 
-            {{-- image crossfade --}}
             imgs[current].classList.add('leaving');
             imgs[current].classList.remove('active');
             imgs[idx].classList.add('active');
             setTimeout(function(){ imgs.forEach(function(im,i){ if(i!==idx) im.classList.remove('leaving'); }); }, 1100);
 
-            {{-- text out --}}
             textSide.classList.add('vs-out');
             elGhost.classList.add('switching');
             elChip.classList.add('switching');
@@ -333,11 +335,11 @@
             setTimeout(function() {
                 elTitle.textContent = v.title;
                 elDesc.textContent = v.desc;
-                elNum.textContent = pad(idx+1) + ' / ' + pad(VALUES.length);
+                elNum.textContent = pad(idx+1)+' / '+pad(VALUES.length);
                 elTag.textContent = v.tag;
                 elTag.style.color = v.color;
                 elGhost.textContent = pad(idx+1);
-                elVeil.style.backgroundColor = v.veil;
+                elVeil.style.background = v.veil;
                 elGlow.style.backgroundColor = v.color;
                 elChip.querySelector('path').setAttribute('d', v.icon);
 
@@ -345,7 +347,6 @@
                 textSide.classList.add('vs-in');
                 elGhost.classList.remove('switching');
                 elChip.classList.remove('switching');
-
                 pills.forEach(function(p,i){ p.classList.toggle('active', i===idx); });
 
                 setTimeout(function(){ textSide.classList.remove('vs-in'); switching = false; }, 650);
@@ -355,9 +356,7 @@
             elapsed = 0;
         }
 
-        pills.forEach(function(p){
-            p.addEventListener('click', function(){ goTo(parseInt(p.dataset.vs)); });
-        });
+        pills.forEach(function(p){ p.addEventListener('click', function(){ goTo(parseInt(p.dataset.vs)); }); });
         document.getElementById('vsNext').addEventListener('click', function(){ goTo(current+1); });
         document.getElementById('vsPrev').addEventListener('click', function(){ goTo(current-1); });
 
@@ -365,39 +364,21 @@
         function updatePaused(){ paused = hovered || offscreen; }
         showcase.addEventListener('mouseenter', function(){ hovered = true; updatePaused(); });
         showcase.addEventListener('mouseleave', function(){ hovered = false; updatePaused(); });
-        var visObs = new IntersectionObserver(function(en){
+        new IntersectionObserver(function(en){
             en.forEach(function(e){ offscreen = !e.isIntersecting; updatePaused(); });
-        }, {threshold:.15});
-        visObs.observe(showcase);
+        }, {threshold:.15}).observe(showcase);
 
         function tick(ts) {
             if (last === null) last = ts;
             var dt = ts - last; last = ts;
             if (!paused && !switching && !reduceMotion) {
                 elapsed += dt;
-                elProg.style.width = Math.min(elapsed / DURATION * 100, 100) + '%';
-                if (elapsed >= DURATION) goTo(current + 1);
+                elProg.style.width = Math.min(elapsed/DURATION*100, 100)+'%';
+                if (elapsed >= DURATION) goTo(current+1);
             }
             requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
-    }
-
-    {{-- 3D tilt on Mission/Vision cards --}}
-    if (!reduceMotion && matchMedia('(pointer:fine)').matches) {
-        document.querySelectorAll('.mv-card-tilt').forEach(function(card) {
-            card.addEventListener('mousemove', function(e) {
-                var r = card.getBoundingClientRect();
-                var x = (e.clientX - r.left) / r.width - 0.5;
-                var y = (e.clientY - r.top) / r.height - 0.5;
-                card.style.transform = 'rotateY(' + (x * 6) + 'deg) rotateX(' + (-y * 6) + 'deg) translateY(-4px)';
-                card.style.transition = 'transform .1s';
-            });
-            card.addEventListener('mouseleave', function() {
-                card.style.transition = 'transform .6s cubic-bezier(.2,.7,.2,1)';
-                card.style.transform = 'none';
-            });
-        });
     }
 })();
 </script>
