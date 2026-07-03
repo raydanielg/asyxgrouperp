@@ -142,6 +142,18 @@
             .profile-v3 *, .profile-v3 *::before, .profile-v3 *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
         }
 
+        {{-- Clients section --}}
+        .clients-section .dot-grid-clients { background-image:radial-gradient(#1B3A5C 1px, transparent 1px); background-size:24px 24px; animation:clientsGridDrift 20s linear infinite; }
+        @keyframes clientsGridDrift { from{background-position:0 0} to{background-position:24px 24px} }
+        .clients-section .client-card { position:relative; overflow:hidden; }
+        .clients-section .client-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,transparent 0%,rgba(168,112,58,.04) 100%); opacity:0; transition:opacity .3s; }
+        .clients-section .client-card:hover::before { opacity:1; }
+        .clients-section .clients-track { will-change:transform; }
+        @keyframes clientsMarquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        @media (prefers-reduced-motion: reduce) {
+            .clients-section .clients-track { animation:none !important; }
+        }
+
         {{-- Animated rotating border on hover --}}
         .service-card { position: relative; overflow: hidden; }
         .service-card::before {
