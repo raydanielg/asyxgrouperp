@@ -89,5 +89,10 @@ class CompanySeeder extends Seeder
         if ($admin && !$admin->company_id) {
             $admin->update(['company_id' => $group->id]);
         }
+
+        $superadmin = User::where('email', 'superadmin@asyxgroup.co.tz')->first();
+        if ($superadmin && !$superadmin->company_id) {
+            $superadmin->update(['company_id' => $group->id]);
+        }
     }
 }
