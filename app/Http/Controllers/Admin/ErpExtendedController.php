@@ -877,7 +877,10 @@ class ErpExtendedController extends Controller
             'address' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
-        CrmContact::create($data);
+        $contact = CrmContact::create($data);
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'contact' => $contact]);
+        }
         return redirect()->route('admin.crm-contacts.index')->with('success', 'Contact added.');
     }
 
