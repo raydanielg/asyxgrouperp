@@ -48,7 +48,11 @@ class UserRoleSeeder extends Seeder
 
         foreach ($users as $userData) {
             $roleName = $userData['role'];
-            unset($userData['role']);
+            $companyIndex = $userData['company_index'] ?? 0;
+            unset($userData['role'], $userData['company_index']);
+
+            $company = $companies->get($companyIndex);
+            $companyId = $company?->id;
 
             $user = User::where('email', $userData['email'])->first();
 
@@ -59,10 +63,13 @@ class UserRoleSeeder extends Seeder
                     'last_name' => $userData['last_name'],
                     'email' => $userData['email'],
                     'phone' => $userData['phone'],
+                    'company_id' => $companyId,
                     'password' => Hash::make($userData['password']),
                     'role' => $roleName,
                     'email_verified_at' => $now,
                 ]);
+            } elseif ($companyId && !$user->company_id) {
+                $user->update(['company_id' => $companyId]);
             }
 
             // Attach role via role_user pivot
@@ -76,6 +83,7 @@ class UserRoleSeeder extends Seeder
         }
 
         // Ensure admin user exists
+        $group = \App\Models\Company::where('is_group', true)->first();
         $admin = User::where('email', 'admin@djanproject.com')->first();
         if (!$admin) {
             $admin = User::create([
@@ -84,10 +92,13 @@ class UserRoleSeeder extends Seeder
                 'last_name' => 'Admin',
                 'email' => 'admin@djanproject.com',
                 'phone' => '+255700000000',
+                'company_id' => $group?->id,
                 'password' => Hash::make('password123'),
                 'role' => 'admin',
                 'email_verified_at' => $now,
             ]);
+        } elseif ($group && !$admin->company_id) {
+            $admin->update(['company_id' => $group->id]);
         }
 
         $adminRole = Role::where('name', 'admin')->first();
