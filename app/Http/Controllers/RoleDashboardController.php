@@ -95,6 +95,8 @@ class RoleDashboardController extends Controller
             case 'admin':
             case 'administrator':
             case 'admin_manager':
+            case 'managing_director':
+            case 'general_manager':
                 $stats = [
                     'totalUsers' => User::count(),
                     'totalEmployees' => Employee::count(),
@@ -127,6 +129,14 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'finance_officer':
+            case 'finance_manager':
+            case 'chief_accountant':
+            case 'accountant':
+            case 'accounts_receivable_officer':
+            case 'accounts_payable_officer':
+            case 'payroll_officer':
+            case 'budget_officer':
+            case 'credit_controller':
                 $stats = [
                     'totalSales' => SalesInvoice::sum('total_amount') ?? 0,
                     'salesPaid' => SalesInvoice::sum('paid_amount') ?? 0,
@@ -158,6 +168,10 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'hr_officer':
+            case 'hr_manager':
+            case 'recruitment_officer':
+            case 'training_officer':
+            case 'time_and_attendance_officer':
                 $stats = [
                     'totalEmployees' => Employee::count(),
                     'activeEmployees' => Employee::where('status', 'active')->count(),
