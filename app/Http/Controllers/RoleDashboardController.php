@@ -775,11 +775,23 @@ class RoleDashboardController extends Controller
         }
 
         switch ($role) {
+            case 'erp_super_administrator':
+                $data['title'] = 'New Users vs Companies (14 days)';
+                $data['values'] = [];
+                $data['secondaryValues'] = [];
+                for ($i = 13; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $data['values'][] = (int) User::whereDate('created_at', $date)->count();
+                    $data['secondaryValues'][] = (int) Company::whereDate('created_at', $date)->count();
+                }
+                $data['secondaryLabels'] = $data['labels'];
+                $data['secondaryTitle'] = 'Companies';
+                break;
+
             case 'admin':
             case 'administrator':
             case 'admin_manager':
             case 'director':
-            case 'erp_super_administrator':
             case 'erp_administrator':
                 $data['title'] = 'Sales vs Purchases (14 days)';
                 $data['values'] = [];
