@@ -228,6 +228,10 @@ class RoleDashboardController extends Controller
             case 'service_desk_manager':
             case 'helpdesk_supervisor':
             case 'helpdesk_officer':
+            case 'ict_administrator':
+            case 'network_engineer':
+            case 'software_engineer':
+            case 'cybersecurity_engineer':
                 $stats = [
                     'openTickets' => HelpdeskTicket::where('status', 'open')->count(),
                     'inProgressTickets' => HelpdeskTicket::where('status', 'in_progress')->count(),
@@ -239,6 +243,7 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'technician':
+            case 'field_technician':
                 $stats = [
                     'myTickets' => HelpdeskTicket::where('assigned_to', auth()->id())->count(),
                     'openTickets' => HelpdeskTicket::where('assigned_to', auth()->id())->where('status', 'open')->count(),
@@ -263,6 +268,7 @@ class RoleDashboardController extends Controller
             case 'project_engineer':
             case 'site_supervisor':
             case 'project_accountant':
+            case 'team_leader':
                 $stats = [
                     'totalProjects' => Project::count(),
                     'activeProjects' => Project::where('status', 'in_progress')->count(),
