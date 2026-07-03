@@ -67,9 +67,19 @@
             <input type="hidden" name="discount_amount" id="discountInput" value="0">
             <input type="hidden" name="total_amount" id="totalInput" value="0">
         </div>
-        <div class="bg-white rounded-xl border p-6">
-            <label class="block text-xs font-medium text-gray-600 mb-1">Notes</label>
-            <textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea>
+        <div class="bg-white rounded-xl border p-6 space-y-4">
+            <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Notes</label>
+                <textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea>
+            </div>
+            <div>
+                <div class="flex items-center justify-between mb-1">
+                    <label class="block text-xs font-medium text-gray-600">Terms & Conditions</label>
+                    <button type="button" onclick="setDefaultTerms()" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-medium">Load Default Terms</button>
+                </div>
+                <textarea id="termsField" name="terms_and_conditions" rows="4" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea>
+                <p class="text-[10px] text-gray-400 mt-1">Click “Load Default Terms” to auto-fill standard terms.</p>
+            </div>
         </div>
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.sales-invoices.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</a>
