@@ -10,17 +10,32 @@ trait BelongsToCompany
     public static function bootBelongsToCompany(): void
     {
         static::addGlobalScope('company', function (Builder $builder) {
-            if (auth()->check() && auth()->user()->company_id) {
-                $user = auth()->user();
-                $switchedId = session('switched_company_id');
+            if (!auth()->check()) return;
 
-                if ($user->company && $user->company->is_group) {
-                    if ($switchedId !== null) {
-                        $builder->where($builder->getQuery()->from . '.company_id', $switchedId);
-                    }
-                    return;
+            $user = auth()->user();
+            $table = $builder->getQuery()->from;
+
+            {{-- Superadmin / ERP admin sees all unless a company is explicitly switched --}}
+            if ($user->isAdmin() || $user->isSuperAdmin()) {
+                $switchedId = session('switched_company_id');
+                if ($switchedId !== null) {
+                    $builder->where($table . '.company_id', $switchedId);
                 }
-                $builder->where($builder->getQuery()->from . '.company_id', $user->company_id);
+                return;
+            }
+
+            {{-- Group-level user sees all subsidiaries, or only the switched company --}}
+            $switchedId = session('switched_company_id');
+            if ($user->company_id && $user->company && $user->company->is_group) {
+                if ($switchedId !== null) {
+                    $builder->where($table . '.company_id', $switchedId);
+                }
+                return;
+            }
+
+            {{-- Regular user only sees their own company --}}
+            if ($user->company_id) {
+                $builder->where($table . '.company_id', $user->company_id);
             }
         });
 
