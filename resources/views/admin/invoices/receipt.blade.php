@@ -95,43 +95,41 @@
     <div id="receipt-full" style="display:none;">
         <div style="background:#fff;border-radius:4px;box-shadow:0 18px 40px -10px rgba(15,61,62,.18),0 0 0 1px #E5E7EA;padding:48px 52px 40px;font-family:'Inter',sans-serif;">
 
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:34px;">
-                <h1 style="font-size:26px;font-weight:800;margin:0;letter-spacing:-.01em;color:#17181A;">Receipt</h1>
-                <div style="display:flex;align-items:center;gap:9px;">
-                    <div style="width:26px;height:26px;border-radius:7px;background:conic-gradient(from 90deg,#C9A227,#8C5E2A,#0F3D3E,#C9A227);overflow:hidden;display:flex;align-items:center;justify-content:center;">
-                        <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX" style="width:20px;height:20px;object-fit:contain;border-radius:4px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px;padding-bottom:16px;border-bottom:1px solid #E5E7EA;">
+                <div>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="width:42px;height:42px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:transparent;">
+                            <img src="{{ asset('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}" style="width:100%;height:100%;object-fit:contain;">
+                        </div>
+                        <div>
+                            <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:#0F3D3E;">{{ $salesInvoice->company?->name ?? config('app.name') }}</div>
+                            <div style="font-size:10px;color:#6B7177;line-height:1.5;">
+                                {{ $salesInvoice->company?->address ?? 'Dar es Salaam, Tanzania' }}<br>
+                                @if($salesInvoice->company?->tax_id)TIN: {{ $salesInvoice->company->tax_id }}@endif
+                                @if($salesInvoice->company?->tax_id && $salesInvoice->company?->vrn) &middot; @endif
+                                @if($salesInvoice->company?->vrn)VRN: {{ $salesInvoice->company->vrn }}@endif
+                            </div>
+                        </div>
                     </div>
-                    <div style="font-size:18px;font-weight:700;letter-spacing:-.01em;color:#0F3D3E;">Asyx</div>
+                </div>
+                <div style="text-align:right;">
+                    <h1 style="font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin:0;color:#17181A;">Receipt</h1>
+                    <div style="font-size:11px;color:#6B7177;margin-top:4px;">Receipt No. <b style="color:#17181A;">{{ $receipt['receipt_number'] }}</b></div>
                 </div>
             </div>
 
-            <div style="font-size:13px;margin-bottom:30px;">
-                <div style="display:flex;gap:8px;padding:2px 0;">
-                    <div style="width:140px;color:#17181A;">Invoice number</div>
-                    <div style="color:#17181A;">{{ $salesInvoice->invoice_number }}</div>
-                </div>
-                <div style="display:flex;gap:8px;padding:2px 0;">
-                    <div style="width:140px;color:#17181A;">Receipt number</div>
-                    <div style="color:#17181A;">{{ $receipt['receipt_number'] }}</div>
-                </div>
-                <div style="display:flex;gap:8px;padding:2px 0;">
-                    <div style="width:140px;color:#17181A;">Date paid</div>
-                    <div style="color:#17181A;">{{ $receipt['payment_date'] }}</div>
-                </div>
-            </div>
-
-            <div style="display:flex;gap:60px;margin-bottom:34px;">
+            <div style="display:flex;justify-content:space-between;gap:40px;margin-bottom:26px;">
                 <div>
-                    <b style="display:block;font-size:13px;margin-bottom:6px;color:#17181A;">{{ config('app.name') }}</b>
-                    <div style="font-size:13px;color:#17181A;line-height:1.6;">
-                        {{ $salesInvoice->company?->name ?? 'ASYX Group' }}<br>
-                        Dar es Salaam, Tanzania<br>
-                        billing@asyxgroup.tz
+                    <b style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#6B7177;margin-bottom:4px;">Invoice Details</b>
+                    <div style="font-size:12px;color:#17181A;line-height:1.6;">
+                        Invoice: {{ $salesInvoice->invoice_number }}<br>
+                        Date Paid: {{ $receipt['payment_date'] }}<br>
+                        Paid By: {{ $salesInvoice->customer?->name ?? 'N/A' }}
                     </div>
                 </div>
                 <div>
-                    <b style="display:block;font-size:13px;margin-bottom:6px;color:#17181A;">Bill to</b>
-                    <div style="font-size:13px;color:#17181A;line-height:1.6;">
+                    <b style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#6B7177;margin-bottom:4px;">Customer</b>
+                    <div style="font-size:12px;color:#17181A;line-height:1.6;">
                         {{ $salesInvoice->customer?->name ?? 'N/A' }}<br>
                         {{ $salesInvoice->customer?->email ?? '' }}<br>
                         {{ $salesInvoice->customer?->phone ?? '' }}
