@@ -21,6 +21,7 @@
                 <th class="px-5 py-3 font-medium">To</th>
                 <th class="px-5 py-3 font-medium">Qty</th>
                 <th class="px-5 py-3 font-medium">Date</th>
+                <th class="px-5 py-3 font-medium">Status</th>
                 <th class="px-5 py-3 font-medium">Actions</th>
             </tr></thead>
             <tbody>
@@ -32,6 +33,15 @@
                     <td class="px-5 py-3 text-xs font-semibold text-gray-900">{{ number_format($transfer->quantity) }}</td>
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $transfer->date ? $transfer->date->format('d M Y') : 'N/A' }}</td>
                     <td class="px-5 py-3">
+                        <span class="px-2 py-1 rounded-full text-[10px] font-medium {{ $transfer->status === 'completed' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($transfer->status ?? 'pending') }}</span>
+                    </td>
+                    <td class="px-5 py-3 flex items-center gap-2">
+                        @if(($transfer->status ?? 'pending') !== 'completed')
+                        <form method="POST" action="{{ route('admin.transfers.approve', $transfer) }}" class="inline" onsubmit="return confirm('Approve this transfer?')">
+                            @csrf @method('PATCH')
+                            <button class="text-emerald-600 hover:text-emerald-800 text-xs">Approve</button>
+                        </form>
+                        @endif
                         <form method="POST" action="{{ route('admin.transfers.destroy', $transfer) }}" class="inline" onsubmit="return confirm('Delete this transfer?')">
                             @csrf @method('DELETE')
                             <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>
@@ -39,7 +49,7 @@
                     </td>
                 </tr>
         @empty
-        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No transfers found</td></tr>
+        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No transfers found</td></tr>
         @endforelse
         </tbody>
         </table>
