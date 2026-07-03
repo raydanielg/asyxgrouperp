@@ -23,11 +23,25 @@
             <td class="px-5 py-3 text-xs text-gray-500">{{ $q->quotation_date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($q->total) }}</td>
             <td class="px-5 py-3">@php $sc=['draft'=>'gray','sent'=>'sky','accepted'=>'emerald','rejected'=>'red','expired'=>'red']; $c=$sc[$q->status]??'gray'; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-{{ $c }}-50 text-{{ $c }}-700">{{ ucfirst($q->status) }}</span></td>
-            <td class="px-5 py-3 flex items-center gap-2">
-                <a href="{{ route('admin.quotations.show', $q) }}" class="text-sky-600 hover:text-sky-700 text-xs">View</a>
-                <button onclick="downloadPdf('{{ route('admin.quotations.pdf', $q) }}', '{{ $q->quotation_number }}')" class="text-emerald-600 hover:text-emerald-700 text-xs">PDF</button>
-                <form id="del-quo-{{ $q->id }}" method="POST" action="{{ route('admin.quotations.destroy', $q) }}">@csrf @method('DELETE')</form>
-                <button onclick="confirmDelete('del-quo-{{ $q->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
+            <td class="px-5 py-3">
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('admin.quotations.show', $q) }}" class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 flex items-center justify-center transition-all" title="View">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    </a>
+                    <button onclick="downloadPdf('{{ route('admin.quotations.pdf', $q) }}', '{{ $q->quotation_number }}')" class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-all" title="Download PDF">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </button>
+                    @if($q->status === 'accepted')
+                    <button onclick="convertQuotation({{ $q->id }}, '{{ $q->quotation_number }}')" class="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 hover:bg-violet-100 flex items-center justify-center transition-all" title="Convert to Invoice">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </button>
+                    <form id="convert-quo-{{ $q->id }}" method="POST" action="{{ route('admin.quotations.convert', $q) }}" class="hidden">@csrf</form>
+                    @endif
+                    <form id="del-quo-{{ $q->id }}" method="POST" action="{{ route('admin.quotations.destroy', $q) }}" class="hidden">@csrf @method('DELETE')</form>
+                    <button onclick="confirmDelete('del-quo-{{ $q->id }}', 'Delete Quotation?', 'Quotation {{ $q->quotation_number }} will be permanently removed.')" class="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center transition-all" title="Delete">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
             </td>
         
         </tr>
