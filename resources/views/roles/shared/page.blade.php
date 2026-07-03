@@ -1443,7 +1443,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
             <div class="relative z-10">
                 <h2 class="text-2xl font-bold">{{ ucwords(str_replace('-', ' ', $module)) }}</h2>
-                <p class="text-emerald-100 text-sm mt-1">Reception module for {{ $roleLabel }}.</p>
+                <p class="text-emerald-100 text-sm mt-1">Module for {{ $roleLabel }}.</p>
             </div>
         </div>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -1455,7 +1455,9 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         <div class="bg-white rounded-xl border p-6 mb-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-bold text-gray-900">Records</h3>
-                <button class="px-4 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors">Add New</button>
+                @if($canCreate && isset($routeMap[$module]['create']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['create']))
+                <a href="{{ route($routeMap[$module]['create']) }}" class="px-4 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors">Add New</a>
+                @endif
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -1465,7 +1467,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
             </div>
         </div>
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-amber-800 text-xs">
-            <strong>Coming soon:</strong> Full CRUD and backend for {{ strtolower(str_replace('-', ' ', $module)) }} will be wired here. Admin has full access to all modules.
+            <strong>Module in progress:</strong> Full CRUD and backend for {{ strtolower(str_replace('-', ' ', $module)) }} will be wired here. Admin has full access to all modules.
         </div>
     @endswitch
 </div>
