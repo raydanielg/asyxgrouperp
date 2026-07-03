@@ -88,6 +88,11 @@ class RolePermissionSeeder extends Seeder
         $permMap = DB::table('permissions')->pluck('id', 'name')->toArray();
 
         $roles = [
+            // System Administration
+            ['name' => 'erp_super_administrator', 'label' => 'ERP Super Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'delete-users', 'view-roles', 'manage-roles', 'view-companies', 'switch-companies', 'view-settings', 'view-reports', 'view-login-history', 'view-approvals', 'approve-final', 'view-employees', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'erp_administrator', 'label' => 'ERP Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'view-roles', 'manage-roles', 'view-settings', 'view-reports', 'view-employees', 'view-attendance', 'view-leaves', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'ict_administrator', 'label' => 'ICT Administrator', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-settings', 'view-projects', 'view-employees', 'view-self-service', 'view-my-payslips']],
+
             // Executive
             ['name' => 'managing_director', 'label' => 'Managing Director', 'perms' => ['view-dashboard', 'view-reports', 'view-approvals', 'approve-final', 'view-companies', 'switch-companies', 'view-tenders', 'view-crm-contracts', 'view-employees', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'general_manager', 'label' => 'General Manager', 'perms' => ['view-dashboard', 'view-reports', 'view-approvals', 'approve-finance', 'approve-hr', 'approve-technical', 'view-projects', 'view-crm-leads', 'view-crm-deals', 'view-sales-invoices', 'view-employees', 'view-attendance', 'view-leaves', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
