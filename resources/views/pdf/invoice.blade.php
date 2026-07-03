@@ -150,71 +150,73 @@
       </div>
     </div>
 
-    <div class="body">
-      <div class="bill-row">
-        <div class="bill-to">
-          <div class="lbl">Invoiced To</div>
-          <b>{{ $invoice->customer?->name ?? 'N/A' }}</b>
-          <div class="addr">
-            {{ $invoice->customer?->email ?? '' }}<br>
-            {{ $invoice->customer?->phone ?? '' }}
-          </div>
+    <div class="bill-row">
+      <div class="bill-to">
+        <div class="lbl">Invoiced To</div>
+        <b>{{ $invoice->customer?->name ?? 'N/A' }}</b>
+        <div class="addr">
+          {{ $invoice->customer?->email ?? '' }}<br>
+          {{ $invoice->customer?->phone ?? '' }}
         </div>
       </div>
+    </div>
 
-      <table class="lines">
-        <tr><th>Description</th><th class="c">Qty</th><th class="r">Unit Price</th><th class="r">Total</th></tr>
-        @forelse($invoice->items as $item)
-        <tr>
-          <td>{{ $item->product_name }}</td>
-          <td class="c">{{ $item->quantity }}</td>
-          <td class="r">{{ number_format($item->unit_price, 2) }} Tsh</td>
-          <td class="r">{{ number_format($item->total_amount, 2) }} Tsh</td>
-        </tr>
-        @empty
-        <tr><td colspan="4" style="padding:24px;text-align:center;color:#6E7570;">No items</td></tr>
-        @endforelse
-      </table>
+    <table class="lines">
+      <tr><th>Description</th><th class="c">Qty</th><th class="r">Unit Price</th><th class="r">Total</th></tr>
+      @forelse($invoice->items as $item)
+      <tr>
+        <td>{{ $item->product_name }}</td>
+        <td class="c">{{ $item->quantity }}</td>
+        <td class="r">{{ number_format($item->unit_price, 2) }} Tsh</td>
+        <td class="r">{{ number_format($item->total_amount, 2) }} Tsh</td>
+      </tr>
+      @empty
+      <tr><td colspan="4" style="padding:12px;text-align:center;color:#6E7570;">No items</td></tr>
+      @endforelse
+    </table>
 
-      <div class="totals">
-        <div><span>Sub Total</span><b>{{ number_format($invoice->subtotal, 2) }} Tsh</b></div>
-        @if($invoice->tax_amount > 0)
-        <div><span>18.00% VAT</span><b>{{ number_format($invoice->tax_amount, 2) }} Tsh</b></div>
-        @endif
-        @if($invoice->discount_amount > 0)
-        <div><span>Discount</span><b style="color:#B23A2E;">&minus;{{ number_format($invoice->discount_amount, 2) }} Tsh</b></div>
-        @endif
-        <div class="grand"><span>Total</span><b>{{ number_format($invoice->total_amount, 2) }} Tsh</b></div>
-      </div>
-
-      @if($invoice->status == 'paid')
-      <div class="balance-bar paid">
-        <span>Paid in Full</span>
-        <b>{{ number_format($invoice->paid_amount, 2) }} Tsh</b>
-      </div>
-      @else
-      <div class="balance-bar due">
-        <span>Balance Due</span>
-        <b>{{ number_format($invoice->balance_amount, 2) }} Tsh</b>
-      </div>
+    <div class="totals">
+      <div><span>Sub Total</span><b>{{ number_format($invoice->subtotal, 2) }} Tsh</b></div>
+      @if($invoice->tax_amount > 0)
+      <div><span>18.00% VAT</span><b>{{ number_format($invoice->tax_amount, 2) }} Tsh</b></div>
       @endif
-
-      @if($invoice->notes)
-      <div class="notes-box">
-        <div class="lbl">Notes</div>
-        <p>{{ $invoice->notes }}</p>
-      </div>
+      @if($invoice->discount_amount > 0)
+      <div><span>Discount</span><b style="color:#B23A2E;">&minus;{{ number_format($invoice->discount_amount, 2) }} Tsh</b></div>
       @endif
+      <div class="grand"><span>Total</span><b>{{ number_format($invoice->total_amount, 2) }} Tsh</b></div>
+    </div>
 
-      <div class="terms-box">
-        <div class="lbl">Terms & Conditions</div>
-        <div class="body">{{ $invoice->terms_and_conditions ?? "1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of " . config('app.name') . " until fully paid\n\nThank You For Your Business." }}</div>
-      </div>
+    @if($invoice->status == 'paid')
+    <div class="balance-bar paid">
+      <span>Paid in Full</span>
+      <b>{{ number_format($invoice->paid_amount, 2) }} Tsh</b>
+    </div>
+    @else
+    <div class="balance-bar due">
+      <span>Balance Due</span>
+      <b>{{ number_format($invoice->balance_amount, 2) }} Tsh</b>
+    </div>
+    @endif
 
-      <div class="thank-you">
-        <div class="title">Thank You For Your Business</div>
-        <div class="contact">For inquiries contact: {{ $company?->email ?? 'billing@asyxgroup.tz' }}</div>
-      </div>
+    @if($invoice->notes)
+    <div class="notes-box">
+      <div class="lbl">Notes</div>
+      <p>{{ $invoice->notes }}</p>
+    </div>
+    @endif
+
+    <div class="terms-box">
+      <div class="lbl">Terms & Conditions</div>
+      <div class="body">{{ $invoice->terms_and_conditions ?? "1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of " . config('app.name') . " until fully paid\n\nThank You For Your Business." }}</div>
+    </div>
+
+    <div class="thank-you">
+      <div class="title">Thank You For Your Business</div>
+      <div class="contact">For inquiries contact: {{ $company?->email ?? 'billing@asyxgroup.tz' }}</div>
+    </div>
+
+    <div class="foot">
+      PDF Generated on {{ now()->format('l, F jS, Y') }} &middot; {{ config('app.name') }}
     </div>
   </div>
 </body>
