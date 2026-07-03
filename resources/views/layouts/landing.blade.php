@@ -66,6 +66,11 @@
             opacity: 1;
             transform: translateY(0) scale(1);
         }
+        {{-- Mission/Vision stacked cards --}}
+        .mv-stack { position: relative; }
+        .mv-card { min-height: 320px; margin-bottom: 2rem; transition: all 0.8s cubic-bezier(0.4,0,0.2,1); }
+        .mv-card.hidden-up { opacity: 0; transform: translateY(60px) scale(0.96); }
+        .mv-card.visible { opacity: 1; transform: translateY(0) scale(1); }
         .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15); }
         {{-- Animated rotating border on hover --}}
