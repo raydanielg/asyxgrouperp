@@ -13,13 +13,16 @@ trait BelongsToCompany
 
         static::addGlobalScope('company', function (Builder $builder) use (&$applyingScope) {
             if ($applyingScope) return;
+
+            $table = $builder->getQuery()->from;
+
+            // Skip scope for users table to prevent infinite recursion:
+            // auth()->check() → retrieveById → User query → applyScopes → auth()->check() ...
+            if ($table === 'users') return;
+
             if (!auth()->check()) return;
 
             $user = auth()->user();
-            $table = $builder->getQuery()->from;
-
-            // Skip scope for users table itself to prevent infinite recursion
-            if ($table === 'users') return;
 
             // Superadmin / ERP admin sees all unless a company is explicitly switched
             if ($user->isAdmin() || $user->isSuperAdmin()) {
