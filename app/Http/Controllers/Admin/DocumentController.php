@@ -122,7 +122,7 @@ class DocumentController extends Controller
             'reference_id' => $validated['reference_id'] ?? $validated['project_id'] ?? null,
             'expiry_date' => $validated['expiry_date'] ?? null,
             'uploaded_by' => auth()->id(),
-            'company_id' => session('current_company_id') ?? auth()->user()?->company_id,
+            'company_id' => auth()->user()->activeCompanyId() ?? session('switched_company_id') ?? auth()->user()?->company_id,
         ]);
 
         if (!empty($validated['signers'])) {
