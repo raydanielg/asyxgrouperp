@@ -188,7 +188,6 @@
     </div>
 </footer>
 
-@push('scripts')
 <script>
 (function() {
     document.getElementById('footer-year').textContent = new Date().getFullYear();
@@ -203,4 +202,3 @@
     document.querySelectorAll('[data-footer-rv]').forEach(function(el){ observer.observe(el); });
 })();
 </script>
-@endpush
