@@ -61,9 +61,3 @@ function setDefaultTerms() {
 }
 </script>
 @endsection
-            <a href="{{ route('admin.sales-invoices.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</a>
-            <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Update Invoice</button>
-        </div>
-    </form>
-</div>
-@endsection
