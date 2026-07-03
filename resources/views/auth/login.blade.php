@@ -91,37 +91,140 @@
                     <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Demo Quick Login</span>
                     <div class="flex-1 h-px bg-gray-200"></div>
                 </div>
-                <div class="grid grid-cols-4 gap-1.5">
+
+                {{-- Admin shortcut --}}
+                <button type="button" onclick="quickLogin('admin@djanproject.com', 'password123')" class="w-full mb-3 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Login as Super Admin
+                </button>
+
+                {{-- Role search + grid --}}
+                <div class="relative mb-2">
+                    <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                    <input type="text" id="roleSearch" placeholder="Find a role..." class="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all">
+                </div>
+
+                <div id="roleGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-40 overflow-y-auto p-1 rounded-lg border border-gray-100 bg-gray-50/50">
                     @php
-                        $quickRoles = [
-                            ['admin@djanproject.com', 'admin12345', 'Admin', 'emerald'],
-                            ['director@djanproject.com', 'password123', 'Director', 'violet'],
-                            ['admin.manager@djanproject.com', 'password123', 'Admin Mgr', 'slate'],
-                            ['administrator@djanproject.com', 'password123', 'Adminstr', 'gray'],
-                            ['finance@djanproject.com', 'password123', 'Finance', 'amber'],
-                            ['auditor@djanproject.com', 'password123', 'Auditor', 'teal'],
-                            ['hr@djanproject.com', 'password123', 'HR', 'sky'],
-                            ['legal@djanproject.com', 'password123', 'Legal', 'lime'],
-                            ['receptionist@djanproject.com', 'password123', 'Reception', 'pink'],
-                            ['logistics@djanproject.com', 'password123', 'Logistics', 'cyan'],
-                            ['tech.manager@djanproject.com', 'password123', 'Tech Mgr', 'indigo'],
-                            ['technician@djanproject.com', 'password123', 'Technician', 'blue'],
-                            ['ict.officer@djanproject.com', 'password123', 'ICT Off', 'fuchsia'],
-                            ['ict.engineer@djanproject.com', 'password123', 'ICT Eng', 'purple'],
-                            ['project.manager@djanproject.com', 'password123', 'Proj Mgr', 'orange'],
-                            ['operations@djanproject.com', 'password123', 'Ops Mgr', 'green'],
-                            ['callcenter@djanproject.com', 'password123', 'Call Center', 'red'],
-                            ['cashier@djanproject.com', 'password123', 'Cashier', 'rose'],
-                            ['supervisor@djanproject.com', 'password123', 'Supervisor', 'yellow'],
+                        $roleGroups = [
+                            'System' => [
+                                ['erp.super.administrator@djanproject.com', 'ERP Super Admin', 'emerald'],
+                                ['erp.administrator@djanproject.com', 'ERP Admin', 'teal'],
+                                ['ict.administrator@djanproject.com', 'ICT Admin', 'cyan'],
+                            ],
+                            'Executive' => [
+                                ['managing.director@djanproject.com', 'Managing Director', 'violet'],
+                                ['general.manager@djanproject.com', 'General Manager', 'indigo'],
+                                ['technical.manager@djanproject.com', 'Technical Manager', 'blue'],
+                                ['operations.manager@djanproject.com', 'Operations Manager', 'sky'],
+                            ],
+                            'Finance' => [
+                                ['finance.manager@djanproject.com', 'Finance Mgr', 'amber'],
+                                ['chief.accountant@djanproject.com', 'Chief Acct', 'yellow'],
+                                ['accountant@djanproject.com', 'Accountant', 'orange'],
+                                ['accounts.receivable.officer@djanproject.com', 'AR Officer', 'lime'],
+                                ['accounts.payable.officer@djanproject.com', 'AP Officer', 'green'],
+                                ['payroll.officer@djanproject.com', 'Payroll', 'emerald'],
+                                ['budget.officer@djanproject.com', 'Budget', 'teal'],
+                                ['credit.controller@djanproject.com', 'Credit Ctrl', 'rose'],
+                                ['cashier@djanproject.com', 'Cashier', 'pink'],
+                            ],
+                            'Procurement' => [
+                                ['procurement.manager@djanproject.com', 'Procurement Mgr', 'amber'],
+                                ['procurement.officer@djanproject.com', 'Procurement Off', 'orange'],
+                                ['tender.officer@djanproject.com', 'Tender Off', 'yellow'],
+                            ],
+                            'Inventory' => [
+                                ['store.manager@djanproject.com', 'Store Mgr', 'emerald'],
+                                ['storekeeper@djanproject.com', 'Storekeeper', 'teal'],
+                                ['inventory.controller@djanproject.com', 'Inventory Ctrl', 'cyan'],
+                                ['asset.officer@djanproject.com', 'Asset Off', 'sky'],
+                            ],
+                            'Sales & CRM' => [
+                                ['sales.manager@djanproject.com', 'Sales Mgr', 'amber'],
+                                ['business.development.manager@djanproject.com', 'BDM', 'orange'],
+                                ['sales.executive@djanproject.com', 'Sales Exec', 'yellow'],
+                                ['crm.officer@djanproject.com', 'CRM Off', 'pink'],
+                                ['marketing.officer@djanproject.com', 'Marketing', 'fuchsia'],
+                            ],
+                            'Projects' => [
+                                ['project.director@djanproject.com', 'Project Director', 'violet'],
+                                ['project.manager@djanproject.com', 'Project Mgr', 'indigo'],
+                                ['technical.projects.manager@djanproject.com', 'Tech Proj Mgr', 'blue'],
+                                ['project.coordinator@djanproject.com', 'Project Coord', 'sky'],
+                                ['project.engineer@djanproject.com', 'Project Eng', 'cyan'],
+                                ['site.supervisor@djanproject.com', 'Site Supervisor', 'teal'],
+                                ['team.leader@djanproject.com', 'Team Leader', 'emerald'],
+                                ['project.accountant@djanproject.com', 'Project Acct', 'amber'],
+                            ],
+                            'Technical' => [
+                                ['senior.systems.engineer@djanproject.com', 'Senior Sys Eng', 'blue'],
+                                ['systems.engineer@djanproject.com', 'Systems Eng', 'indigo'],
+                                ['network.engineer@djanproject.com', 'Network Eng', 'cyan'],
+                                ['software.engineer@djanproject.com', 'Software Eng', 'sky'],
+                                ['cybersecurity.engineer@djanproject.com', 'Cyber Eng', 'teal'],
+                                ['support.engineer@djanproject.com', 'Support Eng', 'emerald'],
+                                ['field.technician@djanproject.com', 'Field Tech', 'green'],
+                                ['noc.engineer@djanproject.com', 'NOC Eng', 'orange'],
+                            ],
+                            'Service Desk' => [
+                                ['service.desk.manager@djanproject.com', 'Service Desk Mgr', 'rose'],
+                                ['helpdesk.supervisor@djanproject.com', 'Helpdesk Sup', 'pink'],
+                                ['helpdesk.officer@djanproject.com', 'Helpdesk Off', 'fuchsia'],
+                                ['call.center.supervisor@djanproject.com', 'CC Sup', 'red'],
+                                ['call.center.agent@djanproject.com', 'CC Agent', 'rose'],
+                            ],
+                            'HR' => [
+                                ['hr.manager@djanproject.com', 'HR Manager', 'sky'],
+                                ['hr.officer@djanproject.com', 'HR Officer', 'cyan'],
+                                ['recruitment.officer@djanproject.com', 'Recruitment', 'teal'],
+                                ['training.officer@djanproject.com', 'Training', 'emerald'],
+                                ['time.and.attendance.officer@djanproject.com', 'T&A Officer', 'indigo'],
+                            ],
+                            'Operations' => [
+                                ['operations.officer@djanproject.com', 'Ops Officer', 'orange'],
+                                ['fleet.manager@djanproject.com', 'Fleet Mgr', 'amber'],
+                                ['logistics.officer@djanproject.com', 'Logistics', 'yellow'],
+                            ],
+                            'Self Service' => [
+                                ['employee.self.service@djanproject.com', 'Employee SS', 'emerald'],
+                                ['manager.self.service@djanproject.com', 'Manager SS', 'teal'],
+                            ],
+                            'Legacy' => [
+                                ['director@djanproject.com', 'Director', 'violet'],
+                                ['administrator@djanproject.com', 'Administrator', 'slate'],
+                                ['admin.manager@djanproject.com', 'Admin Manager', 'gray'],
+                                ['finance.officer@djanproject.com', 'Finance Officer', 'amber'],
+                                ['auditor@djanproject.com', 'Auditor', 'teal'],
+                                ['hr.officer@djanproject.com', 'HR Officer', 'sky'],
+                                ['legal.officer@djanproject.com', 'Legal Officer', 'lime'],
+                                ['receptionist@djanproject.com', 'Receptionist', 'pink'],
+                                ['logistics.officer@djanproject.com', 'Logistics Off', 'cyan'],
+                                ['technician@djanproject.com', 'Technician', 'blue'],
+                                ['ict.officer@djanproject.com', 'ICT Officer', 'fuchsia'],
+                                ['ict.engineer@djanproject.com', 'ICT Engineer', 'purple'],
+                                ['project.manager@djanproject.com', 'Project Manager', 'orange'],
+                                ['operations.manager@djanproject.com', 'Ops Manager', 'green'],
+                                ['call.center.agent@djanproject.com', 'Call Center', 'red'],
+                                ['supervisor@djanproject.com', 'Supervisor', 'yellow'],
+                            ],
                         ];
+                        $allQuickRoles = [];
+                        foreach ($roleGroups as $group => $items) {
+                            foreach ($items as $item) {
+                                $allQuickRoles[] = [$item[0], 'password123', $item[1], $item[2], $group];
+                            }
+                        }
                     @endphp
-                    @foreach($quickRoles as $r)
-                        <button type="button" onclick="quickLogin('{{ $r[0] }}', '{{ $r[1] }}')" class="px-2 py-1.5 rounded-md border border-gray-200 hover:border-{{ $r[3] }}-400 hover:bg-{{ $r[3] }}-50 text-[10px] font-semibold text-gray-600 hover:text-{{ $r[3] }}-700 transition-all">
+                    @foreach($allQuickRoles as $r)
+                        <button type="button" data-role-label="{{ strtolower($r[2]) }} {{ strtolower($r[4]) }}" onclick="quickLogin('{{ $r[0] }}', '{{ $r[1] }}')" class="role-chip px-2 py-1.5 rounded-md border border-gray-200 bg-white hover:border-{{ $r[3] }}-400 hover:bg-{{ $r[3] }}-50 text-[10px] font-semibold text-gray-600 hover:text-{{ $r[3] }}-700 transition-all text-center leading-tight">
                             {{ $r[2] }}
                         </button>
                     @endforeach
                 </div>
-                <p class="mt-2 text-center text-[10px] text-gray-400">Click a role to auto-fill &amp; login instantly</p>
+                <p class="mt-2 text-center text-[10px] text-gray-400">Click any role to auto-fill &amp; login instantly</p>
             </div>
             <script>
             function quickLogin(email, password) {
@@ -129,6 +232,14 @@
                 document.getElementById('password').value = password;
                 document.querySelector('#loginBtn').closest('form').submit();
             }
+
+            document.getElementById('roleSearch').addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.role-chip').forEach(function(btn) {
+                    const label = btn.getAttribute('data-role-label');
+                    btn.style.display = label.includes(term) ? 'block' : 'none';
+                });
+            });
             </script>
         </div>
     </div>
