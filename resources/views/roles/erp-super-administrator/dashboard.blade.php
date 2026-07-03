@@ -35,7 +35,7 @@
                 <span class="text-slate-300 text-xs">{{ now()->format('l, d M Y') }}</span>
             </div>
             <h2 class="text-2xl font-bold">Welcome, {{ auth()->user()->name }}</h2>
-            <p class="text-slate-300 text-sm mt-1">Full visibility across companies, users, finance, projects, and operations.</p>
+            <p class="text-slate-300 text-sm mt-1">Full system control — manage companies, users, roles, intercompany transactions, and consolidated reports.</p>
         </div>
         <div class="flex items-center gap-3">
             <div class="text-right">
@@ -158,6 +158,29 @@
                         </div>
                     </div>
                     <span class="text-[10px] text-gray-400">{{ $user->created_at->format('d M Y') }}</span>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    @if(!empty($recentItems['recentCompanies']))
+    <div class="bg-white rounded-xl border overflow-hidden">
+        <div class="px-5 py-4 border-b flex items-center justify-between">
+            <h3 class="text-sm font-bold text-gray-900">Recent Companies</h3>
+            <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+        </div>
+        <div class="divide-y divide-gray-100">
+            @foreach($recentItems['recentCompanies'] as $company)
+                <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 text-xs font-bold">{{ strtoupper(substr($company->name, 0, 1)) }}</div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-900">{{ $company->name }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $company->is_group ? 'Group' : 'Subsidiary' }}</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-gray-400">{{ $company->created_at->format('d M Y') }}</span>
                 </div>
             @endforeach
         </div>
