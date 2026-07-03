@@ -1110,7 +1110,20 @@ class RoleDashboardController extends Controller
             $overdue = $stats['overdueInvoices'] ?? 0;
             $absent = $stats['absentToday'] ?? 0;
 
-            if (in_array($role, ['admin', 'administrator', 'admin_manager', 'director', 'erp_super_administrator', 'erp_administrator', 'managing_director', 'general_manager'])) {
+            if ($role === 'erp_super_administrator') {
+                $message = 'System overview: Monitor companies, users, roles, and platform health.';
+                $totalCompanies = $stats['totalCompanies'] ?? 0;
+                $totalUsers = $stats['totalUsers'] ?? 0;
+                $totalRoles = $stats['totalRoles'] ?? 0;
+                $openTickets = $stats['openTickets'] ?? 0;
+                $subsidiaries = $stats['subsidiaryCompanies'] ?? 0;
+                if ($totalCompanies === 1) $suggestions[] = 'Only one company configured. Consider adding subsidiaries for multi-company consolidation.';
+                if ($totalRoles < 3) $suggestions[] = 'Few roles defined. Set up role-based access control for better security.';
+                if ($openTickets > 10) $suggestions[] = 'Support backlog is high. Allocate more resources to helpdesk.';
+                if ($totalUsers > 0 && $totalRoles === 0) $suggestions[] = 'No roles assigned. Users may lack proper access control.';
+                if ($subsidiaries > 0) $suggestions[] = "Managing $subsidiaries subsidiaries. Review intercompany transactions for consolidation.";
+                if (empty($suggestions)) $suggestions[] = 'System is well-configured. Focus on user onboarding and role optimization.';
+            } elseif (in_array($role, ['admin', 'administrator', 'admin_manager', 'director', 'erp_administrator', 'managing_director', 'general_manager'])) {
                 $message = 'Executive overview: Monitor revenue, expenses, and project delivery.';
                 if ($outstanding > 0) $suggestions[] = 'Follow up on TZS ' . number_format($outstanding) . ' outstanding customer balance.';
                 if ($profit < 0) $suggestions[] = 'Profit margin is negative. Review expenses and pricing strategy.';
