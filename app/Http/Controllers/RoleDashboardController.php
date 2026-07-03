@@ -97,6 +97,8 @@ class RoleDashboardController extends Controller
             case 'admin_manager':
             case 'managing_director':
             case 'general_manager':
+            case 'erp_super_administrator':
+            case 'erp_administrator':
                 $stats = [
                     'totalUsers' => User::count(),
                     'totalEmployees' => Employee::count(),
