@@ -74,10 +74,14 @@
     {{-- Sidebar --}}
     <aside id="adminSidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-emerald-900 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
         {{-- Brand --}}
-        <div class="h-16 flex items-center px-4 border-b border-emerald-800/50 flex-shrink-0">
-            <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group" class="w-9 h-9 object-contain rounded-lg bg-white/10 p-0.5">
-            <span class="ml-2 text-white font-bold text-sm tracking-wide">ASYX<span class="text-gold-400">GROUP</span></span>
-            <span class="ml-1 text-gold-400 font-bold text-[10px] tracking-wider bg-gold-400/10 px-1.5 py-0.5 rounded">{{ auth()->user()->isAdmin() ? 'ADMIN' : strtoupper(explode(' ', auth()->user()->roles()->first()?->label ?? 'USER')[0]) }}</span>
+        <div class="h-16 flex items-center justify-center px-4 border-b border-emerald-800/50 flex-shrink-0 bg-gradient-to-r from-emerald-900 to-emerald-800">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}" class="w-10 h-10 object-contain rounded-lg bg-white/10 p-0.5">
+                <div class="font-brand text-white leading-none">
+                    <span class="text-lg font-bold tracking-wide">ASYX</span>
+                    <span class="text-lg font-bold text-gold-400">GROUP</span>
+                </div>
+            </div>
         </div>
 
         {{-- Menu --}}
