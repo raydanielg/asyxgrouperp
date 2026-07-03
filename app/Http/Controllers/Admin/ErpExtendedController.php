@@ -1402,6 +1402,7 @@ class ErpExtendedController extends Controller
 
         $invoice = SalesInvoice::create([
             'invoice_number' => 'INV-P-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'company_id' => $project->company_id,
             'invoice_date' => now(),
             'due_date' => now()->copy()->addDays(14),
             'customer_id' => $customerId,
