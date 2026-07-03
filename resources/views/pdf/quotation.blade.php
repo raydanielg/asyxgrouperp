@@ -5,34 +5,48 @@
 <title>Quotation {{ $quotation->quotation_number }}</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+  @page { margin: 0; padding: 0; size: A4; }
   *{box-sizing:border-box;}
-  body{margin:36px auto;background:#EDE9DD;color:#1C2321;font-family:'Inter',sans-serif;max-width:780px;}
-  .sheet{background:#fff;border-radius:4px;box-shadow:0 18px 40px -10px rgba(15,61,62,.18),0 0 0 1px #E5E7EA;padding:48px 52px 40px;position:relative;overflow:hidden;}
-  .stamp{position:absolute;top:28px;right:-40px;background:#0F3D3E;color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;padding:4px 56px;transform:rotate(35deg);box-shadow:0 4px 10px rgba(0,0,0,.12);z-index:10;opacity:.85;}
-  .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;}
-  .top h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin:0;color:#0F3D3E;letter-spacing:-.02em;}
-  .top .co-mark{display:flex;align-items:center;gap:12px;}
-  .top .co-icon img{height:42px;max-width:140px;object-fit:contain;}
-  .top .co-word{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:#0F3D3E;}
-  .top .co-meta{font-size:10px;color:#6E7570;line-height:1.55;margin-top:4px;}
-  .meta{font-size:13px;margin-bottom:28px;}
-  .meta-row{display:flex;gap:8px;padding:3px 0;}
-  .meta-row .k{width:130px;color:#6E7570;}
+  body{margin:0;background:#fff;color:#1C2321;font-family:'Inter',sans-serif;font-size:11px;line-height:1.4;}
+  .sheet{width:210mm;min-height:297mm;padding:12mm 14mm 16mm;position:relative;overflow:hidden;}
+
+  .page-header{position:fixed;top:0;left:0;right:0;height:14mm;padding:4mm 14mm;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E5E7EA;background:#fff;z-index:100;}
+  .page-header .h-logo{height:10mm;max-width:35mm;object-fit:contain;}
+  .page-header .h-text{font-size:9px;color:#6E7570;}
+  .page-footer{position:fixed;bottom:0;left:0;right:0;height:10mm;padding:3mm 14mm;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #E5E7EA;background:#FBF9F2;font-size:8px;color:#6E7570;z-index:100;}
+
+  .watermark{position:fixed;bottom:40%;left:50%;transform:translateX(-50%) rotate(-30deg);opacity:.05;pointer-events:none;z-index:0;}
+  .watermark img{height:150mm;object-fit:contain;filter:grayscale(100%);}
+
+  .stamp{position:absolute;top:20px;right:-48px;background:#0F3D3E;color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;padding:5px 60px;transform:rotate(35deg);box-shadow:0 4px 10px rgba(0,0,0,.12);z-index:10;opacity:.85;}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;margin-top:4mm;}
+  .top h1{font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin:0;color:#0F3D3E;letter-spacing:-.02em;}
+  .top .co-mark{display:flex;align-items:center;gap:10px;}
+  .top .co-icon img{height:40px;max-width:140px;object-fit:contain;}
+  .top .co-word{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:#0F3D3E;}
+  .top .co-meta{font-size:9px;color:#6E7570;line-height:1.5;margin-top:3px;}
+  .meta{font-size:11px;margin-bottom:18px;}
+  .meta-row{display:flex;gap:8px;padding:2px 0;}
+  .meta-row .k{width:120px;color:#6E7570;}
   .meta-row .v{color:#1C2321;font-weight:500;}
-  .parties{display:flex;gap:60px;margin-bottom:30px;}
-  .party b{display:block;font-size:13px;margin-bottom:5px;color:#0F3D3E;}
-  .party .lines{font-size:13px;color:#1C2321;line-height:1.7;}
-  table.items{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
-  table.items thead th{text-align:left;font-weight:600;color:#0F3D3E;border-bottom:1.5px solid #0F3D3E;padding:0 4px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+  .parties{display:flex;gap:40px;margin-bottom:18px;}
+  .party b{display:block;font-size:11px;margin-bottom:3px;color:#0F3D3E;}
+  .party .lines{font-size:10px;color:#1C2321;line-height:1.6;}
+  table.items{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:4px;}
+  table.items thead th{text-align:left;font-weight:600;color:#0F3D3E;border-bottom:1.5px solid #0F3D3E;padding:4px 3px;font-size:9px;text-transform:uppercase;letter-spacing:.04em;}
   table.items thead th.r{text-align:right;}
-  table.items tbody td{padding:13px 4px;border-bottom:1px solid #EDE9DD;vertical-align:top;color:#1C2321;}
-  table.items tbody td.r{text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;}
-  .summary{margin-left:auto;width:250px;margin-top:10px;}
-  .summary-row{display:flex;justify-content:space-between;font-size:12.5px;padding:8px 4px;border-bottom:1px solid #EDE9DD;}
-  .summary-row.final{font-weight:700;border-bottom:2px solid #0F3D3E;padding:10px 4px;font-size:14px;color:#0F3D3E;}
-  .notes{margin-top:30px;padding:16px 20px;background:#FBF9F2;border-radius:6px;font-size:12px;color:#1C2321;border-left:3px solid #C9A227;}
+  table.items tbody td{padding:7px 3px;border-bottom:1px solid #EDE9DD;vertical-align:top;color:#1C2321;}
+  table.items tbody td.r{text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;}
+  .summary{margin-left:auto;width:220px;margin-top:8px;}
+  .summary-row{display:flex;justify-content:space-between;font-size:11px;padding:5px 3px;border-bottom:1px solid #EDE9DD;}
+  .summary-row.final{font-weight:700;border-bottom:2px solid #0F3D3E;padding:8px 3px;font-size:12px;color:#0F3D3E;}
+  .notes{margin-top:14px;padding:10px 12px;background:#FBF9F2;border-radius:6px;font-size:10px;color:#1C2321;border-left:3px solid #C9A227;}
   .notes b{color:#0F3D3E;}
-  .foot{margin-top:36px;padding-top:14px;border-top:1px solid #EDE9DD;font-size:11px;color:#6E7570;text-align:center;}
+  .terms{margin-top:12px;padding:10px 12px;background:#F5F7F6;border-radius:8px;border:1px solid #D8E3DE;font-size:10px;line-height:1.5;}
+  .terms b{color:#0F3D3E;display:block;margin-bottom:4px;}
+  .thank-you{margin-top:12px;padding:10px 14px;border-radius:8px;background:linear-gradient(135deg,#0F3D3E 0%,#1A5A5B 100%);color:#fff;text-align:center;}
+  .thank-you .title{font-family:'Fraunces',serif;font-size:13px;font-weight:700;}
+  .thank-you .contact{font-size:9px;opacity:.85;margin-top:2px;}
 </style>
 </head>
 <body>
