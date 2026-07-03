@@ -138,9 +138,34 @@
 @push('scripts')
 <script>
 (function() {
-    var animatedCards = document.querySelectorAll('.mission-card, .vision-card, .value-card');
-    if (animatedCards.length) {
-        var observer = new IntersectionObserver(function(entries) {
+    {{-- Mission/Vision cards reveal on scroll --}}
+    var mvCards = document.querySelectorAll('.mv-card');
+    if (mvCards.length) {
+        mvCards.forEach(function(card) {
+            card.classList.add('hidden-up');
+        });
+
+        var mvObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var index = parseInt(entry.target.dataset.mv || 0);
+                    setTimeout(function() {
+                        entry.target.classList.remove('hidden-up');
+                        entry.target.classList.add('visible');
+                    }, index * 400);
+                }
+            });
+        }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
+
+        mvCards.forEach(function(card) {
+            mvObserver.observe(card);
+        });
+    }
+
+    {{-- Core value cards reveal --}}
+    var valueCards = document.querySelectorAll('.value-card');
+    if (valueCards.length) {
+        var valueObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('revealed');
@@ -148,8 +173,8 @@
             });
         }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
-        animatedCards.forEach(function(card) {
-            observer.observe(card);
+        valueCards.forEach(function(card) {
+            valueObserver.observe(card);
         });
     }
 })();
