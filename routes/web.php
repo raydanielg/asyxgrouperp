@@ -234,6 +234,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Transfers
     Route::get('/transfers', [$erp, 'transferIndex'])->name('transfers.index');
     Route::post('/transfers', [$erp, 'transferStore'])->name('transfers.store');
+    Route::patch('/transfers/{transfer}/approve', [$erp, 'transferApprove'])->name('transfers.approve');
     Route::delete('/transfers/{transfer}', [$erp, 'transferDestroy'])->name('transfers.destroy');
 
     // Plans
