@@ -473,6 +473,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::get('/crm-contacts', [$ext, 'crmContactIndex'])->name('crm-contacts.index');
     Route::post('/crm-contacts', [$ext, 'crmContactStore'])->name('crm-contacts.store');
+    Route::get('/crm-contacts/{contact}/edit', [$ext, 'crmContactEdit'])->name('crm-contacts.edit');
+    Route::patch('/crm-contacts/{contact}', [$ext, 'crmContactUpdate'])->name('crm-contacts.update');
     Route::delete('/crm-contacts/{contact}', [$ext, 'crmContactDestroy'])->name('crm-contacts.destroy');
 
     // ─── Accounting ───
