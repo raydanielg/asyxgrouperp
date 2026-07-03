@@ -71,6 +71,10 @@
         .mv-card { min-height: 320px; margin-bottom: 2rem; transition: all 0.8s cubic-bezier(0.4,0,0.2,1); }
         .mv-card.hidden-up { opacity: 0; transform: translateY(60px) scale(0.96); }
         .mv-card.visible { opacity: 1; transform: translateY(0) scale(1); }
+        {{-- Core values v2 cards --}}
+        .value-card-v2 { transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .value-card-v2:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .value-card-v2:hover img { transform: scale(1.1); }
         .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15); }
         {{-- Animated rotating border on hover --}}

@@ -182,7 +182,7 @@
     }
 
     {{-- Core value cards reveal --}}
-    var valueCards = document.querySelectorAll('.value-card');
+    var valueCards = document.querySelectorAll('.value-card-v2');
     if (valueCards.length) {
         var valueObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
