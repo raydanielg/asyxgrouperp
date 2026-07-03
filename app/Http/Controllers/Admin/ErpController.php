@@ -476,7 +476,7 @@ class ErpController extends Controller
             'isRemoteEnabled' => true,
         ]);
 
-        return $pdf->download('invoice-' . $salesInvoice->invoice_number . '.pdf');
+        return $pdf->stream('invoice-' . $salesInvoice->invoice_number . '.pdf');
     }
 
     public function salesInvoiceReceipt(SalesInvoice $salesInvoice)
@@ -497,7 +497,7 @@ class ErpController extends Controller
         $pdf->setPaper('A4', 'portrait');
         $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
-        return $pdf->download('receipt-' . $salesInvoice->invoice_number . '.pdf');
+        return $pdf->stream('receipt-' . $salesInvoice->invoice_number . '.pdf');
     }
 
     private function buildReceiptData(SalesInvoice $invoice)
