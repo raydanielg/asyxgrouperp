@@ -317,7 +317,7 @@
             {{-- Top-level items --}}
             @if(auth()->user()->isAdmin())
             @foreach($navItems as $item)
-        <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+        <a href="{{ route($item['route']) }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
                 <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
@@ -867,7 +867,7 @@
                 $itemUrl = isset($item['route']) ? route($item['route']) : route('role.page', ['module' => $item['module']]);
                 $itemActive = isset($item['match']) ? request()->routeIs($item['match']) : (request()->routeIs('role.page') && request()->segment(2) === $item['module']);
             @endphp
-            <a href="{{ $itemUrl }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ $itemActive ? 'active' : '' }}">
+            <a href="{{ $itemUrl }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ $itemActive ? 'active' : '' }}">
                 <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
@@ -899,7 +899,7 @@
                     <div class="pt-1 space-y-0.5 pl-1">
                         @foreach($group['items'] as $item)
                         <div class="sidebar-submenu-item">
-                            <a href="{{ route($item['route']) }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2 rounded-lg text-emerald-100/80 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+                            <a href="{{ route($item['route']) }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2 rounded-lg text-emerald-100/80 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
                                 <svg class="w-4 h-4 text-gold-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                                 <span>{{ $item['label'] }}</span>
                             </a>
@@ -1140,5 +1140,4 @@
         }
     </script>
     @stack('scripts')
-</body>
-</html>
+</body
