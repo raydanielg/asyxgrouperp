@@ -152,6 +152,31 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Password changed successfully!');
     }
 
+    public function bulkToggleLogin(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:users,id',
+            'is_enable_login' => 'required|boolean',
+        ]);
+
+        $ownId = auth()->id();
+        $ids = collect($validated['ids'])->reject(fn($id) => $id == $ownId)->toArray();
+
+        User::whereIn('id', $ids)->update(['is_enable_login' => $validated['is_enable_login']]);
+
+        foreach ($ids as $id) {
+            Cache::forget("user_perms_{$id}");
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'updated' => count($ids)]);
+        }
+
+        $status = $validated['is_enable_login'] ? 'enabled' : 'disabled';
+        return redirect()->route('admin.users.index')->with('success', count($ids) . ' users ' . $status . ' successfully.');
+    }
+
     public function loginHistory()
     {
         $histories = LoginHistory::with('user')->latest()->paginate(15);

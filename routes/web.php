@@ -376,6 +376,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::patch('/users/{user}', [$userCtrl, 'update'])->name('users.update');
     Route::delete('/users/{user}', [$userCtrl, 'destroy'])->name('users.destroy');
     Route::patch('/users/{user}/password', [$userCtrl, 'changePassword'])->name('users.change-password');
+    Route::post('/users/bulk-toggle-login', [$userCtrl, 'bulkToggleLogin'])->name('users.bulk-toggle-login');
     Route::get('/users-login-history', [$userCtrl, 'loginHistory'])->name('users.login-history');
     Route::post('/users/{user}/impersonate', [$userCtrl, 'impersonate'])->name('users.impersonate');
     Route::post('/users/stop-impersonating', [$userCtrl, 'stopImpersonating'])->name('users.stop-impersonating');
