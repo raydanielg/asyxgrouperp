@@ -79,7 +79,7 @@
 const storeUrl = '{{ route('admin.crm-contacts.store') }}';
 
 function openContactModal() {
-    document.getElementById('contactModalTitle').textContent = 'New Contact';
+    document.getElementById('contactModalTitle').querySelector('span').textContent = 'New Contact';
     document.getElementById('contactForm').reset();
     document.getElementById('contactId').value = '';
     document.getElementById('contactSidebarOverlay').classList.remove('hidden');
@@ -138,7 +138,8 @@ function editContact(id) {
     .then(r => r.json())
     .then(data => {
         const c = data.contact;
-        document.getElementById('contactModalTitle').textContent = 'Edit Contact';
+        const title = document.getElementById('contactModalTitle');
+        title.querySelector('span').textContent = 'Edit Contact';
         document.getElementById('contactId').value = c.id;
         document.getElementById('firstName').value = c.first_name || '';
         document.getElementById('lastName').value = c.last_name || '';
@@ -148,7 +149,8 @@ function editContact(id) {
         document.getElementById('phone').value = c.phone || '';
         document.getElementById('address').value = c.address || '';
         document.getElementById('notes').value = c.notes || '';
-        document.getElementById('contactModal').classList.remove('hidden');
+        document.getElementById('contactSidebarOverlay').classList.remove('hidden');
+        document.getElementById('contactSidebar').classList.remove('translate-x-full');
     });
 }
 
