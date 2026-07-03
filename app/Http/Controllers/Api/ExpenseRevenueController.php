@@ -122,7 +122,7 @@ class ExpenseRevenueController extends Controller
             'total_sales' => \App\Models\SalesInvoice::whereMonth('created_at', $month)->whereYear('created_at', $year)->sum('total_amount') ?? 0,
             'total_purchases' => \App\Models\PurchaseInvoice::whereMonth('created_at', $month)->whereYear('created_at', $year)->sum('total_amount') ?? 0,
             'net_profit' => (Revenue::whereMonth('revenue_date', $month)->whereYear('revenue_date', $year)->sum('amount') ?? 0) - (Expense::whereMonth('expense_date', $month)->whereYear('expense_date', $year)->sum('amount') ?? 0),
-            'bank_balance' => BankAccount::sum('balance') ?? 0,
+            'bank_balance' => BankAccount::sum('current_balance') ?? 0,
             'outstanding_receivables' => \App\Models\SalesInvoice::sum('balance_amount') ?? 0,
             'outstanding_payables' => \App\Models\PurchaseInvoice::sum('balance_amount') ?? 0,
         ]);
