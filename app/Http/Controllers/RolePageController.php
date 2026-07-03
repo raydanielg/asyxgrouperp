@@ -183,6 +183,14 @@ class RolePageController extends Controller
             'legal_officer' => ['contracts', 'contacts', 'projects', 'reports'],
             'supervisor' => ['employees', 'attendance', 'leaves', 'projects', 'pos', 'products', 'reports'],
             'administrator' => ['users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports'],
+
+            'erp_super_administrator' => ['dashboard', 'users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports', 'my-account'],
+            'erp_administrator' => ['dashboard', 'users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'my-account'],
+            'ict_administrator' => ['dashboard', 'tickets', 'projects', 'assets', 'settings', 'employees', 'my-account'],
+            'network_engineer' => ['tickets', 'assets', 'projects', 'my-account'],
+            'software_engineer' => ['projects', 'bugs', 'timesheets', 'my-account'],
+            'cybersecurity_engineer' => ['tickets', 'assets', 'my-account'],
+            'field_technician' => ['tickets', 'projects', 'timesheets', 'bugs', 'my-account'],
             default => [],
         };
     }
