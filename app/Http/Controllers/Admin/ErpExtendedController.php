@@ -1168,7 +1168,7 @@ class ErpExtendedController extends Controller
         unset($data['invoicing_type'], $data['one_time_amount'], $data['one_time_when']);
 
         $data['project_number'] = 'PRJ-' . date('Ymd') . '-' . strtoupper(Str::random(4));
-        $data['company_id'] = session('current_company_id');
+        $data['company_id'] = auth()->user()->activeCompanyId() ?? session('switched_company_id') ?? auth()->user()->company_id;
         $projectIds = $request->input('project_employee_ids', []);
         $projectRoles = $request->input('project_employee_roles', []);
         $project = Project::create($data);
