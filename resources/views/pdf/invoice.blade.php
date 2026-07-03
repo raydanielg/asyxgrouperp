@@ -204,6 +204,20 @@
         <p>{{ $invoice->notes }}</p>
       </div>
       @endif
+
+      <div class="terms-box">
+        <div class="lbl">Terms & Conditions</div>
+        <div class="body">{{ $invoice->terms_and_conditions ?? "1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of " . config('app.name') . " until fully paid\n\nThank You For Your Business." }}</div>
+      </div>
+
+      <div class="thank-you">
+        <div class="title">Thank You For Your Business</div>
+        <div class="contact">For inquiries contact: {{ $company?->email ?? 'billing@asyxgroup.tz' }}</div>
+      </div>
+
+      <div class="watermark">
+        <img src="{{ public_path('asyxgrouplogo.png') }}" alt="">
+      </div>
     </div>
 
     <div class="foot">
