@@ -76,6 +76,68 @@ class RolePageController extends Controller
     private function getAllowedModulesForRole(string $role): array
     {
         return match ($role) {
+            'managing_director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'my-account'],
+            'general_manager' => ['dashboard', 'reports', 'approvals', 'projects', 'leads', 'employees', 'my-account'],
+            'technical_manager' => ['dashboard', 'tickets', 'projects', 'timesheets', 'bugs', 'lpos', 'assets', 'employees', 'my-account'],
+            'operations_manager' => ['dashboard', 'products', 'warehouses', 'stock-movements', 'sales-invoices', 'purchase-invoices', 'projects', 'reports', 'my-account'],
+
+            'finance_manager' => ['dashboard', 'journal-entries', 'purchase-invoices', 'sales-invoices', 'bank-accounts', 'budgets', 'reports', 'approvals', 'payroll', 'my-account'],
+            'chief_accountant' => ['journal-entries', 'bank-reconciliation', 'reports', 'tax-management', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'my-account'],
+            'accountant' => ['dashboard', 'journal-entries', 'sales-invoices', 'purchase-invoices', 'expenses', 'cost-centres', 'my-account'],
+            'accounts_receivable_officer' => ['sales-invoices', 'receivables-aging', 'revenues', 'credit-notes', 'my-account'],
+            'accounts_payable_officer' => ['purchase-invoices', 'acc-transfers', 'payables-aging', 'bills', 'my-account'],
+            'payroll_officer' => ['payroll', 'salary-records', 'deductions', 'payslips', 'employees', 'my-account'],
+            'budget_officer' => ['budgets', 'budget-vs-actual', 'cost-centres', 'reports', 'expenses', 'my-account'],
+            'credit_controller' => ['credit-limits', 'overdue-accounts', 'collections', 'sales-invoices', 'my-account'],
+
+            'procurement_manager' => ['dashboard', 'suppliers', 'rfqs', 'approvals', 'reports', 'lpos', 'purchase-requisitions', 'my-account'],
+            'procurement_officer' => ['rfqs', 'purchase-requisitions', 'lpos', 'grns', 'suppliers', 'my-account'],
+            'tender_officer' => ['tenders', 'tender-calendar', 'documents', 'tender-costing', 'my-account'],
+
+            'store_manager' => ['dashboard', 'warehouses', 'transfers', 'reorder-levels', 'reports', 'stock-movements', 'products', 'suppliers', 'my-account'],
+            'storekeeper' => ['stock-movements', 'grns', 'stock-count', 'products', 'my-account'],
+            'inventory_controller' => ['products', 'batch-tracking', 'barcodes', 'reports', 'warehouses', 'my-account'],
+            'asset_officer' => ['assets', 'asset-assignment', 'asset-maintenance', 'asset-disposal', 'employees', 'my-account'],
+
+            'sales_manager' => ['dashboard', 'deals', 'sales-forecast', 'quotations', 'reports', 'crm-leads', 'sales-invoices', 'my-account'],
+            'business_development_manager' => ['leads', 'deals', 'market-analysis', 'my-account'],
+            'sales_executive' => ['leads', 'deals', 'quotations', 'calls', 'my-account'],
+            'crm_officer' => ['contacts', 'calls', 'correspondence', 'leads', 'deals', 'my-account'],
+            'marketing_officer' => ['campaigns', 'lead-source-reports', 'documents', 'my-account'],
+
+            'project_director' => ['dashboard', 'reports', 'projects', 'budgets', 'timesheets', 'my-account'],
+            'project_manager' => ['dashboard', 'projects', 'timesheets', 'bugs', 'employees', 'deals', 'my-account'],
+            'technical_projects_manager' => ['projects', 'resource-allocation', 'milestones', 'timesheets', 'bugs', 'my-account'],
+            'project_coordinator' => ['tasks', 'documents', 'meetings', 'projects', 'my-account'],
+            'project_engineer' => ['tasks', 'site-reports', 'timesheets', 'projects', 'my-account'],
+            'site_supervisor' => ['attendance', 'site-reports', 'incidents', 'tickets', 'my-account'],
+            'team_leader' => ['team-tasks', 'team-attendance', 'team-timesheets', 'my-account'],
+            'project_accountant' => ['budget-vs-actual', 'sales-invoices', 'cost-centres', 'expenses', 'revenues', 'my-account'],
+
+            'senior_systems_engineer' => ['projects', 'documents', 'team-review', 'tickets', 'my-account'],
+            'systems_engineer' => ['tickets', 'assets', 'asset-maintenance', 'my-account'],
+            'support_engineer' => ['site-visits', 'service-reports', 'assets', 'tickets', 'my-account'],
+            'noc_engineer' => ['dashboard', 'tickets', 'escalations', 'assets', 'my-account'],
+
+            'service_desk_manager' => ['dashboard', 'tickets', 'sla-reports', 'reports', 'call-logs', 'my-account'],
+            'helpdesk_supervisor' => ['tickets', 'reports', 'escalations', 'call-logs', 'my-account'],
+            'helpdesk_officer' => ['tickets', 'knowledge-base', 'calls', 'my-account'],
+            'call_center_supervisor' => ['call-statistics', 'shift-schedule', 'sla-reports', 'my-account'],
+            'call_center_agent' => ['call-logs', 'leads', 'tickets', 'my-account'],
+
+            'hr_manager' => ['dashboard', 'employees', 'recruitment', 'leaves', 'payroll', 'disciplinary', 'performance', 'my-account'],
+            'hr_officer' => ['dashboard', 'employees', 'attendance', 'leaves', 'performance', 'training', 'recruitment', 'assets', 'policies', 'my-account'],
+            'recruitment_officer' => ['job-postings', 'applications', 'onboarding', 'my-account'],
+            'training_officer' => ['training', 'training-records', 'certifications', 'employees', 'my-account'],
+            'time_and_attendance_officer' => ['dashboard', 'attendance', 'shift-schedule', 'overtime', 'employees', 'my-account'],
+
+            'operations_officer' => ['operations-log', 'operations-tasks', 'helpdesk-tickets', 'my-account'],
+            'fleet_manager' => ['vehicles', 'driver-assignment', 'fuel-logs', 'trip-schedule', 'my-account'],
+            'logistics_officer' => ['deliveries', 'shipments', 'route-planning', 'my-account'],
+
+            'employee_self_service' => ['my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'announcements'],
+            'manager_self_service' => ['my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'team-overview', 'team-leaves', 'team-timesheets', 'announcements'],
+
             'director' => ['reports', 'projects', 'sales-dashboard', 'employees', 'sales-invoices', 'purchase-invoices', 'expenses', 'tickets'],
             'finance_officer' => ['sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'bank-accounts', 'transfers', 'salary-advance', 'reports'],
             'hr_officer' => ['employees', 'attendance', 'payroll', 'leaves', 'performance', 'training', 'recruitment', 'assets', 'policies'],
