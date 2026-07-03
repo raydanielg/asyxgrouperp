@@ -50,6 +50,17 @@
 </style>
 </head>
 <body>
+  <div class="page-header">
+    <img src="{{ public_path('asyxgrouplogo.png') }}" class="h-logo" alt="{{ config('app.name') }}">
+    <div class="h-text">{{ config('app.name') }} &middot; {{ $company?->address ?? 'Dar es Salaam, Tanzania' }}</div>
+  </div>
+  <div class="page-footer">
+    <span>{{ config('app.name') }}</span>
+    <span>Quotation {{ $quotation->quotation_number }}</span>
+  </div>
+  <div class="watermark">
+    <img src="{{ public_path('asyxgrouplogo.png') }}" alt="">
+  </div>
   <div class="sheet">
     @if($quotation->status === 'accepted')<div class="stamp">ACCEPTED</div>@endif
     <div class="top">
@@ -115,7 +126,17 @@
     @if($quotation->notes)
     <div class="notes"><b>Notes</b><br>{{ $quotation->notes }}</div>
     @endif
-    <div class="foot">Page 1 of 1</div>
+    <div class="terms">
+      <b>Terms & Conditions</b>
+      1. Prices Are Quoted in TZS<br>
+      2. Prices are subject to change without prior notice<br>
+      3. Payment terms must be strictly observed<br>
+      4. Goods remain property of {{ config('app.name') }} until fully paid
+    </div>
+    <div class="thank-you">
+      <div class="title">Thank You For Your Business</div>
+      <div class="contact">For inquiries contact: {{ $company?->email ?? 'billing@asyxgroup.tz' }}</div>
+    </div>
   </div>
 </body>
 </html>
