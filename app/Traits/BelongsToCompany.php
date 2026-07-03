@@ -15,7 +15,7 @@ trait BelongsToCompany
             $user = auth()->user();
             $table = $builder->getQuery()->from;
 
-            {{-- Superadmin / ERP admin sees all unless a company is explicitly switched --}}
+            // Superadmin / ERP admin sees all unless a company is explicitly switched
             if ($user->isAdmin() || $user->isSuperAdmin()) {
                 $switchedId = session('switched_company_id');
                 if ($switchedId !== null) {
@@ -24,7 +24,7 @@ trait BelongsToCompany
                 return;
             }
 
-            {{-- Group-level user sees all subsidiaries, or only the switched company --}}
+            // Group-level user sees all subsidiaries, or only the switched company
             $switchedId = session('switched_company_id');
             if ($user->company_id && $user->company && $user->company->is_group) {
                 if ($switchedId !== null) {
@@ -33,7 +33,7 @@ trait BelongsToCompany
                 return;
             }
 
-            {{-- Regular user only sees their own company --}}
+            // Regular user only sees their own company
             if ($user->company_id) {
                 $builder->where($table . '.company_id', $user->company_id);
             }
