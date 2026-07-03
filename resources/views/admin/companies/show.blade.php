@@ -24,7 +24,8 @@
             <div class="flex justify-between"><dt class="text-gray-400">Type</dt><dd class="text-gray-700">{{ $company->is_group ? 'Group' : 'Operating' }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Currency</dt><dd class="text-gray-700">{{ $company->currency }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Reg. Number</dt><dd class="text-gray-700">{{ $company->registration_number ?? '—' }}</dd></div>
-            <div class="flex justify-between"><dt class="text-gray-400">Tax ID</dt><dd class="text-gray-700">{{ $company->tax_id ?? '—' }}</dd></div>
+            <div class="flex justify-between"><dt class="text-gray-400">Tax ID (TIN)</dt><dd class="text-gray-700">{{ $company->tax_id ?? '—' }}</dd></div>
+            <div class="flex justify-between"><dt class="text-gray-400">VRN</dt><dd class="text-gray-700">{{ $company->vrn ?? '—' }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Phone</dt><dd class="text-gray-700">{{ $company->phone ?? '—' }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Email</dt><dd class="text-gray-700">{{ $company->email ?? '—' }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Address</dt><dd class="text-gray-700 text-right max-w-[200px]">{{ $company->address ?? '—' }}</dd></div>
