@@ -42,14 +42,10 @@
     border-bottom:1px solid #E3DDCB;
   }
   .co-mark{display:flex;align-items:center;gap:12px;}
-  .co-icon{
-    width:38px;height:38px;border-radius:10px;
-    background:conic-gradient(from 90deg,#C9A227,#8C5E2A,#0F3D3E,#C9A227);
-    flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;
-  }
-  .co-icon img{width:30px;height:30px;object-fit:contain;border-radius:4px;}
+  .co-icon img{height:46px;max-width:160px;object-fit:contain;}
   .co-name{font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;}
-  .co-addr{font-size:11.5px;color:#6E7570;margin-top:3px;line-height:1.5;}
+  .co-addr{font-size:11.5px;color:#6E7570;margin-top:3px;line-height:1.55;}
+  .co-tin{font-size:11px;color:#6E7570;margin-top:2px;}
 
   .doc-title{text-align:right;}
   .doc-title h1{font-family:'Fraunces',serif;font-size:24px;margin:0 0 8px;color:#1C2321;}
