@@ -125,6 +125,12 @@ class ErpController extends Controller
         return redirect()->route('admin.transfers.index')->with('success', 'Transfer deleted.');
     }
 
+    public function transferApprove(Transfer $transfer)
+    {
+        $transfer->approve(auth()->user());
+        return redirect()->route('admin.transfers.index')->with('success', 'Transfer approved and completed.');
+    }
+
     // ─── Plans ───
     public function planIndex()
     {
