@@ -736,6 +736,8 @@ class RoleDashboardController extends Controller
             case 'administrator':
             case 'admin_manager':
             case 'director':
+            case 'erp_super_administrator':
+            case 'erp_administrator':
                 $data['title'] = 'Sales vs Purchases (14 days)';
                 $data['values'] = [];
                 $data['secondaryValues'] = [];
@@ -810,6 +812,7 @@ class RoleDashboardController extends Controller
 
             case 'project_manager':
             case 'operations_manager':
+            case 'team_leader':
                 $data['title'] = 'Project Activity (14 days)';
                 $data['values'] = [];
                 for ($i = 13; $i >= 0; $i--) {
