@@ -52,4 +52,31 @@
     </table></div>
     <div class="px-5 py-4 border-t">{{ $proposals->links() }}</div>
 </div>
+@push('scripts')
+<script>
+function convertProposal(id, number) {
+  Swal.fire({
+    title: 'Convert to Invoice?',
+    text: 'Quotation ' + number + ' will be converted into a sales invoice.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#d97706',
+    cancelButtonColor: '#6b7280',
+    confirmButtonText: 'Yes, convert it',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Converting...',
+        text: 'Please wait',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+      document.getElementById('convert-proposal-' + id).submit();
+    }
+  });
+}
+</script>
+@endpush
 @endsection
