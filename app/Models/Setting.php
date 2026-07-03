@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class Setting extends Model
 {
+    use BelongsToCompany;
     protected $fillable = ['key', 'value', 'is_public', 'created_by'];
 
     protected $casts = ['is_public' => 'boolean'];

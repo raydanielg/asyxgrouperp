@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
 
 class HelpdeskCategory extends Model
 {
+    use BelongsToCompany;
     protected $fillable = ['name', 'description', 'color', 'is_active', 'creator_id', 'created_by'];
 
     protected $casts = ['is_active' => 'boolean'];
