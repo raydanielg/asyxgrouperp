@@ -40,9 +40,11 @@
         @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
         @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
         @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
+        @keyframes shakeDown { 0% { opacity:0; transform:translateY(-40px); } 50% { transform:translateY(10px); } 70% { transform:translateY(-5px); } 100% { opacity:1; transform:translateY(0); } }
         .animate-fade-up { animation: fadeInUp 0.6s ease-out both; }
         .animate-fade { animation: fadeIn 0.8s ease-out both; }
         .animate-float { animation: float 6s ease-in-out infinite; }
+        .shake-title { animation: shakeDown 0.8s cubic-bezier(0.34,1.56,0.64,1) both; }
         .hero-gradient { background: linear-gradient(135deg, #1B3A5C 0%, #163049 50%, #112637 100%); }
         .cta-gradient { background: linear-gradient(135deg, #C81E3A 0%, #5B2A6E 100%); }
         .text-gradient { background: linear-gradient(135deg, #C81E3A, #5B2A6E); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
