@@ -3,10 +3,11 @@
 @section('page_title', '')
 @section('content')
 
-<div class="max-w-[760px] mx-auto">
+<div class="max-w-[800px] mx-auto">
     {{-- Toolbar --}}
-    <div class="flex items-center justify-between mb-4 max-w-[760px] no-print">
-        <div class="text-xs" style="color:#6E7570;">
+    <div class="flex items-center justify-between mb-4 no-print">
+        <div class="flex items-center gap-2 text-xs" style="color:#6E7570;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#0F3D3E;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Invoice <b style="color:#1C2321;">{{ $salesInvoice->invoice_number }}</b> &middot; {{ config('app.name') }}
         </div>
         <div class="flex items-center gap-2">
@@ -16,9 +17,16 @@
             </a>
             <a href="{{ route('admin.sales-invoices.pdf', $salesInvoice) }}" target="_blank" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all inline-flex items-center gap-2" style="background:#C9A227;color:#23270F;" onmouseover="this.style.background='#B8941F'" onmouseout="this.style.background='#C9A227'">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Download PDF
+                PDF
             </a>
-            <a href="{{ route('admin.sales-invoices.index') }}" class="px-4 py-2.5 text-xs font-bold rounded-lg border transition-all" style="border-color:#E3DDCB;color:#6E7570;" onmouseover="this.style.background='#FBF9F2'" onmouseout="this.style.background='transparent'">Back</a>
+            <button onclick="window.print()" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all inline-flex items-center gap-2" style="background:#1C2321;color:#fff;" onmouseover="this.style.background='#0F3D3E'" onmouseout="this.style.background='#1C2321'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                Print
+            </button>
+            <a href="{{ route('admin.sales-invoices.index') }}" class="px-4 py-2.5 text-xs font-bold rounded-lg border transition-all inline-flex items-center gap-2" style="border-color:#E3DDCB;color:#6E7570;" onmouseover="this.style.background='#FBF9F2'" onmouseout="this.style.background='transparent'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back
+            </a>
         </div>
     </div>
 
