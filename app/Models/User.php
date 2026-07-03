@@ -130,4 +130,18 @@ class User extends Authenticatable
     {
         return session('current_company_id') ?: session('switched_company_id');
     }
+
+    public function activeCompanyId(): ?int
+    {
+        if ($this->isAdmin() || $this->isSuperAdmin()) {
+            return session('switched_company_id');
+        }
+        return $this->company_id;
+    }
+
+    public function currentCompany(): ?Company
+    {
+        $id = $this->activeCompanyId();
+        return $id ? Company::find($id) : $this->company;
+    }
 }

@@ -52,12 +52,15 @@ class DashboardController extends Controller
     {
         $weekAgo = now()->subDays(7)->startOfDay();
 
+        $currentCompanyId = auth()->user()->activeCompanyId();
+        $currentCompany = $currentCompanyId ? \App\Models\Company::find($currentCompanyId) : null;
+
         // ─── Core ERP Stats ───
         $stats = [
             // Users
             'totalUsers' => User::where('role', 'user')->count(),
             'newUsersThisWeek' => User::where('role', 'user')->where('created_at', '>=', $weekAgo)->count(),
-            'totalAdmins' => User::where('role', 'admin')->count(),
+            'totalAdmins' => User::where('role', 'admin')->orWhere('role', 'superadmin')->count(),
             'totalAllUsers' => User::count(),
             'activeUsers' => User::whereNotNull('email_verified_at')->count(),
             'inactiveUsers' => User::whereNull('email_verified_at')->count(),
