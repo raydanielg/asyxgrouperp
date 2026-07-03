@@ -76,6 +76,27 @@ class User extends Authenticatable
         return $this->role === 'admin' || $this->hasRole('admin');
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin' || $this->hasRole('superadmin') || $this->hasRole('ERP Super Administrator');
+    }
+
+    public function canSwitchCompany(): bool
+    {
+        return $this->isAdmin() || $this->isSuperAdmin() || ($this->company && $this->company->is_group);
+    }
+
+    public function accessibleCompanyIds(): array
+    {
+        if ($this->isAdmin() || $this->isSuperAdmin()) {
+            return \App\Models\Company::pluck('id')->toArray();
+        }
+        if ($this->company && $this->company->is_group) {
+            return \App\Models\Company::where('is_active', true)->pluck('id')->toArray();
+        }
+        return $this->company_id ? [$this->company_id] : [];
+    }
+
     public function loginHistories()
     {
         return $this->hasMany(LoginHistory::class);
