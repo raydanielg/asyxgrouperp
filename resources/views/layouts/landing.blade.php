@@ -54,6 +54,16 @@
         .header-scrolled { background: rgba(27,58,92,0.95); backdrop-filter: blur(20px); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3); }
         .scroll-reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1); }
         .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
+        {{-- Drag-down reveal effect --}}
+        .reveal-down {
+            opacity: 0;
+            transform: translateY(-80px) scale(0.9);
+            transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1), transform 0.9s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .reveal-down.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
         .card-hover { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; }
         .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15); }
         {{-- Animated rotating border on hover --}}
