@@ -174,19 +174,19 @@
 #invoice-a4 { font-family: 'Inter','Nunito',system-ui,sans-serif; position: relative; }
 #invoice-a4 h1 { font-family: 'Fraunces','Georgia',serif; }
 @media print {
-    @page { margin: 6mm; size: A4; }
-    html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-size: 8pt; }
+    @page { margin: 10mm; size: A4; }
+    html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-size: 12pt; }
     body * { visibility: hidden; }
     #invoice-a4, #invoice-a4 * { visibility: visible; }
     #invoice-a4 {
         position: absolute;
         left: 0;
         top: 0;
-        width: 198mm;
+        width: 190mm;
         box-shadow: none !important;
         border-radius: 0 !important;
     }
-    #invoice-a4 > div { padding: 8mm 10mm !important; }
+    #invoice-a4 > div { padding: 6mm !important; }
     #invoice-a4 .invoice-watermark { opacity: .04 !important; }
     .no-print, nav, header, .sidebar, .toolbar { display: none !important; }
 }
