@@ -87,7 +87,7 @@ class MeetingController extends Controller
         ]);
 
         $meeting = Meeting::create([
-            'company_id' => session('current_company_id'),
+            'company_id' => auth()->user()->activeCompanyId() ?? session('switched_company_id') ?? auth()->user()->company_id,
             'project_id' => $validated['type'] === 'project' ? ($validated['project_id'] ?? null) : null,
             'title' => $validated['title'],
             'type' => $validated['type'],
