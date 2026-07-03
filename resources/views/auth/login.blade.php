@@ -192,22 +192,16 @@
                                 ['employee.self.service@djanproject.com', 'Employee SS', 'emerald'],
                                 ['manager.self.service@djanproject.com', 'Manager SS', 'teal'],
                             ],
-                            'Legacy' => [
+                            'Legacy / Shared' => [
                                 ['director@djanproject.com', 'Director', 'violet'],
                                 ['administrator@djanproject.com', 'Administrator', 'slate'],
                                 ['admin.manager@djanproject.com', 'Admin Manager', 'gray'],
                                 ['finance.officer@djanproject.com', 'Finance Officer', 'amber'],
                                 ['auditor@djanproject.com', 'Auditor', 'teal'],
-                                ['hr.officer@djanproject.com', 'HR Officer', 'sky'],
                                 ['legal.officer@djanproject.com', 'Legal Officer', 'lime'],
                                 ['receptionist@djanproject.com', 'Receptionist', 'pink'],
-                                ['logistics.officer@djanproject.com', 'Logistics Off', 'cyan'],
                                 ['technician@djanproject.com', 'Technician', 'blue'],
                                 ['ict.officer@djanproject.com', 'ICT Officer', 'fuchsia'],
-                                ['ict.engineer@djanproject.com', 'ICT Engineer', 'purple'],
-                                ['project.manager@djanproject.com', 'Project Manager', 'orange'],
-                                ['operations.manager@djanproject.com', 'Ops Manager', 'green'],
-                                ['call.center.agent@djanproject.com', 'Call Center', 'red'],
                                 ['supervisor@djanproject.com', 'Supervisor', 'yellow'],
                             ],
                         ];
