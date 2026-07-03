@@ -94,12 +94,21 @@
 
 <style>
 @media print {
-    body { background: #fff !important; padding: 0 !important; }
+    @page { margin: 8mm; size: A4; }
+    html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-size: 10pt; }
     body * { visibility: hidden; }
     #dn-sheet, #dn-sheet * { visibility: visible; }
-    #dn-sheet { position: absolute; left: 0; top: 0; width: 210mm; box-shadow: none !important; border-radius: 0 !important; }
-    .no-print { display: none !important; }
-    nav, header, .sidebar { display: none !important; }
+    #dn-sheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 194mm;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        transform: scale(0.95);
+        transform-origin: top left;
+    }
+    .no-print, nav, header, .sidebar { display: none !important; }
 }
 </style>
 @endsection
