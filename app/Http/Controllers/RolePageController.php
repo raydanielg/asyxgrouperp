@@ -87,6 +87,10 @@ class RolePageController extends Controller
             'training_officer' => 'Training Officer', 'time_and_attendance_officer' => 'Time and Attendance Officer',
             'operations_officer' => 'Operations Officer', 'fleet_manager' => 'Fleet Manager',
             'employee_self_service' => 'Employee Self-Service', 'manager_self_service' => 'Manager Self-Service',
+            'erp_super_administrator' => 'ERP Super Administrator', 'erp_administrator' => 'ERP Administrator',
+            'ict_administrator' => 'ICT Administrator', 'network_engineer' => 'Network Engineer',
+            'software_engineer' => 'Software Engineer', 'cybersecurity_engineer' => 'Cybersecurity Engineer',
+            'field_technician' => 'Field Technician',
         ];
         return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
     }
