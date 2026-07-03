@@ -62,6 +62,7 @@ class RolePermissionSeeder extends Seeder
             'Reception' => ['view-visitors', 'create-visitors', 'view-appointments', 'create-appointments', 'view-calls', 'create-calls', 'view-correspondence', 'create-correspondence', 'view-parcels', 'create-parcels', 'view-front-desk', 'view-departments', 'view-announcements'],
             'Documents' => ['view-documents', 'create-documents', 'edit-documents', 'delete-documents'],
             'Meetings' => ['view-meetings', 'create-meetings', 'edit-meetings'],
+            'Audit' => ['view-audit-logs', 'view-login-history'],
         ];
 
         $allPermissions = [];
