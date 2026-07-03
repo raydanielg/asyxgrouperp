@@ -20,6 +20,13 @@ trait BelongsToCompany
             // auth()->check() → retrieveById → User query → applyScopes → auth()->check() ...
             if ($table === 'users') return;
 
+            // Skip if table doesn't have company_id column
+            try {
+                if (!\Schema::hasColumn($table, 'company_id')) return;
+            } catch (\Throwable $e) {
+                return;
+            }
+
             if (!auth()->check()) return;
 
             $user = auth()->user();
