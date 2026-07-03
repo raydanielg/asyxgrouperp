@@ -39,10 +39,19 @@
     <div class="px-5 py-4 border-t">{{ $contacts->links() }}</div>
 </div>
 
-<div id="contactModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)closeContactModal()">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h3 id="contactModalTitle" class="text-lg font-bold text-gray-900 mb-4">New Contact</h3>
-        <form id="contactForm" class="space-y-3">
+<div id="contactSidebarOverlay" class="hidden fixed inset-0 z-40 bg-black/30 transition-opacity" onclick="closeContactModal()"></div>
+<div id="contactSidebar" class="fixed top-0 right-0 z-50 h-full w-full sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-out flex flex-col">
+    <div class="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-emerald-600 to-emerald-700">
+        <h3 id="contactModalTitle" class="text-base font-bold text-white flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span>New Contact</span>
+        </h3>
+        <button type="button" onclick="closeContactModal()" class="text-emerald-100 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-6">
+        <form id="contactForm" class="space-y-4">
             @csrf
             <input type="hidden" id="contactId" name="contact_id" value="">
             <div class="grid grid-cols-2 gap-3">
@@ -55,13 +64,13 @@
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Email</label><input id="email" name="email" type="email" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Phone</label><input id="phone" name="phone" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Address</label><textarea id="address" name="address" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea id="notes" name="notes" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
-            <div class="flex gap-2 pt-2">
-                <button type="button" onclick="closeContactModal()" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save</button>
-            </div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Address</label><textarea id="address" name="address" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea id="notes" name="notes" rows="3" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
         </form>
+    </div>
+    <div class="border-t px-6 py-4 bg-gray-50 flex gap-3">
+        <button type="button" onclick="closeContactModal()" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-white transition-colors">Cancel</button>
+        <button type="button" onclick="document.getElementById('contactForm').dispatchEvent(new Event('submit'))" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm">Save Contact</button>
     </div>
 </div>
 
