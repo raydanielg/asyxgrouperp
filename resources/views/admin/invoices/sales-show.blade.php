@@ -195,11 +195,16 @@
 @push('scripts')
 <script>
 function printInvoicePdf() {
-    const w = window.open('{{ route('admin.sales-invoices.pdf', $salesInvoice) }}', '_blank');
+    const url = '{{ route('admin.sales-invoices.pdf', $salesInvoice) }}';
+    const w = window.open(url, '_blank');
     if (w) {
-        w.addEventListener('load', function() {
-            w.print();
-        });
+        const tryPrint = function() {
+            try {
+                w.print();
+            } catch (e) {}
+        };
+        setTimeout(tryPrint, 1000);
+        setTimeout(tryPrint, 2500);
     }
 }
 </script>
