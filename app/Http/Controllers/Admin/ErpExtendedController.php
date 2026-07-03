@@ -1121,6 +1121,7 @@ class ErpExtendedController extends Controller
 
         $project = Project::create([
             'project_number' => 'PRJ-' . date('Ym') . '-' . strtoupper(Str::random(4)),
+            'company_id' => $proposal->company_id,
             'title' => 'Project for ' . ($proposal->customer?->name ?? 'Customer') . ' - ' . $proposal->proposal_number,
             'description' => $proposal->notes,
             'start_date' => now(),
