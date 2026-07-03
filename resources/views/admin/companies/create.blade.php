@@ -35,6 +35,10 @@
                 <input type="text" name="tax_id" value="{{ old('tax_id') }}" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
             </div>
             <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">VRN</label>
+                <input type="text" name="vrn" value="{{ old('vrn') }}" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+            </div>
+            <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Phone</label>
                 <input type="text" name="phone" value="{{ old('phone') }}" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
             </div>
