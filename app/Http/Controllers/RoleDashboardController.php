@@ -498,13 +498,13 @@ class RoleDashboardController extends Controller
                 ['label' => 'Warehouses', 'value' => $stats['totalWarehouses'] ?? 0, 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5', 'color' => 'sky'],
                 ['label' => 'Pending Transfers', 'value' => $stats['pendingTransfers'] ?? 0, 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'color' => 'rose'],
             ],
-            'technical_manager', 'ict_engineer', 'senior_systems_engineer', 'systems_engineer', 'support_engineer', 'noc_engineer', 'service_desk_manager', 'helpdesk_supervisor', 'helpdesk_officer' => [
+            'technical_manager', 'ict_engineer', 'senior_systems_engineer', 'systems_engineer', 'support_engineer', 'noc_engineer', 'service_desk_manager', 'helpdesk_supervisor', 'helpdesk_officer', 'ict_administrator', 'network_engineer', 'software_engineer', 'cybersecurity_engineer' => [
                 ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'rose'],
                 ['label' => 'In Progress', 'value' => $stats['inProgressTickets'] ?? 0, 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'color' => 'amber'],
                 ['label' => 'Resolved', 'value' => $stats['resolvedTickets'] ?? 0, 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'color' => 'emerald'],
                 ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'color' => 'sky'],
             ],
-            'technician' => [
+            'technician', 'field_technician' => [
                 ['label' => 'My Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'rose'],
                 ['label' => 'In Progress', 'value' => $stats['inProgressTickets'] ?? 0, 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'color' => 'amber'],
                 ['label' => 'Resolved', 'value' => $stats['resolvedTickets'] ?? 0, 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'color' => 'emerald'],
