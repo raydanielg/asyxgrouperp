@@ -154,6 +154,40 @@
             .clients-section .clients-track { animation:none !important; }
         }
 
+        {{-- Testimonials section --}}
+        .testimonials-section .dot-grid-testimonials { background-image:radial-gradient(#A8703A 1.2px, transparent 1.2px); background-size:28px 28px; animation:gridDrift 24s linear infinite; }
+        .testimonials-section .rv-testimonials { opacity:0; transform:translateY(46px); transition:opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+        .testimonials-section .rv-testimonials.in-view { opacity:1; transform:none; }
+        .testimonials-section .chip-pop-testimonials { opacity:0; transform:scale(.6); transition:opacity .6s, transform .6s cubic-bezier(.34,1.56,.64,1); }
+        .testimonials-section .rv-testimonials.in-view .chip-pop-testimonials { opacity:1; transform:scale(1); }
+        .testimonials-section .title-underline-testimonials { width:0; height:5px; border-radius:99px; background:linear-gradient(90deg,#A8703A,#C81E3A,#5B2A6E); margin:14px auto 0; transition:width 1.1s cubic-bezier(.7,0,.2,1) .3s; }
+        .testimonials-section .rv-testimonials.in-view .title-underline-testimonials { width:120px; }
+        .testimonials-section .tm-marquee { overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); }
+        .testimonials-section .tm-track { display:flex; gap:1.5rem; width:max-content; animation:tmScroll var(--speed,40s) linear infinite; padding:1.25rem 0; }
+        .testimonials-section .tm-track.rev { animation-name:tmScrollRev; }
+        .testimonials-section .tm-marquee:hover .tm-track { animation-play-state:paused; }
+        @keyframes tmScroll { to{transform:translateX(-50%)} }
+        @keyframes tmScrollRev { from{transform:translateX(-50%)} to{transform:translateX(0)} }
+        .testimonials-section .tm-card { width:360px; flex-shrink:0; position:relative; background:#fff; border-radius:1.25rem; padding:1.6rem; border:1px solid rgba(14,42,74,.07); box-shadow:0 10px 28px -14px rgba(27,58,92,.14); transition:transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s; }
+        .testimonials-section .tm-card:hover { transform:translateY(-10px) scale(1.02); box-shadow:0 30px 55px -18px rgba(27,58,92,.32); z-index:5; }
+        .testimonials-section .tm-card::before { content:''; position:absolute; top:0; left:1.6rem; right:1.6rem; height:4px; border-radius:0 0 8px 8px; background:var(--accent, linear-gradient(90deg,#A8703A,#C81E3A)); transform:scaleX(.35); transform-origin:left; transition:transform .5s cubic-bezier(.2,.7,.2,1); }
+        .testimonials-section .tm-card:hover::before { transform:scaleX(1); }
+        .testimonials-section .tm-qicon { position:absolute; top:1.2rem; right:1.4rem; width:38px; height:38px; border-radius:12px; background:var(--accent, linear-gradient(135deg,#A8703A,#C81E3A)); display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 8px 18px -6px rgba(27,58,92,.35); transition:transform .5s cubic-bezier(.34,1.56,.64,1); }
+        .testimonials-section .tm-card:hover .tm-qicon { transform:rotate(-10deg) scale(1.12); }
+        .testimonials-section .tm-av { position:relative; border-radius:9999px; padding:2.5px; background:transparent; transition:background .4s; }
+        .testimonials-section .tm-card:hover .tm-av { background:var(--accent, linear-gradient(135deg,#A8703A,#C81E3A)); }
+        .testimonials-section .tm-av img { display:block; width:44px; height:44px; border-radius:9999px; object-fit:cover; border:2.5px solid #fff; }
+        .testimonials-section .tm-card .star { transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
+        .testimonials-section .tm-card:hover .star:nth-child(1){ transform:scale(1.25); transition-delay:0s }
+        .testimonials-section .tm-card:hover .star:nth-child(2){ transform:scale(1.25); transition-delay:.05s }
+        .testimonials-section .tm-card:hover .star:nth-child(3){ transform:scale(1.25); transition-delay:.1s }
+        .testimonials-section .tm-card:hover .star:nth-child(4){ transform:scale(1.25); transition-delay:.15s }
+        .testimonials-section .tm-card:hover .star:nth-child(5){ transform:scale(1.25); transition-delay:.2s }
+        @media (max-width:640px){ .testimonials-section .tm-card{ width:300px; } }
+        @media (prefers-reduced-motion: reduce) {
+            .testimonials-section .tm-track { animation:none !important; }
+        }
+
         {{-- Animated rotating border on hover --}}
         .service-card { position: relative; overflow: hidden; }
         .service-card::before {
