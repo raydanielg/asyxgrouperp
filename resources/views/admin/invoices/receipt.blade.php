@@ -214,12 +214,22 @@
 
 <style>
 @media print {
-    @page { margin: 0; size: A4; }
-    body { background: #fff !important; padding: 0 !important; }
+    @page { margin: 8mm; size: A4; }
+    html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-size: 9pt; }
     body * { visibility: hidden; }
     #receipt-compact, #receipt-compact *,
     #receipt-full, #receipt-full * { visibility: visible; }
-    #receipt-compact, #receipt-full { position: absolute; left: 0; top: 0; width: 210mm; min-height: 297mm; box-shadow: none !important; border-radius: 0 !important; }
+    #receipt-compact, #receipt-full {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 194mm;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        transform: scale(0.95);
+        transform-origin: top left;
+    }
+    #receipt-full > div { padding: 12mm !important; }
     .no-print { display: none !important; }
     nav, header, .sidebar, .no-print { display: none !important; }
 }
