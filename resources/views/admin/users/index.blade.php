@@ -231,6 +231,115 @@ $roleCount = count($roles);
 
 @push('scripts')
 <script>
+const bulkToggleUrl = '{{ route('admin.users.bulk-toggle-login') }}';
+const csrfToken = '{{ csrf_token() }}';
+
+function updateSelection() {
+    const checked = document.querySelectorAll('.user-checkbox:checked');
+    const toolbar = document.getElementById('bulkToolbar');
+    document.getElementById('selectedCount').textContent = checked.length;
+    toolbar.classList.toggle('hidden', checked.length === 0);
+}
+
+document.getElementById('selectAll').addEventListener('change', function() {
+    document.querySelectorAll('.user-checkbox:not(:disabled)').forEach(cb => cb.checked = this.checked);
+    updateSelection();
+});
+
+document.querySelectorAll('.user-checkbox').forEach(cb => {
+    cb.addEventListener('change', updateSelection);
+});
+
+function getSelectedIds() {
+    return Array.from(document.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
+}
+
+function clearSelection() {
+    document.querySelectorAll('.user-checkbox').forEach(cb => cb.checked = false);
+    document.getElementById('selectAll').checked = false;
+    updateSelection();
+}
+
+function updateStatusBadge(id, enabled) {
+    const badge = document.getElementById('user-status-' + id);
+    if (enabled) {
+        badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Enabled';
+    } else {
+        badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 ring-1 ring-red-200';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Disabled';
+    }
+}
+
+function toggleUserLogin(id, enable) {
+    const actionText = enable ? 'enable' : 'disable';
+    Swal.fire({
+        title: (enable ? 'Enable' : 'Disable') + ' login?',
+        text: 'This user will ' + (enable ? 'be able to' : 'no longer be able to') + ' log in.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: enable ? '#059669' : '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, ' + actionText,
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            fetch(bulkToggleUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+                body: JSON.stringify({ ids: [id], is_enable_login: enable })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    updateStatusBadge(id, enable);
+                    Swal.fire({ icon: 'success', title: 'Updated', text: 'User login ' + actionText + 'd.', confirmButtonColor: '#024938', timer: 2000 });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Could not update user.', confirmButtonColor: '#024938' });
+                }
+            });
+        }
+    });
+}
+
+function bulkEnable(enable) {
+    const ids = getSelectedIds();
+    if (ids.length === 0) return;
+    const actionText = enable ? 'enable' : 'disable';
+    Swal.fire({
+        title: (enable ? 'Enable' : 'Disable') + ' ' + ids.length + ' users?',
+        text: 'Selected users will ' + (enable ? 'be able to' : 'no longer be able to') + ' log in.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: enable ? '#059669' : '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, ' + actionText,
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            fetch(bulkToggleUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+                body: JSON.stringify({ ids: ids, is_enable_login: enable })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    ids.forEach(id => updateStatusBadge(id, enable));
+                    clearSelection();
+                    Swal.fire({ icon: 'success', title: 'Updated', text: data.updated + ' users ' + actionText + 'd.', confirmButtonColor: '#024938', timer: 2000 });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Could not update users.', confirmButtonColor: '#024938' });
+                }
+            });
+        }
+    });
+}
+
 function showChangePassword(userId, userName) {
   document.getElementById('passwordModalUser').textContent = 'User: ' + userName;
   document.getElementById('passwordForm').action = '{{ route("admin.users.change-password", ":id") }}'.replace(':id', userId);
