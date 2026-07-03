@@ -416,6 +416,7 @@ class ErpController extends Controller
             'type' => 'required|in:product,service',
             'payment_terms' => 'nullable|string',
             'notes' => 'nullable|string',
+            'terms_and_conditions' => 'nullable|string',
             'items' => 'nullable|array',
             'items.*.product_name' => 'required|string|max:255',
             'items.*.quantity' => 'required|numeric|min:0',
@@ -833,6 +834,7 @@ class ErpController extends Controller
             'type' => 'required|in:product,service',
             'payment_terms' => 'nullable|string',
             'notes' => 'nullable|string',
+            'terms_and_conditions' => 'nullable|string',
         ]);
         $salesInvoice->update($data);
         return redirect()->route('admin.sales-invoices.index')->with('success', 'Sales invoice updated.');
