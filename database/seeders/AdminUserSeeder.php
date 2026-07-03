@@ -10,6 +10,9 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
+        $group = \App\Models\Company::where('is_group', true)->first();
+        $groupId = $group?->id;
+
         User::updateOrCreate(
             ['email' => 'admin@djanproject.com'],
             [
@@ -19,7 +22,23 @@ class AdminUserSeeder extends Seeder
                 'email' => 'admin@djanproject.com',
                 'phone' => '255700000000',
                 'role' => 'admin',
+                'company_id' => $groupId,
                 'password' => Hash::make('admin12345'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'superadmin@asyxgroup.co.tz'],
+            [
+                'name' => 'ERP Super Administrator',
+                'first_name' => 'ERP Super',
+                'last_name' => 'Administrator',
+                'email' => 'superadmin@asyxgroup.co.tz',
+                'phone' => '255700000001',
+                'role' => 'superadmin',
+                'company_id' => $groupId,
+                'password' => Hash::make('superadmin12345'),
                 'email_verified_at' => now(),
             ]
         );
