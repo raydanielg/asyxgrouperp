@@ -332,6 +332,22 @@ class RoleDashboardController extends Controller
                 ];
                 break;
 
+            case 'employee_self_service':
+            case 'manager_self_service':
+                $employee = Employee::where('user_id', auth()->id())->first();
+                $stats = [
+                    'myPendingLeaves' => $employee ? Leave::where('employee_id', $employee->id)->where('status', 'pending')->count() : 0,
+                    'myApprovedLeaves' => $employee ? Leave::where('employee_id', $employee->id)->where('status', 'approved')->count() : 0,
+                    'myAttendanceThisMonth' => $employee ? Attendance::where('employee_id', $employee->id)->whereMonth('date', date('m'))->whereYear('date', date('Y'))->where('status', 'present')->count() : 0,
+                    'myLatestPayroll' => $employee ? (\App\Models\Payroll::where('employee_id', $employee->id)->latest()->value('net_salary') ?? 0) : 0,
+                    'myTasks' => \App\Models\ProjectTask::where('assigned_to', auth()->id())->count(),
+                ];
+                if ($role === 'manager_self_service') {
+                    $stats['teamPendingLeaves'] = Leave::where('status', 'pending')->count();
+                    $stats['teamPresentToday'] = Attendance::whereDate('date', today())->where('status', 'present')->count();
+                }
+                break;
+
             default:
                 $stats = [
                     'totalProjects' => Project::count(),
