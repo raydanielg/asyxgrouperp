@@ -171,6 +171,9 @@ $roleCount = count($roles);
                 <button onclick="impersonateUser({{ $user->id }}, '{{ addslashes($user->name) }}')" class="p-1.5 rounded-lg hover:bg-violet-50 text-violet-500 hover:text-violet-700 transition-all" title="Login as {{ $user->name }}">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 </button>
+                <button onclick="toggleUserLogin({{ $user->id }}, {{ ($user->is_enable_login ?? true) ? 'false' : 'true' }})" class="p-1.5 rounded-lg hover:bg-{{ ($user->is_enable_login ?? true) ? 'red' : 'emerald' }}-50 text-{{ ($user->is_enable_login ?? true) ? 'red' : 'emerald' }}-500 hover:text-{{ ($user->is_enable_login ?? true) ? 'red' : 'emerald' }}-700 transition-all" title="{{ ($user->is_enable_login ?? true) ? 'Disable' : 'Enable' }} login">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ ($user->is_enable_login ?? true) ? 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636' : 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' }}"/></svg>
+                </button>
                 @endif
                 <a href="{{ route('admin.users.edit', $user) }}" class="p-1.5 rounded-lg hover:bg-sky-50 text-sky-500 hover:text-sky-700 transition-all" title="Edit {{ $user->name }}">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
