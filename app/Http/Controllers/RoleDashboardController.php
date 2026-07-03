@@ -515,7 +515,7 @@ class RoleDashboardController extends Controller
                 ['label' => 'Total Assets', 'value' => $stats['totalAssets'] ?? 0, 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', 'color' => 'emerald'],
                 ['label' => 'Total Projects', 'value' => $stats['totalProjects'] ?? 0, 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'color' => 'sky'],
             ],
-            'project_manager', 'project_director', 'technical_projects_manager', 'project_coordinator', 'project_engineer', 'site_supervisor', 'project_accountant' => [
+            'project_manager', 'project_director', 'technical_projects_manager', 'project_coordinator', 'project_engineer', 'site_supervisor', 'project_accountant', 'team_leader' => [
                 ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2', 'color' => 'emerald'],
                 ['label' => 'Completed', 'value' => $stats['completedProjects'] ?? 0, 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'color' => 'sky'],
                 ['label' => 'Open Deals', 'value' => $stats['openDeals'] ?? 0, 'icon' => 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', 'color' => 'amber'],
