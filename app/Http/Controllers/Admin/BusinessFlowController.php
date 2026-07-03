@@ -124,6 +124,7 @@ class BusinessFlowController extends Controller
 
         $lead = CrmLead::create([
             'lead_number' => 'LEAD-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'company_id' => $tender->company_id,
             'tender_id' => $tender->id,
             'first_name' => $tender->client_name,
             'email' => $tender->client_email,
