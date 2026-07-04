@@ -31,8 +31,10 @@
             <div class="flex justify-between"><dt class="text-gray-400">Address</dt><dd class="text-gray-700 text-right max-w-[200px]">{{ $company->address ?? '—' }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Parent</dt><dd class="text-gray-700">{{ $company->parent?->short_code ?? '—' }}</dd></div>
         </dl>
-        <div class="mt-4 flex gap-2">
+        <div class="mt-4 flex gap-2 flex-wrap">
             <a href="{{ route('admin.companies.edit', $company) }}" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">Edit</a>
+            <a href="{{ route('admin.companies.switch', ['company' => $company->id]) }}" class="px-3 py-1.5 bg-sky-600 text-white text-xs font-medium rounded-lg hover:bg-sky-700">Switch Context</a>
+            <a href="{{ route('admin.reports') }}?company={{ $company->id }}" class="px-3 py-1.5 bg-amber-500 text-white text-xs font-medium rounded-lg hover:bg-amber-600">Company Reports</a>
         </div>
     </div>
 
