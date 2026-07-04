@@ -1279,7 +1279,22 @@
                         </div>
                         <div class="px-4 py-2 border-t bg-gray-50 flex items-center justify-between">
                             <span class="text-[11px] text-gray-500">Showing your activity</span>
-                            <a href="{{ route('follow-ups.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700 font-medium">My Follow-ups</a>
+                            <button type="button" onclick="openFollowUpsList()" class="text-[11px] text-emerald-600 hover:text-emerald-700 font-medium">My Follow-ups</button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Follow Up List Modal --}}
+                <div id="followUpListModal" class="fixed inset-0 bg-black/50 z-[60] hidden items-center justify-center">
+                    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 p-5 max-h-[80vh] flex flex-col">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-gray-900">My Follow-ups</h3>
+                            <button type="button" onclick="document.getElementById('followUpListModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        <div id="followUpListContent" class="overflow-y-auto flex-1 space-y-2 text-sm">
+                            <div class="text-center text-gray-400 py-6">Loading...</div>
                         </div>
                     </div>
                 </div>
