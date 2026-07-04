@@ -369,6 +369,71 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+function toggleSystemMode(mode) {
+    const title = mode === 'maintenance' ? 'Enable Maintenance Mode?' : 'Bring System Online?';
+    const text = mode === 'maintenance' ? 'All non-admin users will be logged out and see a maintenance page.' : 'The system will be available to all users.';
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: mode === 'maintenance' ? '#d97706' : '#059669',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, proceed',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            fetch('{{ route('admin.system-mode') }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'X-Requested-With': 'XMLHttpRequest' },
+                body: JSON.stringify({ mode: mode })
+            })
+            .then(r => r.json())
+            .then(data => {
+                Swal.fire({ icon: 'success', title: 'Updated', text: data.message, timer: 2000, showConfirmButton: false });
+            })
+            .catch(() => Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to update system mode.', confirmButtonColor: '#024938' }));
+        }
+    });
+}
+
+function downloadBackup() {
+    Swal.fire({
+        title: 'Download Database Backup?',
+        text: 'This will generate and download a SQL backup of the entire database.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#059669',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Download',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({ title: 'Preparing backup...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            fetch('{{ route('admin.backup.download') }}', {
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('Backup failed');
+                return r.blob();
+            })
+            .then(blob => {
+                Swal.close();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'backup-' + new Date().toISOString().slice(0,10) + '.sql';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+            })
+            .catch(() => Swal.fire({ icon: 'error', title: 'Error', text: 'Backup failed. Please check server configuration.', confirmButtonColor: '#024938' }));
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('superAdminChart');
     if (!ctx) return;
