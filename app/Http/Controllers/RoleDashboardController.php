@@ -48,12 +48,19 @@ class RoleDashboardController extends Controller
 
             $money = fn($n) => 'TZS ' . number_format($n);
 
-            $viewName = 'roles.' . str_replace('_', '-', $role) . '.dashboard';
-            if (view()->exists($viewName)) {
-                return view($viewName, compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights'));
+            $companies = null;
+            $systemMode = null;
+            if ($role === 'erp_super_administrator') {
+                $companies = Company::withCount('users')->orderBy('is_group', 'desc')->orderBy('name')->get();
+                $systemMode = config('app.maintenance_mode', false) ? 'Maintenance' : 'Online';
             }
 
-            return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights'));
+            $viewName = 'roles.' . str_replace('_', '-', $role) . '.dashboard';
+            if (view()->exists($viewName)) {
+                return view($viewName, compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights', 'companies', 'systemMode'));
+            }
+
+            return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights', 'companies', 'systemMode'));
         } catch (\Throwable $e) {
             // Fail-safe: ensure no company/user ever sees a broken dashboard
             return $this->renderFallbackDashboard($e);
