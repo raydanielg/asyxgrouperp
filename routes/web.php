@@ -56,13 +56,13 @@ Route::get('/register/success', [App\Http\Controllers\Auth\RegisterController::c
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // Role-based Dashboard (non-admin users)
-Route::get('/dashboard', [App\Http\Controllers\RoleDashboardController::class, 'index'])->name('role.dashboard')->middleware('auth');
-Route::get('/dashboard/report-pdf', [App\Http\Controllers\RoleDashboardController::class, 'reportPdf'])->name('role.dashboard.report-pdf')->middleware('auth');
+Route::get('/dashboard', [App\Http\Controllers\RoleDashboardController::class, 'index'])->name('role.dashboard')->middleware('auth', 'route-permission');
+Route::get('/dashboard/report-pdf', [App\Http\Controllers\RoleDashboardController::class, 'reportPdf'])->name('role.dashboard.report-pdf')->middleware('auth', 'route-permission');
 
-Route::get('/role/{module}', [App\Http\Controllers\RolePageController::class, 'page'])->name('role.page')->middleware('auth');
+Route::get('/role/{module}', [App\Http\Controllers\RolePageController::class, 'page'])->name('role.page')->middleware('auth', 'route-permission');
 
 // Reception AJAX routes (used by receptionist role pages)
-Route::prefix('reception')->middleware('auth')->group(function () {
+Route::prefix('reception')->middleware('auth', 'route-permission')->group(function () {
     Route::get('visitors', [App\Http\Controllers\Reception\VisitorController::class, 'index'])->name('reception.visitors.index');
     Route::post('visitors', [App\Http\Controllers\Reception\VisitorController::class, 'store'])->name('reception.visitors.store');
     Route::put('visitors/{visitor}', [App\Http\Controllers\Reception\VisitorController::class, 'update'])->name('reception.visitors.update');
