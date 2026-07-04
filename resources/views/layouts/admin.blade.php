@@ -1145,6 +1145,11 @@
             </div>
             <div class="flex items-center gap-4 font-menu">
                 @yield('page_actions')
+                {{-- AI Power Insights Button --}}
+                <button onclick="if (typeof openAiInsightsModal === 'function') openAiInsightsModal(); else window.location.href='{{ auth()->user()?->isAdmin() ? route('admin.dashboard') : route('role.dashboard') }}';" class="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm" title="AI Power Insights">
+                    <svg class="w-4 h-4 text-yellow-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <span class="hidden sm:inline">Power</span>
+                </button>
                 {{-- Company Context Switcher --}}
                 @php
                     $user = auth()->user();
