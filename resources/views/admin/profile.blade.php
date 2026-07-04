@@ -17,8 +17,17 @@ $description = 'Manage your profile, password and preferences.';
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-1">
         <div class="bg-white rounded-xl border p-6 text-center">
-            <div class="w-24 h-24 mx-auto rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-2xl font-bold mb-4">
-                {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+            <div class="relative w-28 h-28 mx-auto mb-4">
+                @if($user->avatar)
+                <img id="profileAvatar" src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="w-28 h-28 rounded-full object-cover border-4 border-emerald-50 shadow-lg">
+                @else
+                <div id="profileAvatarFallback" class="w-28 h-28 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-3xl font-bold border-4 border-emerald-50 shadow-lg">
+                    {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                </div>
+                @endif
+                <button onclick="openAvatarModal()" class="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 flex items-center justify-center shadow-md transition-colors border-2 border-white" title="Change Avatar">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </button>
             </div>
             <h3 class="text-lg font-bold text-gray-900">{{ $user->name ?? 'User' }}</h3>
             <p class="text-sm text-gray-500">{{ $user->email ?? '-' }}</p>
@@ -26,6 +35,35 @@ $description = 'Manage your profile, password and preferences.';
                 {{ $user->isAdmin() ? 'Administrator' : $user->role }}
             </p>
             <p class="text-xs text-gray-400 mt-4">Member since {{ $user->created_at?->format('M d, Y') ?? '-' }}</p>
+        </div>
+
+        {{-- Avatar Upload Modal --}}
+        <div id="avatarModal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target===this)closeAvatarModal()">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center"><svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+                        <div><h3 class="text-base font-bold text-gray-900">Update Avatar</h3><p class="text-xs text-gray-500">JPG, PNG, GIF, WebP up to 2MB</p></div>
+                    </div>
+                    <button onclick="closeAvatarModal()" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                </div>
+                <form id="avatarForm" enctype="multipart/form-data">
+                    @csrf
+                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-emerald-400 transition-colors cursor-pointer" onclick="document.getElementById('avatarInput').click()">
+                        <input type="file" id="avatarInput" name="avatar" accept="image/*" class="hidden" onchange="previewAvatar(this)">
+                        <img id="avatarPreview" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : '' }}" class="w-20 h-20 rounded-full object-cover mx-auto mb-3 {{ $user->avatar ? '' : 'hidden' }}">
+                        <div id="avatarPlaceholder" class="{{ $user->avatar ? 'hidden' : '' }}">
+                            <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                            <p class="text-xs text-gray-500">Click to upload photo</p>
+                        </div>
+                        <p id="avatarFileName" class="text-xs text-emerald-600 font-medium mt-2"></p>
+                    </div>
+                    <div class="flex gap-2 pt-4">
+                        <button type="button" onclick="closeAvatarModal()" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button type="submit" id="avatarSaveBtn" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save Avatar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
