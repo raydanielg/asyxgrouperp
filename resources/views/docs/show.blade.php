@@ -37,7 +37,7 @@
         .docs-search-highlight { background: #fef08a; }
     </style>
 </head>
-<body class="antialiased bg-white text-slate-800">
+<body class="font-['Nunito',sans-serif] antialiased bg-white text-slate-800">
 
 {{-- Top Bar --}}
 <div class="fixed top-0 left-0 right-0 h-16 bg-emerald-900 border-b border-emerald-800 z-40 flex items-center justify-between px-4 lg:px-8">
@@ -51,6 +51,11 @@
             <span class="bg-emerald-700 px-2 py-1 rounded text-sm">{{ config('app.name', 'ERP') }}</span>
             <span class="hidden sm:inline text-emerald-100 font-medium">Docs</span>
         </a>
+        {{-- Working System Badge --}}
+        <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-800/60 text-emerald-100 text-xs font-semibold rounded-full border border-emerald-700/50" title="System currently in use">
+            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            Working on {{ config('app.name', 'ERP') }}
+        </span>
     </div>
     <div class="flex items-center gap-3">
         @auth
