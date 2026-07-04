@@ -93,7 +93,7 @@ class CheckRoutePermission
     {
         $user = auth()->user();
         if (!$user) {
-            return redirect()->route('login');
+            return $next($request);
         }
 
         if ($user->role === 'admin' || $user->hasRole('admin')) {
