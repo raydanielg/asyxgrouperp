@@ -813,6 +813,14 @@ class RoleDashboardController extends Controller
                 break;
 
             case 'finance_officer':
+            case 'finance_manager':
+            case 'chief_accountant':
+            case 'accountant':
+            case 'accounts_receivable_officer':
+            case 'accounts_payable_officer':
+            case 'payroll_officer':
+            case 'budget_officer':
+            case 'credit_controller':
             case 'auditor':
                 $data['title'] = 'Revenue vs Expenses (14 days)';
                 $data['values'] = [];
