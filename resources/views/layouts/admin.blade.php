@@ -1018,6 +1018,7 @@
                     'salary-advance' => 'view-dashboard',
                     'my-account' => 'view-dashboard',
                     'payslips' => 'view-dashboard',
+                    'salary' => 'view-dashboard',
                     'site-reports' => 'view-dashboard',
                     'service-reports' => 'view-dashboard',
                     'knowledge-base' => 'view-dashboard',
