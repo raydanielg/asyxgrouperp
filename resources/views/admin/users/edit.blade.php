@@ -10,8 +10,39 @@
     </a>
   </div>
 
-  <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-5">
+  <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-5" enctype="multipart/form-data">
     @csrf @method('PATCH')
+
+    {{-- Avatar --}}
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 bg-gradient-to-r from-emerald-50 to-white border-b border-gray-100">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-gray-900">Profile Photo</h3>
+            <p class="text-[11px] text-gray-500">Upload a profile picture</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-6">
+        <div class="flex items-center gap-4">
+          @if($user->avatar)
+          <img id="userAvatarPreview" src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="w-20 h-20 rounded-full object-cover border-4 border-emerald-50 shadow-sm">
+          @else
+          <div id="userAvatarPreviewFallback" class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-xl font-bold border-4 border-emerald-50 shadow-sm">
+            {{ strtoupper(substr($user->name, 0, 1)) }}
+          </div>
+          @endif
+          <div class="flex-1">
+            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Avatar</label>
+            <input type="file" name="avatar" accept="image/*" onchange="previewUserAvatar(this)" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+            @error('avatar')<p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>@enderror
+          </div>
+        </div>
+      </div>
+    </div>
 
     {{-- User Information --}}
     <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
