@@ -1197,18 +1197,53 @@
                     </div>
                 </div>
                 @endif
-                {{-- Global Employee Search --}} 
-                <form method="GET" action="{{ route('admin.employees.index') }}" class="hidden md:flex items-center bg-gray-50 rounded-lg px-3 py-1.5 border border-gray-100">
+                @php
+                    $user = auth()->user();
+                    $searchOptions = [];
+                    if ($user->isAdmin() || $user->isSuperAdmin() || $user->hasPermission('view-employees')) {
+                        $searchOptions[] = ['route' => 'employees.index', 'param' => 'search', 'placeholder' => 'Search employees by name, email or ID...', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'];
+                    }
+                    if ($user->hasPermission('view-crm-leads') || $user->hasPermission('view-crm-deals')) {
+                        $searchOptions[] = ['route' => 'crm-leads.index', 'param' => 'search', 'placeholder' => 'Search leads...', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'];
+                    }
+                    if ($user->hasPermission('view-projects')) {
+                        $searchOptions[] = ['route' => 'projects.index', 'param' => 'search', 'placeholder' => 'Search projects...', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6 4h6'];
+                    }
+                    if ($user->hasPermission('view-products')) {
+                        $searchOptions[] = ['route' => 'products.index', 'param' => 'search', 'placeholder' => 'Search products...', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'];
+                    }
+                    if ($user->hasPermission('view-helpdesk-tickets')) {
+                        $searchOptions[] = ['route' => 'helpdesk-tickets.index', 'param' => 'search', 'placeholder' => 'Search tickets...', 'icon' => 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'];
+                    }
+                    if ($user->hasPermission('view-sales-invoices')) {
+                        $searchOptions[] = ['route' => 'sales-invoices.index', 'param' => 'search', 'placeholder' => 'Search sales invoices...', 'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'];
+                    }
+                    if ($user->hasPermission('view-purchase-invoices')) {
+                        $searchOptions[] = ['route' => 'purchase-invoices.index', 'param' => 'search', 'placeholder' => 'Search purchase invoices...', 'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'];
+                    }
+                    if ($user->hasPermission('view-documents')) {
+                        $searchOptions[] = ['route' => 'documents.index', 'param' => 'search', 'placeholder' => 'Search documents...', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'];
+                    }
+                    $activeSearch = $searchOptions[0] ?? null;
+                @endphp
+
+                @if($activeSearch)
+                {{-- Permission-based Global Search --}}
+                <form method="GET" action="{{ route($activeSearch['route']) }}" class="hidden md:flex items-center bg-gray-50 rounded-lg px-3 py-1.5 border border-gray-100">
                     <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search employees by name, email or ID..." class="bg-transparent text-sm outline-none w-64 text-gray-600 placeholder-gray-400">
+                    <input type="text" name="{{ $activeSearch['param'] }}" value="{{ request($activeSearch['param']) }}" placeholder="{{ $activeSearch['placeholder'] }}" class="bg-transparent text-sm outline-none w-64 text-gray-600 placeholder-gray-400">
                     <button class="ml-2 px-2 py-1 text-xs bg-emerald-600 text-white rounded-md hover:bg-emerald-700">Search</button>
                 </form>
+                @endif
+
                 {{-- Notifications Dropdown --}}
                 @php
                     try {
                         $sessionCompanyId = session('switched_company_id', auth()->user()->company_id);
+                        $user = auth()->user();
                         $recentLogs = \App\Models\AuditLog::query()
                             ->when($sessionCompanyId, function($q) use ($sessionCompanyId) { $q->where('company_id', $sessionCompanyId); })
+                            ->when(!$user->isAdmin() && !$user->isSuperAdmin(), function($q) use ($user) { $q->where('user_id', $user->id); })
                             ->latest()->take(8)->get();
                     } catch (\Throwable $e) {
                         $recentLogs = collect();
@@ -1221,26 +1256,92 @@
                         <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
                         @endif
                     </button>
-                    <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl border shadow-lg z-50 py-2">
+                    <div id="notifMenu" class="hidden absolute right-0 mt-2 w-96 bg-white rounded-xl border shadow-lg z-50 py-2">
                         <div class="px-4 py-2 border-b flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-700">Notifications</span>
-                            <a href="{{ route('admin.audit-logs.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700">View all</a>
+                            <span class="text-xs font-semibold text-gray-700">Your Notifications</span>
+                            @if($user->isAdmin() || $user->hasPermission('view-audit-logs'))
+                            <a href="{{ route('audit-logs.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700">View all</a>
+                            @endif
                         </div>
                         <div class="max-h-80 overflow-y-auto">
                             @forelse($recentLogs as $log)
-                                <div class="px-4 py-2 hover:bg-gray-50 flex items-start gap-2">
+                                <div class="px-4 py-2 hover:bg-gray-50 flex items-start gap-3">
                                     <div class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-bold">{{ strtoupper(substr($log->action ?? 'A',0,1)) }}</div>
-                                    <div class="flex-1">
-                                        <p class="text-xs text-gray-800">{{ $log->action ?? 'Activity' }} @if(!empty($log->entity_type))<span class="text-gray-400">• {{ $log->entity_type }}</span>@endif</p>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs text-gray-800 truncate">{{ $log->action ?? 'Activity' }} @if(!empty($log->module))<span class="text-gray-400">• {{ $log->module }}</span>@endif</p>
                                         <p class="text-[10px] text-gray-400">{{ $log->user?->name ?? 'System' }} • {{ optional($log->created_at)->diffForHumans() }}</p>
                                     </div>
+                                    <button type="button" onclick="createFollowUpFromNotif('{{ $log->action ?? 'Activity' }}', '{{ $log->module ?? '' }}', '{{ $log->id }}')" class="text-[11px] text-emerald-600 hover:text-emerald-700 font-medium whitespace-nowrap" title="Create follow-up reminder">Follow up</button>
                                 </div>
                             @empty
                                 <div class="px-4 py-6 text-center text-[11px] text-gray-400">No recent notifications</div>
                             @endforelse
                         </div>
+                        <div class="px-4 py-2 border-t bg-gray-50 flex items-center justify-between">
+                            <span class="text-[11px] text-gray-500">Showing your activity</span>
+                            <a href="{{ route('follow-ups.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700 font-medium">My Follow-ups</a>
+                        </div>
                     </div>
                 </div>
+
+                {{-- Follow Up Modal --}}
+                <div id="followUpModal" class="fixed inset-0 bg-black/50 z-[60] hidden items-center justify-center">
+                    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-5">
+                        <h3 class="text-sm font-bold text-gray-900 mb-3">Create Follow-up</h3>
+                        <form id="followUpForm" onsubmit="return submitFollowUp(event)">
+                            @csrf
+                            <input type="hidden" id="followUpRelatedType" name="related_type">
+                            <input type="hidden" id="followUpRelatedId" name="related_id">
+                            <div class="mb-3">
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Title</label>
+                                <input type="text" id="followUpTitle" name="title" required class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Note</label>
+                                <textarea id="followUpNote" name="note" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Due Date</label>
+                                <input type="datetime-local" id="followUpDue" name="due_at" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button type="button" onclick="document.getElementById('followUpModal').classList.add('hidden')" class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                                <button type="submit" class="px-3 py-1.5 text-xs bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save Follow-up</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <script>
+                    function createFollowUpFromNotif(action, module, id) {
+                        document.getElementById('followUpTitle').value = 'Follow up: ' + action;
+                        document.getElementById('followUpNote').value = module ? 'Related to ' + module : '';
+                        document.getElementById('followUpRelatedType').value = module || 'audit_log';
+                        document.getElementById('followUpRelatedId').value = id;
+                        document.getElementById('followUpModal').classList.remove('hidden');
+                        document.getElementById('followUpModal').classList.add('flex');
+                    }
+                    function submitFollowUp(e) {
+                        e.preventDefault();
+                        const form = document.getElementById('followUpForm');
+                        const data = new FormData(form);
+                        fetch('{{ route('follow-ups.store') }}', {
+                            method: 'POST',
+                            body: data,
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        }).then(r => r.json()).then(res => {
+                            if (res.success) {
+                                alert('Follow-up created');
+                                document.getElementById('followUpModal').classList.add('hidden');
+                                document.getElementById('followUpModal').classList.remove('flex');
+                                form.reset();
+                            } else {
+                                alert('Failed to create follow-up');
+                            }
+                        }).catch(() => alert('Failed to create follow-up'));
+                        return false;
+                    }
+                </script>
             </div>
         </header>
 
