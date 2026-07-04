@@ -10,6 +10,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -109,16 +110,26 @@ class UserController extends Controller
             'assigned_roles' => 'array',
             'assigned_roles.*' => 'exists:roles,id',
             'is_enable_login' => 'boolean',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $user->update([
+        $data = [
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
             'role' => $validated['role'],
             'company_id' => $validated['company_id'] ?? null,
             'is_enable_login' => $request->boolean('is_enable_login', true),
-        ]);
+        ];
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        $user->update($data);
 
         if (!empty($validated['assigned_roles'])) {
             $user->roles()->sync($validated['assigned_roles']);
