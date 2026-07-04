@@ -356,6 +356,24 @@ class RolePageController extends Controller
                 $data['totalRequested'] = SalaryAdvanceRequest::where('user_id', $user->id)->sum('amount') ?? 0;
                 break;
 
+            case 'salary':
+            case 'payslips':
+                $user = auth()->user();
+                $employee = $user->employee;
+                $employeeId = $employee?->id;
+                $data['employee'] = $employee;
+                $data['salary'] = $employee?->salary ?? 0;
+                $data['payrolls'] = $employeeId
+                    ? \App\Models\Payroll::where('employee_id', $employeeId)->latest()->paginate(12)
+                    : collect([]);
+                $data['latestPayroll'] = $employeeId
+                    ? \App\Models\Payroll::where('employee_id', $employeeId)->latest()->first()
+                    : null;
+                $data['yearToDate'] = $employeeId
+                    ? \App\Models\Payroll::where('employee_id', $employeeId)->where('year', now()->year)->sum('net_salary') ?? 0
+                    : 0;
+                break;
+
             case 'projects':
                 $data['projects'] = Project::latest()->paginate(10);
                 $data['activeProjects'] = Project::where('status', 'in_progress')->count();
