@@ -116,9 +116,27 @@ $roleCount = count($roles);
         </tbody>
       </table>
     </div>
-    @if($users->hasPages())
-    <div class="px-5 py-4 border-t border-gray-100 bg-gray-50/30">{{ $users->links() }}</div>
-    @endif
+    <div class="flex items-center justify-between px-5 py-3 border-t border-gray-100 bg-gray-50/30">
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <span>Show</span>
+        <select id="perPageSelector" onchange="changePerPage(this.value)" class="px-2 py-1 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none bg-white">
+          <option value="10" @selected($perPage == 10)>10</option>
+          <option value="50" @selected($perPage == 50)>50</option>
+          <option value="100" @selected($perPage == 100)>100</option>
+          <option value="all" @selected($perPage === 'all')>All</option>
+        </select>
+        <span>entries</span>
+        @if($perPage !== 'all' && $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
+        <span class="text-gray-400">|</span>
+        <span>Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }}</span>
+        @endif
+      </div>
+      <div id="usersPagination">
+        @if($perPage !== 'all' && $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator && $users->hasPages())
+        @include('admin.users.partials.pagination', ['users' => $users, 'perPage' => $perPage])
+        @endif
+      </div>
+    </div>
   </div>
 </div>
 
