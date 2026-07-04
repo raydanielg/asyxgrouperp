@@ -3,7 +3,7 @@
 @section('page_title', 'Manage Users')
 @section('content')
 @php
-$totalUsers = $users->total();
+$totalUsers = $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator ? $users->total() : $users->count();
 $adminCount = $users->filter(fn($u) => $u->isAdmin())->count();
 $enabledCount = $users->filter(fn($u) => $u->is_enable_login ?? true)->count();
 $roleCount = count($roles);
@@ -126,10 +126,10 @@ $roleCount = count($roles);
           <option value="all" @selected($perPage === 'all')>All</option>
         </select>
         <span>entries</span>
-        @if($perPage !== 'all' && $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
-        <span class="text-gray-400">|</span>
-        <span>Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }}</span>
-        @endif
+        <span id="usersInfoText" class="@if($perPage === 'all' || !($users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)) hidden @endif">
+          <span class="text-gray-400">|</span>
+          <span>Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }}</span>
+        </span>
       </div>
       <div id="usersPagination">
         @if($perPage !== 'all' && $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator && $users->hasPages())
