@@ -192,10 +192,7 @@ function showChangePassword(userId, userName) {
   document.getElementById('passwordForm').action = '{{ route("admin.users.change-password", ":id") }}'.replace(':id', userId);
   document.getElementById('passwordModal').classList.remove('hidden');
 }
-</script>
-@endpush
-@push('scripts')
-<script>
+
 function previewUserAvatar(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
