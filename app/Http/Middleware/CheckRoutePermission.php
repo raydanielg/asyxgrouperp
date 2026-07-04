@@ -84,6 +84,8 @@ class CheckRoutePermission
         'admin.settings*' => 'view-settings',
         'admin.system-mode' => 'view-settings',
         'admin.backup.*' => 'view-settings',
+        'admin.documentation*' => 'view-dashboard',
+        'admin.documentation.*' => 'view-dashboard',
         'role.page' => 'view-dashboard',
         'role.dashboard' => 'view-dashboard',
         'reception.*' => 'view-dashboard',
