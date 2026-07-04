@@ -90,25 +90,61 @@
         </div>
     </div>
 
-    {{-- AI Insights --}}
-    <div class="bg-gradient-to-br from-emerald-50 to-white rounded-xl border border-emerald-100 p-5">
+    {{-- AI Insights Mini Card --}}
+    <div class="bg-gradient-to-br from-emerald-50 to-white rounded-xl border border-emerald-100 p-5 relative">
         <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
             <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             AI Insights
         </h3>
-        <p class="text-xs text-gray-600 mb-3">{{ $aiInsights['message'] ?? 'No actionable insights at this time.' }}</p>
-        @if(!empty($aiInsights['suggestions']))
-            <ul class="space-y-2">
-                @foreach($aiInsights['suggestions'] as $suggestion)
-                    <li class="flex items-start gap-2 text-xs text-gray-700">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
-                        <span>{{ $suggestion }}</span>
-                    </li>
-                @endforeach
-            </ul>
-        @endif
+        <p class="text-xs text-gray-600 mb-3 line-clamp-2">{{ $aiInsights['message'] ?? 'No actionable insights at this time.' }}</p>
+        <button onclick="openAiInsightsModal()" class="w-full px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors">View Full Insights</button>
     </div>
 </div>
+
+{{-- AI Insights Modal --}}
+<div id="aiInsightsModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeAiInsightsModal()"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 px-6 py-4 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2" id="modal-title">
+                        <svg class="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        AI Power Insights
+                    </h3>
+                    <button onclick="closeAiInsightsModal()" class="text-emerald-100 hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="px-6 py-5">
+                    <div class="mb-4 rounded-xl bg-emerald-50 border border-emerald-100 p-4">
+                        <p class="text-sm text-gray-700 font-medium">{{ $aiInsights['message'] ?? 'No actionable insights at this time.' }}</p>
+                    </div>
+                    @if(!empty($aiInsights['suggestions']))
+                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Actionable Suggestions</h4>
+                    <ul class="space-y-3">
+                        @foreach($aiInsights['suggestions'] as $suggestion)
+                            <li class="flex items-start gap-3 text-sm text-gray-700 bg-gray-50 rounded-lg p-3">
+                                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 text-xs font-bold">{{ $loop->iteration }}</span>
+                                <span>{{ $suggestion }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                    @endif
+                </div>
+                <div class="bg-gray-50 px-6 py-4 flex justify-end">
+                    <button onclick="closeAiInsightsModal()" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors">Got it</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Floating Power Button --}}
+<button onclick="openAiInsightsModal()" id="aiPowerButton" class="fixed bottom-6 right-6 z-40 group flex items-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" title="Open AI Power Insights">
+    <svg class="w-6 h-6 text-yellow-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    <span class="text-sm font-semibold max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 whitespace-nowrap">Power</span>
+</button>
 
 {{-- Chart --}}
 <div class="bg-white rounded-xl border p-5 mb-6">
