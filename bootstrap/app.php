@@ -18,12 +18,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'audit' => \App\Http\Middleware\AuditLogMiddleware::class,
             'company' => \App\Http\Middleware\SetCompanyContext::class,
             'maintenance' => \App\Http\Middleware\MaintenanceMode::class,
+            'route-permission' => \App\Http\Middleware\CheckRoutePermission::class,
         ]);
         $middleware->redirectTo(
             guests: fn () => route('login'),
             users: fn () => auth()->user()?->isAdmin() ? '/admin/dashboard' : '/dashboard',
         );
         $middleware->appendToGroup('web', \App\Http\Middleware\MaintenanceMode::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\CheckRoutePermission::class);
         $middleware->appendToGroup('web', \App\Http\Middleware\AuditLogMiddleware::class);
         $middleware->appendToGroup('web', \App\Http\Middleware\SetCompanyContext::class);
     })
