@@ -194,4 +194,27 @@ function showChangePassword(userId, userName) {
 }
 </script>
 @endpush
+@push('scripts')
+<script>
+function previewUserAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            let img = document.getElementById('userAvatarPreview');
+            if (!img) {
+                const fallback = document.getElementById('userAvatarPreviewFallback');
+                if (fallback) {
+                    img = document.createElement('img');
+                    img.id = 'userAvatarPreview';
+                    img.className = 'w-20 h-20 rounded-full object-cover border-4 border-emerald-50 shadow-sm';
+                    fallback.parentNode.replaceChild(img, fallback);
+                }
+            }
+            if (img) img.src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+@endpush
 @endsection
