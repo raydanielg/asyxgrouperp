@@ -1145,6 +1145,10 @@
                     <span>ASYX</span><span class="text-gold-500">GROUP</span>
                 </div>
                 <h1 class="text-lg font-bold text-gray-800 font-menu">@yield('page_title', 'Dashboard')</h1>
+                <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200" title="System currently in use">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    {{ config('app.name', 'ERP') }}
+                </span>
             </div>
             <div class="flex items-center gap-4 font-menu">
                 @yield('page_actions')
