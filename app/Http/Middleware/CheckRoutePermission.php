@@ -121,6 +121,11 @@ class CheckRoutePermission
             }
         }
 
+        // If user is trying to access an admin route without explicit permission, deny access.
+        if (str_starts_with($currentRoute, 'admin.')) {
+            abort(403, 'You do not have permission to access this page.');
+        }
+
         return $next($request);
     }
 }

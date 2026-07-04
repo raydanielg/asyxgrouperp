@@ -103,7 +103,7 @@ class RolePageController extends Controller
     private function getAllowedModulesForRole(string $role): array
     {
         return match ($role) {
-            'managing_director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'my-account'],
+            'managing_director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'my-account', 'payslips', 'salary'],
             'general_manager' => ['dashboard', 'reports', 'approvals', 'projects', 'leads', 'employees', 'my-account'],
             'technical_manager' => ['dashboard', 'tickets', 'projects', 'timesheets', 'bugs', 'lpos', 'assets', 'employees', 'my-account'],
             'operations_manager' => ['dashboard', 'products', 'warehouses', 'stock-movements', 'sales-invoices', 'purchase-invoices', 'projects', 'reports', 'my-account'],
