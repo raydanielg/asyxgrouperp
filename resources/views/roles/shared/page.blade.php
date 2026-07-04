@@ -1159,6 +1159,87 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         <div class="px-5 py-3 border-t">{{ ($employees ?? null)?->links() ?? '' }}</div>
         @break
 
+    @case('salary')
+    @case('payslips')
+        <div class="p-5 space-y-5">
+            {{-- Salary Overview --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                    <span class="text-[10px] font-medium text-emerald-600 uppercase">Basic Salary</span>
+                    <p class="text-xl font-bold text-emerald-900 mt-1">{{ $money($salary ?? 0) }}</p>
+                </div>
+                <div class="bg-sky-50 border border-sky-200 rounded-xl p-4">
+                    <span class="text-[10px] font-medium text-sky-600 uppercase">Year-to-Date Net</span>
+                    <p class="text-xl font-bold text-sky-900 mt-1">{{ $money($yearToDate ?? 0) }}</p>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                    <span class="text-[10px] font-medium text-amber-600 uppercase">Latest Net Pay</span>
+                    <p class="text-xl font-bold text-amber-900 mt-1">{{ $money($latestPayroll?->net_salary ?? 0) }}</p>
+                </div>
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                    <span class="text-[10px] font-medium text-purple-600 uppercase">Payslips</span>
+                    <p class="text-xl font-bold text-purple-900 mt-1">{{ ($payrolls ?? collect())->total() ?? 0 }}</p>
+                </div>
+            </div>
+
+            @if(!$employee)
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                <p class="text-sm text-red-700 font-medium">Employee record not linked to your account.</p>
+                <p class="text-xs text-red-500 mt-1">Contact HR to link your employee profile.</p>
+            </div>
+            @else
+            {{-- Payslips Table --}}
+            <div class="bg-white border rounded-xl overflow-hidden">
+                <div class="px-4 py-3 border-b flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-gray-900">My Payslips</h3>
+                    <span class="text-[10px] text-gray-500">{{ $employee->first_name ?? '' }} {{ $employee->last_name ?? '' }}</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Period</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Basic</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Allowances</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Deductions</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Net Pay</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse(($payrolls ?? collect())->items() ?? [] as $payroll)
+                            <tr class="hover:bg-gray-50/50">
+                                <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $payroll->month }} {{ $payroll->year }}</td>
+                                <td class="px-4 py-3 text-xs text-gray-600">{{ $money($payroll->basic_salary) }}</td>
+                                <td class="px-4 py-3 text-xs text-emerald-600">{{ $money($payroll->allowances) }}</td>
+                                <td class="px-4 py-3 text-xs text-red-600">{{ $money($payroll->deductions) }}</td>
+                                <td class="px-4 py-3 text-xs font-bold text-gray-900">{{ $money($payroll->net_salary) }}</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full {{ $payroll->status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">{{ ucfirst($payroll->status) }}</span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <a href="{{ route('payslip.preview', $payroll->id) }}" target="_blank" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 border border-sky-200 rounded hover:bg-sky-50 transition-colors mr-1">Preview</a>
+                                    <a href="{{ route('payslip.download', $payroll->id) }}" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 rounded hover:bg-emerald-50 transition-colors">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                        PDF
+                                    </a>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="7" class="px-4 py-8 text-center text-xs text-gray-400">No payslips found for your employee record.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-5 py-3 border-t">{{ ($payrolls ?? null)?->links() ?? '' }}</div>
+            </div>
+            @endif
+        </div>
+        @break
+
     @case('pos')
         <div class="p-5">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
