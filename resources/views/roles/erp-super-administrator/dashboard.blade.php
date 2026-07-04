@@ -121,6 +121,116 @@
     </div>
 </div>
 
+{{-- System Control & Backup --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-xl border p-5">
+        <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            System Control
+        </h3>
+        <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-lg border border-gray-100 bg-gray-50/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <div><p class="text-xs font-semibold text-gray-700">System Mode</p><p class="text-[10px] text-gray-500">{{ $systemMode ?? 'Online' }}</p></div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Online</span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="toggleSystemMode('maintenance')" class="flex-1 px-3 py-2 bg-amber-50 text-amber-700 border border-amber-100 rounded-lg text-xs font-medium hover:bg-amber-100 transition-colors">Maintenance Mode</button>
+                <button onclick="toggleSystemMode('online')" class="flex-1 px-3 py-2 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg text-xs font-medium hover:bg-emerald-100 transition-colors">Enable System</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl border p-5">
+        <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Database Backup
+        </h3>
+        <p class="text-xs text-gray-500 mb-3">Download full database backup (SQL). This includes all companies and users.</p>
+        <button onclick="downloadBackup()" class="w-full px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-xs font-bold rounded-lg hover:from-emerald-700 hover:to-emerald-800 transition-all flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download Backup
+        </button>
+    </div>
+
+    <div class="bg-white rounded-xl border p-5">
+        <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Quick Reports
+        </h3>
+        <div class="grid grid-cols-2 gap-2">
+            <a href="{{ route('admin.reports') }}" class="px-3 py-2 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg text-xs font-medium hover:bg-emerald-100 transition-colors text-center">All Reports</a>
+            <a href="{{ route('admin.companies.consolidated') }}" class="px-3 py-2 bg-sky-50 text-sky-700 border border-sky-100 rounded-lg text-xs font-medium hover:bg-sky-100 transition-colors text-center">Consolidated</a>
+            <a href="{{ route('admin.users.login-history') }}" class="px-3 py-2 bg-violet-50 text-violet-700 border border-violet-100 rounded-lg text-xs font-medium hover:bg-violet-100 transition-colors text-center">Login History</a>
+            <a href="{{ route('admin.audit-logs.index') }}" class="px-3 py-2 bg-amber-50 text-amber-700 border border-amber-100 rounded-lg text-xs font-medium hover:bg-amber-100 transition-colors text-center">Audit Logs</a>
+        </div>
+    </div>
+</div>
+
+{{-- Companies Overview --}}
+<div class="bg-white rounded-xl border overflow-hidden mb-6">
+    <div class="px-5 py-4 border-b flex items-center justify-between">
+        <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            All Companies
+        </h3>
+        <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-medium">Manage Companies</a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-[11px] text-gray-500 bg-gray-50/80 border-b border-gray-100">
+                    <th class="px-5 py-3 font-semibold uppercase tracking-wider">Company</th>
+                    <th class="px-5 py-3 font-semibold uppercase tracking-wider">Type</th>
+                    <th class="px-5 py-3 font-semibold uppercase tracking-wider">Users</th>
+                    <th class="px-5 py-3 font-semibold uppercase tracking-wider">Status</th>
+                    <th class="px-5 py-3 font-semibold uppercase tracking-wider text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($companies ?? [] as $company)
+                <tr class="border-t border-gray-50 hover:bg-gray-50/50 transition-colors">
+                    <td class="px-5 py-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">{{ strtoupper(substr($company->name, 0, 1)) }}</div>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-900">{{ $company->name }}</p>
+                                <p class="text-[10px] text-gray-400">{{ $company->short_code ?? '—' }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-5 py-3">
+                        @if($company->is_group)
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Group</span>
+                        @else
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700 border border-sky-100">Subsidiary</span>
+                        @endif
+                    </td>
+                    <td class="px-5 py-3 text-xs text-gray-700">{{ $company->users_count ?? 0 }}</td>
+                    <td class="px-5 py-3">
+                        @if($company->is_active)
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>
+                        @else
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 ring-1 ring-red-200"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Inactive</span>
+                        @endif
+                    </td>
+                    <td class="px-5 py-3 text-right">
+                        <div class="flex items-center justify-end gap-1">
+                            <a href="{{ route('admin.companies.switch', ['company' => $company->id]) }}" class="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 hover:text-emerald-700" title="Switch to this company"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg></a>
+                            <a href="{{ route('admin.companies.show', $company) }}" class="p-1.5 rounded-lg hover:bg-sky-50 text-sky-600 hover:text-sky-700" title="View Dashboard"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></a>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="5" class="px-5 py-8 text-center text-xs text-gray-400">No companies found</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
 {{-- Quick Actions --}}
 @if(!empty($quickActions))
 <div class="bg-white rounded-xl border p-5 mb-6">
