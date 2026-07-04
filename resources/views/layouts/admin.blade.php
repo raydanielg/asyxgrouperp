@@ -1251,28 +1251,28 @@
                     $user = auth()->user();
                     $searchOptions = [];
                     if ($user->isAdmin() || $user->isSuperAdmin() || $user->hasPermission('view-employees')) {
-                        $searchOptions[] = ['route' => 'employees.index', 'param' => 'search', 'placeholder' => 'Search employees by name, email or ID...', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'];
+                        $searchOptions[] = ['route' => 'admin.employees.index', 'param' => 'search', 'placeholder' => 'Search employees by name, email or ID...', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'];
                     }
                     if ($user->hasPermission('view-crm-leads') || $user->hasPermission('view-crm-deals')) {
-                        $searchOptions[] = ['route' => 'crm-leads.index', 'param' => 'search', 'placeholder' => 'Search leads...', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'];
+                        $searchOptions[] = ['route' => 'admin.crm-leads.index', 'param' => 'search', 'placeholder' => 'Search leads...', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'];
                     }
                     if ($user->hasPermission('view-projects')) {
-                        $searchOptions[] = ['route' => 'projects.index', 'param' => 'search', 'placeholder' => 'Search projects...', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6 4h6'];
+                        $searchOptions[] = ['route' => 'admin.projects.index', 'param' => 'search', 'placeholder' => 'Search projects...', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6 4h6'];
                     }
                     if ($user->hasPermission('view-products')) {
-                        $searchOptions[] = ['route' => 'products.index', 'param' => 'search', 'placeholder' => 'Search products...', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'];
+                        $searchOptions[] = ['route' => 'admin.products.index', 'param' => 'search', 'placeholder' => 'Search products...', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'];
                     }
                     if ($user->hasPermission('view-helpdesk-tickets')) {
-                        $searchOptions[] = ['route' => 'helpdesk-tickets.index', 'param' => 'search', 'placeholder' => 'Search tickets...', 'icon' => 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'];
+                        $searchOptions[] = ['route' => 'admin.helpdesk-tickets.index', 'param' => 'search', 'placeholder' => 'Search tickets...', 'icon' => 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'];
                     }
                     if ($user->hasPermission('view-sales-invoices')) {
-                        $searchOptions[] = ['route' => 'sales-invoices.index', 'param' => 'search', 'placeholder' => 'Search sales invoices...', 'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'];
+                        $searchOptions[] = ['route' => 'admin.sales-invoices.index', 'param' => 'search', 'placeholder' => 'Search sales invoices...', 'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'];
                     }
                     if ($user->hasPermission('view-purchase-invoices')) {
-                        $searchOptions[] = ['route' => 'purchase-invoices.index', 'param' => 'search', 'placeholder' => 'Search purchase invoices...', 'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'];
+                        $searchOptions[] = ['route' => 'admin.purchase-invoices.index', 'param' => 'search', 'placeholder' => 'Search purchase invoices...', 'icon' => 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z'];
                     }
                     if ($user->hasPermission('view-documents')) {
-                        $searchOptions[] = ['route' => 'documents.index', 'param' => 'search', 'placeholder' => 'Search documents...', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'];
+                        $searchOptions[] = ['route' => 'admin.documents.index', 'param' => 'search', 'placeholder' => 'Search documents...', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'];
                     }
                     $activeSearch = $searchOptions[0] ?? null;
                 @endphp
