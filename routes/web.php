@@ -176,6 +176,54 @@ Route::get('/register/success', [App\Http\Controllers\Auth\RegisterController::c
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::post('/follow-ups', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'note' => 'nullable|string',
+        'due_at' => 'nullable|date',
+        'related_type' => 'nullable|string|max:100',
+        'related_id' => 'nullable|integer',
+    ]);
+
+    $followUp = \App\Models\FollowUp::create([
+        'user_id' => auth()->id(),
+        'company_id' => auth()->user()?->company_id,
+        'title' => $request->title,
+        'note' => $request->note,
+        'due_at' => $request->due_at,
+        'related_type' => $request->related_type,
+        'related_id' => $request->related_id,
+    ]);
+
+    return response()->json(['success' => true, 'id' => $followUp->id, 'message' => 'Follow-up set.']);
+})->middleware('auth')->name('follow-ups.store');
+
+Route::get('/follow-ups', function (\Illuminate\Http\Request $request) {
+    $query = \App\Models\FollowUp::forUser(auth()->id())->pending()->latest();
+    if (auth()->user()?->company_id && !auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin()) {
+        $query->where('company_id', auth()->user()->company_id);
+    }
+    return response()->json([
+        'follow_ups' => $query->take(20)->get()->map(fn($f) => [
+            'id' => $f->id,
+            'title' => $f->title,
+            'note' => $f->note,
+            'due_at' => $f->due_at?->toDateTimeString(),
+            'related_type' => $f->related_type,
+            'related_id' => $f->related_id,
+            'created_at' => $f->created_at->toDateTimeString(),
+        ])
+    ]);
+})->middleware('auth')->name('follow-ups.index');
+
+Route::patch('/follow-ups/{followUp}/complete', function (\Illuminate\Http\Request $request, \App\Models\FollowUp $followUp) {
+    if ($followUp->user_id !== auth()->id() && !auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin()) {
+        abort(403);
+    }
+    $followUp->update(['completed_at' => now()]);
+    return response()->json(['success' => true]);
+})->middleware('auth')->name('follow-ups.complete');
+
 // Role-based Dashboard (non-admin users)
 Route::get('/dashboard', [App\Http\Controllers\RoleDashboardController::class, 'index'])->name('role.dashboard')->middleware('auth', 'route-permission');
 Route::get('/dashboard/report-pdf', [App\Http\Controllers\RoleDashboardController::class, 'reportPdf'])->name('role.dashboard.report-pdf')->middleware('auth', 'route-permission');
