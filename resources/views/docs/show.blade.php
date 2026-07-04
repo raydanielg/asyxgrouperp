@@ -12,6 +12,8 @@
     <meta name="doc-updated" content="{{ $doc->updated_at->toIso8601String() }}">
     <link rel="alternate" type="application/json" href="{{ url('/api/docs/' . $doc->slug) }}" title="{{ $doc->title }} — JSON">
     @endif
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         html { scroll-behavior: smooth; }
