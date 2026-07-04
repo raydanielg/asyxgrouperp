@@ -375,6 +375,16 @@
                 $iconShield = 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z';
 
                 $roleMenus = [
+                    'erp_super_administrator' => [
+                        ['label' => 'Super Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Companies', 'route' => 'admin.companies.index', 'icon' => $iconWarehouses, 'match' => 'admin.companies*'],
+                        ['label' => 'Users', 'route' => 'admin.users.index', 'icon' => $iconUsers, 'match' => 'admin.users*'],
+                        ['label' => 'Roles & Permissions', 'route' => 'admin.roles.index', 'icon' => $iconRoles, 'match' => 'admin.roles*'],
+                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
+                        ['label' => 'System Control', 'route' => 'admin.settings', 'icon' => $iconPower, 'match' => 'admin.settings*'],
+                        ['label' => 'Database Backup', 'route' => 'admin.settings', 'icon' => $iconDatabase, 'match' => 'admin.settings*'],
+                        ['label' => 'My Profile', 'route' => 'admin.profile', 'icon' => $iconUsers, 'match' => 'admin.profile*'],
+                    ],
                     'director' => [
                         ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
                         ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
