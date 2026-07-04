@@ -762,4 +762,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     $sysCtrl = App\Http\Controllers\Admin\SystemController::class;
     Route::post('/system-mode', [$sysCtrl, 'setSystemMode'])->name('system-mode');
     Route::get('/backup/download', [$sysCtrl, 'downloadBackup'])->name('backup.download');
+
+    // Documentation Management
+    $docCtrl = App\Http\Controllers\Admin\DocumentationController::class;
+    Route::get('/documentation', [$docCtrl, 'index'])->name('documentation');
+    Route::get('/documentation/create', [$docCtrl, 'create'])->name('documentation.create');
+    Route::post('/documentation', [$docCtrl, 'store'])->name('documentation.store');
+    Route::get('/documentation/{id}/edit', [$docCtrl, 'edit'])->name('documentation.edit');
+    Route::put('/documentation/{id}', [$docCtrl, 'update'])->name('documentation.update');
+    Route::delete('/documentation/{id}', [$docCtrl, 'destroy'])->name('documentation.destroy');
+    Route::get('/documentation/{id}/export.md', [$docCtrl, 'exportMarkdown'])->name('documentation.export');
+    Route::get('/documentation/export-all.md', [$docCtrl, 'exportAllMarkdown'])->name('documentation.export-all');
 });
