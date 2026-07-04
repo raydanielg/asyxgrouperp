@@ -291,7 +291,7 @@
                     'admin.settings*' => 'view-settings',
                 ];
 
-                // Filter nav groups based on user permissions
+                // Filter nav groups based on user permissions for ALL users
                 $currentUser = auth()->user();
                 $isFullAdmin = $currentUser->isAdmin();
                 $filteredGroups = [];
