@@ -914,9 +914,13 @@
         {{-- Bottom User --}}
         <div class="p-4 border-t border-emerald-800/50">
             <div class="flex items-center gap-3">
+                @if(Auth::user()->avatar)
+                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm">
+                @else
                 <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-white font-bold text-xs font-menu">
                     {{ strtoupper(substr(Auth::user()->first_name ?? Auth::user()->name ?? 'A', 0, 1)) }}
                 </div>
+                @endif
                 <div class="flex-1 min-w-0 font-menu">
                     <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->first_name ? Auth::user()->first_name . ' ' . Auth::user()->last_name : (Auth::user()->name ?? 'Admin') }}</p>
                     <p class="text-xs text-emerald-300/60">{{ auth()->user()->isAdmin() ? 'Administrator' : (auth()->user()->roles()->first()?->label ?? 'User') }}</p>
