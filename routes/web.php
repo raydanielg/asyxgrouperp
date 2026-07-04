@@ -130,7 +130,7 @@ Route::prefix('reception')->middleware('auth')->group(function () {
 });
 
 // Admin Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
