@@ -949,7 +949,7 @@ class RoleDashboardController extends Controller
                 ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'admin.helpdesk-tickets.index'],
                 ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
             ],
-            'finance_officer' => [
+            'finance_officer', 'finance_manager', 'chief_accountant', 'accountant', 'accounts_receivable_officer', 'accounts_payable_officer', 'payroll_officer', 'budget_officer', 'credit_controller' => [
                 ['label' => 'Sales Paid', 'value' => $money($stats['salesPaid'] ?? 0), 'color' => 'emerald', 'route' => 'admin.sales-invoices.index'],
                 ['label' => 'Purchases', 'value' => $money($stats['totalPurchases'] ?? 0), 'color' => 'sky', 'route' => 'admin.purchase-invoices.index'],
                 ['label' => 'Purchase Balance', 'value' => $money($stats['purchaseBalance'] ?? 0), 'color' => 'amber', 'route' => 'admin.purchase-invoices.index'],
