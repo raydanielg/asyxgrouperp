@@ -43,12 +43,32 @@ class UserController extends Controller
             $query->where('is_enable_login', $request->is_enable_login);
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->except('page'));
+        $perPage = $request->input('per_page', 10);
+        $allowed = [10, 50, 100, 'all'];
+        if (!in_array($perPage, $allowed, true)) {
+            $perPage = 10;
+        }
+
+        if ($perPage === 'all') {
+            $users = $query->orderBy('created_at', 'desc')->get();
+        } else {
+            $users = $query->orderBy('created_at', 'desc')->paginate((int) $perPage)->appends($request->except('page'));
+        }
+
         $roles = Role::orderBy('name')->pluck('label', 'name')->toArray();
         $disabledCount = User::where('is_enable_login', false)->count();
         $activeSessions = \Illuminate\Support\Facades\DB::table('sessions')->where('last_activity', '>', now()->subMinutes(30)->getTimestamp())->count();
 
-        return view('admin.users.index', compact('users', 'roles', 'disabledCount', 'activeSessions'));
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('admin.users.partials.user_rows', compact('users'))->render(),
+                'pagination' => $perPage === 'all' ? '' : view('admin.users.partials.pagination', compact('users', 'perPage'))->render(),
+                'perPage' => $perPage,
+                'total' => $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator ? $users->total() : $users->count(),
+            ]);
+        }
+
+        return view('admin.users.index', compact('users', 'roles', 'disabledCount', 'activeSessions', 'perPage'));
     }
 
     public function create()
