@@ -25,7 +25,6 @@ return Application::configure(basePath: dirname(__DIR__))
             users: fn () => auth()->user()?->isAdmin() ? '/admin/dashboard' : '/dashboard',
         );
         $middleware->appendToGroup('web', \App\Http\Middleware\MaintenanceMode::class);
-        $middleware->appendToGroup('web', \App\Http\Middleware\CheckRoutePermission::class);
         $middleware->appendToGroup('web', \App\Http\Middleware\AuditLogMiddleware::class);
         $middleware->appendToGroup('web', \App\Http\Middleware\SetCompanyContext::class);
     })
