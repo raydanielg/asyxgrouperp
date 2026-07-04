@@ -1147,7 +1147,7 @@ class RoleDashboardController extends Controller
                 if ($lowStock > 0) $suggestions[] = "$lowStock products are low on stock. Review procurement.";
                 if ($openTickets > 10) $suggestions[] = 'Support backlog is high. Allocate more resources to helpdesk.';
                 if (empty($suggestions)) $suggestions[] = 'Overall metrics look healthy. Focus on growth initiatives.';
-            } elseif ($role === 'finance_officer') {
+            } elseif (in_array($role, ['finance_officer', 'finance_manager', 'chief_accountant', 'accountant', 'accounts_receivable_officer', 'accounts_payable_officer', 'payroll_officer', 'budget_officer', 'credit_controller'])) {
                 $message = 'Financial health: Track cash flow, outstanding receivables, and payables.';
                 if ($overdue > 0) $suggestions[] = "$overdue invoices are overdue. Send payment reminders.";
                 if ($expenses > $revenues) $suggestions[] = 'Expenses exceed revenue. Prepare cost-control report.';
