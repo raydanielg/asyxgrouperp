@@ -1356,6 +1356,55 @@
                         }).catch(() => alert('Failed to create follow-up'));
                         return false;
                     }
+                    function openFollowUpsList() {
+                        document.getElementById('followUpListModal').classList.remove('hidden');
+                        document.getElementById('followUpListModal').classList.add('flex');
+                        const container = document.getElementById('followUpListContent');
+                        container.innerHTML = '<div class="text-center text-gray-400 py-6">Loading...</div>';
+                        fetch('{{ route('follow-ups.index') }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                            .then(r => r.json())
+                            .then(res => {
+                                if (!res.follow_ups || res.follow_ups.length === 0) {
+                                    container.innerHTML = '<div class="text-center text-gray-400 py-6">No pending follow-ups</div>';
+                                    return;
+                                }
+                                container.innerHTML = res.follow_ups.map(f => `
+                                    <div class="border rounded-lg p-3 flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <p class="font-medium text-gray-800 truncate">${escapeHtml(f.title)}</p>
+                                            ${f.note ? `<p class="text-xs text-gray-500 truncate">${escapeHtml(f.note)}</p>` : ''}
+                                            ${f.due_at ? `<p class="text-[11px] text-amber-600">Due: ${new Date(f.due_at).toLocaleString()}</p>` : ''}
+                                        </div>
+                                        <button type="button" onclick="completeFollowUp(${f.id}, this)" class="text-xs bg-emerald-600 text-white px-2 py-1 rounded hover:bg-emerald-700">Done</button>
+                                    </div>
+                                `).join('');
+                            })
+                            .catch(() => container.innerHTML = '<div class="text-center text-red-500 py-6">Failed to load</div>');
+                    }
+                    function completeFollowUp(id, btn) {
+                        btn.disabled = true;
+                        btn.textContent = '...';
+                        fetch('{{ url('/follow-ups') }}/' + id + '/complete', {
+                            method: 'PATCH',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        }).then(r => r.json()).then(res => {
+                            if (res.success) {
+                                btn.closest('div').classList.add('opacity-50');
+                                btn.textContent = 'Done';
+                            } else {
+                                btn.disabled = false;
+                                btn.textContent = 'Done';
+                            }
+                        }).catch(() => { btn.disabled = false; btn.textContent = 'Done'; });
+                    }
+                    function escapeHtml(text) {
+                        const div = document.createElement('div');
+                        div.textContent = text;
+                        return div.innerHTML;
+                    }
                 </script>
             </div>
         </header>
