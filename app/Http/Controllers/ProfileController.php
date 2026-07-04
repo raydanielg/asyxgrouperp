@@ -46,6 +46,34 @@ class ProfileController extends Controller
         return back()->with('success', 'Profile updated successfully.');
     }
 
+    public function updateAvatar(Request $request)
+    {
+        $user = auth()->user();
+
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()->first()], 422);
+            }
+            return back()->withErrors($validator)->withInput();
+        }
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->update(['avatar' => $path]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Avatar updated.', 'avatar_url' => asset('storage/' . $path)]);
+        }
+        return back()->with('success', 'Avatar updated successfully.');
+    }
+
     public function updatePassword(Request $request)
     {
         $user = auth()->user();
