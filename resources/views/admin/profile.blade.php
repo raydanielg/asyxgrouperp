@@ -205,9 +205,13 @@ document.getElementById('avatarForm').addEventListener('submit', function(e) {
     fetch('{{ route('admin.profile.avatar') }}', {
         method: 'POST',
         body: formData,
-        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken }
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
     })
-    .then(r => r.json())
+    .then(async r => {
+        const text = await r.text();
+        try { return JSON.parse(text); }
+        catch (e) { throw new Error('Server returned invalid response: ' + text.substring(0, 200)); }
+    })
     .then(res => {
         btn.disabled = false;
         btn.textContent = 'Save Avatar';
@@ -233,10 +237,10 @@ document.getElementById('avatarForm').addEventListener('submit', function(e) {
             Swal.fire({ icon: 'error', title: 'Error', text: res.message || 'Failed to upload avatar.', confirmButtonColor: '#024938' });
         }
     })
-    .catch(() => {
+    .catch(err => {
         btn.disabled = false;
         btn.textContent = 'Save Avatar';
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Network error. Please try again.', confirmButtonColor: '#024938' });
+        Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Network error. Please try again.', confirmButtonColor: '#024938' });
     });
 });
 
