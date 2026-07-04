@@ -171,6 +171,88 @@ function saveProfile(e) {
     });
 }
 
+function openAvatarModal() {
+    document.getElementById('avatarModal').classList.remove('hidden');
+}
+function closeAvatarModal() {
+    document.getElementById('avatarModal').classList.add('hidden');
+}
+function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('avatarPreview').src = e.target.result;
+            document.getElementById('avatarPreview').classList.remove('hidden');
+            document.getElementById('avatarPlaceholder').classList.add('hidden');
+            document.getElementById('avatarFileName').textContent = input.files[0].name;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.getElementById('avatarForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const input = document.getElementById('avatarInput');
+    if (!input.files[0]) {
+        Swal.fire({ icon: 'warning', title: 'No Image', text: 'Please select an image first.', confirmButtonColor: '#024938' });
+        return;
+    }
+    const btn = document.getElementById('avatarSaveBtn');
+    btn.disabled = true;
+    btn.textContent = 'Uploading...';
+    const formData = new FormData(form);
+    fetch('{{ route('admin.profile.avatar') }}', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken }
+    })
+    .then(r => r.json())
+    .then(res => {
+        btn.disabled = false;
+        btn.textContent = 'Save Avatar';
+        if (res.success) {
+            closeAvatarModal();
+            let img = document.getElementById('profileAvatar');
+            if (!img) {
+                const fallback = document.getElementById('profileAvatarFallback');
+                if (fallback) {
+                    img = document.createElement('img');
+                    img.id = 'profileAvatar';
+                    img.src = res.avatar_url;
+                    img.alt = document.querySelector('h3')?.textContent || 'User';
+                    img.className = 'w-28 h-28 rounded-full object-cover border-4 border-emerald-50 shadow-lg';
+                    fallback.parentNode.replaceChild(img, fallback);
+                }
+            } else {
+                img.src = res.avatar_url + '?t=' + Date.now();
+            }
+            updateSidebarAvatar(res.avatar_url + '?t=' + Date.now());
+            Swal.fire({ icon: 'success', title: 'Avatar Updated', text: res.message, timer: 2000, showConfirmButton: false });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Error', text: res.message || 'Failed to upload avatar.', confirmButtonColor: '#024938' });
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.textContent = 'Save Avatar';
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Network error. Please try again.', confirmButtonColor: '#024938' });
+    });
+});
+
+function updateSidebarAvatar(url) {
+    const sidebarImg = document.querySelector('#adminSidebar img[src*="avatars"]');
+    if (sidebarImg) sidebarImg.src = url;
+    const sidebarFallback = document.querySelector('#adminSidebar .w-9.h-9.rounded-full');
+    if (sidebarFallback && !sidebarImg) {
+        const parent = sidebarFallback.parentNode;
+        const img = document.createElement('img');
+        img.src = url;
+        img.className = 'w-9 h-9 rounded-full object-cover border-2 border-white';
+        parent.replaceChild(img, sidebarFallback);
+    }
+}
+
 function changePassword(e) {
     e.preventDefault();
     const form = document.getElementById('passwordForm');
