@@ -30,6 +30,127 @@ Route::get('/hosting', function () {
     return view('pages.hosting');
 })->name('hosting');
 
+// Public Documentation
+Route::get('/docs/{page?}', function ($page = 'introduction') {
+    $user = auth()->user();
+    $role = $user?->roles?->first()?->name ?? $user?->role ?? 'guest';
+
+    $doc = \App\Models\DocumentationPage::published()
+        ->forRole($role)
+        ->where('slug', $page)
+        ->first();
+
+    if (!$doc) {
+        $doc = \App\Models\DocumentationPage::published()->forRole($role)->ordered()->first();
+    }
+
+    $allPages = \App\Models\DocumentationPage::published()
+        ->forRole($role)
+        ->ordered()
+        ->get()
+        ->groupBy('category');
+
+    return view('docs.show', ['doc' => $doc, 'allPages' => $allPages, 'currentSlug' => $doc?->slug ?? $page]);
+})->name('docs');
+
+Route::get('/docs/export.md', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    $markdown = "# ERP Documentation\n\n"
+        . "> Complete system documentation.\n"
+        . "> URL: " . url('/api/docs') . "\n"
+        . "> Generated: " . now()->toDateTimeString() . "\n\n---\n\n";
+    foreach ($pages as $page) {
+        $markdown .= "# {$page->title}\n\n"
+            . "**Category:** " . ucfirst(str_replace('_', ' ', $page->category)) . "\n"
+            . "**Slug:** `{$page->slug}`\n"
+            . "**Updated:** " . $page->updated_at->toDateTimeString() . "\n\n"
+            . $page->content . "\n\n---\n\n";
+    }
+    return response($markdown)->header('Content-Type', 'text/markdown; charset=utf-8');
+});
+
+// LLM discovery feeds
+Route::get('/llms.txt', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    $text = "# ERP System Documentation\n\n"
+        . "> LLM-optimized documentation index.\n"
+        . "> Updated: " . now()->toDateTimeString() . "\n"
+        . "> Pages: " . $pages->count() . "\n\n";
+    foreach ($pages as $page) {
+        $text .= "## {$page->title}\n"
+            . "- Slug: `{$page->slug}`\n"
+            . "- Category: " . ucfirst(str_replace('_', ' ', $page->category)) . "\n"
+            . "- JSON: " . url('/api/docs/' . $page->slug) . "\n"
+            . "- Web: " . route('docs', $page->slug) . "\n\n";
+    }
+    return response($text)->header('Content-Type', 'text/plain; charset=utf-8');
+});
+
+Route::get('/llms-full.txt', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    $text = "# ERP System — Complete Documentation for LLMs\n\n"
+        . "> Generated: " . now()->toDateTimeString() . "\n"
+        . "> Total Pages: " . $pages->count() . "\n\n---\n\n";
+    foreach ($pages as $page) {
+        $text .= "# {$page->title}\n\n"
+            . "**Category:** " . ucfirst(str_replace('_', ' ', $page->category)) . "\n"
+            . "**Slug:** `{$page->slug}`\n"
+            . "**Updated:** " . $page->updated_at->toDateTimeString() . "\n"
+            . "**URL:** " . route('docs', $page->slug) . "\n\n"
+            . $page->content . "\n\n---\n\n";
+    }
+    return response($text)->header('Content-Type', 'text/plain; charset=utf-8');
+});
+
+Route::get('/api/docs', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    return response()->json([
+        'meta' => [
+            'project' => config('app.name', 'ERP'),
+            'generated_at' => now()->toDateTimeString(),
+            'total_pages' => $pages->count(),
+            'formats' => ['json', 'markdown', 'text'],
+        ],
+        'pages' => $pages->map(fn($p) => [
+            'title' => $p->title,
+            'slug' => $p->slug,
+            'category' => $p->category,
+            'sort_order' => $p->sort_order,
+            'role_scope' => $p->role_scope,
+            'updated_at' => $p->updated_at->toDateTimeString(),
+            'content' => $p->content,
+        ])->toArray(),
+    ])->withHeaders([
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+        'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+        'X-LLM-Compatible' => 'true',
+    ]);
+});
+
+Route::get('/api/docs/{slug}', function ($slug) {
+    $page = \App\Models\DocumentationPage::published()->where('slug', $slug)->first();
+    if (!$page) {
+        return response()->json(['error' => 'Page not found'], 404);
+    }
+    return response()->json([
+        'meta' => ['project' => config('app.name', 'ERP')],
+        'page' => [
+            'title' => $page->title,
+            'slug' => $page->slug,
+            'category' => $page->category,
+            'sort_order' => $page->sort_order,
+            'role_scope' => $page->role_scope,
+            'updated_at' => $page->updated_at->toDateTimeString(),
+            'content' => $page->content,
+        ]
+    ])->withHeaders([
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+        'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+    ]);
+});
+
 // Public Careers
 Route::get('/careers', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersJobsIndex'])->name('careers');
 Route::get('/careers/{jobPosting}/apply', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersApplyForm'])->name('careers.apply');
