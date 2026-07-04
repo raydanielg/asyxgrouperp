@@ -1,4 +1,5 @@
 @forelse($users as $user)
+
 <tr class="border-t border-gray-50 hover:bg-amber-50/20 transition-colors group" id="user-row-{{ $user->id }}">
   <td class="px-4 py-3.5">
     <input type="checkbox" class="user-checkbox w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" value="{{ $user->id }}" @if($user->id === auth()->id()) disabled @endif>
