@@ -176,14 +176,7 @@ function updateSelection() {
     toolbar.classList.toggle('hidden', checked.length === 0);
 }
 
-document.getElementById('selectAll').addEventListener('change', function() {
-    document.querySelectorAll('.user-checkbox:not(:disabled)').forEach(cb => cb.checked = this.checked);
-    updateSelection();
-});
-
-document.querySelectorAll('.user-checkbox').forEach(cb => {
-    cb.addEventListener('change', updateSelection);
-});
+bindCheckboxEvents();
 
 function getSelectedIds() {
     return Array.from(document.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
@@ -280,6 +273,58 @@ function showChangePassword(userId, userName) {
   document.getElementById('passwordForm').action = '{{ route("admin.users.change-password", ":id") }}'.replace(':id', userId);
   document.getElementById('passwordModal').classList.remove('hidden');
 }
+function loadUsersPage(url) {
+    const container = document.getElementById('usersTableBody');
+    const paginationContainer = document.getElementById('usersPagination');
+    container.style.opacity = '0.5';
+    fetch(url, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+    })
+    .then(async r => {
+        const text = await r.text();
+        try { return JSON.parse(text); }
+        catch (e) { throw new Error('Invalid response'); }
+    })
+    .then(data => {
+        container.innerHTML = data.html;
+        container.style.opacity = '1';
+        if (paginationContainer) paginationContainer.innerHTML = data.pagination;
+        document.getElementById('selectAll').checked = false;
+        clearSelection();
+        bindCheckboxEvents();
+        window.history.pushState({}, '', url);
+    })
+    .catch(() => {
+        container.style.opacity = '1';
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load users.', confirmButtonColor: '#024938' });
+    });
+}
+
+function changePerPage(value) {
+    const params = new URLSearchParams(window.location.search);
+    params.set('per_page', value);
+    params.delete('page');
+    const url = '{{ route('admin.users.index') }}?' + params.toString();
+    loadUsersPage(url);
+}
+
+function bindCheckboxEvents() {
+    document.querySelectorAll('.user-checkbox').forEach(cb => {
+        cb.removeEventListener('change', updateSelection);
+        cb.addEventListener('change', updateSelection);
+    });
+    const selectAll = document.getElementById('selectAll');
+    if (selectAll) {
+        selectAll.removeEventListener('change', selectAllHandler);
+        selectAll.addEventListener('change', selectAllHandler);
+    }
+}
+
+function selectAllHandler() {
+    document.querySelectorAll('.user-checkbox:not(:disabled)').forEach(cb => cb.checked = this.checked);
+    updateSelection();
+}
+
 function impersonateUser(userId, userName) {
   Swal.fire({
     title: 'Login as ' + userName + '?',
