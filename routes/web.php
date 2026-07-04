@@ -176,6 +176,34 @@ Route::get('/register/success', [App\Http\Controllers\Auth\RegisterController::c
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/payslip/{payroll}/preview', function (\App\Models\Payroll $payroll) {
+    $user = auth()->user();
+    if (!$user->isAdmin() && !$user->isSuperAdmin() && $payroll->employee?->user_id !== $user->id) {
+        abort(403, 'You can only view your own payslips.');
+    }
+    $payroll->load('employee', 'creator');
+    $company = $user->company ?? \App\Models\Company::where('is_group', true)->first();
+    return view('pdf.payslip', compact('payroll', 'company'));
+})->middleware('auth')->name('payslip.preview');
+
+Route::get('/payslip/{payroll}/download', function (\App\Models\Payroll $payroll) {
+    $user = auth()->user();
+    if (!$user->isAdmin() && !$user->isSuperAdmin() && $payroll->employee?->user_id !== $user->id) {
+        abort(403, 'You can only download your own payslips.');
+    }
+    $payroll->load('employee', 'creator');
+    $company = $user->company ?? \App\Models\Company::where('is_group', true)->first();
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.payslip', compact('payroll', 'company'));
+    $pdf->setPaper('A4', 'portrait');
+    $pdf->setOptions([
+        'defaultFont' => 'sans-serif',
+        'isHtml5ParserEnabled' => true,
+        'isRemoteEnabled' => true,
+        'isPhpEnabled' => false,
+    ]);
+    return $pdf->download('payslip-' . $payroll->payroll_number . '.pdf');
+})->middleware('auth')->name('payslip.download');
+
 Route::post('/follow-ups', function (\Illuminate\Http\Request $request) {
     $request->validate([
         'title' => 'required|string|max:255',
