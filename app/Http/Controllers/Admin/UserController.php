@@ -60,9 +60,14 @@ class UserController extends Controller
         $activeSessions = \Illuminate\Support\Facades\DB::table('sessions')->where('last_activity', '>', now()->subMinutes(30)->getTimestamp())->count();
 
         if ($request->ajax()) {
+            $infoText = '';
+            if ($perPage !== 'all' && $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) {
+                $infoText = 'Showing ' . ($users->firstItem() ?? 0) . ' to ' . ($users->lastItem() ?? 0) . ' of ' . $users->total();
+            }
             return response()->json([
                 'html' => view('admin.users.partials.user_rows', compact('users'))->render(),
                 'pagination' => $perPage === 'all' ? '' : view('admin.users.partials.pagination', compact('users', 'perPage'))->render(),
+                'infoText' => $infoText,
                 'perPage' => $perPage,
                 'total' => $users instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator ? $users->total() : $users->count(),
             ]);

@@ -289,6 +289,11 @@ function loadUsersPage(url) {
         container.innerHTML = data.html;
         container.style.opacity = '1';
         if (paginationContainer) paginationContainer.innerHTML = data.pagination;
+        const infoText = document.getElementById('usersInfoText');
+        if (infoText) {
+            infoText.classList.toggle('hidden', !data.infoText);
+            if (data.infoText) infoText.querySelector('span:last-child').textContent = data.infoText;
+        }
         document.getElementById('selectAll').checked = false;
         clearSelection();
         bindCheckboxEvents();
