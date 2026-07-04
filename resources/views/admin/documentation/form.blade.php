@@ -4,7 +4,6 @@
 @section('page_title', ($page ? 'Edit' : 'New') . ' Documentation Page')
 
 @section('content')
-@include('admin.partials.alert')
 
 <div class="mb-6">
     <h2 class="text-xl font-bold text-gray-900">{{ $page ? 'Edit' : 'New' }} Page</h2>
