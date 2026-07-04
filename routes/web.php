@@ -636,4 +636,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Recurring Project Invoice
     Route::post('/projects/{project}/generate-recurring-invoice', [$mtgCtrl, 'generateInvoice'])->name('projects.generate-recurring-invoice');
+
+    // Super Admin System Control
+    $sysCtrl = App\Http\Controllers\Admin\SystemController::class;
+    Route::post('/system-mode', [$sysCtrl, 'setSystemMode'])->name('system-mode');
+    Route::get('/backup/download', [$sysCtrl, 'downloadBackup'])->name('backup.download');
 });
