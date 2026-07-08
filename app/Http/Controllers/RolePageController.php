@@ -269,74 +269,11 @@ class RolePageController extends Controller
 
     private function getAiInsightsForModule(string $module, array $data): array
     {
-        $suggestions = [];
-        $message = 'No insights for this module.';
-
-        try {
-            switch ($module) {
-                case 'sales-invoices':
-                case 'sales-dashboard':
-                    $message = 'Sales performance overview.';
-                    $balance = $data['salesBalance'] ?? 0;
-                    if ($balance > 0) $suggestions[] = 'Follow up on TZS ' . number_format($balance) . ' outstanding customer balance.';
-                    break;
-                case 'expenses':
-                    $message = 'Expense tracking.';
-                    $suggestions[] = 'Review monthly expenses and identify cost-saving opportunities.';
-                    break;
-                case 'projects':
-                    $message = 'Project delivery status.';
-                    $suggestions[] = 'Monitor deadlines and resource allocation.';
-                    break;
-                case 'employees':
-                case 'attendance':
-                case 'leaves':
-                    $message = 'HR operations.';
-                    $pending = $data['pendingLeaves'] ?? 0;
-                    if ($pending > 0) $suggestions[] = "Review $pending pending leave requests.";
-                    break;
-                case 'products':
-                    $message = 'Inventory status.';
-                    $low = $data['lowStock'] ?? 0;
-                    if ($low > 0) $suggestions[] = "Reorder $low low-stock products.";
-                    break;
-                case 'tickets':
-                    $message = 'Helpdesk status.';
-                    $open = $data['openTickets'] ?? 0;
-                    if ($open > 0) $suggestions[] = 'Resolve open tickets to maintain SLA.';
-                    break;
-                case 'my-account':
-                    $message = 'Your profile and account overview.';
-                    $pending = $data['pendingLeave'] ?? 0;
-                    $open = $data['openTickets'] ?? 0;
-                    if ($pending > 0) $suggestions[] = "You have $pending pending leave requests.";
-                    if ($open > 0) $suggestions[] = "You have $open open tickets that need attention.";
-                    break;
-                case 'job-cards':
-                    $message = 'Your assigned job cards.';
-                    $open = $data['openCards'] ?? 0;
-                    if ($open > 0) $suggestions[] = "You have $open open job cards that need attention.";
-                    break;
-                case 'import-action-points':
-                    $message = 'Upload weekly action points for SGR operations.';
-                    $pending = $data['pendingApproval'] ?? 0;
-                    if ($pending > 0) $suggestions[] = "$pending items awaiting admin approval.";
-                    break;
-                case 'action-points-reports':
-                    $message = 'Track your submitted action points.';
-                    $overdue = $data['overdue'] ?? 0;
-                    if ($overdue > 0) $suggestions[] = "$overdue overdue items need attention.";
-                    break;
-                default:
-                    $message = 'Module loaded successfully.';
-                    $suggestions[] = 'Use quick actions to manage this module.';
-            }
-        } catch (\Throwable $e) {
-            $message = 'Insights unavailable.';
-            $suggestions = [];
-        }
-
-        return ['message' => $message, 'suggestions' => $suggestions];
+        // AI Insights feature disabled system-wide.
+        return [
+            'message' => null,
+            'suggestions' => [],
+        ];
     }
 
     private function getDataForModule(string $module): array
