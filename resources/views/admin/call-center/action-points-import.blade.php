@@ -119,6 +119,29 @@
         @endif
     </div>
 
+    {{-- Pending Approvals (Admin only) --}}
+    @if($isAdmin)
+    <div class="bg-white rounded-xl border p-6 h-fit mb-4">
+        <h3 class="text-sm font-bold text-gray-900 mb-4">Pending Approvals</h3>
+        @forelse($pendingApprovals as $ap)
+        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+            <div class="min-w-0">
+                <p class="text-xs font-medium text-gray-700 truncate">{{ \Illuminate\Support\Str::limit($ap->activity, 40) }}</p>
+                <p class="text-[10px] text-gray-400">{{ $ap->import_batch }} | by {{ $ap->creator?->name ?? '—' }}</p>
+            </div>
+            <form method="POST" action="{{ route('admin.call-center.action-points.approve') }}" class="flex gap-1">
+                @csrf
+                <input type="hidden" name="batch" value="{{ $ap->import_batch }}">
+                <button type="submit" name="action" value="approve" class="px-2 py-1 bg-emerald-600 text-white text-[10px] font-medium rounded hover:bg-emerald-700">Approve</button>
+                <button type="submit" name="action" value="reject" class="px-2 py-1 bg-red-600 text-white text-[10px] font-medium rounded hover:bg-red-700">Reject</button>
+            </form>
+        </div>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No pending approvals.</p>
+        @endforelse
+    </div>
+    @endif
+
     {{-- Recent Imports --}}
     <div class="bg-white rounded-xl border p-6 h-fit">
         <h3 class="text-sm font-bold text-gray-900 mb-4">Recent Imports</h3>
@@ -127,6 +150,7 @@
             <div class="min-w-0">
                 <p class="text-xs font-medium text-gray-700 truncate">{{ $batch->source_filename }}</p>
                 <p class="text-[10px] text-gray-400">{{ $batch->import_batch }} | {{ $batch->total }} rows</p>
+                <p class="text-[10px] text-gray-400">{{ \Carbon\Carbon::parse($batch->imported_at)->diffForHumans() }}</p>
             </div>
             <a href="{{ route('admin.call-center.action-points.reports', ['batch' => $batch->import_batch]) }}" class="text-xs text-emerald-600 hover:text-emerald-700 whitespace-nowrap">View</a>
         </div>
