@@ -1090,8 +1090,9 @@ class ErpExtendedController extends Controller
     // ═══════════════════════════════════════════════════════
     public function billIndex()
     {
-        $bills = Bill::latest()->paginate(15);
-        return view('admin.accounting.bills.index', compact('bills'));
+        $bills = Bill::with('costAllocations.costCenter')->latest()->paginate(15);
+        $costCenters = CostCenter::where('is_active', true)->get();
+        return view('admin.accounting.bills.index', compact('bills', 'costCenters'));
     }
 
     public function billStore(Request $request)
