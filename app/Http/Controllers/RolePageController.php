@@ -102,6 +102,14 @@ class RolePageController extends Controller
 
     private function getAllowedModulesForRole(string $role): array
     {
+        return \App\Support\RoleModules::allowedModules($role, auth()->user());
+    }
+
+    /**
+     * @deprecated kept only for reference; module list now lives in App\Support\RoleModules.
+     */
+    private function legacyAllowedModulesForRole(string $role): array
+    {
         return match ($role) {
             'managing_director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'my-account', 'payslips', 'salary'],
             'general_manager' => ['dashboard', 'reports', 'approvals', 'projects', 'leads', 'employees', 'my-account', 'payslips', 'salary'],
