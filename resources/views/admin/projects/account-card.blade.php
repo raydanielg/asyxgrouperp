@@ -106,4 +106,24 @@
         </form>
     </div>
 </div>
+
+<div id="transferModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Transfer Balance to Another Project</h3>
+        <form method="POST" action="{{ route('admin.projects.account.transfer', $project) }}" class="space-y-3">@csrf
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Destination Project *</label>
+                <select name="destination_project_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-sky-500 outline-none">
+                    <option value="">Select project…</option>
+                    @foreach(\App\Models\Project::where('id', '!=', $project->id)->orderBy('title')->get() as $p)
+                    <option value="{{ $p->id }}">{{ $p->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Amount *</label><input name="amount" type="number" step="0.01" min="1" max="{{ $account->current_balance }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-sky-500 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><input name="notes" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-sky-500 outline-none"></div>
+            <p class="text-[11px] text-gray-400">Balance will be debited from <strong>{{ $project->title }}</strong> and credited to the destination project's account card.</p>
+            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('transferModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700">Transfer</button></div>
+        </form>
+    </div>
+</div>
 @endsection
