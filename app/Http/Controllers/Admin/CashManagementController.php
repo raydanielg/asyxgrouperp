@@ -26,7 +26,8 @@ class CashManagementController extends Controller
     public function pettyCashIndex()
     {
         $accounts = CashAccount::pettyCash()->with('custodian')->latest()->get();
-        return view('admin.accounting.petty-cash.index', compact('accounts'));
+        $users = \App\Models\User::orderBy('name')->get(['id', 'name']);
+        return view('admin.accounting.petty-cash.index', compact('accounts', 'users'));
     }
 
     public function pettyCashStore(Request $request)
