@@ -14,8 +14,10 @@ class Payroll extends Model
     protected $casts = [
         'basic_salary' => 'decimal:2',
         'allowances' => 'decimal:2',
+        'overtime' => 'decimal:2',
         'deductions' => 'decimal:2',
         'net_salary' => 'decimal:2',
+        'paid_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

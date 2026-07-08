@@ -389,15 +389,39 @@ class RolePageController extends Controller
                 $employeeId = $employee?->id;
                 $data['employee'] = $employee;
                 $data['salary'] = $employee?->salary ?? 0;
-                $data['payrolls'] = $employeeId
-                    ? \App\Models\Payroll::where('employee_id', $employeeId)->latest()->paginate(12)
-                    : collect([]);
+
+                $query = $employeeId ? \App\Models\Payroll::where('employee_id', $employeeId) : null;
+                if ($query && request('month')) {
+                    $query->where('month', request('month'));
+                }
+                if ($query && request('year')) {
+                    $query->where('year', request('year'));
+                }
+                if ($query && request('status')) {
+                    $query->where('status', request('status'));
+                }
+                $data['payrolls'] = $query ? $query->latest()->paginate(15)->withQueryString() : collect([]);
                 $data['latestPayroll'] = $employeeId
                     ? \App\Models\Payroll::where('employee_id', $employeeId)->latest()->first()
                     : null;
                 $data['yearToDate'] = $employeeId
                     ? \App\Models\Payroll::where('employee_id', $employeeId)->where('year', now()->year)->sum('net_salary') ?? 0
                     : 0;
+                $data['totalOvertime'] = $employeeId
+                    ? \App\Models\Payroll::where('employee_id', $employeeId)->sum('overtime') ?? 0
+                    : 0;
+                $data['totalPaid'] = $employeeId
+                    ? \App\Models\Payroll::where('employee_id', $employeeId)->where('status', 'paid')->sum('net_salary') ?? 0
+                    : 0;
+                $data['months'] = $employeeId
+                    ? \App\Models\Payroll::where('employee_id', $employeeId)->select('month')->distinct()->pluck('month')
+                    : collect([]);
+                $data['years'] = $employeeId
+                    ? \App\Models\Payroll::where('employee_id', $employeeId)->select('year')->distinct()->orderBy('year', 'desc')->pluck('year')
+                    : collect([]);
+                $data['filterMonth'] = request('month');
+                $data['filterYear'] = request('year');
+                $data['filterStatus'] = request('status');
                 break;
 
             case 'projects':
