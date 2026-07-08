@@ -154,6 +154,60 @@ class CashManagementController extends Controller
         return back()->with('success', 'Expense recorded against project account card.');
     }
 
+    public function projectAccountTransferStore(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'destination_project_id' => 'required|exists:projects,id|different:project.id',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        $sourceAccount = $this->getOrCreateProjectCashAccount($project);
+        $destProject = Project::findOrFail($data['destination_project_id']);
+        $destAccount = $this->getOrCreateProjectCashAccount($destProject);
+        $amount = (float) $data['amount'];
+
+        if ($amount > (float) $sourceAccount->current_balance) {
+            return back()->with('error', 'Insufficient balance on source project account card.');
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($sourceAccount, $destAccount, $destProject, $amount, $data, $project) {
+            $description = 'Transfer from ' . $project->title . ' to ' . $destProject->title;
+
+            $srcBalance = round((float) $sourceAccount->current_balance - $amount, 2);
+            $sourceAccount->update(['current_balance' => $srcBalance]);
+
+            \App\Models\CashAccountTransaction::create([
+                'company_id' => $sourceAccount->company_id,
+                'cash_account_id' => $sourceAccount->id,
+                'type' => 'debit',
+                'category' => 'transfer',
+                'amount' => $amount,
+                'balance_after' => $srcBalance,
+                'description' => $description . ($data['notes'] ? ' — ' . $data['notes'] : ''),
+                'created_by' => auth()->id(),
+                'transaction_date' => now()->toDateString(),
+            ]);
+
+            $dstBalance = round((float) $destAccount->current_balance + $amount, 2);
+            $destAccount->update(['current_balance' => $dstBalance]);
+
+            \App\Models\CashAccountTransaction::create([
+                'company_id' => $destAccount->company_id,
+                'cash_account_id' => $destAccount->id,
+                'type' => 'credit',
+                'category' => 'transfer',
+                'amount' => $amount,
+                'balance_after' => $dstBalance,
+                'description' => $description . ($data['notes'] ? ' — ' . $data['notes'] : ''),
+                'created_by' => auth()->id(),
+                'transaction_date' => now()->toDateString(),
+            ]);
+        });
+
+        return back()->with('success', 'TZS ' . number_format($amount, 2) . ' transferred to ' . $destProject->title . '.');
+    }
+
     // ═══ Helpers ═══
 
     protected function getOrCreateProjectCashAccount(Project $project): CashAccount
