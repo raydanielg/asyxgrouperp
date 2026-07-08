@@ -64,4 +64,66 @@
         </form>
     </div>
 </div>
+
+{{-- Cost Allocation Modal --}}
+<div id="allocateRevModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-1">Allocate Revenue Costs</h3>
+        <p class="text-xs text-gray-500 mb-4" id="alloc_rev_info">Revenue: <span id="alloc_rev_no"></span> | Amount: TZS <span id="alloc_rev_amount"></span></p>
+        <form method="POST" action="{{ route('admin.cost-centers.allocate') }}" class="space-y-3">@csrf
+            <input type="hidden" name="allocatable_type" value="App\Models\Revenue">
+            <input type="hidden" name="allocatable_id" id="alloc_rev_id">
+            <div id="alloc_rev_rows" class="space-y-2">
+                <div class="alloc-row flex items-center gap-2">
+                    <select name="allocations[0][cost_center_id]" required class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                        <option value="">Select cost center...</option>
+                        @foreach($costCenters as $cc)
+                        <option value="{{ $cc->id }}">{{ $cc->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="number" name="allocations[0][amount]" placeholder="Amount" step="0.01" min="0" required class="w-28 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <input type="number" name="allocations[0][percentage]" placeholder="%" step="0.01" min="0" max="100" class="w-16 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <button type="button" onclick="this.closest('.alloc-row').remove()" class="text-red-400 hover:text-red-600">&times;</button>
+                </div>
+            </div>
+            <button type="button" onclick="addRevAllocRow()" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Add another cost center</button>
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="document.getElementById('allocateRevModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save Allocations</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+let revAllocRowIndex = 1;
+function showAllocateRevModal(id, no, amount) {
+    document.getElementById('alloc_rev_id').value = id;
+    document.getElementById('alloc_rev_no').textContent = no;
+    document.getElementById('alloc_rev_amount').textContent = Number(amount).toLocaleString();
+    const container = document.getElementById('alloc_rev_rows');
+    container.innerHTML = '';
+    addRevAllocRow();
+    document.getElementById('allocateRevModal').classList.remove('hidden');
+}
+function addRevAllocRow() {
+    const container = document.getElementById('alloc_rev_rows');
+    const idx = revAllocRowIndex++;
+    let opts = '<option value="">Select cost center...</option>';
+    @foreach($costCenters as $cc)
+    opts += '<option value="{{ $cc->id }}">{{ $cc->name }}</option>';
+    @endforeach
+    const div = document.createElement('div');
+    div.className = 'alloc-row flex items-center gap-2';
+    div.innerHTML = `
+        <select name="allocations[${idx}][cost_center_id]" required class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">${opts}</select>
+        <input type="number" name="allocations[${idx}][amount]" placeholder="Amount" step="0.01" min="0" required class="w-28 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+        <input type="number" name="allocations[${idx}][percentage]" placeholder="%" step="0.01" min="0" max="100" class="w-16 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+        <button type="button" onclick="this.closest('.alloc-row').remove()" class="text-red-400 hover:text-red-600">&times;</button>
+    `;
+    container.appendChild(div);
+}
+</script>
+@endpush
