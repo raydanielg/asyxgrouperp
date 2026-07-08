@@ -144,7 +144,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'project_engineer', 'label' => 'Project Engineer', 'perms' => ['view-dashboard', 'view-projects', 'view-timesheets', 'create-timesheets', 'view-site-reports', 'create-site-reports', 'view-self-service', 'view-my-payslips']],
             ['name' => 'site_supervisor', 'label' => 'Site Supervisor', 'perms' => ['view-dashboard', 'view-attendance', 'view-site-reports', 'create-site-reports', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'team_leader', 'label' => 'Team Leader', 'perms' => ['view-dashboard', 'view-team-timesheets', 'approve-team-timesheets', 'view-team-leaves', 'approve-team-leaves', 'view-team-attendance', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'project_accountant', 'label' => 'Project Accountant', 'perms' => ['view-dashboard', 'view-project-budgets', 'view-sales-invoices', 'create-sales-invoices', 'view-expenses', 'view-revenues', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'project_accountant', 'label' => 'Project Accountant', 'perms' => ['view-dashboard', 'view-project-budgets', 'view-sales-invoices', 'create-sales-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-petty-cash', 'create-petty-cash', 'view-financial-reports', 'view-self-service', 'view-my-payslips']],
 
             // Technical
             ['name' => 'senior_systems_engineer', 'label' => 'Senior Systems Engineer', 'perms' => ['view-dashboard', 'view-projects', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-documents', 'view-self-service', 'view-my-payslips']],
