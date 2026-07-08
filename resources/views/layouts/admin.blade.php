@@ -821,6 +821,7 @@
                         ['label' => 'Site Visits', 'module' => 'site-visits', 'icon' => $iconAppointments],
                         ['label' => 'Service Reports', 'module' => 'service-reports', 'icon' => $iconBills],
                         ['label' => 'Customer Assets', 'module' => 'assets', 'icon' => $iconAssets],
+                        ['label' => 'Job Cards', 'module' => 'job-cards', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4'],
                         ['label' => 'My Salary', 'module' => 'salary', 'icon' => $iconPayroll],
                         ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
                     ],
