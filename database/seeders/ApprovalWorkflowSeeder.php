@@ -79,5 +79,19 @@ class ApprovalWorkflowSeeder extends Seeder
 
         ApprovalStep::create(['workflow_id' => $tenderWf->id, 'level' => 1, 'name' => 'Technical Review', 'approver_type' => 'role', 'approver_role' => 'manager', 'order' => 0]);
         ApprovalStep::create(['workflow_id' => $tenderWf->id, 'level' => 2, 'name' => 'Managing Director Approval', 'approver_type' => 'role', 'approver_role' => 'admin', 'is_final' => true, 'order' => 1]);
+
+        // ═══ Petty Cash / Project Cash Top-up Approval Workflow ═══
+        if (!ApprovalWorkflow::where('module', 'cash_topup')->exists()) {
+            $cashWf = ApprovalWorkflow::create([
+                'name' => 'Petty Cash & Project Cash Top-up Approval',
+                'module' => 'cash_topup',
+                'description' => 'Approval required before funds are credited to a petty cash or project account card',
+                'is_active' => true,
+                'company_id' => $companyId,
+                'created_by' => 1,
+            ]);
+
+            ApprovalStep::create(['workflow_id' => $cashWf->id, 'level' => 1, 'name' => 'Finance Manager Approval', 'approver_type' => 'role', 'approver_role' => 'finance', 'is_final' => true, 'order' => 0]);
+        }
     }
 }

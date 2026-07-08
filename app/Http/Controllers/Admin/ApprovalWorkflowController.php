@@ -20,7 +20,7 @@ class ApprovalWorkflowController extends Controller
 
     public function create()
     {
-        $modules = ['lpo' => 'LPO / Purchase Order', 'office_expense' => 'Office Expense', 'budget' => 'Project Budget', 'vendor_invoice' => 'Vendor Invoice', 'quotation' => 'Quotation', 'tender' => 'Tender'];
+        $modules = ['lpo' => 'LPO / Purchase Order', 'office_expense' => 'Office Expense', 'budget' => 'Project Budget', 'vendor_invoice' => 'Vendor Invoice', 'quotation' => 'Quotation', 'tender' => 'Tender', 'cash_topup' => 'Petty Cash / Project Cash Top-up'];
         return view('admin.approvals.create', compact('modules'));
     }
 
