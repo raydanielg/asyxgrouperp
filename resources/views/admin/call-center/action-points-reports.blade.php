@@ -146,11 +146,21 @@
                         @endphp
                         <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ $color }}">{{ $item->status ?: 'No status' }}</span>
                     </td>
+                    <td class="px-4 py-2 text-xs">
+                        @php
+                        $apColor = match($item->approval_status) {
+                            'approved' => 'bg-emerald-50 text-emerald-700',
+                            'rejected' => 'bg-red-50 text-red-700',
+                            default => 'bg-amber-50 text-amber-700',
+                        };
+                        @endphp
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ $apColor }}">{{ $item->approval_status ?: 'pending' }}</span>
+                    </td>
                     <td class="px-4 py-2 text-[10px] text-gray-400 font-mono">{{ $item->import_batch }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-4 py-8 text-center text-gray-400 text-xs">No action points found. <a href="{{ route('admin.call-center.action-points.import') }}" class="text-emerald-600 hover:text-emerald-700">Import now</a></td>
+                    <td colspan="6" class="px-4 py-8 text-center text-gray-400 text-xs">No action points found. <a href="{{ route('admin.call-center.action-points.import') }}" class="text-emerald-600 hover:text-emerald-700">Import now</a></td>
                 </tr>
                 @endforelse
             </tbody>
