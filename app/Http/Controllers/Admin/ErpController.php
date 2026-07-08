@@ -808,15 +808,17 @@ class ErpController extends Controller
     {
         $customers = User::where('role', 'user')->get();
         $warehouses = Warehouse::where('is_active', true)->get();
-        return view('admin.invoices.sales-create', compact('customers', 'warehouses'));
+        $bankAccounts = BankAccount::where('is_active', true)->get();
+        return view('admin.invoices.sales-create', compact('customers', 'warehouses', 'bankAccounts'));
     }
 
     public function salesInvoiceEdit(SalesInvoice $salesInvoice)
     {
-        $salesInvoice->load(['items']);
+        $salesInvoice->load(['items', 'bankAccounts']);
         $customers = User::where('role', 'user')->get();
         $warehouses = Warehouse::where('is_active', true)->get();
-        return view('admin.invoices.sales-edit', compact('salesInvoice', 'customers', 'warehouses'));
+        $bankAccounts = BankAccount::where('is_active', true)->get();
+        return view('admin.invoices.sales-edit', compact('salesInvoice', 'customers', 'warehouses', 'bankAccounts'));
     }
 
     public function salesInvoiceUpdate(Request $request, SalesInvoice $salesInvoice)
