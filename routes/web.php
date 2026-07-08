@@ -712,11 +712,38 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/estimates', [$ext, 'estimateStore'])->name('estimates.store');
     Route::delete('/estimates/{estimate}', [$ext, 'estimateDestroy'])->name('estimates.destroy');
 
+    // ─── General Ledger / Chart of Accounts ───
+    $glCtrl = App\Http\Controllers\Admin\AccountingLedgerController::class;
+    Route::get('/chart-of-accounts', [$glCtrl, 'chartOfAccountsIndex'])->name('chart-of-accounts.index');
+    Route::post('/chart-of-accounts', [$glCtrl, 'chartOfAccountsStore'])->name('chart-of-accounts.store');
+    Route::delete('/chart-of-accounts/{chartOfAccount}', [$glCtrl, 'chartOfAccountsDestroy'])->name('chart-of-accounts.destroy');
+
+    Route::get('/journal-entries', [$glCtrl, 'journalEntriesIndex'])->name('journal-entries.index');
+    Route::get('/journal-entries/create', [$glCtrl, 'journalEntriesCreate'])->name('journal-entries.create');
+    Route::post('/journal-entries', [$glCtrl, 'journalEntriesStore'])->name('journal-entries.store');
+    Route::get('/journal-entries/{journalEntry}', [$glCtrl, 'journalEntriesShow'])->name('journal-entries.show');
+
+    // ─── Financial Reports ───
+    Route::get('/financial-reports', [$glCtrl, 'reportsIndex'])->name('financial-reports.index');
+    Route::get('/financial-reports/trial-balance', [$glCtrl, 'trialBalance'])->name('financial-reports.trial-balance');
+    Route::get('/financial-reports/profit-loss', [$glCtrl, 'profitLoss'])->name('financial-reports.profit-loss');
+
+    // ─── Petty Cash ───
+    $cashCtrl = App\Http\Controllers\Admin\CashManagementController::class;
+    Route::get('/petty-cash', [$cashCtrl, 'pettyCashIndex'])->name('petty-cash.index');
+    Route::post('/petty-cash', [$cashCtrl, 'pettyCashStore'])->name('petty-cash.store');
+    Route::get('/petty-cash/{pettyCash}', [$cashCtrl, 'pettyCashShow'])->name('petty-cash.show');
+    Route::post('/petty-cash/{pettyCash}/topup', [$cashCtrl, 'pettyCashTopupStore'])->name('petty-cash.topup');
+    Route::post('/petty-cash/{pettyCash}/expense', [$cashCtrl, 'pettyCashExpenseStore'])->name('petty-cash.expense');
+
     // ─── Projects ───
     Route::get('/projects', [$ext, 'projectIndex'])->name('projects.index');
     Route::post('/projects', [$ext, 'projectStore'])->name('projects.store');
     Route::get('/projects/{project}', [$ext, 'projectShow'])->name('projects.show');
     Route::get('/projects/{project}/settlements', [$ext, 'projectSettlements'])->name('projects.settlements');
+    Route::get('/projects/{project}/account', [$cashCtrl, 'projectAccountShow'])->name('projects.account');
+    Route::post('/projects/{project}/account/topup', [$cashCtrl, 'projectAccountTopupStore'])->name('projects.account.topup');
+    Route::post('/projects/{project}/account/expense', [$cashCtrl, 'projectAccountExpenseStore'])->name('projects.account.expense');
     Route::get('/settlements', [$ext, 'projectSettlementsIndex'])->name('settlements.index');
     Route::post('/projects/{project}/generate-invoice', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'generateProjectInvoice'])->name('projects.generate-invoice');
     Route::get('/projects/{project}/pdf', [$ext, 'projectPdf'])->name('projects.pdf');
