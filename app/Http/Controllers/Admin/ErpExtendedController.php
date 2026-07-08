@@ -1856,4 +1856,86 @@ class ErpExtendedController extends Controller
 
         return $pdf->download('project-' . $project->project_number . '.pdf');
     }
+
+    public function projectFinancingIndex(Project $project)
+    {
+        $financings = \App\Models\ProjectFinancing::where('project_id', $project->id)
+            ->with(['sourceProject', 'createdBy', 'repayments'])
+            ->latest()
+            ->get();
+        $projects = Project::where('id', '!=', $project->id)->orderBy('title')->get(['id', 'title']);
+        return view('admin.projects.financing', compact('project', 'financings', 'projects'));
+    }
+
+    public function projectFinancingStore(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'type' => 'required|in:internal,inter_project',
+            'source_project_id' => 'required_if:type,inter_project|nullable|exists:projects,id|different:project.id',
+            'interest_rate' => 'nullable|numeric|min:0|max:100',
+            'repayment_period_months' => 'nullable|integer|min:1|max:360',
+            'disbursed_at' => 'required|date',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $financing = \App\Models\ProjectFinancing::create([
+            'company_id' => auth()->user()->company_id ?? 1,
+            'project_id' => $project->id,
+            'source_project_id' => $data['type'] === 'inter_project' ? $data['source_project_id'] : null,
+            'type' => $data['type'],
+            'amount' => $data['amount'],
+            'interest_rate' => $data['interest_rate'],
+            'repayment_period_months' => $data['repayment_period_months'],
+            'status' => 'active',
+            'disbursed_at' => $data['disbursed_at'],
+            'notes' => $data['notes'],
+            'created_by' => auth()->id(),
+        ]);
+
+        if ($data['repayment_period_months'] && $data['repayment_period_months'] > 0) {
+            $installmentAmount = round($data['amount'] / $data['repayment_period_months'], 2);
+            $dueDate = \Carbon\Carbon::parse($data['disbursed_at'])->addMonth();
+            for ($i = 0; $i < $data['repayment_period_months']; $i++) {
+                $isLast = $i === $data['repayment_period_months'] - 1;
+                \App\Models\ProjectFinancingRepayment::create([
+                    'project_financing_id' => $financing->id,
+                    'due_date' => $dueDate->copy(),
+                    'amount' => $isLast ? round($data['amount'] - ($installmentAmount * $i), 2) : $installmentAmount,
+                    'status' => 'pending',
+                ]);
+                $dueDate->addMonth();
+            }
+        }
+
+        return redirect()->route('admin.projects.financing', $project)
+            ->with('success', 'Financing of TZS ' . number_format($data['amount'], 2) . ' recorded.');
+    }
+
+    public function projectFinancingRepaymentStore(Request $request, \App\Models\ProjectFinancing $financing)
+    {
+        $data = $request->validate([
+            'repayment_id' => 'required|exists:project_financing_repayments,id',
+            'paid_amount' => 'required|numeric|min:1',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        $repayment = \App\Models\ProjectFinancingRepayment::findOrFail($data['repayment_id']);
+        $newPaid = round((float) $repayment->paid_amount + $data['paid_amount'], 2);
+
+        $repayment->update([
+            'paid_amount' => $newPaid,
+            'status' => $newPaid >= (float) $repayment->amount ? 'paid' : 'partial',
+            'paid_at' => $newPaid >= (float) $repayment->amount ? now() : ($repayment->paid_at ?? now()),
+            'notes' => $data['notes'] ?? $repayment->notes,
+        ]);
+
+        $totalPaid = (float) $financing->repayments()->sum('paid_amount');
+        if ($totalPaid >= (float) $financing->amount) {
+            $financing->update(['status' => 'repaid']);
+        }
+
+        return redirect()->route('admin.projects.financing', $financing->project_id)
+            ->with('success', 'Repayment of TZS ' . number_format($data['paid_amount'], 2) . ' recorded.');
+    }
 }
