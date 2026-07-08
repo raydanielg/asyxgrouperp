@@ -14,4 +14,9 @@ class Bill extends Model
         'bill_date' => 'date',
         'due_date' => 'date',
     ];
+
+    public function costAllocations()
+    {
+        return $this->morphMany(CostAllocation::class, 'cost_allocatable');
+    }
 }

@@ -22,4 +22,9 @@ class Revenue extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function costAllocations()
+    {
+        return $this->morphMany(CostAllocation::class, 'cost_allocatable');
+    }
 }
