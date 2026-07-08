@@ -417,6 +417,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/call-center/action-points/upload', [$ccCtrl, 'actionPointsUpload'])->name('call-center.action-points.upload');
     Route::post('/call-center/action-points', [$ccCtrl, 'actionPointsStore'])->name('call-center.action-points.store');
     Route::get('/call-center/action-points/reports', [$ccCtrl, 'actionPointsReports'])->name('call-center.action-points.reports');
+    Route::post('/call-center/action-points/approve', [$ccCtrl, 'actionPointsApprove'])->name('call-center.action-points.approve');
+    Route::get('/call-center/action-points/pending', [$ccCtrl, 'actionPointsPending'])->name('call-center.action-points.pending');
+    Route::get('/call-center/tickets', [$ccCtrl, 'tickets'])->name('call-center.tickets');
+    Route::post('/call-center/tickets', [$ccCtrl, 'storeTicket'])->name('call-center.tickets.store');
+    Route::post('/call-center/tickets/{ticket}', [$ccCtrl, 'updateTicket'])->name('call-center.tickets.update');
+    Route::get('/call-center/download-template', [$ccCtrl, 'downloadTemplate'])->name('call-center.download-template');
 
     // ═══ Audit Logs ═══
     $alCtrl = App\Http\Controllers\Admin\AuditLogController::class;

@@ -89,7 +89,7 @@ class CallCenterController extends Controller
         $campaigns = CallCampaign::withCount('callLogs')->latest()->paginate(10, ['*'], 'c_page');
 
         return view('admin.call-center.index', compact(
-            'stats', 'myTickets', 'ticketStats', 'apStats', 'recentActionPoints',
+            'stats', 'myTickets', 'ticketStats', 'apStats', 'recentActionPoints', 'recentCalls',
             'agents', 'campaigns', 'isAdmin'
         ));
     }
