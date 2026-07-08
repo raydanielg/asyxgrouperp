@@ -91,7 +91,7 @@ class RoleModules
         'admin_manager' => ['dashboard', 'users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'my-account', 'payslips', 'salary'],
         'administrator' => ['dashboard', 'users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports', 'my-account', 'payslips', 'salary'],
 
-        'erp_super_administrator' => ['dashboard', 'users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports', 'my-account', 'payslips', 'salary'],
+        'erp_super_administrator' => ['dashboard', 'companies', 'users', 'roles', 'employees', 'projects', 'products', 'settings', 'system-control', 'database-backup', 'reports', 'my-account', 'payslips', 'salary'],
         'erp_administrator' => ['dashboard', 'users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'my-account', 'payslips', 'salary'],
         'ict_administrator' => ['dashboard', 'tickets', 'projects', 'assets', 'settings', 'employees', 'my-account', 'payslips', 'salary'],
         'ict_officer' => ['dashboard', 'tickets', 'projects', 'bugs', 'assets', 'employees', 'my-account', 'payslips', 'salary'],
