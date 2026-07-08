@@ -1598,6 +1598,124 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         </div>
         @break
 
+    @case('my-account')
+        @php $u = $user ?? []; $emp = $employee ?? null; @endphp
+        <div class="p-5 space-y-5">
+            {{-- Profile Header --}}
+            <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -mr-20 -mt-20"></div>
+                <div class="relative z-10 flex items-center gap-5">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-white font-bold text-2xl font-menu shadow-lg">
+                        {{ strtoupper(substr($u['first_name'] ?? $u['name'] ?? 'U', 0, 1)) }}
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-xl font-bold">{{ $u['first_name'] ?? '' }} {{ $u['last_name'] ?? $u['name'] ?? '' }}</h2>
+                        <p class="text-emerald-100 text-sm">{{ $roleLabel }}</p>
+                        <div class="flex items-center gap-3 mt-1 text-xs text-emerald-200">
+                            <span>{{ $u['email'] ?? '' }}</span>
+                            @if($u['phone'] ?? false)<span>&middot; {{ $u['phone'] }}</span>@endif
+                        </div>
+                    </div>
+                    <div class="text-right text-xs text-emerald-200">
+                        <div>Member since</div>
+                        <div class="font-medium text-white">{{ $u['created_at'] ? \Carbon\Carbon::parse($u['created_at'])->format('M Y') : '—' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Stats Grid --}}
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">Pending Leave</span>
+                    <p class="text-2xl font-bold text-amber-600 mt-1">{{ $pendingLeave ?? 0 }}</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">Approved Leave</span>
+                    <p class="text-2xl font-bold text-emerald-600 mt-1">{{ $approvedLeave ?? 0 }}</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">Open Tickets</span>
+                    <p class="text-2xl font-bold text-rose-600 mt-1">{{ $openTickets ?? 0 }}</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">Resolved Tickets</span>
+                    <p class="text-2xl font-bold text-sky-600 mt-1">{{ $resolvedTickets ?? 0 }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {{-- Employee Info --}}
+                <div class="bg-white rounded-xl border overflow-hidden">
+                    <div class="px-4 py-3 border-b bg-gray-50/50"><h3 class="text-sm font-bold text-gray-900">Employee Details</h3></div>
+                    <div class="p-4">
+                        @if($emp)
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div><span class="text-[10px] text-gray-400 uppercase">Employee ID</span><p class="font-medium text-gray-900 mt-0.5">{{ $emp->employee_id ?? '—' }}</p></div>
+                            <div><span class="text-[10px] text-gray-400 uppercase">Designation</span><p class="font-medium text-gray-900 mt-0.5">{{ $emp->designation ?? '—' }}</p></div>
+                            <div><span class="text-[10px] text-gray-400 uppercase">Department</span><p class="font-medium text-gray-900 mt-0.5">{{ $emp->department ?? '—' }}</p></div>
+                            <div><span class="text-[10px] text-gray-400 uppercase">Status</span>
+                                <p class="mt-0.5"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($emp->status ?? '') === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-600' }}">{{ ucfirst($emp->status ?? 'N/A') }}</span></p>
+                            </div>
+                            @if($emp->phone)
+                            <div><span class="text-[10px] text-gray-400 uppercase">Phone</span><p class="font-medium text-gray-900 mt-0.5">{{ $emp->phone }}</p></div>
+                            @endif
+                            @if($emp->salary)
+                            <div><span class="text-[10px] text-gray-400 uppercase">Salary</span><p class="font-medium text-emerald-700 mt-0.5">TZS {{ number_format($emp->salary, 2) }}</p></div>
+                            @endif
+                        </div>
+                        @else
+                        <div class="text-center py-4">
+                            <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <p class="text-xs text-gray-400">No employee record linked.</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Recent Payslips --}}
+                <div class="bg-white rounded-xl border overflow-hidden">
+                    <div class="px-4 py-3 border-b bg-gray-50/50 flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-gray-900">Recent Payslips</h3>
+                        <a href="{{ route('role.page', ['module' => 'payslips']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-medium">View All</a>
+                    </div>
+                    <div class="p-4">
+                        @if($recentPayslips->count())
+                        <div class="space-y-2">
+                            @foreach($recentPayslips as $p)
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                                <div>
+                                    <p class="text-xs font-medium text-gray-900">{{ $p->month }} {{ $p->year }}</p>
+                                    <p class="text-[10px] {{ $p->status === 'paid' ? 'text-emerald-600' : 'text-amber-600' }}">{{ ucfirst($p->status) }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-gray-900">TZS {{ number_format($p->net_salary, 2) }}</p>
+                                    <a href="{{ route('payslip.download', $p->id) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">PDF</a>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @else
+                        <p class="text-xs text-gray-400 text-center py-4">No payslips yet.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            {{-- Account Info --}}
+            <div class="bg-white rounded-xl border overflow-hidden">
+                <div class="px-4 py-3 border-b bg-gray-50/50"><h3 class="text-sm font-bold text-gray-900">Account Information</h3></div>
+                <div class="p-4">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                        <div><span class="text-[10px] text-gray-400 uppercase">User ID</span><p class="font-medium text-gray-900 mt-0.5 font-mono">{{ $u['id'] ?? '—' }}</p></div>
+                        <div><span class="text-[10px] text-gray-400 uppercase">Email</span><p class="font-medium text-gray-900 mt-0.5">{{ $u['email'] ?? '—' }}</p></div>
+                        <div><span class="text-[10px] text-gray-400 uppercase">Phone</span><p class="font-medium text-gray-900 mt-0.5">{{ $u['phone'] ?? '—' }}</p></div>
+                        <div><span class="text-[10px] text-gray-400 uppercase">Role</span><p class="font-medium text-gray-900 mt-0.5">{{ $roleLabel }}</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @break
+
     @default
         <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
             <div class="relative z-10">
