@@ -514,6 +514,15 @@ class DashboardController extends Controller
 
     private function getAiInsightsForRole(string $role, array $stats): array
     {
+        // AI Insights feature disabled system-wide.
+        return [
+            'message' => null,
+            'suggestions' => [],
+        ];
+    }
+
+    private function __disabledGetAiInsightsForRole(string $role, array $stats): array
+    {
         $suggestions = [];
         $message = 'No actionable insights at this time.';
 
