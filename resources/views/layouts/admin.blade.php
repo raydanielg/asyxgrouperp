@@ -543,6 +543,13 @@
                         ['label' => 'Contacts', 'module' => 'contacts', 'icon' => $iconContacts],
                         ['label' => 'Tickets', 'module' => 'tickets', 'icon' => $iconTickets],
                     ],
+                    'sgr_agent' => [
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                        ['label' => 'Upload Action Points', 'module' => 'import-action-points', 'icon' => 'M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3'],
+                        ['label' => 'My Reports', 'module' => 'action-points-reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
+                        ['label' => 'Payslips', 'module' => 'payslips', 'icon' => $iconPayroll],
+                        ['label' => 'My Account', 'module' => 'my-account', 'icon' => $iconUsers],
+                    ],
                     'legal_officer' => [
                         ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
                         ['label' => 'Contracts', 'module' => 'contracts', 'icon' => $iconContracts],
