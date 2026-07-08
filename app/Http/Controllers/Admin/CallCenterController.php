@@ -76,6 +76,12 @@ class CallCenterController extends Controller
         ];
         $recentActionPoints = (clone $actionPointsQuery)->with('creator')->latest()->limit(10)->get();
 
+        $recentCalls = CallLog::with('agent');
+        if (!$isAdmin) {
+            $recentCalls->where('agent_id', $user->id);
+        }
+        $recentCalls = $recentCalls->latest()->limit(10)->get();
+
         $agents = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['call_center_agent', 'call_center_supervisor']);
         })->get();
