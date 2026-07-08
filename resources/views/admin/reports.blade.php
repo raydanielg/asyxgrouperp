@@ -51,7 +51,7 @@
                 <span class="text-sm font-bold text-sky-600">{{ $stats['totalAdmins'] }}</span>
             </div>
             <div class="w-full bg-gray-100 rounded-full h-3">
-                <div class="bg-gradient-to-r from-sky-400 to-sky-600 h-3 rounded-full transition-all" style="width: {{ $stats['totalAllUsers'] > 0 ? ($stats['totalAdmins'] / $stats['totalAllUsers'] * 100) : 0 }}%"></div>
+                <div class="bg-gradient-to-r from-sky-400 to-sky-600 h-3 rounded-full transition-all" style="width: {{ ($stats['totalAllUsers'] ?? 0) > 0 ? ($stats['totalAdmins'] / ($stats['totalAllUsers'] ?? 1) * 100) : 0 }}%"></div>
             </div>
         </div>
     </div>

@@ -371,7 +371,7 @@ class ErpExtendedController extends Controller
             'status' => 'nullable|string',
         ]);
         Leave::create($data);
-        return redirect()->route('admin.leaves.index')->with('success', 'Leave request created.');
+        return back()->with('success', 'Leave request created.');
     }
 
     public function leaveApprove(Leave $leave)
@@ -389,7 +389,7 @@ class ErpExtendedController extends Controller
     public function leaveDestroy(Leave $leave)
     {
         $leave->delete();
-        return redirect()->route('admin.leaves.index')->with('success', 'Leave deleted.');
+        return back()->with('success', 'Leave deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -414,13 +414,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['reviewer_id'] = auth()->id();
         PerformanceReview::create($data);
-        return redirect()->route('admin.performance.index')->with('success', 'Performance review added.');
+        return back()->with('success', 'Performance review added.');
     }
 
     public function performanceDestroy(PerformanceReview $review)
     {
         $review->delete();
-        return redirect()->route('admin.performance.index')->with('success', 'Review deleted.');
+        return back()->with('success', 'Review deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -443,13 +443,13 @@ class ErpExtendedController extends Controller
             'status' => 'nullable|string',
         ]);
         Training::create($data);
-        return redirect()->route('admin.training.index')->with('success', 'Training created.');
+        return back()->with('success', 'Training created.');
     }
 
     public function trainingDestroy(Training $training)
     {
         $training->delete();
-        return redirect()->route('admin.training.index')->with('success', 'Training deleted.');
+        return back()->with('success', 'Training deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -475,13 +475,13 @@ class ErpExtendedController extends Controller
             'status' => 'nullable|string',
         ]);
         JobPosting::create($data);
-        return redirect()->route('admin.job-postings.index')->with('success', 'Job posting created.');
+        return back()->with('success', 'Job posting created.');
     }
 
     public function jobPostingDestroy(JobPosting $jobPosting)
     {
         $jobPosting->delete();
-        return redirect()->route('admin.job-postings.index')->with('success', 'Job posting deleted.');
+        return back()->with('success', 'Job posting deleted.');
     }
 
     // ───────────────────────────────────────────────────────
@@ -588,7 +588,7 @@ class ErpExtendedController extends Controller
             'notes' => $data['notes'] ?? null,
         ]);
         $this->notifyHrNewApplication($app);
-        return redirect()->route('admin.applications.index')->with('success', 'Application created.');
+        return back()->with('success', 'Application created.');
     }
 
     private function notifyHrNewApplication(JobApplication $application): void
@@ -698,13 +698,13 @@ class ErpExtendedController extends Controller
             'status' => 'nullable|string',
         ]);
         EmployeeAsset::create($data);
-        return redirect()->route('admin.assets.index')->with('success', 'Asset assigned.');
+        return back()->with('success', 'Asset assigned.');
     }
 
     public function assetDestroy(EmployeeAsset $asset)
     {
         $asset->delete();
-        return redirect()->route('admin.assets.index')->with('success', 'Asset record deleted.');
+        return back()->with('success', 'Asset record deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -727,13 +727,13 @@ class ErpExtendedController extends Controller
             'type' => 'nullable|string',
         ]);
         HrEvent::create($data);
-        return redirect()->route('admin.hr-events.index')->with('success', 'Event created.');
+        return back()->with('success', 'Event created.');
     }
 
     public function hrEventDestroy(HrEvent $hrEvent)
     {
         $hrEvent->delete();
-        return redirect()->route('admin.hr-events.index')->with('success', 'Event deleted.');
+        return back()->with('success', 'Event deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -755,13 +755,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['is_active'] = $request->boolean('is_active', true);
         Policy::create($data);
-        return redirect()->route('admin.policies.index')->with('success', 'Policy created.');
+        return back()->with('success', 'Policy created.');
     }
 
     public function policyDestroy(Policy $policy)
     {
         $policy->delete();
-        return redirect()->route('admin.policies.index')->with('success', 'Policy deleted.');
+        return back()->with('success', 'Policy deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -790,13 +790,13 @@ class ErpExtendedController extends Controller
         $data['lead_number'] = 'LEAD-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['created_by'] = auth()->id();
         CrmLead::create($data);
-        return redirect()->route('admin.crm-leads.index')->with('success', 'Lead created.');
+        return back()->with('success', 'Lead created.');
     }
 
     public function crmLeadDestroy(CrmLead $lead)
     {
         $lead->delete();
-        return redirect()->route('admin.crm-leads.index')->with('success', 'Lead deleted.');
+        return back()->with('success', 'Lead deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -824,13 +824,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['deal_number'] = 'DEAL-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         CrmDeal::create($data);
-        return redirect()->route('admin.crm-deals.index')->with('success', 'Deal created.');
+        return back()->with('success', 'Deal created.');
     }
 
     public function crmDealDestroy(CrmDeal $deal)
     {
         $deal->delete();
-        return redirect()->route('admin.crm-deals.index')->with('success', 'Deal deleted.');
+        return back()->with('success', 'Deal deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -857,13 +857,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['contract_number'] = 'CON-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         CrmContract::create($data);
-        return redirect()->route('admin.crm-contracts.index')->with('success', 'Contract created.');
+        return back()->with('success', 'Contract created.');
     }
 
     public function crmContractDestroy(CrmContract $contract)
     {
         $contract->delete();
-        return redirect()->route('admin.crm-contracts.index')->with('success', 'Contract deleted.');
+        return back()->with('success', 'Contract deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -891,7 +891,7 @@ class ErpExtendedController extends Controller
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json(['success' => true, 'contact' => $contact]);
         }
-        return redirect()->route('admin.crm-contacts.index')->with('success', 'Contact added.');
+        return back()->with('success', 'Contact added.');
     }
 
     public function crmContactEdit(CrmContact $contact)
@@ -918,7 +918,7 @@ class ErpExtendedController extends Controller
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json(['success' => true, 'contact' => $contact]);
         }
-        return redirect()->route('admin.crm-contacts.index')->with('success', 'Contact updated.');
+        return back()->with('success', 'Contact updated.');
     }
 
     public function crmContactDestroy(CrmContact $contact)
@@ -927,7 +927,7 @@ class ErpExtendedController extends Controller
         if (request()->ajax() || request()->wantsJson()) {
             return response()->json(['success' => true]);
         }
-        return redirect()->route('admin.crm-contacts.index')->with('success', 'Contact deleted.');
+        return back()->with('success', 'Contact deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -954,7 +954,7 @@ class ErpExtendedController extends Controller
         $data['is_active'] = $request->boolean('is_active', true);
         if (!isset($data['current_balance'])) $data['current_balance'] = $data['opening_balance'] ?? 0;
         BankAccount::create($data);
-        return redirect()->route('admin.bank-accounts.index')->with('success', 'Bank account created.');
+        return back()->with('success', 'Bank account created.');
     }
 
     public function bankAccountUpdate(Request $request, BankAccount $bankAccount)
@@ -973,7 +973,7 @@ class ErpExtendedController extends Controller
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Bank account updated.', 'item' => $bankAccount]);
         }
-        return redirect()->route('admin.bank-accounts.index')->with('success', 'Bank account updated.');
+        return back()->with('success', 'Bank account updated.');
     }
 
     public function bankAccountDestroy(BankAccount $bankAccount, Request $request)
@@ -982,7 +982,7 @@ class ErpExtendedController extends Controller
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Bank account deleted.']);
         }
-        return redirect()->route('admin.bank-accounts.index')->with('success', 'Bank account deleted.');
+        return back()->with('success', 'Bank account deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1007,13 +1007,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['transfer_number'] = 'TRF-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         BankTransferAcc::create($data);
-        return redirect()->route('admin.acc-transfers.index')->with('success', 'Transfer recorded.');
+        return back()->with('success', 'Transfer recorded.');
     }
 
     public function accTransferDestroy(BankTransferAcc $transfer)
     {
         $transfer->delete();
-        return redirect()->route('admin.acc-transfers.index')->with('success', 'Transfer deleted.');
+        return back()->with('success', 'Transfer deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1040,13 +1040,13 @@ class ErpExtendedController extends Controller
         $data['expense_number'] = 'EXP-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['created_by'] = auth()->id();
         Expense::create($data);
-        return redirect()->route('admin.expenses.index')->with('success', 'Expense recorded.');
+        return back()->with('success', 'Expense recorded.');
     }
 
     public function expenseDestroy(Expense $expense)
     {
         $expense->delete();
-        return redirect()->route('admin.expenses.index')->with('success', 'Expense deleted.');
+        return back()->with('success', 'Expense deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1073,13 +1073,13 @@ class ErpExtendedController extends Controller
         $data['revenue_number'] = 'REV-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['created_by'] = auth()->id();
         Revenue::create($data);
-        return redirect()->route('admin.revenues.index')->with('success', 'Revenue recorded.');
+        return back()->with('success', 'Revenue recorded.');
     }
 
     public function revenueDestroy(Revenue $revenue)
     {
         $revenue->delete();
-        return redirect()->route('admin.revenues.index')->with('success', 'Revenue deleted.');
+        return back()->with('success', 'Revenue deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1104,13 +1104,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['bill_number'] = 'BILL-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         Bill::create($data);
-        return redirect()->route('admin.bills.index')->with('success', 'Bill created.');
+        return back()->with('success', 'Bill created.');
     }
 
     public function billDestroy(Bill $bill)
     {
         $bill->delete();
-        return redirect()->route('admin.bills.index')->with('success', 'Bill deleted.');
+        return back()->with('success', 'Bill deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1136,13 +1136,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['estimate_number'] = 'EST-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         Estimate::create($data);
-        return redirect()->route('admin.estimates.index')->with('success', 'Estimate created.');
+        return back()->with('success', 'Estimate created.');
     }
 
     public function estimateDestroy(Estimate $estimate)
     {
         $estimate->delete();
-        return redirect()->route('admin.estimates.index')->with('success', 'Estimate deleted.');
+        return back()->with('success', 'Estimate deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1562,13 +1562,13 @@ class ErpExtendedController extends Controller
             'description' => 'nullable|string',
         ]);
         Timesheet::create($data);
-        return redirect()->route('admin.timesheets.index')->with('success', 'Timesheet entry added.');
+        return back()->with('success', 'Timesheet entry added.');
     }
 
     public function timesheetDestroy(Timesheet $timesheet)
     {
         $timesheet->delete();
-        return redirect()->route('admin.timesheets.index')->with('success', 'Timesheet deleted.');
+        return back()->with('success', 'Timesheet deleted.');
     }
 
     public function bugIndex()
@@ -1590,13 +1590,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['reported_by'] = auth()->id();
         ProjectBug::create($data);
-        return redirect()->route('admin.bugs.index')->with('success', 'Bug reported.');
+        return back()->with('success', 'Bug reported.');
     }
 
     public function bugDestroy(ProjectBug $bug)
     {
         $bug->delete();
-        return redirect()->route('admin.bugs.index')->with('success', 'Bug deleted.');
+        return back()->with('success', 'Bug deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1618,13 +1618,13 @@ class ErpExtendedController extends Controller
         $data['slug'] = Str::slug($data['name']) . '-' . Str::random(4);
         $data['is_active'] = $request->boolean('is_active', true);
         ProductCategory::create($data);
-        return redirect()->route('admin.product-categories.index')->with('success', 'Category created.');
+        return back()->with('success', 'Category created.');
     }
 
     public function productCategoryDestroy(ProductCategory $category)
     {
         $category->delete();
-        return redirect()->route('admin.product-categories.index')->with('success', 'Category deleted.');
+        return back()->with('success', 'Category deleted.');
     }
 
     public function productIndex()
@@ -1676,7 +1676,7 @@ class ErpExtendedController extends Controller
                 ]);
             }
 
-            return redirect()->route('admin.products.index')->with('success', 'Product "' . $data['name'] . '" created successfully!');
+            return back()->with('success', 'Product "' . $data['name'] . '" created successfully!');
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($isAjax) {
                 return response()->json([
@@ -1705,7 +1705,7 @@ class ErpExtendedController extends Controller
         if (request()->ajax() || request()->expectsJson()) {
             return response()->json(['success' => true, 'message' => 'Product "' . $name . '" deleted successfully!']);
         }
-        return redirect()->route('admin.products.index')->with('success', 'Product "' . $name . '" deleted successfully!');
+        return back()->with('success', 'Product "' . $name . '" deleted successfully!');
     }
 
     public function supplierIndex()
@@ -1727,13 +1727,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['is_active'] = $request->boolean('is_active', true);
         Supplier::create($data);
-        return redirect()->route('admin.suppliers.index')->with('success', 'Supplier created.');
+        return back()->with('success', 'Supplier created.');
     }
 
     public function supplierDestroy(Supplier $supplier)
     {
         $supplier->delete();
-        return redirect()->route('admin.suppliers.index')->with('success', 'Supplier deleted.');
+        return back()->with('success', 'Supplier deleted.');
     }
 
     public function stockMovementIndex()
