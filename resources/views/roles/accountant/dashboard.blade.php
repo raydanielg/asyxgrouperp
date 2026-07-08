@@ -136,7 +136,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Sales Invoices</h3>
-            <a href="{{ route('admin.sales-invoices.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'sales-invoices']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @forelse($recentSales->take(5) as $invoice)
@@ -158,7 +158,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Expenses</h3>
-            <a href="{{ route('admin.expenses.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'expenses']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @forelse($recentExpenses->take(5) as $expense)
@@ -177,7 +177,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Purchases</h3>
-            <a href="{{ route('admin.purchase-invoices.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'purchase-invoices']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @forelse($recentPurchases->take(5) as $purchase)
