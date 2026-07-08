@@ -11,7 +11,7 @@
 </div>
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Revenue #</th><th class="px-5 py-3 font-medium">Category</th><th class="px-5 py-3 font-medium">Payer</th><th class="px-5 py-3 font-medium">Amount</th><th class="px-5 py-3 font-medium">Method</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
+        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Revenue #</th><th class="px-5 py-3 font-medium">Category</th><th class="px-5 py-3 font-medium">Payer</th><th class="px-5 py-3 font-medium">Amount</th><th class="px-5 py-3 font-medium">Cost Allocation</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
         @forelse($revenues as $r)
         <tr class="border-t border-gray-100 hover:bg-gray-50/50">
@@ -19,10 +19,24 @@
             <td class="px-5 py-3 text-xs text-gray-700">{{ $r->category ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $r->payer ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs font-semibold text-emerald-600">TZS {{ number_format($r->amount) }}</td>
-            <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst($r->payment_method) }}</td>
+            <td class="px-5 py-3 text-xs">
+                @php $allocTotal = $r->costAllocations->sum('amount'); @endphp
+                @if($allocTotal > 0)
+                <span class="text-emerald-600 font-medium">TZS {{ number_format($allocTotal) }}</span>
+                <div class="text-[10px] text-gray-400">
+                @foreach($r->costAllocations as $ca)
+                <div>{{ $ca->costCenter?->name ?? '?' }}: {{ number_format($ca->percentage, 0) }}%</div>
+                @endforeach
+                </div>
+                @else
+                <span class="text-amber-500 text-[10px]">Not allocated</span>
+                @endif
+            </td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $r->revenue_date->format('d M Y') }}</td>
-            <td class="px-5 py-3"><form id="del-rev-{{ $r->id }}" method="POST" action="{{ route('admin.revenues.destroy', $r) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-rev-{{ $r->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        
+            <td class="px-5 py-3 text-xs">
+                <button onclick="showAllocateRevModal({{ $r->id }}, '{{ $r->revenue_number }}', {{ $r->amount }})" class="text-emerald-600 hover:text-emerald-700 font-medium mr-2">Allocate</button>
+                <form id="del-rev-{{ $r->id }}" method="POST" action="{{ route('admin.revenues.destroy', $r) }}" class="inline">@csrf @method('DELETE')<button type="button" onclick="confirmDelete('del-rev-{{ $r->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
+            </td>
         </tr>
         @empty
         <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No revenue records</td></tr>
