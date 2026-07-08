@@ -1101,7 +1101,28 @@
                     'cost-centre-budgets' => 'view-dashboard',
                 ];
 
-                $myMenu = $roleMenus[$roleName] ?? $roleMenus['administrator'] ?? [];
+                if (isset($roleMenus[$roleName])) {
+                    $myMenu = $roleMenus[$roleName];
+                } else {
+                    // Any role not explicitly curated above (including brand-new roles created
+                    // and assigned in the future) gets its OWN menu auto-derived from the single
+                    // source of truth in App\Support\RoleModules, instead of silently inheriting
+                    // the administrator's menu.
+                    $autoModules = \App\Support\RoleModules::allowedModules($roleName, $currentUser);
+                    $myMenu = [
+                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                    ];
+                    foreach ($autoModules as $autoModule) {
+                        if ($autoModule === 'dashboard') {
+                            continue;
+                        }
+                        $myMenu[] = [
+                            'label' => \App\Support\RoleModules::label($autoModule),
+                            'module' => $autoModule,
+                            'icon' => \App\Support\RoleModules::icon($autoModule),
+                        ];
+                    }
+                }
                 $filteredMenu = [];
                 foreach ($myMenu as $item) {
                     if ($isFullAdmin) {
