@@ -60,7 +60,7 @@ class RoleModules
 
         'senior_systems_engineer' => ['dashboard', 'projects', 'documents', 'team-review', 'tickets', 'my-account', 'payslips', 'salary'],
         'systems_engineer' => ['dashboard', 'tickets', 'assets', 'asset-maintenance', 'my-account', 'payslips', 'salary'],
-        'support_engineer' => ['dashboard', 'site-visits', 'service-reports', 'assets', 'tickets', 'my-account', 'payslips', 'salary'],
+        'support_engineer' => ['dashboard', 'site-visits', 'service-reports', 'assets', 'tickets', 'job-cards', 'my-account', 'payslips', 'salary'],
         'noc_engineer' => ['dashboard', 'tickets', 'escalations', 'assets', 'my-account', 'payslips', 'salary'],
         'network_engineer' => ['dashboard', 'tickets', 'assets', 'projects', 'my-account', 'payslips', 'salary'],
         'software_engineer' => ['dashboard', 'projects', 'bugs', 'timesheets', 'my-account', 'payslips', 'salary'],
@@ -152,6 +152,7 @@ class RoleModules
         'view-bugs' => 'bugs',
         'view-site-reports' => 'site-reports',
         'view-helpdesk-tickets' => 'tickets',
+        'view-job-cards' => 'job-cards',
         'view-training' => 'training',
         'view-certifications' => 'certifications',
         'view-overtime' => 'overtime',
@@ -263,6 +264,7 @@ class RoleModules
         'team-timesheets' => ['label' => 'Team Timesheets', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
 
         'import-action-points' => ['label' => 'Upload Action Points', 'icon' => 'M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3'],
+        'job-cards' => ['label' => 'Job Cards', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6 4h6'],
         'action-points-reports' => ['label' => 'My Reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
     ];
 
