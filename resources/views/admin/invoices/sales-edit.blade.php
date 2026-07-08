@@ -32,6 +32,18 @@
         </select></div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Payment Terms</label><input name="payment_terms" value="{{ old('payment_terms', $salesInvoice->payment_terms) }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             </div>
+            <div class="mt-4">
+                <label class="block text-xs font-medium text-gray-600 mb-2">Bank Accounts (select one or more for payment)</label>
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                    @php $selectedBanks = $salesInvoice->bankAccounts->pluck('id')->toArray(); @endphp
+                    @foreach($bankAccounts as $ba)
+                    <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:border-emerald-300 cursor-pointer transition-colors has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50">
+                        <input type="checkbox" name="bank_account_ids[]" value="{{ $ba->id }}" {{ in_array($ba->id, $selectedBanks) ? 'checked' : '' }} class="rounded text-emerald-600 focus:ring-emerald-500">
+                        <div><span class="text-xs font-medium text-gray-900">{{ $ba->account_name }}</span><p class="text-[10px] text-gray-400">{{ $ba->bank_name }} - {{ $ba->account_number }}</p></div>
+                    </label>
+                    @endforeach
+                </div>
+            </div>
         </div>
         <div class="bg-white rounded-xl border p-6">
             <h3 class="text-sm font-semibold text-gray-900 mb-4">Summary</h3>

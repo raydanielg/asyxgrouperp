@@ -145,6 +145,24 @@
             </div>
             @endif
 
+            {{-- Bank Accounts --}}
+            @php $invoiceBanks = $salesInvoice->bankAccounts; @endphp
+            @if($invoiceBanks->count())
+            <div style="margin-top:20px;padding:14px 16px;background:#F0F4F8;border-radius:8px;border:1px solid #D8E3DE;">
+                <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6E7570;margin-bottom:8px;">Payment To</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    @foreach($invoiceBanks as $ba)
+                    <div style="padding:8px 10px;background:#fff;border-radius:6px;border:1px solid #E3DDCB;">
+                        <b style="font-size:12px;color:#1C2321;display:block;">{{ $ba->account_name }}</b>
+                        <span style="font-size:11px;color:#6E7570;">{{ $ba->bank_name }}</span>
+                        <span style="font-size:11px;color:#6E7570;display:block;">{{ $ba->account_number }}</span>
+                        @if($ba->branch)<span style="font-size:10px;color:#9CA3AF;">{{ $ba->branch }}</span>@endif
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
             {{-- Terms & Conditions --}}
             <div style="margin-top:24px;padding:18px 20px;background:#F5F7F6;border-radius:10px;border:1px solid #D8E3DE;">
                 <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#0F3D3E;font-weight:700;margin-bottom:8px;">Terms & Conditions</div>
