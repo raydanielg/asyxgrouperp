@@ -899,3 +899,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/documentation/{id}/export.md', [$docCtrl, 'exportMarkdown'])->name('documentation.export');
     Route::get('/documentation/export-all.md', [$docCtrl, 'exportAllMarkdown'])->name('documentation.export-all');
 });
+
+// ═══════════════════════════════════════════════════════
+//  SGR AGENT ROUTES (outside admin prefix so agents without
+//  full admin permissions can still upload & store action points)
+// ═══════════════════════════════════════════════════════
+Route::prefix('sgr')->name('sgr.')->middleware('auth')->group(function () {
+    $ccCtrl = App\Http\Controllers\Admin\CallCenterController::class;
+    Route::post('/action-points/upload', [$ccCtrl, 'actionPointsUpload'])->name('action-points.upload');
+    Route::post('/action-points/store', [$ccCtrl, 'actionPointsStore'])->name('action-points.store');
+    Route::get('/action-points/pending', [$ccCtrl, 'actionPointsPending'])->name('action-points.pending');
+});
