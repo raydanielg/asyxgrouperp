@@ -1085,7 +1085,8 @@ class RoleDashboardController extends Controller
     private function getSafeRecentItemsForRole(string $role): array
     {
         try {
-            return $this->cacheForRole('recent', $role, fn() => $this->getRecentItemsForRole($role));
+            // Don't cache Eloquent collections — they can cause serialization errors across deployments
+            return $this->getRecentItemsForRole($role);
         } catch (\Throwable $e) {
             return [];
         }
