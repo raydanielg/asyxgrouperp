@@ -11,7 +11,7 @@
 </div>
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Expense #</th><th class="px-5 py-3 font-medium">Category</th><th class="px-5 py-3 font-medium">Payee</th><th class="px-5 py-3 font-medium">Amount</th><th class="px-5 py-3 font-medium">Method</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
+        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Expense #</th><th class="px-5 py-3 font-medium">Category</th><th class="px-5 py-3 font-medium">Payee</th><th class="px-5 py-3 font-medium">Amount</th><th class="px-5 py-3 font-medium">Cost Allocation</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
         @forelse($expenses as $e)
         <tr class="border-t border-gray-100 hover:bg-gray-50/50">
@@ -19,10 +19,24 @@
             <td class="px-5 py-3 text-xs text-gray-700">{{ $e->category ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $e->payee ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs font-semibold text-red-600">TZS {{ number_format($e->amount) }}</td>
-            <td class="px-5 py-3 text-xs text-gray-500">{{ ucfirst($e->payment_method) }}</td>
+            <td class="px-5 py-3 text-xs">
+                @php $allocTotal = $e->costAllocations->sum('amount'); @endphp
+                @if($allocTotal > 0)
+                <span class="text-emerald-600 font-medium">TZS {{ number_format($allocTotal) }}</span>
+                <div class="text-[10px] text-gray-400">
+                @foreach($e->costAllocations as $ca)
+                <div>{{ $ca->costCenter?->name ?? '?' }}: {{ number_format($ca->percentage, 0) }}%</div>
+                @endforeach
+                </div>
+                @else
+                <span class="text-amber-500 text-[10px]">Not allocated</span>
+                @endif
+            </td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $e->expense_date->format('d M Y') }}</td>
-            <td class="px-5 py-3"><form id="del-exp-{{ $e->id }}" method="POST" action="{{ route('admin.expenses.destroy', $e) }}">@csrf @method('DELETE')</form><button onclick="confirmDelete('del-exp-{{ $e->id }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>
-        
+            <td class="px-5 py-3 text-xs">
+                <button onclick="showAllocateModal({{ $e->id }}, '{{ $e->expense_number }}', {{ $e->amount }})" class="text-emerald-600 hover:text-emerald-700 font-medium mr-2">Allocate</button>
+                <form id="del-exp-{{ $e->id }}" method="POST" action="{{ route('admin.expenses.destroy', $e) }}" class="inline">@csrf @method('DELETE')<button type="button" onclick="confirmDelete('del-exp-{{ $e->id }}')" class="text-red-500 hover:text-red-700">Delete</button></form>
+            </td>
         </tr>
         @empty
         <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No expenses found</td></tr>
