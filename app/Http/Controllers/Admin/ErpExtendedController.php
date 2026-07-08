@@ -22,6 +22,7 @@ use App\Models\BankTransferAcc;
 use App\Models\Expense;
 use App\Models\Revenue;
 use App\Models\Bill;
+use App\Models\CostCenter;
 use App\Models\Estimate;
 use App\Models\Project;
 use App\Models\ProjectTask;
@@ -1021,9 +1022,10 @@ class ErpExtendedController extends Controller
     // ═══════════════════════════════════════════════════════
     public function expenseIndex()
     {
-        $expenses = Expense::latest()->paginate(15);
+        $expenses = Expense::with('costAllocations.costCenter')->latest()->paginate(15);
         $accounts = BankAccount::where('is_active', true)->get();
-        return view('admin.accounting.expenses.index', compact('expenses', 'accounts'));
+        $costCenters = CostCenter::where('is_active', true)->get();
+        return view('admin.accounting.expenses.index', compact('expenses', 'accounts', 'costCenters'));
     }
 
     public function expenseStore(Request $request)
