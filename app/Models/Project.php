@@ -121,6 +121,42 @@ class Project extends Model
         return $this->hasMany(EmployeeBonus::class);
     }
 
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    public function cashAccount()
+    {
+        return $this->hasOne(CashAccount::class)->where('type', 'project');
+    }
+
+    public function cashTopupRequests()
+    {
+        return $this->hasMany(CashTopupRequest::class);
+    }
+
+    public function journalEntries()
+    {
+        return $this->hasMany(JournalEntry::class);
+    }
+
+    /**
+     * Total money credited into this project's account card (top-ups received).
+     */
+    public function totalCashCredited(): float
+    {
+        return (float) ($this->cashAccount?->totalCredits() ?? 0);
+    }
+
+    /**
+     * Total money spent out of this project's account card.
+     */
+    public function totalCashDebited(): float
+    {
+        return (float) ($this->cashAccount?->totalDebits() ?? 0);
+    }
+
     public function nextInvoiceDate()
     {
         if (!$this->recurring_invoicing) return null;

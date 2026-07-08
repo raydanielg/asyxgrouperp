@@ -17,4 +17,14 @@ class Expense extends Model
     {
         return $this->belongsTo(BankAccount::class);
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function cashAccount()
+    {
+        return $this->belongsTo(CashAccount::class);
+    }
 }

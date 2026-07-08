@@ -17,4 +17,9 @@ class Revenue extends Model
     {
         return $this->belongsTo(BankAccount::class);
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }
