@@ -960,6 +960,11 @@ class RoleDashboardController extends Controller
                 $data['values'] = $this->dailyCountsForRange(HelpdeskTicket::class, 'created_at');
                 break;
 
+            case 'sgr_agent':
+                $data['title'] = 'Action Points Uploads (14 days)';
+                $data['values'] = $this->dailyCountsForRange(\App\Models\CallCenterActionPoint::class, 'created_at');
+                break;
+
             case 'receptionist':
             case 'call_center_agent':
                 $data['title'] = 'New Leads (14 days)';
@@ -1053,6 +1058,14 @@ class RoleDashboardController extends Controller
                 ['label' => 'Total Contracts', 'value' => $stats['totalContracts'] ?? 0, 'color' => 'emerald', 'route' => 'admin.crm-contracts.index'],
                 ['label' => 'Total Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'sky', 'route' => 'admin.projects.index'],
                 ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'emerald', 'route' => 'admin.projects.index'],
+            ],
+            'sgr_agent' => [
+                ['label' => 'Total Uploaded', 'value' => $stats['totalActionPoints'] ?? 0, 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'action-points-reports']],
+                ['label' => 'Pending', 'value' => $stats['pendingApproval'] ?? 0, 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'action-points-reports']],
+                ['label' => 'Approved', 'value' => $stats['approvedPoints'] ?? 0, 'color' => 'sky', 'route' => 'role.page', 'params' => ['module' => 'action-points-reports']],
+                ['label' => 'Overdue', 'value' => $stats['overduePoints'] ?? 0, 'color' => 'rose', 'route' => 'role.page', 'params' => ['module' => 'action-points-reports']],
+                ['label' => 'Completed', 'value' => $stats['completedPoints'] ?? 0, 'color' => 'violet', 'route' => 'role.page', 'params' => ['module' => 'action-points-reports']],
+                ['label' => 'Rejected', 'value' => $stats['rejectedPoints'] ?? 0, 'color' => 'gray', 'route' => 'role.page', 'params' => ['module' => 'action-points-reports']],
             ],
             'receptionist', 'call_center_agent' => [
                 ['label' => 'Total Leads', 'value' => $stats['totalLeads'] ?? 0, 'color' => 'emerald', 'route' => 'admin.crm-leads.index'],
