@@ -47,6 +47,7 @@ use App\Models\JobApplication;
 use App\Models\VendorInvoice;
 use App\Models\OfficeExpense;
 use App\Models\ClientReceipt;
+use App\Models\ExpenseRequest;
 
 class ErpExtendedController extends Controller
 {
@@ -1937,5 +1938,67 @@ class ErpExtendedController extends Controller
 
         return redirect()->route('admin.projects.financing', $financing->project_id)
             ->with('success', 'Repayment of TZS ' . number_format($data['paid_amount'], 2) . ' recorded.');
+    }
+
+    public function projectExpenseRequestIndex(Project $project)
+    {
+        $requests = ExpenseRequest::where('project_id', $project->id)
+            ->with(['employee', 'createdBy', 'approvedBy'])
+            ->latest()
+            ->paginate(20);
+        $employees = Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name']);
+        return view('admin.projects.expense-requests', compact('project', 'requests', 'employees'));
+    }
+
+    public function projectExpenseRequestStore(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'amount' => 'required|numeric|min:1',
+            'category' => 'nullable|string|max:100',
+            'description' => 'required|string|max:1000',
+        ]);
+
+        ExpenseRequest::create([
+            'company_id' => auth()->user()->company_id ?? 1,
+            'request_number' => 'ER-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'project_id' => $project->id,
+            'employee_id' => $data['employee_id'],
+            'amount' => $data['amount'],
+            'category' => $data['category'],
+            'description' => $data['description'],
+            'status' => 'pending',
+            'approval_status' => 'pending',
+            'created_by' => auth()->id(),
+        ]);
+
+        return redirect()->route('admin.projects.expense-requests', $project)
+            ->with('success', 'Expense request submitted for approval.');
+    }
+
+    public function projectExpenseRequestApprove(Request $request, ExpenseRequest $expenseRequest)
+    {
+        $expenseRequest->update([
+            'status' => 'approved',
+            'approval_status' => 'approved',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+
+        return back()->with('success', 'Expense request approved.');
+    }
+
+    public function projectExpenseRequestReject(Request $request, ExpenseRequest $expenseRequest)
+    {
+        $data = $request->validate(['rejection_reason' => 'nullable|string|max:500']);
+        $expenseRequest->update([
+            'status' => 'rejected',
+            'approval_status' => 'rejected',
+            'rejection_reason' => $data['rejection_reason'] ?? null,
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+
+        return back()->with('success', 'Expense request rejected.');
     }
 }
