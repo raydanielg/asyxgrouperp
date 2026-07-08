@@ -1162,65 +1162,140 @@ $hasActions = $canEdit || $canDelete || $canApprove;
     @case('salary')
     @case('payslips')
         <div class="p-5 space-y-5">
-            {{-- Salary Overview --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                    <span class="text-[10px] font-medium text-emerald-600 uppercase">Basic Salary</span>
-                    <p class="text-xl font-bold text-emerald-900 mt-1">{{ $money($salary ?? 0) }}</p>
-                </div>
-                <div class="bg-sky-50 border border-sky-200 rounded-xl p-4">
-                    <span class="text-[10px] font-medium text-sky-600 uppercase">Year-to-Date Net</span>
-                    <p class="text-xl font-bold text-sky-900 mt-1">{{ $money($yearToDate ?? 0) }}</p>
-                </div>
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                    <span class="text-[10px] font-medium text-amber-600 uppercase">Latest Net Pay</span>
-                    <p class="text-xl font-bold text-amber-900 mt-1">{{ $money($latestPayroll?->net_salary ?? 0) }}</p>
-                </div>
-                <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
-                    <span class="text-[10px] font-medium text-purple-600 uppercase">Payslips</span>
-                    <p class="text-xl font-bold text-purple-900 mt-1">{{ ($payrolls ?? collect())->total() ?? 0 }}</p>
-                </div>
-            </div>
-
             @if(!$employee)
-            <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+            <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                <svg class="w-10 h-10 text-red-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                 <p class="text-sm text-red-700 font-medium">Employee record not linked to your account.</p>
                 <p class="text-xs text-red-500 mt-1">Contact HR to link your employee profile.</p>
             </div>
             @else
+            {{-- Stats Cards --}}
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200 rounded-xl p-4">
+                    <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Basic Salary</span>
+                    <p class="text-xl font-bold text-emerald-900 mt-1">{{ $money($salary ?? 0) }}</p>
+                    <p class="text-[10px] text-emerald-500 mt-0.5">Monthly base pay</p>
+                </div>
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200 rounded-xl p-4">
+                    <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Total Overtime</span>
+                    <p class="text-xl font-bold text-amber-900 mt-1">{{ $money($totalOvertime ?? 0) }}</p>
+                    <p class="text-[10px] text-amber-500 mt-0.5">All-time</p>
+                </div>
+                <div class="bg-gradient-to-br from-sky-50 to-sky-100/50 border border-sky-200 rounded-xl p-4">
+                    <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Year-to-Date Net</span>
+                    <p class="text-xl font-bold text-sky-900 mt-1">{{ $money($yearToDate ?? 0) }}</p>
+                    <p class="text-[10px] text-sky-500 mt-0.5">{{ now()->year }}</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100/50 border border-purple-200 rounded-xl p-4">
+                    <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Total Paid</span>
+                    <p class="text-xl font-bold text-purple-900 mt-1">{{ $money($totalPaid ?? 0) }}</p>
+                    <p class="text-[10px] text-purple-500 mt-0.5">All paid payslips</p>
+                </div>
+            </div>
+
+            {{-- Latest Net Pay Banner --}}
+            @if($latestPayroll)
+            <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-5 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-emerald-200 uppercase tracking-wider font-semibold">Latest Payslip</p>
+                        <p class="text-lg font-bold mt-0.5">{{ $latestPayroll->month }} {{ $latestPayroll->year }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold">{{ $money($latestPayroll->net_salary) }}</p>
+                        <p class="text-xs text-emerald-200">Net Pay</p>
+                    </div>
+                    <a href="{{ route('payslip.download', $latestPayroll->id) }}" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-lg transition-colors inline-flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+            @endif
+
+            {{-- Filters --}}
+            <form method="GET" action="{{ route('role.page', ['module' => $module]) }}" class="flex flex-wrap items-end gap-3">
+                <div>
+                    <label class="block text-[10px] font-medium text-gray-500 mb-1 uppercase tracking-wider">Month</label>
+                    <select name="month" class="px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none bg-white">
+                        <option value="">All Months</option>
+                        @foreach(['January','February','March','April','May','June','July','August','September','October','November','December'] as $m)
+                        <option value="{{ $m }}" {{ ($filterMonth ?? '') === $m ? 'selected' : '' }}>{{ $m }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-medium text-gray-500 mb-1 uppercase tracking-wider">Year</label>
+                    <select name="year" class="px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none bg-white">
+                        <option value="">All Years</option>
+                        @foreach($years as $y)
+                        <option value="{{ $y }}" {{ ($filterYear ?? '') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-medium text-gray-500 mb-1 uppercase tracking-wider">Status</label>
+                    <select name="status" class="px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none bg-white">
+                        <option value="">All Status</option>
+                        <option value="paid" {{ ($filterStatus ?? '') === 'paid' ? 'selected' : '' }}>Paid</option>
+                        <option value="pending" {{ ($filterStatus ?? '') === 'pending' ? 'selected' : '' }}>Pending</option>
+                    </select>
+                </div>
+                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">Filter</button>
+                @if($filterMonth || $filterYear || $filterStatus)
+                <a href="{{ route('role.page', ['module' => $module]) }}" class="px-3 py-2 border border-gray-200 text-gray-600 text-xs font-medium rounded-lg hover:bg-gray-50 transition-colors">Clear</a>
+                @endif
+            </form>
+
             {{-- Payslips Table --}}
-            <div class="bg-white border rounded-xl overflow-hidden">
-                <div class="px-4 py-3 border-b flex items-center justify-between">
+            <div class="bg-white border rounded-xl overflow-hidden shadow-sm">
+                <div class="px-4 py-3 border-b bg-gray-50/50 flex items-center justify-between">
                     <h3 class="text-sm font-bold text-gray-900">My Payslips</h3>
-                    <span class="text-[10px] text-gray-500">{{ $employee->first_name ?? '' }} {{ $employee->last_name ?? '' }}</span>
+                    <span class="text-[10px] text-gray-500 font-medium">{{ $employee->first_name ?? '' }} {{ $employee->last_name ?? '' }}</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50 border-b">
                             <tr>
-                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Period</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Basic</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Allowances</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Deductions</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Net Pay</th>
-                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
-                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>
+                                <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase tracking-wider">Period</th>
+                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase tracking-wider">Basic</th>
+                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase tracking-wider">Overtime</th>
+                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase tracking-wider">Allowances</th>
+                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase tracking-wider">Deductions</th>
+                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase tracking-wider">Net Pay</th>
+                                <th class="px-4 py-3 text-center text-[10px] font-bold text-gray-600 uppercase tracking-wider">Malipo</th>
+                                <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @forelse(($payrolls ?? collect())->items() ?? [] as $payroll)
-                            <tr class="hover:bg-gray-50/50">
-                                <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $payroll->month }} {{ $payroll->year }}</td>
-                                <td class="px-4 py-3 text-xs text-gray-600">{{ $money($payroll->basic_salary) }}</td>
-                                <td class="px-4 py-3 text-xs text-emerald-600">{{ $money($payroll->allowances) }}</td>
-                                <td class="px-4 py-3 text-xs text-red-600">{{ $money($payroll->deductions) }}</td>
-                                <td class="px-4 py-3 text-xs font-bold text-gray-900">{{ $money($payroll->net_salary) }}</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full {{ $payroll->status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">{{ ucfirst($payroll->status) }}</span>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="px-4 py-3 text-xs font-semibold text-gray-900 whitespace-nowrap">{{ $payroll->month }} {{ $payroll->year }}</td>
+                                <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $money($payroll->basic_salary) }}</td>
+                                <td class="px-4 py-3 text-xs text-right text-amber-600 font-medium">{{ $money($payroll->overtime ?? 0) }}</td>
+                                <td class="px-4 py-3 text-xs text-right text-emerald-600">{{ $money($payroll->allowances) }}</td>
+                                <td class="px-4 py-3 text-xs text-right text-red-600">{{ $money($payroll->deductions) }}</td>
+                                <td class="px-4 py-3 text-xs text-right font-bold text-gray-900">{{ $money($payroll->net_salary) }}</td>
+                                <td class="px-4 py-3 text-center">
+                                    @if($payroll->status === 'paid')
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                        Imelipwa
+                                    </span>
+                                    @else
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        Hajalipwa
+                                    </span>
+                                    @endif
                                 </td>
-                                <td class="px-4 py-3 text-right">
-                                    <a href="{{ route('payslip.preview', $payroll->id) }}" target="_blank" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 border border-sky-200 rounded hover:bg-sky-50 transition-colors mr-1">Preview</a>
-                                    <a href="{{ route('payslip.download', $payroll->id) }}" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 rounded hover:bg-emerald-50 transition-colors">
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <a href="{{ route('payslip.preview', $payroll->id) }}" target="_blank" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 border border-sky-200 rounded-lg hover:bg-sky-50 transition-colors mr-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        Ona
+                                    </a>
+                                    <a href="{{ route('payslip.download', $payroll->id) }}" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-50 transition-colors">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                         PDF
                                     </a>
@@ -1228,13 +1303,16 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="px-4 py-8 text-center text-xs text-gray-400">No payslips found for your employee record.</td>
+                                <td colspan="8" class="px-4 py-12 text-center">
+                                    <svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    <p class="text-sm text-gray-400">No payslips found.</p>
+                                </td>
                             </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
-                <div class="px-5 py-3 border-t">{{ ($payrolls ?? null)?->links() ?? '' }}</div>
+                <div class="px-5 py-3 border-t bg-gray-50/30">{{ ($payrolls ?? null)?->links() ?? '' }}</div>
             </div>
             @endif
         </div>
