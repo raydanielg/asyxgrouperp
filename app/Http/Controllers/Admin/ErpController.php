@@ -423,6 +423,8 @@ class ErpController extends Controller
             'items.*.unit_price' => 'required|numeric|min:0',
             'items.*.discount_amount' => 'nullable|numeric|min:0',
             'items.*.tax_percentage' => 'nullable|numeric|min:0',
+            'bank_account_ids' => 'nullable|array',
+            'bank_account_ids.*' => 'exists:bank_accounts,id',
         ]);
         $data['creator_id'] = auth()->id();
         $data['created_by'] = auth()->id();
@@ -442,6 +444,9 @@ class ErpController extends Controller
                     'total_amount' => $lineTotal + $lineTax,
                 ]);
             }
+        }
+        if (!empty($request->bank_account_ids)) {
+            $invoice->bankAccounts()->sync($request->bank_account_ids);
         }
         return redirect()->route('admin.sales-invoices.index')->with('success', 'Sales invoice created.');
     }
@@ -837,8 +842,13 @@ class ErpController extends Controller
             'payment_terms' => 'nullable|string',
             'notes' => 'nullable|string',
             'terms_and_conditions' => 'nullable|string',
+            'bank_account_ids' => 'nullable|array',
+            'bank_account_ids.*' => 'exists:bank_accounts,id',
         ]);
         $salesInvoice->update($data);
+        if ($request->has('bank_account_ids')) {
+            $salesInvoice->bankAccounts()->sync($request->bank_account_ids);
+        }
         return redirect()->route('admin.sales-invoices.index')->with('success', 'Sales invoice updated.');
     }
 
