@@ -175,12 +175,14 @@
                                 ['field.technician@djanproject.com', 'Field Tech', 'green'],
                                 ['noc.engineer@djanproject.com', 'NOC Eng', 'orange'],
                             ],
+                            'Call Center' => [
+                                ['call.center.supervisor@djanproject.com', 'Call Center Sup', 'rose'],
+                                ['call.center.agent@djanproject.com', 'Call Center Agent', 'pink'],
+                            ],
                             'Service Desk' => [
                                 ['service.desk.manager@djanproject.com', 'Service Desk Mgr', 'rose'],
                                 ['helpdesk.supervisor@djanproject.com', 'Helpdesk Sup', 'pink'],
                                 ['helpdesk.officer@djanproject.com', 'Helpdesk Off', 'fuchsia'],
-                                ['call.center.supervisor@djanproject.com', 'CC Sup', 'red'],
-                                ['call.center.agent@djanproject.com', 'CC Agent', 'rose'],
                             ],
                             'HR' => [
                                 ['hr.manager@djanproject.com', 'HR Manager', 'sky'],

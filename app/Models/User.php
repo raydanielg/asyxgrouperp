@@ -102,6 +102,11 @@ class User extends Authenticatable
         return $this->hasMany(LoginHistory::class);
     }
 
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
+
     public function assignedTasks()
     {
         return $this->hasMany(ProjectTask::class, 'assigned_to');

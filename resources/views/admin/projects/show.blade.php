@@ -148,7 +148,12 @@
 <div class="bg-white rounded-xl border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-gray-900">Assigned Staff</h3>
-        <span class="text-[10px] text-gray-400">{{ $project->employees->count() }} employees</span>
+        <div class="flex items-center gap-2">
+            <span class="text-[10px] text-gray-400">{{ $project->employees->count() }} employees</span>
+            @if($availableEmployees->count() > 0)
+            <button onclick="document.getElementById('assignStaffModal').classList.remove('hidden')" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Assign Staff</button>
+            @endif
+        </div>
     </div>
     <div class="space-y-2">
     @forelse($project->employees as $emp)
@@ -166,10 +171,15 @@
                 @else
                 <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 text-gray-500">Inactive</span>
                 @endif
+                <form id="remove-emp-{{ $emp->id }}" method="POST" action="{{ route('admin.projects.employees.remove', [$project, $emp]) }}">@csrf @method('DELETE')</form>
+                <button onclick="confirmDelete('remove-emp-{{ $emp->id }}')" class="text-red-500 hover:text-red-700 text-[10px]" title="Remove from project">Remove</button>
             </div>
         </div>
     @empty
         <p class="text-xs text-gray-400 text-center py-4">No staff assigned to this project</p>
+        @if($availableEmployees->count() > 0)
+        <button onclick="document.getElementById('assignStaffModal').classList.remove('hidden')" class="w-full py-2 border border-dashed border-emerald-300 text-emerald-600 text-xs font-medium rounded-lg hover:bg-emerald-50">+ Assign Staff to Project</button>
+        @endif
     @endforelse
     </div>
 </div>
@@ -241,11 +251,41 @@
         <form method="POST" action="{{ route('admin.projects.tasks.store', $project) }}" class="space-y-3">@csrf
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Assigned To</label><select name="assigned_to" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Unassigned</option>@foreach($users as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach</select></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date</label><input name="due_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="todo">To Do</option><option value="in_progress">In Progress</option><option value="review">Review</option><option value="done">Done</option></select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Priority</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Progress (%)</label><input name="progress" type="number" min="0" max="100" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('taskModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Add Task</button></div>
         </form>
+    </div>
+</div>
+<div id="assignStaffModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Assign Staff to Project</h3>
+        @if($availableEmployees->count() > 0)
+        <form method="POST" action="{{ route('admin.projects.employees.assign', $project) }}" class="space-y-4">@csrf
+            <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Employee *</label>
+                <select name="employee_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <option value="">Select employee...</option>
+                    @foreach($availableEmployees as $emp)
+                    <option value="{{ $emp->id }}">{{ $emp->full_name }} ({{ $emp->designation ?? 'No designation' }} — {{ $emp->department ?? 'N/A' }})</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Role on Project</label>
+                <input name="role" placeholder="e.g. Project Engineer, Developer, Supervisor" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="document.getElementById('assignStaffModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Assign Employee</button>
+            </div>
+        </form>
+        @else
+        <p class="text-sm text-gray-500">All active employees are already assigned to this project.</p>
+        <div class="pt-4"><button type="button" onclick="document.getElementById('assignStaffModal').classList.add('hidden')" class="w-full px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Close</button></div>
+        @endif
     </div>
 </div>
 @push('scripts')

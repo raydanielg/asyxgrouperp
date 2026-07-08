@@ -31,6 +31,13 @@ class RoleDashboardController extends Controller
         $this->middleware('auth');
     }
 
+    private function cacheForRole(string $key, string $role, callable $callback, int $ttl = 300): mixed
+    {
+        $userId = auth()->id() ?? 0;
+        $cacheKey = "role_dashboard_{$key}_{$role}_{$userId}";
+        return cache()->remember($cacheKey, $ttl, $callback);
+    }
+
     public function index()
     {
         try {
@@ -405,7 +412,7 @@ class RoleDashboardController extends Controller
             case 'admin_manager':
             case 'director':
             case 'erp_administrator':
-                $items['recentUsers'] = User::latest()->take(5)->get();
+                $items['recentUsers'] = User::with('roles')->latest()->take(5)->get();
                 $items['recentSales'] = SalesInvoice::with('customer')->latest()->take(5)->get();
                 $items['recentTickets'] = HelpdeskTicket::latest()->take(5)->get();
                 $items['activeProjects'] = Project::where('status', 'in_progress')->latest()->take(5)->get();
@@ -765,6 +772,58 @@ class RoleDashboardController extends Controller
         return $pdf->download('role-report-' . $role . '-' . now()->format('Ymd') . '.pdf');
     }
 
+    private function dailyCountsForRange(string $model, string $dateColumn = 'created_at', ?\Closure $filter = null): array
+    {
+        $start = now()->subDays(13)->startOfDay();
+        $end = now()->endOfDay();
+
+        $query = $model::query()
+            ->whereDate($dateColumn, '>=', $start)
+            ->whereDate($dateColumn, '<=', $end);
+
+        if ($filter) {
+            $filter($query);
+        }
+
+        $counts = $query->selectRaw("DATE({$dateColumn}) as date, COUNT(*) as total")
+            ->groupBy('date')
+            ->pluck('total', 'date');
+
+        $values = [];
+        for ($i = 13; $i >= 0; $i--) {
+            $date = now()->subDays($i)->toDateString();
+            $values[] = (int) ($counts[$date] ?? 0);
+        }
+
+        return $values;
+    }
+
+    private function dailySumsForRange(string $model, string $dateColumn, string $amountColumn, ?\Closure $filter = null): array
+    {
+        $start = now()->subDays(13)->startOfDay();
+        $end = now()->endOfDay();
+
+        $query = $model::query()
+            ->whereDate($dateColumn, '>=', $start)
+            ->whereDate($dateColumn, '<=', $end);
+
+        if ($filter) {
+            $filter($query);
+        }
+
+        $sums = $query->selectRaw("DATE({$dateColumn}) as date, SUM({$amountColumn}) as total")
+            ->groupBy('date')
+            ->pluck('total', 'date');
+
+        $values = [];
+        for ($i = 13; $i >= 0; $i--) {
+            $date = now()->subDays($i)->toDateString();
+            $values[] = (int) ($sums[$date] ?? 0);
+        }
+
+        return $values;
+    }
+
     private function getChartDataForRole(string $role): array
     {
         $data = [
@@ -786,13 +845,8 @@ class RoleDashboardController extends Controller
         switch ($role) {
             case 'erp_super_administrator':
                 $data['title'] = 'New Users vs Companies (14 days)';
-                $data['values'] = [];
-                $data['secondaryValues'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = (int) User::whereDate('created_at', $date)->count();
-                    $data['secondaryValues'][] = (int) Company::whereDate('created_at', $date)->count();
-                }
+                $data['values'] = $this->dailyCountsForRange(User::class, 'created_at');
+                $data['secondaryValues'] = $this->dailyCountsForRange(Company::class, 'created_at');
                 $data['secondaryLabels'] = $data['labels'];
                 $data['secondaryTitle'] = 'Companies';
                 break;
@@ -803,13 +857,8 @@ class RoleDashboardController extends Controller
             case 'director':
             case 'erp_administrator':
                 $data['title'] = 'Sales vs Purchases (14 days)';
-                $data['values'] = [];
-                $data['secondaryValues'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = (int) (SalesInvoice::whereDate('created_at', $date)->sum('total_amount') ?? 0);
-                    $data['secondaryValues'][] = (int) (PurchaseInvoice::whereDate('created_at', $date)->sum('total_amount') ?? 0);
-                }
+                $data['values'] = $this->dailySumsForRange(SalesInvoice::class, 'created_at', 'total_amount');
+                $data['secondaryValues'] = $this->dailySumsForRange(PurchaseInvoice::class, 'created_at', 'total_amount');
                 $data['secondaryLabels'] = $data['labels'];
                 $data['secondaryTitle'] = 'Purchases';
                 break;
@@ -825,13 +874,8 @@ class RoleDashboardController extends Controller
             case 'credit_controller':
             case 'auditor':
                 $data['title'] = 'Revenue vs Expenses (14 days)';
-                $data['values'] = [];
-                $data['secondaryValues'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = (int) (Revenue::whereDate('revenue_date', $date)->sum('amount') ?? 0);
-                    $data['secondaryValues'][] = (int) (Expense::whereDate('expense_date', $date)->sum('amount') ?? 0);
-                }
+                $data['values'] = $this->dailySumsForRange(Revenue::class, 'revenue_date', 'amount');
+                $data['secondaryValues'] = $this->dailySumsForRange(Expense::class, 'expense_date', 'amount');
                 $data['secondaryLabels'] = $data['labels'];
                 $data['secondaryTitle'] = 'Expenses';
                 break;
@@ -839,20 +883,12 @@ class RoleDashboardController extends Controller
             case 'hr_officer':
             case 'supervisor':
                 $data['title'] = 'Attendance Trend (14 days)';
-                $data['values'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = Attendance::whereDate('date', $date)->where('status', 'present')->count();
-                }
+                $data['values'] = $this->dailyCountsForRange(Attendance::class, 'date', fn($q) => $q->where('status', 'present'));
                 break;
 
             case 'cashier':
                 $data['title'] = 'POS Sales (14 days)';
-                $data['values'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = (int) (PosSale::whereDate('created_at', $date)->sum('total_amount') ?? 0);
-                }
+                $data['values'] = $this->dailySumsForRange(PosSale::class, 'created_at', 'total_amount');
                 break;
 
             case 'technical_manager':
@@ -865,51 +901,35 @@ class RoleDashboardController extends Controller
             case 'cybersecurity_engineer':
             case 'field_technician':
                 $data['title'] = 'Tickets Created (14 days)';
-                $data['values'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = HelpdeskTicket::whereDate('created_at', $date)->count();
-                }
+                $data['values'] = $this->dailyCountsForRange(HelpdeskTicket::class, 'created_at');
                 break;
 
             case 'receptionist':
             case 'call_center_agent':
                 $data['title'] = 'New Leads (14 days)';
-                $data['values'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = CrmLead::whereDate('created_at', $date)->count();
-                }
+                $data['values'] = $this->dailyCountsForRange(CrmLead::class, 'created_at');
                 break;
 
             case 'project_manager':
             case 'operations_manager':
             case 'team_leader':
                 $data['title'] = 'Project Activity (14 days)';
-                $data['values'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = Project::whereDate('updated_at', $date)->count();
-                }
+                $data['values'] = $this->dailyCountsForRange(Project::class, 'updated_at');
                 break;
 
             case 'logistics_officer':
                 $data['title'] = 'Stock Movements (14 days)';
-                $data['values'] = [];
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = \App\Models\StockMovement::whereDate('created_at', $date)->count() ?? 0;
-                }
+                $data['values'] = $this->dailyCountsForRange(\App\Models\StockMovement::class, 'created_at');
                 break;
 
             case 'employee_self_service':
             case 'manager_self_service':
                 $data['title'] = 'My Attendance Trend (14 days)';
-                $data['values'] = [];
                 $emp = Employee::where('user_id', auth()->id())->first();
-                for ($i = 13; $i >= 0; $i--) {
-                    $date = now()->subDays($i);
-                    $data['values'][] = $emp ? Attendance::where('employee_id', $emp->id)->whereDate('date', $date)->where('status', 'present')->count() : 0;
+                if ($emp) {
+                    $data['values'] = $this->dailyCountsForRange(Attendance::class, 'date', fn($q) => $q->where('employee_id', $emp->id)->where('status', 'present'));
+                } else {
+                    $data['values'] = array_fill(0, 14, 0);
                 }
                 break;
 
@@ -1056,7 +1076,7 @@ class RoleDashboardController extends Controller
     private function getSafeStatsForRole(string $role): array
     {
         try {
-            return $this->getStatsForRole($role);
+            return $this->cacheForRole('stats', $role, fn() => $this->getStatsForRole($role));
         } catch (\Throwable $e) {
             return [];
         }
@@ -1065,7 +1085,7 @@ class RoleDashboardController extends Controller
     private function getSafeRecentItemsForRole(string $role): array
     {
         try {
-            return $this->getRecentItemsForRole($role);
+            return $this->cacheForRole('recent', $role, fn() => $this->getRecentItemsForRole($role));
         } catch (\Throwable $e) {
             return [];
         }
@@ -1085,7 +1105,7 @@ class RoleDashboardController extends Controller
     private function getSafeChartDataForRole(string $role): array
     {
         try {
-            return $this->getChartDataForRole($role);
+            return $this->cacheForRole('chart', $role, fn() => $this->getChartDataForRole($role));
         } catch (\Throwable $e) {
             return [
                 'title' => 'Activity',

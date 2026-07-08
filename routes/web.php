@@ -413,6 +413,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/call-center/campaigns', [$ccCtrl, 'storeCampaign'])->name('call-center.campaigns.store');
     Route::post('/call-center/calls', [$ccCtrl, 'storeCall'])->name('call-center.calls.store');
     Route::get('/call-center/calls', [$ccCtrl, 'calls'])->name('call-center.calls');
+    Route::get('/call-center/action-points', [$ccCtrl, 'actionPointsImport'])->name('call-center.action-points.import');
+    Route::post('/call-center/action-points/upload', [$ccCtrl, 'actionPointsUpload'])->name('call-center.action-points.upload');
+    Route::post('/call-center/action-points', [$ccCtrl, 'actionPointsStore'])->name('call-center.action-points.store');
+    Route::get('/call-center/action-points/reports', [$ccCtrl, 'actionPointsReports'])->name('call-center.action-points.reports');
 
     // ═══ Audit Logs ═══
     $alCtrl = App\Http\Controllers\Admin\AuditLogController::class;
@@ -713,6 +717,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/projects/{project}', [$ext, 'projectDestroy'])->name('projects.destroy');
     Route::post('/projects/{project}/tasks', [$ext, 'projectTaskStore'])->name('projects.tasks.store');
     Route::delete('/projects/tasks/{task}', [$ext, 'projectTaskDestroy'])->name('projects.tasks.destroy');
+    Route::post('/projects/{project}/employees', [$ext, 'projectEmployeeAssign'])->name('projects.employees.assign');
+    Route::delete('/projects/{project}/employees/{employee}', [$ext, 'projectEmployeeRemove'])->name('projects.employees.remove');
 
     Route::get('/timesheets', [$ext, 'timesheetIndex'])->name('timesheets.index');
     Route::post('/timesheets', [$ext, 'timesheetStore'])->name('timesheets.store');

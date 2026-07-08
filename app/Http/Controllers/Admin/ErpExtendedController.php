@@ -98,7 +98,10 @@ class ErpExtendedController extends Controller
         $employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Intern', 'Probation'];
         $managers = Employee::where('status', 'active')->get();
         $projects = Project::whereIn('status', ['in_progress', 'planning', 'active'])->orderBy('title')->get();
-        return view('admin.hrm.employees.create', compact('departments', 'designations', 'employmentTypes', 'managers', 'projects'));
+        $users = User::whereDoesntHave('employee')
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+        return view('admin.hrm.employees.create', compact('departments', 'designations', 'employmentTypes', 'managers', 'projects', 'users'));
     }
 
     public function employeeStore(Request $request)
@@ -120,6 +123,7 @@ class ErpExtendedController extends Controller
             'salary' => 'nullable|numeric|min:0',
             'status' => 'nullable|string',
             'manager_id' => 'nullable|exists:employees,id',
+            'user_id' => 'nullable|exists:users,id|unique:employees,user_id',
             'marital_status' => 'nullable|string',
             'shift' => 'nullable|string',
             'work_location' => 'nullable|string',
@@ -150,7 +154,12 @@ class ErpExtendedController extends Controller
         $managers = Employee::where('status', 'active')->where('id', '!=', $employee->id)->get();
         $projects = Project::whereIn('status', ['in_progress', 'planning', 'active', 'completed'])->orderBy('title')->get();
         $employee->load('projects');
-        return view('admin.hrm.employees.edit', compact('employee', 'departments', 'designations', 'employmentTypes', 'managers', 'projects'));
+        $users = User::where(function ($q) use ($employee) {
+                $q->whereDoesntHave('employee')->orWhere('id', $employee->user_id);
+            })
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+        return view('admin.hrm.employees.edit', compact('employee', 'departments', 'designations', 'employmentTypes', 'managers', 'projects', 'users'));
     }
 
     public function employeeUpdate(Request $request, Employee $employee)
@@ -173,6 +182,7 @@ class ErpExtendedController extends Controller
             'salary' => 'nullable|numeric|min:0',
             'status' => 'nullable|string',
             'manager_id' => 'nullable|exists:employees,id',
+            'user_id' => 'nullable|exists:users,id|unique:employees,user_id,' . $employee->id,
             'marital_status' => 'nullable|string',
             'shift' => 'nullable|string',
             'work_location' => 'nullable|string',
@@ -1270,7 +1280,13 @@ class ErpExtendedController extends Controller
     public function projectShow(Project $project)
     {
         $project->load(['tasks', 'bugs', 'timesheets', 'meetings', 'documents', 'employees', 'bonuses.employee', 'invoices']);
-        return view('admin.projects.show', compact('project'));
+        $assignedIds = $project->employees->pluck('id')->toArray();
+        $availableEmployees = Employee::where('status', 'active')
+            ->when(!empty($assignedIds), fn($q) => $q->whereNotIn('id', $assignedIds))
+            ->orderBy('first_name')
+            ->get();
+        $users = User::orderBy('name')->get(['id', 'name']);
+        return view('admin.projects.show', compact('project', 'availableEmployees', 'users'));
     }
 
     public function projectSettlements(Project $project)
@@ -1502,6 +1518,30 @@ class ErpExtendedController extends Controller
     {
         $task->delete();
         return redirect()->back()->with('success', 'Task deleted.');
+    }
+
+    public function projectEmployeeAssign(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'role' => 'nullable|string|max:255',
+        ]);
+
+        $project->employees()->syncWithoutDetaching([
+            $data['employee_id'] => [
+                'role' => $data['role'] ?? null,
+                'assigned_from' => now(),
+                'is_active' => true,
+            ],
+        ]);
+
+        return redirect()->back()->with('success', 'Employee assigned to project.');
+    }
+
+    public function projectEmployeeRemove(Project $project, Employee $employee)
+    {
+        $project->employees()->detach($employee->id);
+        return redirect()->back()->with('success', 'Employee removed from project.');
     }
 
     public function timesheetIndex()

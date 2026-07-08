@@ -64,6 +64,16 @@
         @endforeach
         </select>
             </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">User Account (for login)</label>
+                <select name="user_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <option value="" @selected(old('user_id', $employee->user_id) === null)>No account — employee cannot log in</option>
+        @foreach($users as $u)
+        <option value="{{ $u->id }}" @selected(old('user_id', $employee->user_id)==$u->id)>{{ $u->name }} ({{ $u->email }})</option>
+        @endforeach
+        </select>
+                <p class="text-[10px] text-gray-400 mt-1">Linking an account lets the employee log in.</p>
+            </div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Joining Date</label><input name="joining_date" type="date" value="{{ old('joining_date', $employee->joining_date?->format('Y-m-d')) }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div><label class="block text-xs font-medium text-gray-600 mb-1">Leaving Date</label><input name="leaving_date" type="date" value="{{ old('leaving_date', $employee->leaving_date?->format('Y-m-d')) }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
             <div>

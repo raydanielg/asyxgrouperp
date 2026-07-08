@@ -1133,7 +1133,7 @@
             <div class="pt-2">
                 <button onclick="toggleSidebarGroup('{{ $groupId }}')" id="btn-{{ $groupId }}" class="sidebar-group-btn font-menu w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-emerald-200 text-sm font-semibold {{ $groupHasActive ? 'open' : '' }}">
                     <span class="flex items-center gap-2">
-                        <span class="font-brand text-[13px] tracking-wide text-emerald-300/80 font-semibold">{{ $group['title'] }}</span>
+                        <span class="font-menu text-[13px] tracking-wide text-emerald-300/80 font-semibold">{{ $group['title'] }}</span>
                     </span>
                     <svg class="chevron w-3.5 h-3.5 text-emerald-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                 </button>
@@ -1310,7 +1310,7 @@
                         <div class="px-4 py-2 border-b flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-700">Your Notifications</span>
                             @if($user->isAdmin() || $user->hasPermission('view-audit-logs'))
-                            <a href="{{ route('audit-logs.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700">View all</a>
+                            <a href="{{ route('admin.audit-logs.index') }}" class="text-[11px] text-emerald-600 hover:text-emerald-700">View all</a>
                             @endif
                         </div>
                         <div class="max-h-80 overflow-y-auto">

@@ -1,0 +1,138 @@
+@extends('layouts.admin')
+@section('title', 'Call Center Action Points Import - ' . config('app.name'))
+@section('page_title', 'Call Center Action Points Import')
+@section('content')
+@if(session('success'))
+<div class="mb-4 px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
+@endif
+@if(session('error'))
+<div class="mb-4 px-4 py-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-100">{{ session('error') }}</div>
+@endif
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {{-- Upload + Mapping --}}
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-xl border p-6">
+            <h3 class="text-sm font-bold text-gray-900 mb-4">1. Upload Excel File</h3>
+            <form method="POST" action="{{ route('admin.call-center.action-points.upload') }}" enctype="multipart/form-data" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Excel File (.xlsx, .xls, .csv)</label>
+                    <input type="file" name="excel_file" accept=".xlsx,.xls,.csv" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:text-emerald-700 file:text-xs hover:file:bg-emerald-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Sheet Name (optional)</label>
+                    <input type="text" name="sheet_name" placeholder="Leave blank to use first sheet" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                </div>
+                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Upload & Preview</button>
+            </form>
+        </div>
+
+        @if($preview)
+        <div class="bg-white rounded-xl border p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-gray-900">2. Map Columns</h3>
+                    <p class="text-xs text-gray-500">Sheet: <span class="font-medium">{{ $preview['sheet_name'] }}</span> | Total rows: <span class="font-medium">{{ $preview['total_rows'] }}</span></p>
+                </div>
+                <a href="{{ route('admin.call-center.action-points.reports') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">View Reports</a>
+            </div>
+
+            @if(!empty($preview['preview']))
+            <div class="overflow-x-auto mb-4 rounded-lg border">
+                <table class="w-full text-xs">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            @foreach($preview['headers'] as $header)
+                            <th class="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">{{ $header ?? '' }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($preview['preview'] as $row)
+                        <tr class="border-t border-gray-100">
+                            @foreach($row as $cell)
+                            <td class="px-3 py-2 text-gray-700 whitespace-nowrap">{{ $cell ?? '' }}</td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
+
+            <form method="POST" action="{{ route('admin.call-center.action-points.store') }}" class="space-y-4">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Header Row *</label>
+                        <input type="number" name="header_row" value="1" min="1" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                        <p class="text-[10px] text-gray-400 mt-1">Row number containing column names. Data rows start after this.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Activity Column *</label>
+                        <select name="activity_column" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                            <option value="">Select column...</option>
+                            @foreach($preview['headers'] as $index => $header)
+                            <option value="{{ $header }}" @selected(strtolower($header) === 'activity')>{{ $header ?? 'Column ' . ($index + 1) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Responsible Person Column *</label>
+                        <select name="responsible_column" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                            <option value="">Select column...</option>
+                            @foreach($preview['headers'] as $index => $header)
+                            <option value="{{ $header }}" @selected(stripos($header, 'responsible') !== false)>{{ $header ?? 'Column ' . ($index + 1) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Due Date Column</label>
+                        <select name="due_date_column" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                            <option value="">— None —</option>
+                            @foreach($preview['headers'] as $index => $header)
+                            <option value="{{ $header }}" @selected(stripos($header, 'due') !== false || stripos($header, 'date') !== false)>{{ $header ?? 'Column ' . ($index + 1) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Status Column</label>
+                        <select name="status_column" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                            <option value="">— None —</option>
+                            @foreach($preview['headers'] as $index => $header)
+                            <option value="{{ $header }}" @selected(strtolower($header) === 'status')>{{ $header ?? 'Column ' . ($index + 1) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Import Action Points</button>
+                    <a href="{{ route('admin.call-center.action-points.import') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</a>
+                </div>
+            </form>
+        </div>
+        @else
+        <div class="bg-white rounded-xl border p-6 text-center">
+            <p class="text-sm text-gray-500">Upload an Excel file to see column mapping options.</p>
+        </div>
+        @endif
+    </div>
+
+    {{-- Recent Imports --}}
+    <div class="bg-white rounded-xl border p-6 h-fit">
+        <h3 class="text-sm font-bold text-gray-900 mb-4">Recent Imports</h3>
+        @forelse($batches as $batch)
+        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+            <div class="min-w-0">
+                <p class="text-xs font-medium text-gray-700 truncate">{{ $batch->source_filename }}</p>
+                <p class="text-[10px] text-gray-400">{{ $batch->import_batch }} | {{ $batch->total }} rows</p>
+            </div>
+            <a href="{{ route('admin.call-center.action-points.reports', ['batch' => $batch->import_batch]) }}" class="text-xs text-emerald-600 hover:text-emerald-700 whitespace-nowrap">View</a>
+        </div>
+        @empty
+        <p class="text-xs text-gray-400 text-center py-4">No imports yet.</p>
+        @endforelse
+    </div>
+</div>
+@endsection

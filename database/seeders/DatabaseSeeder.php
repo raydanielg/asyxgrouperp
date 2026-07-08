@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             RolePermissionSeeder::class,
             UserRoleSeeder::class,
+            EmployeeSeeder::class,
             ApprovalWorkflowSeeder::class,
             MasterDataSeeder::class,
         ]);
