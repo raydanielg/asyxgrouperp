@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             ApprovalWorkflowSeeder::class,
             MasterDataSeeder::class,
+            ChartOfAccountsSeeder::class,
         ]);
     }
 }
