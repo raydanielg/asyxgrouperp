@@ -916,6 +916,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/documentation/{id}', [$docCtrl, 'destroy'])->name('documentation.destroy');
     Route::get('/documentation/{id}/export.md', [$docCtrl, 'exportMarkdown'])->name('documentation.export');
     Route::get('/documentation/export-all.md', [$docCtrl, 'exportAllMarkdown'])->name('documentation.export-all');
+
+    // ─── Contracts ───
+    $contractCtrl = App\Http\Controllers\ContractController::class;
+    Route::get('/contracts', [$contractCtrl, 'index'])->name('contracts.index');
+    Route::post('/contracts', [$contractCtrl, 'store'])->name('contracts.store');
+    Route::get('/contracts/{contract}', [$contractCtrl, 'show'])->name('contracts.show');
+    Route::put('/contracts/{contract}', [$contractCtrl, 'update'])->name('contracts.update');
+    Route::delete('/contracts/{contract}', [$contractCtrl, 'destroy'])->name('contracts.destroy');
 });
 
 // ═══════════════════════════════════════════════════════
