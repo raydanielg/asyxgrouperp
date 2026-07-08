@@ -123,7 +123,7 @@
     </h3>
     <div class="flex flex-wrap gap-3">
         @foreach($quickActions as $action)
-        <a href="{{ route($action['route']) }}" class="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium transition-colors border border-emerald-100">
+        <a href="{{ route($action['route'], $action['params'] ?? []) }}" class="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium transition-colors border border-emerald-100">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $action['icon'] }}"/></svg>
             {{ $action['label'] }}
         </a>
