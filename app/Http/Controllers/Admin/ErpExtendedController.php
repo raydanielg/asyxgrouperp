@@ -829,6 +829,28 @@ class ErpExtendedController extends Controller
         return back()->with('success', 'Deal created.');
     }
 
+    public function crmDealShow(CrmDeal $deal)
+    {
+        $deal->load('lead');
+        return view('admin.crm.deals.show', compact('deal'));
+    }
+
+    public function crmDealUpdate(Request $request, CrmDeal $deal)
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'lead_id' => 'nullable|exists:crm_leads,id',
+            'value' => 'required|numeric|min:0',
+            'stage' => 'nullable|string',
+            'expected_close_date' => 'nullable|date',
+            'status' => 'nullable|string',
+            'assigned_to' => 'nullable|exists:users,id',
+            'notes' => 'nullable|string',
+        ]);
+        $deal->update($data);
+        return back()->with('success', 'Deal updated.');
+    }
+
     public function crmDealDestroy(CrmDeal $deal)
     {
         $deal->delete();
