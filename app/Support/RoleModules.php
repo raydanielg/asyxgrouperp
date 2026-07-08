@@ -65,8 +65,8 @@ class RoleModules
         'network_engineer' => ['dashboard', 'tickets', 'assets', 'projects', 'my-account', 'payslips', 'salary'],
         'software_engineer' => ['dashboard', 'projects', 'bugs', 'timesheets', 'my-account', 'payslips', 'salary'],
         'cybersecurity_engineer' => ['dashboard', 'tickets', 'assets', 'my-account', 'payslips', 'salary'],
-        'field_technician' => ['dashboard', 'tickets', 'projects', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
-        'technician' => ['dashboard', 'tickets', 'projects', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
+        'field_technician' => ['dashboard', 'tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
+        'technician' => ['dashboard', 'tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
 
         'service_desk_manager' => ['dashboard', 'tickets', 'sla-reports', 'reports', 'call-statistics', 'my-account', 'payslips', 'salary'],
         'helpdesk_supervisor' => ['dashboard', 'tickets', 'reports', 'escalations', 'call-statistics', 'my-account', 'payslips', 'salary'],
