@@ -19,8 +19,6 @@ return new class extends Migration
             $table->decimal('amount', 14, 2)->default(0);
             $table->decimal('percentage', 5, 2)->default(0);
             $table->timestamps();
-
-            $table->index(['cost_allocatable_type', 'cost_allocatable_id']);
         });
     }
 

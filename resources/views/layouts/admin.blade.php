@@ -266,6 +266,7 @@
                     'admin.bank-accounts*' => 'view-bank-accounts',
                     'admin.acc-transfers*' => 'view-acc-transfers',
                     'admin.expenses*' => 'view-expenses',
+                    'admin.cost-centers*' => 'view-dashboard',
                     'admin.revenues*' => 'view-revenues',
                     'admin.bills*' => 'view-bills',
                     'admin.estimates*' => 'view-dashboard',
