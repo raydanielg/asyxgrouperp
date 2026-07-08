@@ -71,7 +71,8 @@
         <h3 class="text-lg font-bold text-gray-900 mb-1">Allocate Costs</h3>
         <p class="text-xs text-gray-500 mb-4" id="alloc_info">Expense: <span id="alloc_expense_no"></span> | Amount: TZS <span id="alloc_amount"></span></p>
         <form method="POST" action="{{ route('admin.cost-centers.allocate') }}" class="space-y-3">@csrf
-            <input type="hidden" name="expense_id" id="alloc_expense_id">
+            <input type="hidden" name="allocatable_type" value="App\Models\Expense">
+            <input type="hidden" name="allocatable_id" id="alloc_expense_id">
 
             <div id="alloc_rows" class="space-y-2">
                 <div class="alloc-row flex items-center gap-2">

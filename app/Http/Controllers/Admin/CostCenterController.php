@@ -72,23 +72,25 @@ class CostCenterController extends Controller
     public function storeAllocations(Request $request)
     {
         $validated = $request->validate([
-            'expense_id' => 'required|exists:expenses,id',
+            'allocatable_type' => 'required|string',
+            'allocatable_id' => 'required|integer',
             'allocations' => 'required|array|min:1',
             'allocations.*.cost_center_id' => 'required|exists:cost_centers,id',
             'allocations.*.amount' => 'required|numeric|min:0',
             'allocations.*.percentage' => 'nullable|numeric|min:0|max:100',
         ]);
 
-        $expense = Expense::findOrFail($validated['expense_id']);
+        $modelClass = $validated['allocatable_type'];
+        $model = $modelClass::findOrFail($validated['allocatable_id']);
 
-        // Delete existing allocations for this expense
-        $expense->costAllocations()->delete();
+        // Delete existing allocations
+        $model->costAllocations()->delete();
 
         $totalAllocated = 0;
         foreach ($validated['allocations'] as $alloc) {
-            $percentage = $alloc['percentage'] ?? (($alloc['amount'] / $expense->amount) * 100);
-            $expense->costAllocations()->create([
-                'company_id' => $expense->company_id,
+            $percentage = $alloc['percentage'] ?? (($alloc['amount'] / $model->amount) * 100);
+            $model->costAllocations()->create([
+                'company_id' => $model->company_id ?? auth()->user()?->company_id,
                 'cost_center_id' => $alloc['cost_center_id'],
                 'amount' => $alloc['amount'],
                 'percentage' => $percentage,
@@ -96,7 +98,7 @@ class CostCenterController extends Controller
             $totalAllocated += $alloc['amount'];
         }
 
-        return back()->with('success', 'Cost allocations saved. Allocated ' . number_format($totalAllocated, 2) . ' / ' . number_format($expense->amount, 2));
+        return back()->with('success', 'Cost allocations saved. Allocated ' . number_format($totalAllocated, 2) . ' / ' . number_format($model->amount, 2));
     }
 
     // ═══════════════════════════════════════════════════════
