@@ -304,6 +304,16 @@ class RolePageController extends Controller
                     $open = $data['openTickets'] ?? 0;
                     if ($open > 0) $suggestions[] = 'Resolve open tickets to maintain SLA.';
                     break;
+                case 'import-action-points':
+                    $message = 'Upload weekly action points for SGR operations.';
+                    $pending = $data['pendingApproval'] ?? 0;
+                    if ($pending > 0) $suggestions[] = "$pending items awaiting admin approval.";
+                    break;
+                case 'action-points-reports':
+                    $message = 'Track your submitted action points.';
+                    $overdue = $data['overdue'] ?? 0;
+                    if ($overdue > 0) $suggestions[] = "$overdue overdue items need attention.";
+                    break;
                 default:
                     $message = 'Module loaded successfully.';
                     $suggestions[] = 'Use quick actions to manage this module.';
@@ -538,6 +548,25 @@ class RolePageController extends Controller
 
             case 'settings':
                 $data['settings'] = (object) [];
+                break;
+
+            case 'import-action-points':
+                $userId = auth()->id();
+                $data['totalUploaded'] = \App\Models\CallCenterActionPoint::where('created_by', $userId)->count();
+                $data['pendingApproval'] = \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'pending')->count();
+                $data['approvedCount'] = \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'approved')->count();
+                $data['recentBatches'] = \App\Models\CallCenterActionPoint::where('created_by', $userId)->select('import_batch', 'source_filename', 'created_at')->distinct()->orderBy('created_at', 'desc')->take(5)->get();
+                break;
+
+            case 'action-points-reports':
+                $userId = auth()->id();
+                $query = \App\Models\CallCenterActionPoint::where('created_by', $userId);
+                $data['total'] = (clone $query)->count();
+                $data['overdue'] = (clone $query)->where('due_date', '<', now())->where('status', '!=', 'Completed')->count();
+                $data['completed'] = (clone $query)->where('status', 'Completed')->count();
+                $data['pendingCount'] = (clone $query)->where('status', 'Pending')->count();
+                $data['actionPoints'] = (clone $query)->when(request('status'), fn($q, $v) => $q->where('status', $v))->when(request('approval_status'), fn($q, $v) => $q->where('approval_status', $v))->latest()->paginate(15);
+                $data['statuses'] = \App\Models\CallCenterActionPoint::where('created_by', $userId)->select('status')->distinct()->pluck('status');
                 break;
 
             case 'sales-dashboard':

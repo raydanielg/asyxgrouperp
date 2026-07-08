@@ -330,6 +330,18 @@ class RoleDashboardController extends Controller
                 ];
                 break;
 
+            case 'sgr_agent':
+                $userId = auth()->id();
+                $stats = [
+                    'totalActionPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->count(),
+                    'pendingApproval' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'pending')->count(),
+                    'approvedPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'approved')->count(),
+                    'rejectedPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'rejected')->count(),
+                    'overduePoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('due_date', '<', now())->where('status', '!=', 'Completed')->count(),
+                    'completedPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('status', 'Completed')->count(),
+                ];
+                break;
+
             case 'call_center_agent':
             case 'sales_manager':
             case 'business_development_manager':
