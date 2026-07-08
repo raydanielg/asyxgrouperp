@@ -446,7 +446,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Open Deals</h3>
-            <a href="{{ route('admin.crm-deals.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'deals']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['openDeals'] as $deal)
@@ -466,7 +466,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Transfers</h3>
-            <a href="{{ route('admin.transfers.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'transfers']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentTransfers'] as $transfer)
