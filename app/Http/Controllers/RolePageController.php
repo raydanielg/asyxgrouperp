@@ -355,6 +355,7 @@ class RolePageController extends Controller
 
             case 'my-account':
                 $user = auth()->user();
+                $employee = $user->employee;
                 $data['user'] = [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -365,6 +366,18 @@ class RolePageController extends Controller
                     'role' => $user->role,
                     'created_at' => $user->created_at?->toDateTimeString(),
                 ];
+                $data['employee'] = $employee;
+                $data['recentPayslips'] = $employee
+                    ? \App\Models\Payroll::where('employee_id', $employee->id)->latest()->take(5)->get()
+                    : collect([]);
+                $data['pendingLeave'] = $employee
+                    ? \App\Models\Leave::where('employee_id', $employee->id)->where('status', 'pending')->count()
+                    : 0;
+                $data['approvedLeave'] = $employee
+                    ? \App\Models\Leave::where('employee_id', $employee->id)->where('status', 'approved')->count()
+                    : 0;
+                $data['openTickets'] = \App\Models\HelpdeskTicket::where('created_by', $user->id)->where('status', 'open')->count();
+                $data['resolvedTickets'] = \App\Models\HelpdeskTicket::where('created_by', $user->id)->where('status', 'resolved')->count();
                 break;
 
             case 'messages':
