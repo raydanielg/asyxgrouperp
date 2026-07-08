@@ -9,6 +9,11 @@
 <div class="mb-4 px-4 py-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-100">{{ session('error') }}</div>
 @endif
 
+<div class="mb-4 flex items-center justify-between">
+    <a href="{{ route('admin.call-center.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Dashboard</a>
+    <a href="{{ route('admin.call-center.download-template') }}" class="px-4 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">Download Template</a>
+</div>
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     {{-- Upload + Mapping --}}
     <div class="lg:col-span-2 space-y-6">

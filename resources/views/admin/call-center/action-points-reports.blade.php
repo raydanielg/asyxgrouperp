@@ -8,7 +8,10 @@
 
 <div class="mb-4 flex items-center justify-between">
     <a href="{{ route('admin.call-center.action-points.import') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to Import</a>
-    <a href="{{ route('admin.call-center.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">Call Center Dashboard</a>
+    <div class="flex gap-2">
+        <a href="{{ route('admin.call-center.download-template') }}" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">Download Template</a>
+        <a href="{{ route('admin.call-center.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">Dashboard</a>
+    </div>
 </div>
 
 {{-- Summary Cards --}}
