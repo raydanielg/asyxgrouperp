@@ -139,10 +139,13 @@
           <table class="lines">
             <tr><th>Mapato</th><th class="r">Kiasi</th></tr>
             <tr><td>Mshahara wa Msingi</td><td class="r">{{ number_format($payroll->basic_salary, 2) }} Tsh</td></tr>
+            @if($payroll->overtime > 0)
+            <tr><td>Overtime</td><td class="r">{{ number_format($payroll->overtime, 2) }} Tsh</td></tr>
+            @endif
             <tr><td>Posho ya Usafiri</td><td class="r">{{ number_format($payroll->allowances * 0.5, 2) }} Tsh</td></tr>
             <tr><td>Posho ya Mawasiliano</td><td class="r">{{ number_format($payroll->allowances * 0.3, 2) }} Tsh</td></tr>
             <tr><td>Posho ya Matibabu</td><td class="r">{{ number_format($payroll->allowances * 0.2, 2) }} Tsh</td></tr>
-            <tr class="subtotal"><td>Jumla ya Mapato</td><td class="r">{{ number_format($payroll->basic_salary + $payroll->allowances, 2) }} Tsh</td></tr>
+            <tr class="subtotal"><td>Jumla ya Mapato</td><td class="r">{{ number_format($payroll->basic_salary + $payroll->allowances + $payroll->overtime, 2) }} Tsh</td></tr>
           </table>
         </div>
         <div class="col">
