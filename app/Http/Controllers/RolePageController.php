@@ -182,7 +182,7 @@ class RolePageController extends Controller
             'admin_manager' => ['users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'payslips', 'salary', 'my-account'],
             'cashier' => ['pos', 'pos-reports', 'sales-invoices', 'products', 'revenues', 'payslips', 'salary', 'my-account'],
             'technical_manager' => ['tickets', 'projects', 'timesheets', 'bugs', 'employees', 'payslips', 'salary', 'my-account'],
-            'technician' => ['tickets', 'projects', 'timesheets', 'bugs', 'payslips', 'salary', 'my-account'],
+            'technician' => ['tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'payslips', 'salary', 'my-account'],
             'ict_officer' => ['tickets', 'projects', 'bugs', 'assets', 'employees', 'payslips', 'salary', 'my-account'],
             'ict_engineer' => ['tickets', 'projects', 'bugs', 'assets', 'settings', 'payslips', 'salary', 'my-account'],
             'project_manager' => ['projects', 'timesheets', 'bugs', 'deals', 'reports', 'payslips', 'salary', 'my-account'],
@@ -200,7 +200,7 @@ class RolePageController extends Controller
             'network_engineer' => ['tickets', 'assets', 'projects', 'my-account', 'payslips', 'salary'],
             'software_engineer' => ['projects', 'bugs', 'timesheets', 'my-account', 'payslips', 'salary'],
             'cybersecurity_engineer' => ['tickets', 'assets', 'my-account', 'payslips', 'salary'],
-            'field_technician' => ['tickets', 'projects', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
+            'field_technician' => ['tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
             'sgr_agent' => ['dashboard', 'import-action-points', 'action-points-reports', 'my-account', 'payslips', 'salary'],
             default => [],
         };
@@ -304,6 +304,11 @@ class RolePageController extends Controller
                     $message = 'Helpdesk status.';
                     $open = $data['openTickets'] ?? 0;
                     if ($open > 0) $suggestions[] = 'Resolve open tickets to maintain SLA.';
+                    break;
+                case 'job-cards':
+                    $message = 'Your assigned job cards.';
+                    $open = $data['openCards'] ?? 0;
+                    if ($open > 0) $suggestions[] = "You have $open open job cards that need attention.";
                     break;
                 case 'import-action-points':
                     $message = 'Upload weekly action points for SGR operations.';
@@ -549,6 +554,18 @@ class RolePageController extends Controller
 
             case 'settings':
                 $data['settings'] = (object) [];
+                break;
+
+            case 'job-cards':
+                $userId = auth()->id();
+                $data['jobCards'] = JobCard::where('assigned_to', $userId)
+                    ->with('project', 'createdBy')
+                    ->latest()
+                    ->paginate(15);
+                $data['totalCards'] = JobCard::where('assigned_to', $userId)->count();
+                $data['openCards'] = JobCard::where('assigned_to', $userId)->where('status', 'open')->count();
+                $data['inProgressCards'] = JobCard::where('assigned_to', $userId)->where('status', 'in_progress')->count();
+                $data['resolvedCards'] = JobCard::where('assigned_to', $userId)->where('status', 'resolved')->count();
                 break;
 
             case 'import-action-points':
