@@ -683,9 +683,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     Route::get('/crm-deals', [$ext, 'crmDealIndex'])->name('crm-deals.index');
     Route::post('/crm-deals', [$ext, 'crmDealStore'])->name('crm-deals.store');
+    Route::get('/crm-deals/{deal}/pdf', [$ext, 'crmDealPdf'])->name('crm-deals.pdf');
     Route::get('/crm-deals/{deal}', [$ext, 'crmDealShow'])->name('crm-deals.show');
     Route::patch('/crm-deals/{deal}', [$ext, 'crmDealUpdate'])->name('crm-deals.update');
-    Route::get('/crm-deals/{deal}/pdf', [$ext, 'crmDealPdf'])->name('crm-deals.pdf');
     Route::delete('/crm-deals/{deal}', [$ext, 'crmDealDestroy'])->name('crm-deals.destroy');
 
     Route::get('/crm-contracts', [$ext, 'crmContractIndex'])->name('crm-contracts.index');
