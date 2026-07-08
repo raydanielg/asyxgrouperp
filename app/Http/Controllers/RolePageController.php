@@ -91,6 +91,7 @@ class RolePageController extends Controller
             'ict_administrator' => 'ICT Administrator', 'network_engineer' => 'Network Engineer',
             'software_engineer' => 'Software Engineer', 'cybersecurity_engineer' => 'Cybersecurity Engineer',
             'field_technician' => 'Field Technician',
+            'sgr_agent' => 'SGR Agent',
         ];
         return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
     }
@@ -199,6 +200,7 @@ class RolePageController extends Controller
             'software_engineer' => ['projects', 'bugs', 'timesheets', 'my-account', 'payslips', 'salary'],
             'cybersecurity_engineer' => ['tickets', 'assets', 'my-account', 'payslips', 'salary'],
             'field_technician' => ['tickets', 'projects', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
+            'sgr_agent' => ['dashboard', 'import-action-points', 'action-points-reports', 'my-account', 'payslips', 'salary'],
             default => [],
         };
     }
