@@ -600,7 +600,33 @@ class RoleDashboardController extends Controller
         };
     }
 
+    /**
+     * Quick action links on the role dashboard. Built from RoleModules so every
+     * link points to the role's own /role/{module} page (never /admin/...), and
+     * so new/custom roles automatically get sensible actions without code changes.
+     */
     private function getQuickActionsForRole(string $role): array
+    {
+        $skip = ['dashboard', 'my-account', 'payslips', 'salary'];
+        $modules = array_values(array_diff(\App\Support\RoleModules::allowedModules($role, auth()->user()), $skip));
+
+        $actions = [];
+        foreach (array_slice($modules, 0, 6) as $module) {
+            $actions[] = [
+                'label' => \App\Support\RoleModules::label($module),
+                'route' => 'role.page',
+                'params' => $module,
+                'icon' => \App\Support\RoleModules::icon($module),
+            ];
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @deprecated superseded by the generic getQuickActionsForRole() above; kept for reference only.
+     */
+    private function legacyQuickActionsForRole(string $role): array
     {
         return match ($role) {
             'erp_super_administrator' => [
