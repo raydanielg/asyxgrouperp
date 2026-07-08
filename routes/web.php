@@ -763,6 +763,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/projects/{project}/employees', [$ext, 'projectEmployeeAssign'])->name('projects.employees.assign');
     Route::delete('/projects/{project}/employees/{employee}', [$ext, 'projectEmployeeRemove'])->name('projects.employees.remove');
 
+    // ═══ Job Cards ═══
+    $jobCtrl = App\Http\Controllers\Admin\JobCardController::class;
+    Route::get('/job-cards', [$jobCtrl, 'index'])->name('job-cards.index');
+    Route::post('/job-cards', [$jobCtrl, 'store'])->name('job-cards.store');
+    Route::get('/job-cards/{jobCard}', [$jobCtrl, 'show'])->name('job-cards.show');
+    Route::get('/job-cards/{jobCard}/print', [$jobCtrl, 'print'])->name('job-cards.print');
+    Route::patch('/job-cards/{jobCard}', [$jobCtrl, 'update'])->name('job-cards.update');
+    Route::post('/job-cards/{jobCard}/status', [$jobCtrl, 'updateStatus'])->name('job-cards.status');
+    Route::delete('/job-cards/{jobCard}', [$jobCtrl, 'destroy'])->name('job-cards.destroy');
+
     Route::get('/timesheets', [$ext, 'timesheetIndex'])->name('timesheets.index');
     Route::post('/timesheets', [$ext, 'timesheetStore'])->name('timesheets.store');
     Route::delete('/timesheets/{timesheet}', [$ext, 'timesheetDestroy'])->name('timesheets.destroy');
