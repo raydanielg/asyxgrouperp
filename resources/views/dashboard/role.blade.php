@@ -221,7 +221,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Leads</h3>
-            <a href="{{ route('admin.crm-leads.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'leads']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentLeads'] as $lead)
@@ -241,7 +241,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Employees</h3>
-            <a href="{{ route('admin.employees.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'employees']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentEmployees'] as $emp)
@@ -261,7 +261,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Pending Leave Requests</h3>
-            <a href="{{ route('admin.leaves.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'leaves']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['pendingLeaves'] as $leave)
@@ -281,7 +281,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Active Projects</h3>
-            <a href="{{ route('admin.projects.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'projects']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['activeProjects'] as $project)
