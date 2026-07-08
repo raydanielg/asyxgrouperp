@@ -143,7 +143,7 @@ class ErpExtendedController extends Controller
             }
             $employee->projects()->sync($syncData);
         }
-        return redirect()->route('admin.employees.index')->with('success', 'Employee added successfully.');
+        return back()->with('success', 'Employee added successfully.');
     }
 
     public function employeeEdit(Employee $employee)
@@ -202,7 +202,7 @@ class ErpExtendedController extends Controller
         } else {
             $employee->projects()->detach();
         }
-        return redirect()->route('admin.employees.index')->with('success', 'Employee updated successfully.');
+        return back()->with('success', 'Employee updated successfully.');
     }
 
     public function employeeShow(Employee $employee)
@@ -223,7 +223,7 @@ class ErpExtendedController extends Controller
     public function employeeDestroy(Employee $employee)
     {
         $employee->delete();
-        return redirect()->route('admin.employees.index')->with('success', 'Employee deleted.');
+        return back()->with('success', 'Employee deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -253,7 +253,7 @@ class ErpExtendedController extends Controller
         $data['status'] = 'pending';
         $data['created_by'] = auth()->id();
         \App\Models\EmployeeBonus::create($data);
-        return redirect()->route('admin.bonuses.index')->with('success', 'Bonus created successfully.');
+        return back()->with('success', 'Bonus created successfully.');
     }
 
     public function bonusApprove(\App\Models\EmployeeBonus $bonus)
@@ -281,7 +281,7 @@ class ErpExtendedController extends Controller
     public function bonusDestroy(\App\Models\EmployeeBonus $bonus)
     {
         $bonus->delete();
-        return redirect()->route('admin.bonuses.index')->with('success', 'Bonus deleted.');
+        return back()->with('success', 'Bonus deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -306,13 +306,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['created_by'] = auth()->id();
         Attendance::create($data);
-        return redirect()->route('admin.attendance.index')->with('success', 'Attendance recorded.');
+        return back()->with('success', 'Attendance recorded.');
     }
 
     public function attendanceDestroy(Attendance $attendance)
     {
         $attendance->delete();
-        return redirect()->route('admin.attendance.index')->with('success', 'Attendance record deleted.');
+        return back()->with('success', 'Attendance record deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -340,13 +340,13 @@ class ErpExtendedController extends Controller
         ]);
         $data['created_by'] = auth()->id();
         Payroll::create($data);
-        return redirect()->route('admin.payroll.index')->with('success', 'Payroll created.');
+        return back()->with('success', 'Payroll created.');
     }
 
     public function payrollDestroy(Payroll $payroll)
     {
         $payroll->delete();
-        return redirect()->route('admin.payroll.index')->with('success', 'Payroll deleted.');
+        return back()->with('success', 'Payroll deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
