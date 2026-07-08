@@ -15,7 +15,23 @@
     <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-gray-700">{{ sprintf('%02d:%02d', floor($stats['avg_duration']/60), $stats['avg_duration']%60) }}</p><p class="text-xs text-gray-500 mt-1">Avg Duration</p></div>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+{{-- Tickets Stats --}}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-emerald-600">{{ $ticketStats['total'] }}</p><p class="text-xs text-gray-500 mt-1">Total Tickets</p></div>
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-amber-600">{{ $ticketStats['open'] }}</p><p class="text-xs text-gray-500 mt-1">Open</p></div>
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-sky-600">{{ $ticketStats['in_progress'] }}</p><p class="text-xs text-gray-500 mt-1">In Progress</p></div>
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-emerald-600">{{ $ticketStats['resolved'] }}</p><p class="text-xs text-gray-500 mt-1">Resolved</p></div>
+</div>
+
+{{-- Action Points Stats --}}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-emerald-600">{{ $apStats['total'] }}</p><p class="text-xs text-gray-500 mt-1">Total Action Points</p></div>
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-amber-600">{{ $apStats['pending'] }}</p><p class="text-xs text-gray-500 mt-1">Pending Approval</p></div>
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-sky-600">{{ $apStats['approved'] }}</p><p class="text-xs text-gray-500 mt-1">Approved</p></div>
+    <div class="bg-white rounded-xl border p-4 text-center"><p class="text-2xl font-bold text-red-600">{{ $apStats['overdue'] }}</p><p class="text-xs text-gray-500 mt-1">Overdue</p></div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     {{-- Recent Calls --}}
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-3 border-b bg-gray-50/50 flex items-center justify-between">
