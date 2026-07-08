@@ -416,54 +416,7 @@ function downloadBackup() {
     });
 }
 
-function openAiInsightsModal() {
-    const modal = document.getElementById('aiInsightsModal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function closeAiInsightsModal() {
-    const modal = document.getElementById('aiInsightsModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-}
-
-function markAiInsightsSeen() {
-    try {
-        localStorage.setItem('aiInsightsSeen', 'true');
-        localStorage.setItem('aiInsightsDate', new Date().toISOString().split('T')[0]);
-    } catch (e) {}
-}
-
-function shouldShowAiInsights() {
-    try {
-        const seen = localStorage.getItem('aiInsightsSeen');
-        const date = localStorage.getItem('aiInsightsDate');
-        const today = new Date().toISOString().split('T')[0];
-        return !seen || date !== today;
-    } catch (e) {
-        return true;
-    }
-}
-
-// Close modal on Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeAiInsightsModal();
-});
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-show AI Insights on first visit of the day
-    if (shouldShowAiInsights()) {
-        setTimeout(() => {
-            openAiInsightsModal();
-            markAiInsightsSeen();
-        }, 800);
-    }
-
     const ctx = document.getElementById('superAdminChart');
     if (!ctx) return;
 
