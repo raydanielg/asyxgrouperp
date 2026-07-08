@@ -27,4 +27,9 @@ class Expense extends Model
     {
         return $this->belongsTo(CashAccount::class);
     }
+
+    public function costAllocations()
+    {
+        return $this->morphMany(CostAllocation::class, 'cost_allocatable');
+    }
 }
