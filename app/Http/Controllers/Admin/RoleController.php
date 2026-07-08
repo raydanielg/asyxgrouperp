@@ -63,7 +63,7 @@ class RoleController extends Controller
             cache()->forget("user_perms_{$user->id}");
         }
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role created successfully!');
+        return back()->with('success', 'Role created successfully!');
     }
 
     public function edit(Role $role)
@@ -102,19 +102,19 @@ class RoleController extends Controller
             cache()->forget("user_perms_{$user->id}");
         }
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully!');
+        return back()->with('success', 'Role updated successfully!');
     }
 
     public function destroy(Role $role)
     {
         if (!$role->editable) {
-            return redirect()->route('admin.roles.index')->with('error', 'This role cannot be deleted.');
+            return back()->with('error', 'This role cannot be deleted.');
         }
 
         $role->permissions()->detach();
         $role->users()->detach();
         $role->delete();
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully!');
+        return back()->with('success', 'Role deleted successfully!');
     }
 }

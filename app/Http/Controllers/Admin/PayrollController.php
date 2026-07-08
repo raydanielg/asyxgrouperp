@@ -72,7 +72,7 @@ class PayrollController extends Controller
 
         Payroll::create($data);
 
-        return redirect()->route('admin.payroll.index')->with('success', 'Payroll created successfully.');
+        return back()->with('success', 'Payroll created successfully.');
     }
 
     public function update(Request $request, Payroll $payroll)
@@ -97,7 +97,7 @@ class PayrollController extends Controller
     public function destroy(Payroll $payroll)
     {
         $payroll->delete();
-        return redirect()->route('admin.payroll.index')->with('success', 'Payroll deleted.');
+        return back()->with('success', 'Payroll deleted.');
     }
 
     public function generateForm()

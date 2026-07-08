@@ -113,7 +113,7 @@ class UserController extends Controller
 
         Cache::forget("user_perms_{$user->id}");
 
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully!');
+        return back()->with('success', 'User created successfully!');
     }
 
     public function edit(User $user)
@@ -164,19 +164,19 @@ class UserController extends Controller
 
         Cache::forget("user_perms_{$user->id}");
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully!');
+        return back()->with('success', 'User updated successfully!');
     }
 
     public function destroy(User $user)
     {
         if ($user->id === auth()->id()) {
-            return redirect()->route('admin.users.index')->with('error', 'You cannot delete yourself.');
+            return back()->with('error', 'You cannot delete yourself.');
         }
 
         $user->roles()->detach();
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully!');
+        return back()->with('success', 'User deleted successfully!');
     }
 
     public function changePassword(Request $request, User $user)
@@ -187,7 +187,7 @@ class UserController extends Controller
 
         $user->update(['password' => Hash::make($validated['password'])]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Password changed successfully!');
+        return back()->with('success', 'Password changed successfully!');
     }
 
     public function bulkToggleLogin(Request $request)
@@ -212,7 +212,7 @@ class UserController extends Controller
         }
 
         $status = $validated['is_enable_login'] ? 'enabled' : 'disabled';
-        return redirect()->route('admin.users.index')->with('success', count($ids) . ' users ' . $status . ' successfully.');
+        return back()->with('success', count($ids) . ' users ' . $status . ' successfully.');
     }
 
     public function loginHistory()
