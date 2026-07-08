@@ -301,7 +301,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Low Stock Products</h3>
-            <a href="{{ route('admin.products.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'products']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['lowStockProducts'] as $product)
@@ -321,7 +321,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Expenses</h3>
-            <a href="{{ route('admin.expenses.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'expenses']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentExpenses'] as $expense)
@@ -341,7 +341,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Revenues</h3>
-            <a href="{{ route('admin.revenues.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'revenues']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentRevenues'] as $revenue)
@@ -361,7 +361,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Purchases</h3>
-            <a href="{{ route('admin.purchase-invoices.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'purchase-invoices']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentPurchases'] as $purchase)
