@@ -1056,9 +1056,10 @@ class ErpExtendedController extends Controller
     // ═══════════════════════════════════════════════════════
     public function revenueIndex()
     {
-        $revenues = Revenue::latest()->paginate(15);
+        $revenues = Revenue::with('costAllocations.costCenter')->latest()->paginate(15);
         $accounts = BankAccount::where('is_active', true)->get();
-        return view('admin.accounting.revenues.index', compact('revenues', 'accounts'));
+        $costCenters = CostCenter::where('is_active', true)->get();
+        return view('admin.accounting.revenues.index', compact('revenues', 'accounts', 'costCenters'));
     }
 
     public function revenueStore(Request $request)
