@@ -25,6 +25,7 @@
 <div class="flex items-center gap-3 mb-4">
     <button onclick="document.getElementById('topupModal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Request Cash</button>
     <button onclick="document.getElementById('expenseModal').classList.remove('hidden')" class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700">Record Expense</button>
+    <button onclick="document.getElementById('transferModal').classList.remove('hidden')" class="px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700">Transfer to Project</button>
 </div>
 
 @if($account->topupRequests->where('status', 'pending')->count())

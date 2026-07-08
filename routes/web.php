@@ -754,6 +754,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/projects/{project}/account', [$cashCtrl, 'projectAccountShow'])->name('projects.account');
     Route::post('/projects/{project}/account/topup', [$cashCtrl, 'projectAccountTopupStore'])->name('projects.account.topup');
     Route::post('/projects/{project}/account/expense', [$cashCtrl, 'projectAccountExpenseStore'])->name('projects.account.expense');
+    Route::post('/projects/{project}/account/transfer', [$cashCtrl, 'projectAccountTransferStore'])->name('projects.account.transfer');
     Route::get('/settlements', [$ext, 'projectSettlementsIndex'])->name('settlements.index');
     Route::post('/projects/{project}/generate-invoice', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'generateProjectInvoice'])->name('projects.generate-invoice');
     Route::get('/projects/{project}/pdf', [$ext, 'projectPdf'])->name('projects.pdf');
