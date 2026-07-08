@@ -225,6 +225,7 @@ class DashboardController extends Controller
         $stats = [
             'totalUsers' => User::where('role', 'user')->count(),
             'totalAdmins' => User::where('role', 'admin')->count(),
+            'totalAllUsers' => User::count(),
             'activeUsers' => User::whereNotNull('email_verified_at')->count(),
             'inactiveUsers' => User::whereNull('email_verified_at')->count(),
             'totalSales' => SalesInvoice::sum('total_amount') ?? 0,
