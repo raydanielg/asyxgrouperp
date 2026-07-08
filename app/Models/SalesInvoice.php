@@ -21,4 +21,5 @@ class SalesInvoice extends Model
     public function items() { return $this->hasMany(SalesInvoiceItem::class, 'invoice_id'); }
     public function creator() { return $this->belongsTo(User::class, 'creator_id'); }
     public function project() { return $this->belongsTo(Project::class); }
+    public function bankAccounts() { return $this->belongsToMany(BankAccount::class, 'invoice_bank_accounts', 'invoice_id', 'bank_account_id'); }
 }
