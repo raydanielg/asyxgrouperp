@@ -29,6 +29,10 @@
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m2 2v-4m2 4v-6m2 6V7m2 10V5M3 7l3-3 3 3M3 17l3 3 3-3"/></svg>
         Settlements
     </a>
+    <a href="{{ route('admin.projects.account', $project) }}" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-all flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        Account Card
+    </a>
     </div>
 </div>
 @if($project->status === 'completed' && !$project->recurring_invoicing && !$project->invoices->where('type', 'service')->isNotEmpty())
