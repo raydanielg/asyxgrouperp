@@ -153,7 +153,7 @@ class RolePageController extends Controller
 
             'senior_systems_engineer' => ['projects', 'documents', 'team-review', 'tickets', 'my-account', 'payslips', 'salary'],
             'systems_engineer' => ['tickets', 'assets', 'asset-maintenance', 'my-account', 'payslips', 'salary'],
-            'support_engineer' => ['site-visits', 'service-reports', 'assets', 'tickets', 'my-account', 'payslips', 'salary'],
+            'support_engineer' => ['site-visits', 'service-reports', 'assets', 'tickets', 'job-cards', 'my-account', 'payslips', 'salary'],
             'noc_engineer' => ['dashboard', 'tickets', 'escalations', 'assets', 'my-account', 'payslips', 'salary'],
 
             'service_desk_manager' => ['dashboard', 'tickets', 'sla-reports', 'reports', 'call-logs', 'my-account', 'payslips', 'salary'],
