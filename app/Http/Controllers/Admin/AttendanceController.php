@@ -162,12 +162,12 @@ class AttendanceController extends Controller
         ]);
         $data['created_by'] = auth()->id();
         Attendance::create($data);
-        return redirect()->route('admin.attendance.index')->with('success', 'Attendance recorded.');
+        return back()->with('success', 'Attendance recorded.');
     }
 
     public function destroy(Attendance $attendance)
     {
         $attendance->delete();
-        return redirect()->route('admin.attendance.index')->with('success', 'Attendance record deleted.');
+        return back()->with('success', 'Attendance record deleted.');
     }
 }
