@@ -99,6 +99,8 @@ class RoleModules
 
         'employee_self_service' => ['dashboard', 'my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'announcements', 'salary'],
         'manager_self_service' => ['dashboard', 'my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'team-overview', 'team-leaves', 'team-timesheets', 'announcements', 'salary'],
+
+        'sgr_agent' => ['dashboard', 'import-action-points', 'action-points-reports', 'my-account', 'payslips', 'salary'],
     ];
 
     /**
