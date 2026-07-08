@@ -206,7 +206,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Revenues</h3>
-            <a href="{{ route('admin.revenues.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'revenues']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentRevenues']->take(5) as $revenue)
@@ -222,7 +222,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Purchases</h3>
-            <a href="{{ route('admin.purchase-invoices.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'purchase-invoices']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentPurchases']->take(5) as $purchase)
@@ -254,7 +254,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Open Deals</h3>
-            <a href="{{ route('admin.crm-deals.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'deals']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['openDeals']->take(5) as $deal)
@@ -270,7 +270,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Transfers</h3>
-            <a href="{{ route('admin.transfers.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'transfers']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentTransfers']->take(5) as $transfer)
@@ -286,7 +286,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Today's Attendance</h3>
-            <a href="{{ route('admin.attendance.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'attendance']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
         @foreach($recentItems['recentAttendance']->take(5) as $att)
