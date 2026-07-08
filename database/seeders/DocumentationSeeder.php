@@ -36,7 +36,6 @@ This is the central documentation for the ASYX Group ERP platform. It covers eve
 - Use the **search box** on the left to find any topic quickly.
 - Browse by **category** for role-based guides.
 - Click **Copy Markdown** or **Export .md** to share documentation offline.
-- Use the **Power** button in the app to reopen AI insights at any time.
 
 ## Support
 
