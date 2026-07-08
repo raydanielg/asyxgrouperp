@@ -196,7 +196,7 @@ As an ERP Super Administrator, you have full visibility and control over:
 
 ## Daily Tasks
 
-- Review the dashboard KPIs and AI insights.
+- Review the dashboard KPIs and alerts.
 - Check pending approvals and user login activity.
 - Manage companies and role assignments.
 - Download regular database backups.
@@ -570,9 +570,6 @@ Only super administrators can log in. All other users are logged out and see a m
 - Contact your system administrator.
 - Review the **Audit Logs** for recent changes.
 
-## What is the Power button?
-
-The Power button opens AI insights. It appears automatically on first login each day and can be reopened anytime.
 MD
             ],
         ];
