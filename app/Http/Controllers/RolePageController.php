@@ -305,6 +305,13 @@ class RolePageController extends Controller
                     $open = $data['openTickets'] ?? 0;
                     if ($open > 0) $suggestions[] = 'Resolve open tickets to maintain SLA.';
                     break;
+                case 'my-account':
+                    $message = 'Your profile and account overview.';
+                    $pending = $data['pendingLeave'] ?? 0;
+                    $open = $data['openTickets'] ?? 0;
+                    if ($pending > 0) $suggestions[] = "You have $pending pending leave requests.";
+                    if ($open > 0) $suggestions[] = "You have $open open tickets that need attention.";
+                    break;
                 case 'job-cards':
                     $message = 'Your assigned job cards.';
                     $open = $data['openCards'] ?? 0;
