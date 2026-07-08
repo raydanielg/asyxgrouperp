@@ -424,6 +424,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/call-center/tickets/{ticket}', [$ccCtrl, 'updateTicket'])->name('call-center.tickets.update');
     Route::get('/call-center/download-template', [$ccCtrl, 'downloadTemplate'])->name('call-center.download-template');
 
+    // ═══ Cost Centers ═══
+    $ccCtrl = App\Http\Controllers\Admin\CostCenterController::class;
+    Route::get('/cost-centers', [$ccCtrl, 'index'])->name('cost-centers.index');
+    Route::post('/cost-centers', [$ccCtrl, 'store'])->name('cost-centers.store');
+    Route::patch('/cost-centers/{costCenter}', [$ccCtrl, 'update'])->name('cost-centers.update');
+    Route::delete('/cost-centers/{costCenter}', [$ccCtrl, 'destroy'])->name('cost-centers.destroy');
+    Route::post('/cost-centers/allocate', [$ccCtrl, 'storeAllocations'])->name('cost-centers.allocate');
+    Route::get('/cost-centers/report', [$ccCtrl, 'report'])->name('cost-centers.report');
+    Route::get('/cost-centers/json', [$ccCtrl, 'getCenters'])->name('cost-centers.json');
+
     // ═══ Audit Logs ═══
     $alCtrl = App\Http\Controllers\Admin\AuditLogController::class;
     Route::get('/audit-logs', [$alCtrl, 'index'])->name('audit-logs.index');
