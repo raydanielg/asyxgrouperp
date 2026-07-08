@@ -739,6 +739,7 @@ class RoleDashboardController extends Controller
             'hr_officer' => 'HR Officer',
             'legal_officer' => 'Legal Officer',
             'receptionist' => 'Receptionist',
+            'sgr_agent' => 'SGR Agent',
             'logistics_officer' => 'Logistics Officer',
             'technical_manager' => 'Technical Manager',
             'technician' => 'Technician',
