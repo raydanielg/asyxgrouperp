@@ -143,10 +143,10 @@
             Quick Reports
         </h3>
         <div class="grid grid-cols-2 gap-2">
-            <a href="{{ route('admin.reports') }}" class="px-3 py-2 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg text-xs font-medium hover:bg-emerald-100 transition-colors text-center">All Reports</a>
-            <a href="{{ route('admin.companies.consolidated') }}" class="px-3 py-2 bg-sky-50 text-sky-700 border border-sky-100 rounded-lg text-xs font-medium hover:bg-sky-100 transition-colors text-center">Consolidated</a>
-            <a href="{{ route('admin.users.login-history') }}" class="px-3 py-2 bg-violet-50 text-violet-700 border border-violet-100 rounded-lg text-xs font-medium hover:bg-violet-100 transition-colors text-center">Login History</a>
-            <a href="{{ route('admin.audit-logs.index') }}" class="px-3 py-2 bg-amber-50 text-amber-700 border border-amber-100 rounded-lg text-xs font-medium hover:bg-amber-100 transition-colors text-center">Audit Logs</a>
+            <a href="{{ route('role.page', ['module' => 'reports']) }}" class="px-3 py-2 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-lg text-xs font-medium hover:bg-emerald-100 transition-colors text-center">All Reports</a>
+            <a href="{{ route('role.page', ['module' => 'consolidated']) }}" class="px-3 py-2 bg-sky-50 text-sky-700 border border-sky-100 rounded-lg text-xs font-medium hover:bg-sky-100 transition-colors text-center">Consolidated</a>
+            <a href="{{ route('role.page', ['module' => 'login-history']) }}" class="px-3 py-2 bg-violet-50 text-violet-700 border border-violet-100 rounded-lg text-xs font-medium hover:bg-violet-100 transition-colors text-center">Login History</a>
+            <a href="{{ route('role.page', ['module' => 'audit-logs']) }}" class="px-3 py-2 bg-amber-50 text-amber-700 border border-amber-100 rounded-lg text-xs font-medium hover:bg-amber-100 transition-colors text-center">Audit Logs</a>
         </div>
     </div>
 </div>
@@ -158,7 +158,7 @@
             <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             All Companies
         </h3>
-        <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-medium">Manage Companies</a>
+        <a href="{{ route('role.page', ['module' => 'companies']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-medium">Manage Companies</a>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -237,7 +237,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Users</h3>
-            <a href="{{ route('admin.users.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'users']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
             @foreach($recentItems['recentUsers'] as $user)
@@ -260,7 +260,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Companies</h3>
-            <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'companies']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
             @foreach($recentItems['recentCompanies'] as $company)
@@ -283,7 +283,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Sales Invoices</h3>
-            <a href="{{ route('admin.sales-invoices.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'sales-invoices']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
             @foreach($recentItems['recentSales'] as $invoice)
@@ -306,7 +306,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Support Tickets</h3>
-            <a href="{{ route('admin.helpdesk-tickets.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'tickets']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
             @foreach(($recentItems['recentTickets'] ?? $recentItems['openTickets'] ?? collect())->take(5) as $ticket)
@@ -332,7 +332,7 @@
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Active Projects</h3>
-            <a href="{{ route('admin.projects.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('role.page', ['module' => 'projects']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="divide-y divide-gray-100">
             @foreach($recentItems['activeProjects'] as $project)
