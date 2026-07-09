@@ -100,7 +100,7 @@ class BusinessFlowController extends Controller
         $data['status'] = 'received';
         $data['created_by'] = auth()->id();
         Tender::create($data);
-        return redirect()->route('admin.tenders.index')->with('success', 'Tender created successfully.');
+        return back()->with('success', 'Tender created successfully.');
     }
 
     public function tenderShow(Tender $tender)
@@ -112,7 +112,7 @@ class BusinessFlowController extends Controller
     public function tenderDestroy(Tender $tender)
     {
         $tender->delete();
-        return redirect()->route('admin.tenders.index')->with('success', 'Tender deleted.');
+        return back()->with('success', 'Tender deleted.');
     }
 
     // Convert Tender → Lead
@@ -139,7 +139,7 @@ class BusinessFlowController extends Controller
 
         $tender->update(['status' => 'converted']);
 
-        return redirect()->route('admin.crm-leads.index')->with('success', "Tender converted to Lead successfully. Lead: {$lead->lead_number}");
+        return back()->with('success', "Tender converted to Lead successfully. Lead: {$lead->lead_number}");
     }
 
     // ═══════════════════════════════════════════════════════
@@ -214,7 +214,7 @@ class BusinessFlowController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.quotations.index')->with('success', 'Quotation created successfully.');
+        return back()->with('success', 'Quotation created successfully.');
     }
 
     public function quotationShow(Quotation $quotation)
@@ -234,7 +234,7 @@ class BusinessFlowController extends Controller
     {
         $quotation->items()->delete();
         $quotation->delete();
-        return redirect()->route('admin.quotations.index')->with('success', 'Quotation deleted.');
+        return back()->with('success', 'Quotation deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -260,7 +260,7 @@ class BusinessFlowController extends Controller
 
         $lead->update(['status' => 'converted']);
 
-        return redirect()->route('admin.crm-deals.index')->with('success', "Lead converted to Deal: {$deal->deal_number}");
+        return back()->with('success', "Lead converted to Deal: {$deal->deal_number}");
     }
 
     // ═══════════════════════════════════════════════════════
@@ -286,7 +286,7 @@ class BusinessFlowController extends Controller
 
         $deal->update(['status' => 'won', 'project_id' => $project->id]);
 
-        return redirect()->route('admin.projects.show', $project)->with('success', "Deal converted to Project: {$project->project_number}");
+        return back()->with('success', "Deal converted to Project: {$project->project_number}");
     }
 
     // ═══════════════════════════════════════════════════════
@@ -314,7 +314,7 @@ class BusinessFlowController extends Controller
         $data['status'] = 'pending';
         $data['created_by'] = auth()->id();
         ProjectBudget::create($data);
-        return redirect()->route('admin.budgets.index')->with('success', 'Budget created and pending approval.');
+        return back()->with('success', 'Budget created and pending approval.');
     }
 
     public function budgetApprove(ProjectBudget $budget)
@@ -338,7 +338,7 @@ class BusinessFlowController extends Controller
     public function budgetDestroy(ProjectBudget $budget)
     {
         $budget->delete();
-        return redirect()->route('admin.budgets.index')->with('success', 'Budget deleted.');
+        return back()->with('success', 'Budget deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
