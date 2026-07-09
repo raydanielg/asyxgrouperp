@@ -398,7 +398,7 @@ class CallCenterController extends Controller
                 'success' => true,
                 'imported' => $imported,
                 'approval_needed' => !$isAdmin,
-                'redirect' => route('admin.call-center.action-points.reports', ['batch' => $batch]),
+                'redirect' => route('role.page', ['module' => 'action-points-reports', 'batch' => $batch]),
             ]);
         }
 

@@ -1205,7 +1205,7 @@ class ErpExtendedController extends Controller
             'proposal_id' => $proposal->id,
         ]);
 
-        return redirect()->route('admin.projects.show', $project)->with('success', 'Project created from accepted quotation.');
+        return back()->with('success', 'Project created from accepted quotation.');
     }
 
     public function projectStore(Request $request)
