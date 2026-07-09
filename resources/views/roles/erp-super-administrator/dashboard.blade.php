@@ -77,7 +77,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             @foreach($secondaryKpis as $kpi)
                 @php $c = $colorMap[$kpi['color']] ?? $colorMap['emerald']; @endphp
-                <a href="{{ route($kpi['route']) }}" class="group flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all">
+                <a href="{{ route($kpi['route'], $kpi['params'] ?? []) }}" class="group flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-all">
                     <div class="w-9 h-9 rounded-lg {{ $c['light'] }} flex items-center justify-center shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                     </div>
