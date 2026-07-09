@@ -1301,7 +1301,7 @@ class ErpExtendedController extends Controller
         } elseif ($invoicingType === 'one_time') {
             $msg .= ' One-time invoice will be generated ' . ($oneTimeWhen === 'completion' ? 'on completion.' : 'manually.');
         }
-        return redirect()->route('admin.projects.index')->with('success', $msg);
+        return back()->with('success', $msg);
     }
 
     public function projectShow(Project $project)
