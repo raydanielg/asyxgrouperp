@@ -37,7 +37,7 @@ class AccountingLedgerController extends Controller
         $data['is_system'] = false;
         $data['is_active'] = true;
         ChartOfAccount::create($data);
-        return redirect()->route('admin.chart-of-accounts.index')->with('success', 'Account created.');
+        return back()->with('success', 'Account created.');
     }
 
     public function chartOfAccountsDestroy(ChartOfAccount $chartOfAccount)
@@ -105,7 +105,7 @@ class AccountingLedgerController extends Controller
             return back()->withInput()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('admin.journal-entries.index')->with('success', 'Journal entry posted.');
+        return back()->with('success', 'Journal entry posted.');
     }
 
     public function journalEntriesShow(JournalEntry $journalEntry)

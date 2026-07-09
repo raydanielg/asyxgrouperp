@@ -54,7 +54,7 @@ class CashManagementController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        return redirect()->route('admin.petty-cash.index')->with('success', 'Petty cash account created.');
+        return back()->with('success', 'Petty cash account created.');
     }
 
     public function pettyCashShow(CashAccount $pettyCash)

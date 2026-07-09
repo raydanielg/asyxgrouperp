@@ -51,7 +51,7 @@ class ContractController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        return redirect()->route('admin.contracts.index')->with('success', 'Contract created successfully.');
+        return back()->with('success', 'Contract created successfully.');
     }
 
     public function show(Contract $contract)
@@ -77,12 +77,12 @@ class ContractController extends Controller
 
         $contract->update($data);
 
-        return redirect()->route('admin.contracts.index')->with('success', 'Contract updated.');
+        return back()->with('success', 'Contract updated.');
     }
 
     public function destroy(Contract $contract)
     {
         $contract->delete();
-        return redirect()->route('admin.contracts.index')->with('success', 'Contract deleted.');
+        return back()->with('success', 'Contract deleted.');
     }
 }

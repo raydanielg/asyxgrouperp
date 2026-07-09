@@ -45,7 +45,7 @@ class FixedAssetController extends Controller
 
         FixedAsset::create($validated);
 
-        return redirect()->route('admin.fixed-assets.index')->with('success', 'Fixed asset registered.');
+        return back()->with('success', 'Fixed asset registered.');
     }
 
     public function show(FixedAsset $fixedAsset)
@@ -78,7 +78,7 @@ class FixedAssetController extends Controller
         ]);
 
         $fixedAsset->update($validated);
-        return redirect()->route('admin.fixed-assets.index')->with('success', 'Asset updated.');
+        return back()->with('success', 'Asset updated.');
     }
 
     public function destroy(FixedAsset $fixedAsset)

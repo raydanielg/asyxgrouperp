@@ -70,7 +70,7 @@ class DocumentationController extends Controller
             'role_scope' => $request->role_scope ?: 'all',
         ]);
 
-        return redirect()->route('admin.documentation')->with('success', 'Documentation page created');
+        return back()->with('success', 'Documentation page created');
     }
 
     public function edit($id)
@@ -103,7 +103,7 @@ class DocumentationController extends Controller
             'role_scope' => $request->role_scope ?: 'all',
         ]);
 
-        return redirect()->route('admin.documentation')->with('success', 'Documentation page updated');
+        return back()->with('success', 'Documentation page updated');
     }
 
     public function destroy($id)

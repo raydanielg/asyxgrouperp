@@ -61,7 +61,7 @@ class ApprovalWorkflowController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.approvals.index')->with('success', 'Approval workflow created.');
+        return back()->with('success', 'Approval workflow created.');
     }
 
     public function show(ApprovalWorkflow $workflow)
@@ -75,7 +75,7 @@ class ApprovalWorkflowController extends Controller
     {
         $workflow->steps()->delete();
         $workflow->delete();
-        return redirect()->route('admin.approvals.index')->with('success', 'Workflow deleted.');
+        return back()->with('success', 'Workflow deleted.');
     }
 
     public function requests()
