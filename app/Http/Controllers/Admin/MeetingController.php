@@ -126,7 +126,7 @@ class MeetingController extends Controller
             }
         }
 
-        return redirect()->route('admin.meetings.show', $meeting)
+        return back()
             ->with('success', 'Meeting created successfully.');
     }
 
@@ -166,14 +166,14 @@ class MeetingController extends Controller
 
         $meeting->update($validated);
 
-        return redirect()->route('admin.meetings.show', $meeting)
+        return back()
             ->with('success', 'Meeting updated successfully.');
     }
 
     public function destroy(Meeting $meeting)
     {
         $meeting->delete();
-        return redirect()->route('admin.meetings.index')
+        return back()
             ->with('success', 'Meeting deleted.');
     }
 

@@ -60,7 +60,7 @@ class IntercompanyTransactionController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.intercompany.index')
+        return back()
             ->with('success', 'Intercompany transaction created successfully.');
     }
 
@@ -84,7 +84,7 @@ class IntercompanyTransactionController extends Controller
     {
         $intercompany->lines()->delete();
         $intercompany->delete();
-        return redirect()->route('admin.intercompany.index')
+        return back()
             ->with('success', 'Intercompany transaction deleted.');
     }
 }

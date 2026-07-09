@@ -91,7 +91,7 @@ class PayrollController extends Controller
 
         $payroll->update($data);
 
-        return redirect()->route('admin.payroll.show', $payroll)->with('success', 'Payroll updated successfully.');
+        return back()->with('success', 'Payroll updated successfully.');
     }
 
     public function destroy(Payroll $payroll)
@@ -170,7 +170,7 @@ class PayrollController extends Controller
             $count++;
         }
 
-        return redirect()->route('admin.payroll.index', ['month' => $month, 'year' => $year])
+        return back()
             ->with('success', "Generated $count payroll records for $month $year.");
     }
 

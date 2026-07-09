@@ -146,7 +146,7 @@ class DocumentController extends Controller
             'ip_address' => request()->ip(),
         ]);
 
-        return redirect()->route('admin.documents.show', $doc)
+        return back()
             ->with('success', 'Document uploaded successfully.');
     }
 
@@ -288,7 +288,7 @@ class DocumentController extends Controller
             'company_id' => $document->company_id,
         ]);
 
-        return redirect()->route('admin.documents.show', $newDoc)
+        return back()
             ->with('success', 'New version v' . $newVersion . ' uploaded.');
     }
 
@@ -296,7 +296,7 @@ class DocumentController extends Controller
     {
         Storage::disk('public')->delete($document->file_path);
         $document->delete();
-        return redirect()->route('admin.documents.index')
+        return back()
             ->with('success', 'Document deleted.');
     }
 
