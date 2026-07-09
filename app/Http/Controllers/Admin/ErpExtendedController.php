@@ -1522,7 +1522,7 @@ class ErpExtendedController extends Controller
     public function projectDestroy(Project $project)
     {
         $project->delete();
-        return redirect()->route('admin.projects.index')->with('success', 'Project deleted.');
+        return back()->with('success', 'Project deleted.');
     }
 
     public function projectTaskStore(Request $request, Project $project)
