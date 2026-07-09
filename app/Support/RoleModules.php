@@ -25,6 +25,7 @@ class RoleModules
         'operations_manager' => ['dashboard', 'products', 'warehouses', 'stock-movements', 'sales-invoices', 'purchase-invoices', 'projects', 'reports', 'my-account', 'payslips', 'salary'],
 
         'finance_manager' => ['dashboard', 'journal-entries', 'petty-cash', 'financial-reports', 'purchase-invoices', 'sales-invoices', 'bank-accounts', 'budgets', 'reports', 'approvals', 'payroll', 'my-account', 'payslips', 'salary'],
+        'finance_officer' => ['dashboard', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'bank-accounts', 'transfers', 'reports', 'my-account', 'payslips', 'salary'],
         'chief_accountant' => ['dashboard', 'journal-entries', 'petty-cash', 'financial-reports', 'bank-reconciliation', 'reports', 'tax-management', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'my-account', 'payslips', 'salary'],
         'accountant' => ['dashboard', 'journal-entries', 'petty-cash', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'cost-centres', 'financial-reports', 'reports', 'approvals', 'bank-accounts', 'acc-transfers', 'budgets', 'budget-vs-actual', 'tax-management', 'payroll', 'my-account', 'payslips', 'salary'],
         'accounts_receivable_officer' => ['dashboard', 'sales-invoices', 'receivables-aging', 'revenues', 'credit-notes', 'my-account', 'payslips', 'salary'],
