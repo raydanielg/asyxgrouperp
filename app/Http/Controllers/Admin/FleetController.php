@@ -45,7 +45,7 @@ class FleetController extends Controller
         $validated['company_id'] = auth()->user()?->company_id;
         Vehicle::create($validated);
 
-        return redirect()->route('admin.fleet.index')->with('success', 'Vehicle added.');
+        return back()->with('success', 'Vehicle added.');
     }
 
     public function show(Vehicle $vehicle)
@@ -83,13 +83,13 @@ class FleetController extends Controller
         ]);
 
         $vehicle->update($validated);
-        return redirect()->route('admin.fleet.index')->with('success', 'Vehicle updated.');
+        return back()->with('success', 'Vehicle updated.');
     }
 
     public function destroy(Vehicle $vehicle)
     {
         $vehicle->delete();
-        return redirect()->route('admin.fleet.index')->with('success', 'Vehicle deleted.');
+        return back()->with('success', 'Vehicle deleted.');
     }
 
     public function storeMaintenance(Request $request, Vehicle $vehicle)

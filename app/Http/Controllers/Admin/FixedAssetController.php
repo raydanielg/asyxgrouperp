@@ -84,7 +84,7 @@ class FixedAssetController extends Controller
     public function destroy(FixedAsset $fixedAsset)
     {
         $fixedAsset->delete();
-        return redirect()->route('admin.fixed-assets.index')->with('success', 'Asset deleted.');
+        return back()->with('success', 'Asset deleted.');
     }
 
     public function runDepreciation(FixedAsset $fixedAsset)
@@ -133,6 +133,6 @@ class FixedAssetController extends Controller
             'disposal_notes' => $validated['disposal_notes'] ?? null,
         ]);
 
-        return redirect()->route('admin.fixed-assets.index')->with('success', 'Asset disposed.');
+        return back()->with('success', 'Asset disposed.');
     }
 }

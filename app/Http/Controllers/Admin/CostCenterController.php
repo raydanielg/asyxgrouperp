@@ -41,7 +41,7 @@ class CostCenterController extends Controller
 
         CostCenter::create($validated);
 
-        return redirect()->route('admin.cost-centers.index')->with('success', 'Cost center created.');
+        return back()->with('success', 'Cost center created.');
     }
 
     public function update(Request $request, CostCenter $costCenter)
@@ -56,13 +56,13 @@ class CostCenterController extends Controller
         $validated['is_active'] = $request->boolean('is_active', true);
         $costCenter->update($validated);
 
-        return redirect()->route('admin.cost-centers.index')->with('success', 'Cost center updated.');
+        return back()->with('success', 'Cost center updated.');
     }
 
     public function destroy(CostCenter $costCenter)
     {
         $costCenter->delete();
-        return redirect()->route('admin.cost-centers.index')->with('success', 'Cost center deleted.');
+        return back()->with('success', 'Cost center deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
