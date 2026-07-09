@@ -405,7 +405,7 @@ class BusinessFlowController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.lpos.index')->with('success', 'LPO created successfully.');
+        return back()->with('success', 'LPO created successfully.');
     }
 
     public function lpoShow(Lpo $lpo)
@@ -425,7 +425,7 @@ class BusinessFlowController extends Controller
     {
         $lpo->items()->delete();
         $lpo->delete();
-        return redirect()->route('admin.lpos.index')->with('success', 'LPO deleted.');
+        return back()->with('success', 'LPO deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -505,7 +505,7 @@ class BusinessFlowController extends Controller
             elseif ($anyReceived) $lpo->update(['status' => 'partially_received']);
         }
 
-        return redirect()->route('admin.grns.index')->with('success', 'GRN created successfully.');
+        return back()->with('success', 'GRN created successfully.');
     }
 
     public function grnShow(Grn $grn)
@@ -518,7 +518,7 @@ class BusinessFlowController extends Controller
     {
         $grn->items()->delete();
         $grn->delete();
-        return redirect()->route('admin.grns.index')->with('success', 'GRN deleted.');
+        return back()->with('success', 'GRN deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -548,7 +548,7 @@ class BusinessFlowController extends Controller
         $data['status'] = 'delivered';
         $data['created_by'] = auth()->id();
         DeliveryNote::create($data);
-        return redirect()->route('admin.delivery-notes.index')->with('success', 'Delivery Note created.');
+        return back()->with('success', 'Delivery Note created.');
     }
 
     public function deliveryNoteShow(DeliveryNote $deliveryNote)
@@ -561,7 +561,7 @@ class BusinessFlowController extends Controller
     public function deliveryNoteDestroy(DeliveryNote $deliveryNote)
     {
         $deliveryNote->delete();
-        return redirect()->route('admin.delivery-notes.index')->with('success', 'Delivery Note deleted.');
+        return back()->with('success', 'Delivery Note deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -596,7 +596,7 @@ class BusinessFlowController extends Controller
         $data['status'] = 'unpaid';
         $data['created_by'] = auth()->id();
         VendorInvoice::create($data);
-        return redirect()->route('admin.vendor-invoices.index')->with('success', 'Vendor Invoice created.');
+        return back()->with('success', 'Vendor Invoice created.');
     }
 
     public function vendorInvoiceShow(VendorInvoice $invoice)
@@ -609,7 +609,7 @@ class BusinessFlowController extends Controller
     {
         $invoice->payments()->delete();
         $invoice->delete();
-        return redirect()->route('admin.vendor-invoices.index')->with('success', 'Vendor Invoice deleted.');
+        return back()->with('success', 'Vendor Invoice deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -688,7 +688,7 @@ class BusinessFlowController extends Controller
         }
 
         OfficeExpense::create($data);
-        return redirect()->route('admin.office-expenses.index')->with('success', 'Office Expense submitted.');
+        return back()->with('success', 'Office Expense submitted.');
     }
 
     public function officeExpenseApprove(OfficeExpense $expense)
@@ -717,7 +717,7 @@ class BusinessFlowController extends Controller
     public function officeExpenseDestroy(OfficeExpense $expense)
     {
         $expense->delete();
-        return redirect()->route('admin.office-expenses.index')->with('success', 'Office Expense deleted.');
+        return back()->with('success', 'Office Expense deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
@@ -753,7 +753,7 @@ class BusinessFlowController extends Controller
             $project->increment('actual_revenue', $data['amount']);
         }
 
-        return redirect()->route('admin.client-receipts.index')->with('success', 'Client Receipt created.');
+        return back()->with('success', 'Client Receipt created.');
     }
 
     public function clientReceiptDestroy(ClientReceipt $receipt)
@@ -762,7 +762,7 @@ class BusinessFlowController extends Controller
             $receipt->project->decrement('actual_revenue', $receipt->amount);
         }
         $receipt->delete();
-        return redirect()->route('admin.client-receipts.index')->with('success', 'Client Receipt deleted.');
+        return back()->with('success', 'Client Receipt deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
