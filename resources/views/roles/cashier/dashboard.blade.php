@@ -38,15 +38,15 @@
     <div class="bg-white rounded-xl border p-5">
         <h3 class="text-sm font-bold text-gray-900 mb-4">Quick Actions</h3>
         <div class="space-y-2">
-            <a href="{{ route('admin.pos.index') }}" class="flex items-center gap-3 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium transition-colors">
+            <a href="{{ route('role.page', ['module' => 'pos']) }}" class="flex items-center gap-3 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17"/></svg>
                 POS Terminal
             </a>
-            <a href="{{ route('admin.sales-invoices.index') }}" class="flex items-center gap-3 px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-xs font-medium transition-colors">
+            <a href="{{ route('role.page', ['module' => 'sales-invoices']) }}" class="flex items-center gap-3 px-4 py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg text-xs font-medium transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Sales Invoices
             </a>
-            <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-2.5 bg-violet-50 hover:bg-violet-100 text-violet-700 rounded-lg text-xs font-medium transition-colors">
+            <a href="{{ route('role.page', ['module' => 'products']) }}" class="flex items-center gap-3 px-4 py-2.5 bg-violet-50 hover:bg-violet-100 text-violet-700 rounded-lg text-xs font-medium transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                 Products
             </a>
@@ -64,7 +64,7 @@
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="px-5 py-4 border-b flex items-center justify-between">
         <h3 class="text-sm font-bold text-gray-900">Recent POS Sales</h3>
-        <a href="{{ route('admin.pos.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+        <a href="{{ route('role.page', ['module' => 'pos']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
     </div>
     <div class="divide-y divide-gray-100">
         @if(!empty($recentItems['recentSales']))
