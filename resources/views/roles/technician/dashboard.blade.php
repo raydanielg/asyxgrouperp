@@ -47,7 +47,7 @@
         @if(!empty($secondaryKpis))
 <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-6">
         @foreach($secondaryKpis as $kpi)
-        <a href="{{ route($kpi['route']) }}" class="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow">
+        <a href="{{ route($kpi['route'], $kpi['params'] ?? []) }}" class="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow">
         <span class="text-[10px] font-medium text-gray-500">{{ $kpi['label'] }}</span>
         <p class="text-lg font-bold text-gray-900 mt-1">{{ $kpi['value'] }}</p>
     </a>
