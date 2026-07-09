@@ -1469,7 +1469,7 @@ class ErpExtendedController extends Controller
         // Prevent duplicate invoices tied to this project
         $existing = SalesInvoice::where('project_id', $project->id)->first();
         if ($existing) {
-            return redirect()->route('admin.sales-invoices.show', $existing)->with('info', 'Invoice for this project already exists.');
+            return back()->with('info', 'Invoice for this project already exists.');
         }
 
         $customerId = $project->customer_id ?? ($project->deal?->customer_id ?? null);
@@ -1516,7 +1516,7 @@ class ErpExtendedController extends Controller
             $project->update(['status' => 'invoiced']);
         }
 
-        return redirect()->route('admin.sales-invoices.show', $invoice)->with('success', 'Tax invoice generated from project.');
+        return back()->with('success', 'Tax invoice generated from project.');
     }
 
     public function projectDestroy(Project $project)
@@ -1829,7 +1829,7 @@ class ErpExtendedController extends Controller
     public function posSaleDestroy(PosSale $posSale)
     {
         $posSale->delete();
-        return redirect()->route('admin.pos.reports')->with('success', 'POS sale deleted.');
+        return back()->with('success', 'POS sale deleted.');
     }
 
     public function crmLeadPdf(CrmLead $lead)
@@ -1931,7 +1931,7 @@ class ErpExtendedController extends Controller
             }
         }
 
-        return redirect()->route('admin.projects.financing', $project)
+        return back()
             ->with('success', 'Financing of TZS ' . number_format($data['amount'], 2) . ' recorded.');
     }
 
@@ -1958,7 +1958,7 @@ class ErpExtendedController extends Controller
             $financing->update(['status' => 'repaid']);
         }
 
-        return redirect()->route('admin.projects.financing', $financing->project_id)
+        return back()
             ->with('success', 'Repayment of TZS ' . number_format($data['paid_amount'], 2) . ' recorded.');
     }
 
@@ -1994,7 +1994,7 @@ class ErpExtendedController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        return redirect()->route('admin.projects.expense-requests', $project)
+        return back()
             ->with('success', 'Expense request submitted for approval.');
     }
 
