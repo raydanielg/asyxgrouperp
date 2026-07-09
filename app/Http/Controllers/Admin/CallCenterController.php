@@ -149,7 +149,7 @@ class CallCenterController extends Controller
             return response()->json(['success' => true, 'ticket' => $ticket->load('creator')]);
         }
 
-        return redirect()->route('admin.call-center.tickets')->with('success', "Ticket {$ticket->ticket_no} created.");
+        return back()->with('success', "Ticket {$ticket->ticket_no} created.");
     }
 
     public function updateTicket(Request $request, CallCenterTicket $ticket)
@@ -178,7 +178,7 @@ class CallCenterController extends Controller
             return response()->json(['success' => true, 'ticket' => $ticket->fresh()->load(['creator', 'assignee'])]);
         }
 
-        return redirect()->route('admin.call-center.tickets')->with('success', "Ticket {$ticket->ticket_no} updated.");
+        return back()->with('success', "Ticket {$ticket->ticket_no} updated.");
     }
 
     // ═══════════════════════════════════════════════════════
@@ -313,7 +313,7 @@ class CallCenterController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.call-center.action-points.import')->with('success', 'File uploaded. Map the columns below.');
+        return back()->with('success', 'File uploaded. Map the columns below.');
     }
 
     public function actionPointsStore(Request $request)
@@ -334,7 +334,7 @@ class CallCenterController extends Controller
         if (!$filePath || !Storage::disk('local')->exists($filePath)) {
             return $request->ajax()
                 ? response()->json(['success' => false, 'message' => 'Upload file first.'], 400)
-                : redirect()->route('admin.call-center.action-points.import')->with('error', 'Upload file first.');
+                : back()->with('error', 'Upload file first.');
         }
 
         $mapping = $request->only(['activity_column', 'responsible_column', 'due_date_column', 'status_column']);
@@ -402,7 +402,7 @@ class CallCenterController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.call-center.action-points.reports', ['batch' => $batch])
+        return redirect()->route('role.page', ['module' => 'action-points-reports', 'batch' => $batch])
             ->with('success', "Imported {$imported} action points.");
     }
 
@@ -438,7 +438,7 @@ class CallCenterController extends Controller
         }
 
         $msg = $request->action === 'approve' ? "Approved {$updated} items." : "Rejected {$updated} items.";
-        return redirect()->route('admin.call-center.action-points.reports')->with('success', $msg);
+        return back()->with('success', $msg);
     }
 
     public function actionPointsPending()

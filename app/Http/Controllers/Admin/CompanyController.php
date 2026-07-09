@@ -57,7 +57,7 @@ class CompanyController extends Controller
 
         Company::create($validated);
 
-        return redirect()->route('admin.companies.index')
+        return back()
             ->with('success', 'Company created successfully.');
     }
 
@@ -115,7 +115,7 @@ class CompanyController extends Controller
 
         $company->update($validated);
 
-        return redirect()->route('admin.companies.index')
+        return back()
             ->with('success', 'Company updated successfully.');
     }
 
@@ -125,7 +125,7 @@ class CompanyController extends Controller
             return back()->with('error', 'Cannot delete a company with active users or employees.');
         }
         $company->delete();
-        return redirect()->route('admin.companies.index')
+        return back()
             ->with('success', 'Company deleted successfully.');
     }
 
