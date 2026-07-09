@@ -71,7 +71,7 @@ class ErpController extends Controller
         $data['created_by'] = auth()->id();
         $data['is_active'] = $request->boolean('is_active', true);
         Warehouse::create($data);
-        return redirect()->route('admin.warehouses.index')->with('success', 'Warehouse created successfully.');
+        return back()->with('success', 'Warehouse created successfully.');
     }
 
     public function warehouseUpdate(Request $request, Warehouse $warehouse)
@@ -87,13 +87,13 @@ class ErpController extends Controller
         ]);
         $data['is_active'] = $request->boolean('is_active', true);
         $warehouse->update($data);
-        return redirect()->route('admin.warehouses.index')->with('success', 'Warehouse updated successfully.');
+        return back()->with('success', 'Warehouse updated successfully.');
     }
 
     public function warehouseDestroy(Warehouse $warehouse)
     {
         $warehouse->delete();
-        return redirect()->route('admin.warehouses.index')->with('success', 'Warehouse deleted.');
+        return back()->with('success', 'Warehouse deleted.');
     }
 
     // ─── Transfers ───
@@ -116,19 +116,19 @@ class ErpController extends Controller
         $data['creator_id'] = auth()->id();
         $data['created_by'] = auth()->id();
         Transfer::create($data);
-        return redirect()->route('admin.transfers.index')->with('success', 'Transfer created successfully.');
+        return back()->with('success', 'Transfer created successfully.');
     }
 
     public function transferDestroy(Transfer $transfer)
     {
         $transfer->delete();
-        return redirect()->route('admin.transfers.index')->with('success', 'Transfer deleted.');
+        return back()->with('success', 'Transfer deleted.');
     }
 
     public function transferApprove(Transfer $transfer)
     {
         $transfer->approve(auth()->user());
-        return redirect()->route('admin.transfers.index')->with('success', 'Transfer approved and completed.');
+        return back()->with('success', 'Transfer approved and completed.');
     }
 
     // ─── Plans ───
@@ -157,7 +157,7 @@ class ErpController extends Controller
         $data['trial'] = $request->boolean('trial');
         $data['status'] = $request->boolean('status', true);
         Plan::create($data);
-        return redirect()->route('admin.plans.index')->with('success', 'Plan created successfully.');
+        return back()->with('success', 'Plan created successfully.');
     }
 
     public function planUpdate(Request $request, Plan $plan)
@@ -178,13 +178,13 @@ class ErpController extends Controller
         $data['trial'] = $request->boolean('trial');
         $data['status'] = $request->boolean('status', true);
         $plan->update($data);
-        return redirect()->route('admin.plans.index')->with('success', 'Plan updated successfully.');
+        return back()->with('success', 'Plan updated successfully.');
     }
 
     public function planDestroy(Plan $plan)
     {
         $plan->delete();
-        return redirect()->route('admin.plans.index')->with('success', 'Plan deleted.');
+        return back()->with('success', 'Plan deleted.');
     }
 
     // ─── Orders ───
@@ -224,13 +224,13 @@ class ErpController extends Controller
         $data['created_by'] = auth()->id();
         $data['status'] = $request->boolean('status', true);
         Coupon::create($data);
-        return redirect()->route('admin.coupons.index')->with('success', 'Coupon created successfully.');
+        return back()->with('success', 'Coupon created successfully.');
     }
 
     public function couponDestroy(Coupon $coupon)
     {
         $coupon->delete();
-        return redirect()->route('admin.coupons.index')->with('success', 'Coupon deleted.');
+        return back()->with('success', 'Coupon deleted.');
     }
 
     // ─── Helpdesk Categories ───
@@ -252,13 +252,13 @@ class ErpController extends Controller
         $data['created_by'] = auth()->id();
         $data['is_active'] = $request->boolean('is_active', true);
         HelpdeskCategory::create($data);
-        return redirect()->route('admin.helpdesk-categories.index')->with('success', 'Category created.');
+        return back()->with('success', 'Category created.');
     }
 
     public function helpdeskCategoryDestroy(HelpdeskCategory $category)
     {
         $category->delete();
-        return redirect()->route('admin.helpdesk-categories.index')->with('success', 'Category deleted.');
+        return back()->with('success', 'Category deleted.');
     }
 
     // ─── Helpdesk Tickets ───
@@ -287,7 +287,7 @@ class ErpController extends Controller
         $data['ticket_id'] = 'TKT-' . strtoupper(Str::random(8));
         $data['created_by'] = auth()->id();
         HelpdeskTicket::create($data);
-        return redirect()->route('admin.helpdesk-tickets.index')->with('success', 'Ticket created.');
+        return back()->with('success', 'Ticket created.');
     }
 
     public function helpdeskReplyStore(Request $request, HelpdeskTicket $ticket)
@@ -300,7 +300,7 @@ class ErpController extends Controller
         $data['created_by'] = auth()->id();
         $data['is_internal'] = $request->boolean('is_internal');
         HelpdeskReply::create($data);
-        return redirect()->route('admin.helpdesk-tickets.show', $ticket)->with('success', 'Reply added.');
+        return back()->with('success', 'Reply added.');
     }
 
     public function helpdeskTicketUpdateStatus(Request $request, HelpdeskTicket $ticket)
@@ -352,7 +352,7 @@ class ErpController extends Controller
         $data['created_by'] = auth()->id();
         $data['balance_amount'] = $data['total_amount'];
         PurchaseInvoice::create($data);
-        return redirect()->route('admin.purchase-invoices.index')->with('success', 'Purchase invoice created.');
+        return back()->with('success', 'Purchase invoice created.');
     }
 
     public function purchaseInvoiceShow(PurchaseInvoice $purchaseInvoice)
@@ -370,7 +370,7 @@ class ErpController extends Controller
     public function purchaseInvoiceDestroy(PurchaseInvoice $purchaseInvoice)
     {
         $purchaseInvoice->delete();
-        return redirect()->route('admin.purchase-invoices.index')->with('success', 'Invoice deleted.');
+        return back()->with('success', 'Invoice deleted.');
     }
 
     // ─── Purchase Returns ───
@@ -389,7 +389,7 @@ class ErpController extends Controller
     public function purchaseReturnDestroy(PurchaseReturn $purchaseReturn)
     {
         $purchaseReturn->delete();
-        return redirect()->route('admin.purchase-returns.index')->with('success', 'Return deleted.');
+        return back()->with('success', 'Return deleted.');
     }
 
     // ─── Sales Invoices ───
@@ -448,7 +448,7 @@ class ErpController extends Controller
         if (!empty($request->bank_account_ids)) {
             $invoice->bankAccounts()->sync($request->bank_account_ids);
         }
-        return redirect()->route('admin.sales-invoices.index')->with('success', 'Sales invoice created.');
+        return back()->with('success', 'Sales invoice created.');
     }
 
     public function salesInvoiceShow(SalesInvoice $salesInvoice)
@@ -466,7 +466,7 @@ class ErpController extends Controller
     public function salesInvoiceDestroy(SalesInvoice $salesInvoice)
     {
         $salesInvoice->delete();
-        return redirect()->route('admin.sales-invoices.index')->with('success', 'Invoice deleted.');
+        return back()->with('success', 'Invoice deleted.');
     }
 
     public function salesInvoicePdf(SalesInvoice $salesInvoice)
@@ -555,7 +555,7 @@ class ErpController extends Controller
     public function salesReturnDestroy(SalesInvoiceReturn $salesReturn)
     {
         $salesReturn->delete();
-        return redirect()->route('admin.sales-returns.index')->with('success', 'Return deleted.');
+        return back()->with('success', 'Return deleted.');
     }
 
     // ─── Sales Dashboard ───
@@ -624,7 +624,7 @@ class ErpController extends Controller
                 ]);
             }
         }
-        return redirect()->route('admin.sales-proposals.index')->with('success', 'Quotation created.');
+        return back()->with('success', 'Quotation created.');
     }
 
     public function salesProposalConvert(SalesProposal $salesProposal)
@@ -664,7 +664,7 @@ class ErpController extends Controller
             ]);
         }
         $salesProposal->update(['converted_to_invoice' => true, 'status' => 'accepted']);
-        return redirect()->route('admin.sales-invoices.show', $invoice)->with('success', 'Quotation converted to invoice.');
+        return back()->with('success', 'Quotation converted to invoice.');
     }
 
     public function salesProposalShow(SalesProposal $salesProposal)
@@ -683,7 +683,7 @@ class ErpController extends Controller
     public function salesProposalDestroy(SalesProposal $salesProposal)
     {
         $salesProposal->delete();
-        return redirect()->route('admin.sales-proposals.index')->with('success', 'Proposal deleted.');
+        return back()->with('success', 'Proposal deleted.');
     }
 
     // ─── Email Templates ───
@@ -805,7 +805,7 @@ class ErpController extends Controller
         ]);
         $data['status'] = $request->boolean('status', true);
         $coupon->update($data);
-        return redirect()->route('admin.coupons.index')->with('success', 'Coupon updated successfully.');
+        return back()->with('success', 'Coupon updated successfully.');
     }
 
     // ─── Sales Invoice Create/Edit ───
@@ -849,7 +849,7 @@ class ErpController extends Controller
         if ($request->has('bank_account_ids')) {
             $salesInvoice->bankAccounts()->sync($request->bank_account_ids);
         }
-        return redirect()->route('admin.sales-invoices.index')->with('success', 'Sales invoice updated.');
+        return back()->with('success', 'Sales invoice updated.');
     }
 
     // ─── Purchase Invoice Create/Edit ───
@@ -884,7 +884,7 @@ class ErpController extends Controller
             'notes' => 'nullable|string',
         ]);
         $purchaseInvoice->update($data);
-        return redirect()->route('admin.purchase-invoices.index')->with('success', 'Purchase invoice updated.');
+        return back()->with('success', 'Purchase invoice updated.');
     }
 
     // ─── Sales Proposal Create/Edit ───
@@ -938,7 +938,7 @@ class ErpController extends Controller
                 ]);
             }
         }
-        return redirect()->route('admin.sales-proposals.index')->with('success', 'Quotation updated.');
+        return back()->with('success', 'Quotation updated.');
     }
 
     // ─── Notification Templates ───
@@ -964,7 +964,7 @@ class ErpController extends Controller
         ]);
         $data['is_active'] = $request->boolean('is_active', true);
         $notificationTemplate->update($data);
-        return redirect()->route('admin.notification-templates.index')->with('success', 'Notification template updated.');
+        return back()->with('success', 'Notification template updated.');
     }
 
     // ─── Profile ───
@@ -1022,7 +1022,7 @@ class ErpController extends Controller
         ]);
         $data['password'] = Hash::make($data['password']);
         User::create($data);
-        return redirect()->route('admin.users-index')->with('success', 'User created successfully.');
+        return back()->with('success', 'User created successfully.');
     }
 
     public function userEdit(User $user)
@@ -1043,7 +1043,7 @@ class ErpController extends Controller
             $data['password'] = Hash::make($request->password);
         }
         $user->update($data);
-        return redirect()->route('admin.users-index')->with('success', 'User updated successfully.');
+        return back()->with('success', 'User updated successfully.');
     }
 
     public function userDestroy(User $user)
@@ -1052,6 +1052,6 @@ class ErpController extends Controller
             return redirect()->back()->withErrors(['error' => 'You cannot delete yourself.']);
         }
         $user->delete();
-        return redirect()->route('admin.users-index')->with('success', 'User deleted.');
+        return back()->with('success', 'User deleted.');
     }
 }
