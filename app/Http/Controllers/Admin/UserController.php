@@ -230,7 +230,7 @@ class UserController extends Controller
         session(['impersonated_by' => auth()->id()]);
         auth()->login($user);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('role.dashboard');
     }
 
     public function stopImpersonating()
@@ -240,6 +240,6 @@ class UserController extends Controller
             session()->forget('impersonated_by');
             auth()->loginUsingId($originalId);
         }
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('role.dashboard');
     }
 }

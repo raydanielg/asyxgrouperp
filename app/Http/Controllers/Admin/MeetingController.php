@@ -258,7 +258,7 @@ class MeetingController extends Controller
 
         $project->update(['last_invoiced_at' => now()]);
 
-        return redirect()->route('admin.sales-invoices.show', $invoice)
+        return back()
             ->with('success', 'Invoice generated for ' . $nextDate->format('F Y'));
     }
 }
