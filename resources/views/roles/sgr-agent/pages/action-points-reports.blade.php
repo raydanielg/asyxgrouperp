@@ -20,7 +20,7 @@
     </div>
     <div class="bg-white rounded-xl border p-4">
         <span class="text-[10px] font-medium text-emerald-600">Approved</span>
-        @php $approved = \App\Models\CallCenterActionPoint::where('created_by', auth()->id())->where('approval_status', 'approved')->count(); @endphp
+        @php $approved = \App\Models\SgrActionPoint::where('created_by', auth()->id())->where('approval_status', 'approved')->count(); @endphp
         <p class="text-xl font-bold text-emerald-600 mt-1">{{ $approved }}</p>
     </div>
     <div class="bg-white rounded-xl border p-4">

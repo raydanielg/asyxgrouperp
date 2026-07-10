@@ -424,6 +424,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/call-center/tickets/{ticket}', [$ccCtrl, 'updateTicket'])->name('call-center.tickets.update');
     Route::get('/call-center/download-template', [$ccCtrl, 'downloadTemplate'])->name('call-center.download-template');
 
+    // ═══ SGR (Standard Gauge Railway) ═══
+    $sgrCtrl = App\Http\Controllers\Admin\SgrController::class;
+    Route::get('/sgr', [$sgrCtrl, 'index'])->name('sgr.index');
+    Route::get('/sgr/action-points', [$sgrCtrl, 'actionPointsImport'])->name('sgr.action-points.import');
+    Route::post('/sgr/action-points/upload', [$sgrCtrl, 'actionPointsUpload'])->name('sgr.action-points.upload');
+    Route::post('/sgr/action-points', [$sgrCtrl, 'actionPointsStore'])->name('sgr.action-points.store');
+    Route::get('/sgr/action-points/reports', [$sgrCtrl, 'actionPointsReports'])->name('sgr.action-points.reports');
+    Route::post('/sgr/action-points/approve', [$sgrCtrl, 'actionPointsApprove'])->name('sgr.action-points.approve');
+    Route::get('/sgr/action-points/pending', [$sgrCtrl, 'actionPointsPending'])->name('sgr.action-points.pending');
+    Route::get('/sgr/download-template', [$sgrCtrl, 'downloadTemplate'])->name('sgr.download-template');
+
+    // ═══ SGR Parking Revenue Collection ═══
+    $sgrParkingCtrl = App\Http\Controllers\Admin\SgrParkingRevenueController::class;
+    Route::get('/sgr/parking-revenue', [$sgrParkingCtrl, 'index'])->name('sgr.parking-revenue.index');
+    Route::get('/sgr/parking-revenue/import', [$sgrParkingCtrl, 'import'])->name('sgr.parking-revenue.import');
+    Route::post('/sgr/parking-revenue/upload', [$sgrParkingCtrl, 'upload'])->name('sgr.parking-revenue.upload');
+    Route::post('/sgr/parking-revenue', [$sgrParkingCtrl, 'store'])->name('sgr.parking-revenue.store');
+    Route::get('/sgr/parking-revenue/reports', [$sgrParkingCtrl, 'reports'])->name('sgr.parking-revenue.reports');
+    Route::get('/sgr/parking-revenue/download-template', [$sgrParkingCtrl, 'downloadTemplate'])->name('sgr.parking-revenue.download-template');
+
     // ═══ Cost Centers ═══
     $ccCtrl = App\Http\Controllers\Admin\CostCenterController::class;
     Route::get('/cost-centers', [$ccCtrl, 'index'])->name('cost-centers.index');
@@ -933,8 +953,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 //  full admin permissions can still upload & store action points)
 // ═══════════════════════════════════════════════════════
 Route::prefix('sgr')->name('sgr.')->middleware('auth')->group(function () {
-    $ccCtrl = App\Http\Controllers\Admin\CallCenterController::class;
-    Route::post('/action-points/upload', [$ccCtrl, 'actionPointsUpload'])->name('action-points.upload');
-    Route::post('/action-points/store', [$ccCtrl, 'actionPointsStore'])->name('action-points.store');
-    Route::get('/action-points/pending', [$ccCtrl, 'actionPointsPending'])->name('action-points.pending');
+    $sgrCtrl = App\Http\Controllers\Admin\SgrController::class;
+    Route::get('/action-points/reports', [$sgrCtrl, 'actionPointsReports'])->name('action-points.reports');
+    Route::post('/action-points/upload', [$sgrCtrl, 'actionPointsUpload'])->name('action-points.upload');
+    Route::post('/action-points/store', [$sgrCtrl, 'actionPointsStore'])->name('action-points.store');
+    Route::get('/action-points/pending', [$sgrCtrl, 'actionPointsPending'])->name('action-points.pending');
 });

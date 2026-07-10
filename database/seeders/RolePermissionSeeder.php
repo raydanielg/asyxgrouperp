@@ -59,6 +59,8 @@ class RolePermissionSeeder extends Seeder
             'Engineer' => ['view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-projects'],
             'NOC' => ['view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets'],
             'Call Center' => ['view-call-logs', 'create-call-logs', 'view-crm-leads', 'create-crm-leads', 'view-helpdesk-tickets', 'create-helpdesk-tickets'],
+            'SGR' => ['view-sgr', 'create-sgr-action-points', 'approve-sgr-action-points', 'view-sgr-reports'],
+            'SGR Parking Revenue' => ['view-sgr-parking-revenue', 'create-sgr-parking-revenue', 'approve-sgr-parking-revenue'],
             'Training' => ['view-training', 'create-training', 'view-certifications', 'create-certifications'],
             'Time Attendance' => ['view-attendance', 'create-attendance', 'view-overtime', 'approve-overtime'],
             'Fleet' => ['view-vehicles', 'create-vehicles', 'edit-vehicles', 'view-fuel-logs', 'create-fuel-logs', 'view-maintenance', 'create-maintenance'],
@@ -162,6 +164,9 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'helpdesk_officer', 'label' => 'Helpdesk Officer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'call_center_supervisor', 'label' => 'Call Center Supervisor', 'perms' => ['view-dashboard', 'view-call-logs', 'view-reports', 'view-self-service', 'view-my-payslips']],
             ['name' => 'call_center_agent', 'label' => 'Call Center Agent', 'perms' => ['view-dashboard', 'view-call-logs', 'create-call-logs', 'view-crm-leads', 'create-crm-leads', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'sgr_supervisor', 'label' => 'SGR Supervisor', 'perms' => ['view-dashboard', 'view-sgr', 'approve-sgr-action-points', 'view-sgr-reports', 'view-sgr-parking-revenue', 'approve-sgr-parking-revenue', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'sgr_agent', 'label' => 'SGR Agent', 'perms' => ['view-dashboard', 'view-sgr', 'create-sgr-action-points', 'view-sgr-reports', 'view-sgr-parking-revenue', 'create-sgr-parking-revenue', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'sgr_parking_officer', 'label' => 'SGR Parking Officer', 'perms' => ['view-dashboard', 'view-sgr-parking-revenue', 'create-sgr-parking-revenue', 'view-self-service', 'view-my-payslips']],
 
             // HR
             ['name' => 'hr_manager', 'label' => 'HR Manager', 'perms' => ['view-dashboard', 'view-employees', 'create-employees', 'edit-employees', 'view-attendance', 'view-payroll', 'view-leaves', 'approve-leaves', 'view-performance', 'view-training', 'view-recruitment', 'view-approvals', 'approve-hr', 'view-disciplinary', 'view-assets', 'view-policies', 'view-self-service', 'view-my-payslips']],

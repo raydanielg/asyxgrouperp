@@ -34,6 +34,31 @@ class RoleSeeder extends Seeder
                 'permissions' => ['view-dashboard', 'view-sales-invoices', 'create-sales-invoices', 'edit-sales-invoices', 'view-purchase-invoices', 'create-purchase-invoices', 'edit-purchase-invoices', 'view-expenses', 'create-expenses', 'view-revenues', 'create-revenues', 'view-bills', 'create-bills', 'view-bank-accounts', 'create-bank-accounts', 'view-acc-transfers', 'create-acc-transfers', 'view-reports'],
             ],
             [
+                'name' => 'finance_director',
+                'label' => 'Finance Director',
+                'permissions' => ['view-dashboard', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-bills', 'view-bank-accounts', 'view-acc-transfers', 'view-financial-reports', 'view-reports'],
+            ],
+            [
+                'name' => 'tax_officer',
+                'label' => 'Tax Officer',
+                'permissions' => ['view-dashboard', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-reports', 'view-tax-management'],
+            ],
+            [
+                'name' => 'treasury_officer',
+                'label' => 'Treasury Officer',
+                'permissions' => ['view-dashboard', 'view-bank-accounts', 'create-bank-accounts', 'view-acc-transfers', 'create-acc-transfers', 'view-revenues', 'view-reports'],
+            ],
+            [
+                'name' => 'cost_accountant',
+                'label' => 'Cost Accountant',
+                'permissions' => ['view-dashboard', 'view-expenses', 'create-expenses', 'view-projects', 'view-products', 'view-reports'],
+            ],
+            [
+                'name' => 'collections_officer',
+                'label' => 'Collections Officer',
+                'permissions' => ['view-dashboard', 'view-sales-invoices', 'view-revenues', 'create-revenues', 'view-reports'],
+            ],
+            [
                 'name' => 'auditor',
                 'label' => 'Auditor',
                 'permissions' => ['view-dashboard', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-bills', 'view-bank-accounts', 'view-acc-transfers', 'view-reports', 'view-warehouses', 'view-products', 'view-stock-movements', 'view-pos'],

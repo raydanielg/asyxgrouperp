@@ -18,6 +18,7 @@ class UserRoleSeeder extends Seeder
             'erp_super_administrator', 'erp_administrator', 'ict_administrator',
             'managing_director', 'general_manager', 'technical_manager', 'operations_manager',
             'finance_manager', 'chief_accountant', 'accountant', 'accounts_receivable_officer', 'accounts_payable_officer', 'cashier', 'payroll_officer', 'budget_officer', 'credit_controller',
+            'finance_director', 'tax_officer', 'treasury_officer', 'cost_accountant', 'collections_officer',
             'procurement_manager', 'procurement_officer', 'tender_officer',
             'store_manager', 'storekeeper', 'inventory_controller', 'asset_officer',
             'sales_manager', 'business_development_manager', 'sales_executive', 'crm_officer', 'marketing_officer',

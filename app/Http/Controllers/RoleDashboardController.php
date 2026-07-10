@@ -333,12 +333,12 @@ class RoleDashboardController extends Controller
             case 'sgr_agent':
                 $userId = auth()->id();
                 $stats = [
-                    'totalActionPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->count(),
-                    'pendingApproval' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'pending')->count(),
-                    'approvedPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'approved')->count(),
-                    'rejectedPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'rejected')->count(),
-                    'overduePoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('due_date', '<', now())->where('status', '!=', 'Completed')->count(),
-                    'completedPoints' => \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('status', 'Completed')->count(),
+                    'totalActionPoints' => \App\Models\SgrActionPoint::where('created_by', $userId)->count(),
+                    'pendingApproval' => \App\Models\SgrActionPoint::where('created_by', $userId)->where('approval_status', 'pending')->count(),
+                    'approvedPoints' => \App\Models\SgrActionPoint::where('created_by', $userId)->where('approval_status', 'approved')->count(),
+                    'rejectedPoints' => \App\Models\SgrActionPoint::where('created_by', $userId)->where('approval_status', 'rejected')->count(),
+                    'overduePoints' => \App\Models\SgrActionPoint::where('created_by', $userId)->where('due_date', '<', now())->where('status', '!=', 'Completed')->count(),
+                    'completedPoints' => \App\Models\SgrActionPoint::where('created_by', $userId)->where('status', 'Completed')->count(),
                 ];
                 break;
 
@@ -449,8 +449,8 @@ class RoleDashboardController extends Controller
 
             case 'sgr_agent':
                 $userId = auth()->id();
-                $items['recentActionPoints'] = \App\Models\CallCenterActionPoint::where('created_by', $userId)->latest()->take(5)->get();
-                $items['pendingActionPoints'] = \App\Models\CallCenterActionPoint::where('created_by', $userId)->where('approval_status', 'pending')->latest()->take(5)->get();
+                $items['recentActionPoints'] = \App\Models\SgrActionPoint::where('created_by', $userId)->latest()->take(5)->get();
+                $items['pendingActionPoints'] = \App\Models\SgrActionPoint::where('created_by', $userId)->where('approval_status', 'pending')->latest()->take(5)->get();
                 break;
 
             case 'receptionist':
@@ -963,7 +963,7 @@ class RoleDashboardController extends Controller
 
             case 'sgr_agent':
                 $data['title'] = 'Action Points Uploads (14 days)';
-                $data['values'] = $this->dailyCountsForRange(\App\Models\CallCenterActionPoint::class, 'created_at');
+                $data['values'] = $this->dailyCountsForRange(\App\Models\SgrActionPoint::class, 'created_at');
                 break;
 
             case 'receptionist':

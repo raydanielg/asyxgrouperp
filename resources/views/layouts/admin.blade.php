@@ -206,6 +206,13 @@
                         ['label' => 'Action Points Reports', 'route' => 'admin.call-center.action-points.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'match' => 'admin.call-center.action-points.reports*'],
                         ['label' => 'Download Template', 'route' => 'admin.call-center.download-template', 'icon' => 'M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'match' => 'admin.call-center.download-template*'],
                     ]],
+                    ['title' => 'SGR', 'items' => [
+                        ['label' => 'Dashboard', 'route' => 'admin.sgr.index', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5', 'match' => 'admin.sgr.index*'],
+                        ['label' => 'Import Action Points', 'route' => 'admin.sgr.action-points.import', 'icon' => 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12', 'match' => 'admin.sgr.action-points.import*'],
+                        ['label' => 'Action Points Reports', 'route' => 'admin.sgr.action-points.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'match' => 'admin.sgr.action-points.reports*'],
+                        ['label' => 'Parking Revenue', 'route' => 'admin.sgr.parking-revenue.index', 'icon' => 'M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1', 'match' => 'admin.sgr.parking-revenue*'],
+                        ['label' => 'Download Template', 'route' => 'admin.sgr.download-template', 'icon' => 'M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'match' => 'admin.sgr.download-template*'],
+                    ]],
                     ['title' => 'Support', 'items' => [
                         ['label' => 'Tickets', 'route' => 'admin.helpdesk-tickets.index', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'match' => 'admin.helpdesk*'],
                         ['label' => 'Categories', 'route' => 'admin.helpdesk-categories.index', 'icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16', 'match' => 'admin.helpdesk-categories*'],
@@ -232,6 +239,8 @@
                     'admin.fixed-assets*' => 'view-dashboard',
                     'admin.documents*' => 'view-dashboard',
                     'admin.call-center*' => 'view-dashboard',
+                    'admin.sgr.parking-revenue*' => 'view-sgr-parking-revenue',
+                    'admin.sgr*' => 'view-sgr',
                     'admin.audit-logs*' => 'view-dashboard',
                     'admin.business-flow*' => 'view-dashboard',
                     'admin.tenders*' => 'view-dashboard',
