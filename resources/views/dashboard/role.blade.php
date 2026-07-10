@@ -80,7 +80,6 @@
         'field_technician' => 'Field Technician',
         'employee_self_service' => 'Employee Self-Service',
         'manager_self_service' => 'Manager Self-Service',
-        'erp_super_administrator' => 'ERP Super Administrator',
         'erp_administrator' => 'ERP Administrator',
     ];
     $roleLabel = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));

@@ -69,7 +69,7 @@
 
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Role Scope (comma-separated role names, or 'all')</label>
-                    <input type="text" name="role_scope" value="{{ old('role_scope', $page?->role_scope ?? 'all') }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="all or admin, erp_super_administrator, accountant">
+                    <input type="text" name="role_scope" value="{{ old('role_scope', $page?->role_scope ?? 'all') }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="all or admin, accountant">
                     <p class="text-[10px] text-gray-400 mt-1">Use 'all' to show to everyone. Limits visibility in public docs.</p>
                 </div>
 

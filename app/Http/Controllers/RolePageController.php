@@ -88,7 +88,7 @@ class RolePageController extends Controller
             'training_officer' => 'Training Officer', 'time_and_attendance_officer' => 'Time and Attendance Officer',
             'operations_officer' => 'Operations Officer', 'fleet_manager' => 'Fleet Manager',
             'employee_self_service' => 'Employee Self-Service', 'manager_self_service' => 'Manager Self-Service',
-            'erp_super_administrator' => 'ERP Super Administrator', 'erp_administrator' => 'ERP Administrator',
+            'erp_administrator' => 'ERP Administrator',
             'ict_administrator' => 'ICT Administrator', 'network_engineer' => 'Network Engineer',
             'software_engineer' => 'Software Engineer', 'cybersecurity_engineer' => 'Cybersecurity Engineer',
             'field_technician' => 'Field Technician',
@@ -194,7 +194,6 @@ class RolePageController extends Controller
             'supervisor' => ['employees', 'attendance', 'leaves', 'projects', 'pos', 'products', 'reports', 'payslips', 'salary', 'my-account'],
             'administrator' => ['users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports', 'payslips', 'salary', 'my-account'],
 
-            'erp_super_administrator' => ['dashboard', 'users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports', 'my-account', 'payslips', 'salary'],
             'erp_administrator' => ['dashboard', 'users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'my-account', 'payslips', 'salary'],
             'ict_administrator' => ['dashboard', 'tickets', 'projects', 'assets', 'settings', 'employees', 'my-account', 'payslips', 'salary'],
             'network_engineer' => ['tickets', 'assets', 'projects', 'my-account', 'payslips', 'salary'],

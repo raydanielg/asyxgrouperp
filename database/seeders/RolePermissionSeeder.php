@@ -98,8 +98,7 @@ class RolePermissionSeeder extends Seeder
         $permMap = DB::table('permissions')->pluck('id', 'name')->toArray();
 
         $roles = [
-            // System Administration — Super Admin gets ALL permissions
-            ['name' => 'erp_super_administrator', 'label' => 'ERP Super Administrator', 'perms' => array_keys($allPermissions)],
+            // System Administration
             ['name' => 'erp_administrator', 'label' => 'ERP Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'view-roles', 'manage-roles', 'view-settings', 'view-reports', 'view-employees', 'view-attendance', 'view-leaves', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'ict_administrator', 'label' => 'ICT Administrator', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-settings', 'view-projects', 'view-employees', 'view-self-service', 'view-my-payslips']],
 

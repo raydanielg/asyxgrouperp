@@ -15,7 +15,7 @@ class UserRoleSeeder extends Seeder
         $now = now();
 
         $allRoles = [
-            'erp_super_administrator', 'erp_administrator', 'ict_administrator',
+            'erp_administrator', 'ict_administrator',
             'managing_director', 'general_manager', 'technical_manager', 'operations_manager',
             'finance_manager', 'chief_accountant', 'accountant', 'accounts_receivable_officer', 'accounts_payable_officer', 'cashier', 'payroll_officer', 'budget_officer', 'credit_controller',
             'finance_director', 'tax_officer', 'treasury_officer', 'cost_accountant', 'collections_officer',
@@ -25,6 +25,7 @@ class UserRoleSeeder extends Seeder
             'project_director', 'project_manager', 'technical_projects_manager', 'project_coordinator', 'project_engineer', 'site_supervisor', 'team_leader', 'project_accountant',
             'senior_systems_engineer', 'systems_engineer', 'network_engineer', 'software_engineer', 'cybersecurity_engineer', 'support_engineer', 'field_technician', 'noc_engineer',
             'service_desk_manager', 'helpdesk_supervisor', 'helpdesk_officer', 'call_center_supervisor', 'call_center_agent',
+            'sgr_supervisor', 'sgr_agent', 'sgr_parking_officer',
             'hr_manager', 'hr_officer', 'recruitment_officer', 'training_officer', 'time_and_attendance_officer',
             'operations_officer', 'fleet_manager', 'logistics_officer',
             'employee_self_service', 'manager_self_service',

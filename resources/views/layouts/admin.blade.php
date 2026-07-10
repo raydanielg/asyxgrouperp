@@ -397,17 +397,6 @@
                 $iconShield = 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z';
 
                 $roleMenus = [
-                    'erp_super_administrator' => [
-                        ['label' => 'Super Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Companies', 'module' => 'companies', 'icon' => $iconWarehouses],
-                        ['label' => 'Users', 'module' => 'users', 'icon' => $iconUsers],
-                        ['label' => 'Roles & Permissions', 'module' => 'roles', 'icon' => $iconRoles],
-                        ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
-                        ['label' => 'System Control', 'module' => 'system-control', 'icon' => $iconPower],
-                        ['label' => 'Database Backup', 'module' => 'database-backup', 'icon' => $iconDatabase],
-                        ['label' => 'My Salary', 'module' => 'salary', 'icon' => $iconPayroll],
-                        ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
-                    ],
                     'director' => [
                         ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
                         ['label' => 'Reports', 'module' => 'reports', 'icon' => $iconReports],
@@ -1254,7 +1243,7 @@
             </div>
             <div class="flex items-center gap-4 font-menu">
                 @yield('page_actions')
-                @if(auth()->user()?->isAdmin() || auth()->user()?->hasRole('erp_super_administrator'))
+                @if(auth()->user()?->isAdmin())
                 <a href="{{ route('admin.documentation') }}" class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm" title="Manage Documentation">
                     <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     <span class="hidden sm:inline">Docs</span>

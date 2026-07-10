@@ -15,7 +15,7 @@ class MaintenanceMode
 
         if (config('app.maintenance_mode', false) && auth()->check()) {
             $user = auth()->user();
-            $allowed = $user->role === 'admin' || $user->hasRole('admin') || $user->hasRole('erp_super_administrator');
+            $allowed = $user->role === 'admin' || $user->hasRole('admin');
             if (!$allowed) {
                 auth()->logout();
                 return response()->view('errors.maintenance', [], 503);

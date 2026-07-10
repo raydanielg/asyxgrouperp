@@ -17,7 +17,7 @@ class SystemController extends Controller
                 return redirect()->route('login');
             }
             $user = auth()->user();
-            if ($user->role === 'admin' || $user->hasRole('admin') || $user->hasRole('erp_super_administrator')) {
+            if ($user->role === 'admin' || $user->hasRole('admin')) {
                 return $next($request);
             }
             abort(403, 'Only super administrators can perform this action.');

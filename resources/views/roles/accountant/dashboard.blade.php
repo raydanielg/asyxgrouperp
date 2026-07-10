@@ -131,6 +131,78 @@
     </div>
 </div>
 
+{{-- Salary Advance Section --}}
+<div class="bg-white rounded-xl border overflow-hidden mb-6">
+    <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 px-6 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                <svg class="w-5 h-5 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-base">Salary Advance</h3>
+                <p class="text-emerald-100 text-[10px]">Employee advance requests overview</p>
+            </div>
+        </div>
+        <a href="{{ route('role.page', ['module' => 'salary-advance']) }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-2">
+            Manage Requests
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="rounded-xl border p-4 bg-amber-50/50 border-amber-200">
+                <p class="text-[10px] font-bold text-amber-700 uppercase tracking-wide">Pending</p>
+                <p class="text-2xl font-bold text-amber-800 mt-1">{{ number_format($salaryAdvancePending) }}</p>
+            </div>
+            <div class="rounded-xl border p-4 bg-emerald-50/50 border-emerald-200">
+                <p class="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">Approved</p>
+                <p class="text-2xl font-bold text-emerald-800 mt-1">{{ number_format($salaryAdvanceApproved) }}</p>
+            </div>
+            <div class="rounded-xl border p-4 bg-sky-50/50 border-sky-200">
+                <p class="text-[10px] font-bold text-sky-700 uppercase tracking-wide">Total Requested</p>
+                <p class="text-2xl font-bold text-sky-800 mt-1">{{ $money($salaryAdvanceTotal) }}</p>
+            </div>
+        </div>
+
+        <h4 class="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Recent Requests</h4>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Employee</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Amount</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @forelse($recentSalaryAdvances as $advance)
+                    <tr class="hover:bg-gray-50/50">
+                        <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $advance->user?->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">{{ $advance->requested_date?->format('d M Y') ?? '-' }}</td>
+                        <td class="px-4 py-3 text-xs font-bold text-gray-900">{{ $money($advance->amount) }}</td>
+                        <td class="px-4 py-3 text-xs">
+                            @php
+                                $statusColors = [
+                                    'pending' => 'bg-amber-50 text-amber-700 border border-amber-200',
+                                    'approved' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+                                    'rejected' => 'bg-rose-50 text-rose-700 border border-rose-200',
+                                ];
+                            @endphp
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $statusColors[$advance->status] ?? $statusColors['pending'] }}">{{ ucfirst($advance->status) }}</span>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-4 py-8 text-center text-xs text-gray-400">No salary advance requests found</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 {{-- Recent Items --}}
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="bg-white rounded-xl border overflow-hidden">

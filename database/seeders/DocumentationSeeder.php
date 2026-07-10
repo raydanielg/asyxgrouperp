@@ -50,7 +50,7 @@ MD
                 'category' => 'admin_guide',
                 'sort_order' => 1,
                 'is_published' => true,
-                'role_scope' => 'admin,erp_super_administrator',
+                'role_scope' => 'admin',
                 'content' => <<<'MD'
 # Admin Dashboard
 
@@ -81,7 +81,7 @@ MD
                 'category' => 'admin_guide',
                 'sort_order' => 2,
                 'is_published' => true,
-                'role_scope' => 'admin,erp_super_administrator',
+                'role_scope' => 'admin',
                 'content' => <<<'MD'
 # Companies Management
 
@@ -112,7 +112,7 @@ MD
                 'category' => 'admin_guide',
                 'sort_order' => 3,
                 'is_published' => true,
-                'role_scope' => 'admin,erp_super_administrator',
+                'role_scope' => 'admin',
                 'content' => <<<'MD'
 # Users & Roles
 
@@ -120,7 +120,7 @@ MD
 
 Roles define what a user can see and do. The system includes built-in roles such as:
 
-- `erp_super_administrator` — full system control.
+- `admin` — full system control.
 - `director`, `manager`, `accountant`, `cashier`, `hr_manager`, etc.
 - Self-service roles for employees.
 
@@ -147,7 +147,7 @@ MD
                 'category' => 'admin_guide',
                 'sort_order' => 4,
                 'is_published' => true,
-                'role_scope' => 'admin,erp_super_administrator',
+                'role_scope' => 'admin',
                 'content' => <<<'MD'
 # System Control & Backups
 
@@ -175,40 +175,6 @@ MD
             ],
 
             // Role Guides
-            [
-                'slug' => 'erp-super-administrator-guide',
-                'title' => 'ERP Super Administrator Guide',
-                'category' => 'role_guide',
-                'sort_order' => 1,
-                'is_published' => true,
-                'role_scope' => 'erp_super_administrator',
-                'content' => <<<'MD'
-# ERP Super Administrator Guide
-
-## Your Responsibilities
-
-As an ERP Super Administrator, you have full visibility and control over:
-
-- All companies and subsidiaries.
-- All users, roles, and permissions.
-- System-wide reports and settings.
-- Maintenance mode and database backups.
-
-## Daily Tasks
-
-- Review the dashboard KPIs and alerts.
-- Check pending approvals and user login activity.
-- Manage companies and role assignments.
-- Download regular database backups.
-
-## Important Notes
-
-- Your sidebar is dynamic — it shows all modules because you have all permissions.
-- Use the company switcher to drill into a specific company.
-- Never disable your own account or remove your admin role.
-MD
-            ],
-
             [
                 'slug' => 'accountant-guide',
                 'title' => 'Accountant Guide',

@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('title', 'Login - ' . config('app.name', 'Laravel'))
 
 @section('content')
 <div class="w-full max-w-md" style="animation: simpleFadeIn 0.4s ease-out both;">
-    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden relative">
         {{-- Header --}}
         <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-8 py-8 text-center">
             <div class="w-20 h-20 mx-auto bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
@@ -78,168 +78,127 @@
                     <svg id="btnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
                     <span id="loginBtnText">Sign In</span>
                 </button>
-                <script>
-                document.querySelector('#loginBtn').closest('form').addEventListener('submit', function() {
-                    document.getElementById('loginBtn').disabled = true;
-                    document.getElementById('btnIcon').innerHTML = '<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
-                    document.getElementById('loginBtnText').textContent = 'Signing In...';
-                });
-                @if($errors->any())
-                document.addEventListener('DOMContentLoaded', function() {
-                    Swal.fire({ icon:'error', title:'Login Failed', text:'{{ $errors->first() }}', confirmButtonColor:'#024938', confirmButtonText:'Try Again', timer:5000 });
-                });
-                @endif
-                </script>
             </form>
 
-            {{-- Demo Quick Login --}}
+            {{-- Demo Quick Login Toggle --}}
             <div class="mt-6">
                 <div class="flex items-center gap-2 mb-3">
                     <div class="flex-1 h-px bg-gray-200"></div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Demo Quick Login</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Demo Access</span>
                     <div class="flex-1 h-px bg-gray-200"></div>
                 </div>
 
-                {{-- Admin shortcuts --}}
-                <div class="grid grid-cols-2 gap-2 mb-3">
-                    <button type="button" onclick="quickLogin('admin@djanproject.com', 'admin12345')" class="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Super Admin
-                    </button>
-                    <button type="button" onclick="quickLogin('superadmin@asyxgroup.co.tz', 'superadmin12345')" class="px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                        ERP Super Admin
-                    </button>
-                </div>
+                <button type="button" id="quickLoginToggle" class="w-full py-2.5 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group">
+                    <svg class="w-4 h-4 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Quick Login as Demo Role
+                </button>
+            </div>
 
-                {{-- Role search + grid --}}
-                <div class="relative mb-2">
-                    <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            {{-- Sliding Demo Roles Sidebar (inside card) --}}
+            <div id="demoSidebar" class="absolute inset-0 z-20 bg-white transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col rounded-2xl">
+                {{-- Sidebar header --}}
+                <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-6 py-4 flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span class="text-white font-bold text-sm">Select Demo Role</span>
                     </div>
-                    <input type="text" id="roleSearch" placeholder="Find a role..." class="w-full pl-8 pr-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all">
+                    <button type="button" id="closeDemoSidebar" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
                 </div>
 
-                <div id="roleGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-40 overflow-y-auto p-1 rounded-lg border border-gray-100 bg-gray-50/50">
-                    @php
-                        $roleGroups = [
-                            'System' => [
-                                ['erp.super.administrator@djanproject.com', 'ERP Super Admin', 'emerald'],
-                                ['erp.administrator@djanproject.com', 'ERP Admin', 'teal'],
-                                ['ict.administrator@djanproject.com', 'ICT Admin', 'cyan'],
-                            ],
-                            'Executive' => [
-                                ['managing.director@djanproject.com', 'Managing Director', 'violet'],
-                                ['general.manager@djanproject.com', 'General Manager', 'indigo'],
-                                ['technical.manager@djanproject.com', 'Technical Manager', 'blue'],
-                                ['operations.manager@djanproject.com', 'Operations Manager', 'sky'],
-                            ],
-                            'Finance' => [
-                                ['finance.director@djanproject.com', 'Finance Director', 'violet'],
-                                ['finance.manager@djanproject.com', 'Finance Mgr', 'amber'],
-                                ['chief.accountant@djanproject.com', 'Chief Acct', 'yellow'],
-                                ['accountant@djanproject.com', 'Accountant', 'orange'],
-                                ['cost.accountant@djanproject.com', 'Cost Acct', 'fuchsia'],
-                                ['tax.officer@djanproject.com', 'Tax Officer', 'indigo'],
-                                ['treasury.officer@djanproject.com', 'Treasury', 'sky'],
-                                ['collections.officer@djanproject.com', 'Collections', 'cyan'],
-                                ['accounts.receivable.officer@djanproject.com', 'AR Officer', 'lime'],
-                                ['accounts.payable.officer@djanproject.com', 'AP Officer', 'green'],
-                                ['payroll.officer@djanproject.com', 'Payroll', 'emerald'],
-                                ['budget.officer@djanproject.com', 'Budget', 'teal'],
-                                ['credit.controller@djanproject.com', 'Credit Ctrl', 'rose'],
-                                ['cashier@djanproject.com', 'Cashier', 'pink'],
-                            ],
-                            'Procurement' => [
-                                ['procurement.manager@djanproject.com', 'Procurement Mgr', 'amber'],
-                                ['procurement.officer@djanproject.com', 'Procurement Off', 'orange'],
-                                ['tender.officer@djanproject.com', 'Tender Off', 'yellow'],
-                            ],
-                            'Inventory' => [
-                                ['store.manager@djanproject.com', 'Store Mgr', 'emerald'],
-                                ['storekeeper@djanproject.com', 'Storekeeper', 'teal'],
-                                ['inventory.controller@djanproject.com', 'Inventory Ctrl', 'cyan'],
-                                ['asset.officer@djanproject.com', 'Asset Off', 'sky'],
-                            ],
-                            'Sales & CRM' => [
-                                ['sales.manager@djanproject.com', 'Sales Mgr', 'amber'],
-                                ['business.development.manager@djanproject.com', 'BDM', 'orange'],
-                                ['sales.executive@djanproject.com', 'Sales Exec', 'yellow'],
-                                ['crm.officer@djanproject.com', 'CRM Off', 'pink'],
-                                ['marketing.officer@djanproject.com', 'Marketing', 'fuchsia'],
-                            ],
-                            'Projects' => [
-                                ['project.director@djanproject.com', 'Project Director', 'violet'],
-                                ['project.manager@djanproject.com', 'Project Mgr', 'indigo'],
-                                ['technical.projects.manager@djanproject.com', 'Tech Proj Mgr', 'blue'],
-                                ['project.coordinator@djanproject.com', 'Project Coord', 'sky'],
-                                ['project.engineer@djanproject.com', 'Project Eng', 'cyan'],
-                                ['site.supervisor@djanproject.com', 'Site Supervisor', 'teal'],
-                                ['team.leader@djanproject.com', 'Team Leader', 'emerald'],
-                                ['project.accountant@djanproject.com', 'Project Acct', 'amber'],
-                            ],
-                            'Technical' => [
-                                ['senior.systems.engineer@djanproject.com', 'Senior Sys Eng', 'blue'],
-                                ['systems.engineer@djanproject.com', 'Systems Eng', 'indigo'],
-                                ['network.engineer@djanproject.com', 'Network Eng', 'cyan'],
-                                ['software.engineer@djanproject.com', 'Software Eng', 'sky'],
-                                ['cybersecurity.engineer@djanproject.com', 'Cyber Eng', 'teal'],
-                                ['support.engineer@djanproject.com', 'Support Eng', 'emerald'],
-                                ['field.technician@djanproject.com', 'Field Tech', 'green'],
-                                ['noc.engineer@djanproject.com', 'NOC Eng', 'orange'],
-                            ],
-                            'Call Center' => [
-                                ['call.center.supervisor@djanproject.com', 'Call Center Sup', 'rose'],
-                                ['call.center.agent@djanproject.com', 'Call Center Agent', 'pink'],
-                            ],
-                            'Service Desk' => [
-                                ['service.desk.manager@djanproject.com', 'Service Desk Mgr', 'rose'],
-                                ['helpdesk.supervisor@djanproject.com', 'Helpdesk Sup', 'pink'],
-                                ['helpdesk.officer@djanproject.com', 'Helpdesk Off', 'fuchsia'],
-                            ],
-                            'HR' => [
-                                ['hr.manager@djanproject.com', 'HR Manager', 'sky'],
-                                ['hr.officer@djanproject.com', 'HR Officer', 'cyan'],
-                                ['recruitment.officer@djanproject.com', 'Recruitment', 'teal'],
-                                ['training.officer@djanproject.com', 'Training', 'emerald'],
-                                ['time.and.attendance.officer@djanproject.com', 'T&A Officer', 'indigo'],
-                            ],
-                            'Operations' => [
-                                ['operations.officer@djanproject.com', 'Ops Officer', 'orange'],
-                                ['fleet.manager@djanproject.com', 'Fleet Mgr', 'amber'],
-                                ['logistics.officer@djanproject.com', 'Logistics', 'yellow'],
-                            ],
-                            'Self Service' => [
-                                ['employee.self.service@djanproject.com', 'Employee SS', 'emerald'],
-                                ['manager.self.service@djanproject.com', 'Manager SS', 'teal'],
-                            ],
-                            'Legacy / Shared' => [
-                                ['director@djanproject.com', 'Director', 'violet'],
-                                ['administrator@djanproject.com', 'Administrator', 'slate'],
-                                ['admin.manager@djanproject.com', 'Admin Manager', 'gray'],
-                                ['finance.officer@djanproject.com', 'Finance Officer', 'amber'],
-                                ['auditor@djanproject.com', 'Auditor', 'teal'],
-                                ['legal.officer@djanproject.com', 'Legal Officer', 'lime'],
-                                ['receptionist@djanproject.com', 'Receptionist', 'pink'],
-                                ['technician@djanproject.com', 'Technician', 'blue'],
-                                ['ict.officer@djanproject.com', 'ICT Officer', 'fuchsia'],
-                                ['supervisor@djanproject.com', 'Supervisor', 'yellow'],
-                            ],
-                        ];
-                        $allQuickRoles = [];
-                        foreach ($roleGroups as $group => $items) {
-                            foreach ($items as $item) {
-                                $allQuickRoles[] = [$item[0], 'password123', $item[1], $item[2], $group];
-                            }
-                        }
-                    @endphp
-                    @foreach($allQuickRoles as $r)
-                        <button type="button" data-role-label="{{ strtolower($r[2]) }} {{ strtolower($r[4]) }}" onclick="quickLogin('{{ $r[0] }}', '{{ $r[1] }}')" class="role-chip px-2 py-1.5 rounded-md border border-gray-200 bg-white hover:border-{{ $r[3] }}-400 hover:bg-{{ $r[3] }}-50 text-[10px] font-semibold text-gray-600 hover:text-{{ $r[3] }}-700 transition-all text-center leading-tight">
-                            {{ $r[2] }}
-                        </button>
-                    @endforeach
+                {{-- Search --}}
+                <div class="p-4 border-b border-gray-100 shrink-0">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </div>
+                        <input type="text" id="roleSearch" placeholder="Find a role..." class="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all">
+                    </div>
                 </div>
-                <p class="mt-2 text-center text-[10px] text-gray-400">Click any role to auto-fill &amp; login instantly</p>
+
+                {{-- Roles list --}}
+                <div class="flex-1 overflow-y-auto p-4">
+                    <div id="roleGrid" class="space-y-4">
+                        @php
+                            $roleGroups = [
+                                'Administration' => [
+                                    ['admin@djanproject.com', 'Super Admin', 'emerald', 'admin12345'],
+                                    ['erp.administrator@djanproject.com', 'ERP Admin', 'teal'],
+                                    ['ict.administrator@djanproject.com', 'ICT Admin', 'cyan'],
+                                ],
+                                'Executive' => [
+                                    ['managing.director@djanproject.com', 'Managing Director', 'violet'],
+                                    ['general.manager@djanproject.com', 'General Manager', 'indigo'],
+                                ],
+                                'Finance' => [
+                                    ['finance.director@djanproject.com', 'Finance Director', 'violet'],
+                                    ['finance.manager@djanproject.com', 'Finance Manager', 'amber'],
+                                    ['accountant@djanproject.com', 'Accountant', 'orange'],
+                                ],
+                                'Procurement & Inventory' => [
+                                    ['procurement.manager@djanproject.com', 'Procurement Manager', 'amber'],
+                                    ['store.manager@djanproject.com', 'Store Manager', 'emerald'],
+                                    ['inventory.controller@djanproject.com', 'Inventory Controller', 'cyan'],
+                                ],
+                                'Sales & CRM' => [
+                                    ['sales.manager@djanproject.com', 'Sales Manager', 'amber'],
+                                    ['crm.officer@djanproject.com', 'CRM Officer', 'pink'],
+                                ],
+                                'Projects' => [
+                                    ['project.director@djanproject.com', 'Project Director', 'violet'],
+                                    ['project.manager@djanproject.com', 'Project Manager', 'indigo'],
+                                    ['project.engineer@djanproject.com', 'Project Engineer', 'cyan'],
+                                ],
+                                'Technical' => [
+                                    ['senior.systems.engineer@djanproject.com', 'Senior Systems Engineer', 'blue'],
+                                    ['network.engineer@djanproject.com', 'Network Engineer', 'cyan'],
+                                    ['support.engineer@djanproject.com', 'Support Engineer', 'emerald'],
+                                ],
+                                'Service & Operations' => [
+                                    ['service.desk.manager@djanproject.com', 'Service Desk Manager', 'rose'],
+                                    ['operations.officer@djanproject.com', 'Operations Officer', 'orange'],
+                                    ['fleet.manager@djanproject.com', 'Fleet Manager', 'amber'],
+                                ],
+                                'Call Center & SGR' => [
+                                    ['call.center.supervisor@djanproject.com', 'Call Center Supervisor', 'rose'],
+                                    ['sgr.supervisor@djanproject.com', 'SGR Supervisor', 'amber'],
+                                    ['sgr.parking.officer@djanproject.com', 'SGR Parking', 'amber'],
+                                ],
+                                'HR' => [
+                                    ['hr.manager@djanproject.com', 'HR Manager', 'sky'],
+                                    ['hr.officer@djanproject.com', 'HR Officer', 'cyan'],
+                                    ['employee.self.service@djanproject.com', 'Employee Self-Service', 'emerald'],
+                                ],
+                            ];
+                        @endphp
+                        @foreach($roleGroups as $groupName => $items)
+                            <div class="role-group" data-group-label="{{ strtolower($groupName) }}">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="px-2.5 py-1 rounded-md bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wide">{{ $groupName }}</span>
+                                    <span class="text-[10px] text-gray-400">{{ count($items) }} roles</span>
+                                </div>
+                                <div class="space-y-2">
+                                    @foreach($items as $r)
+                                        <button type="button" data-role-label="{{ strtolower($r[1]) }} {{ strtolower($groupName) }}" onclick="quickLogin('{{ $r[0] }}', '{{ $r[3] ?? 'password123' }}')" class="role-chip w-full px-4 py-3 rounded-xl border border-gray-200 bg-white hover:border-{{ $r[2] }}-400 hover:bg-{{ $r[2] }}-50 transition-all flex items-center gap-3 group">
+                                            <span class="w-10 h-10 rounded-lg bg-{{ $r[2] }}-100 text-{{ $r[2] }}-600 flex items-center justify-center flex-shrink-0 font-bold text-sm">{{ strtoupper(substr($r[1], 0, 1)) }}</span>
+                                            <div class="flex-1 text-left">
+                                                <p class="text-sm font-bold text-gray-700 group-hover:text-{{ $r[2] }}-700 leading-tight">{{ $r[1] }}</p>
+                                                <p class="text-[10px] text-gray-400 mt-0.5">Demo login</p>
+                                            </div>
+                                            <svg class="w-5 h-5 text-gray-300 group-hover:text-{{ $r[2] }}-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Sidebar footer --}}
+                <div class="p-4 border-t border-gray-100 bg-gray-50 shrink-0">
+                    <p class="text-center text-[10px] text-gray-400">Click any role to auto-fill &amp; login instantly</p>
+                </div>
             </div>
             <script>
             function quickLogin(email, password) {
@@ -251,17 +210,42 @@
                 document.querySelector('#loginBtn').closest('form').submit();
             }
 
-            document.getElementById('roleSearch').addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
-                document.querySelectorAll('.role-chip').forEach(function(btn) {
-                    const label = btn.getAttribute('data-role-label');
-                    btn.style.display = label.includes(term) ? 'block' : 'none';
-                });
-            });
+            (function() {
+                const toggle = document.getElementById('quickLoginToggle');
+                const sidebar = document.getElementById('demoSidebar');
+                const close = document.getElementById('closeDemoSidebar');
+                const search = document.getElementById('roleSearch');
+
+                function openSidebar() {
+                    if (sidebar) sidebar.classList.remove('translate-x-full');
+                    if (search) setTimeout(() => search.focus(), 300);
+                }
+
+                function closeSidebar() {
+                    if (sidebar) sidebar.classList.add('translate-x-full');
+                }
+
+                if (toggle) toggle.addEventListener('click', openSidebar);
+                if (close) close.addEventListener('click', closeSidebar);
+
+                if (search) {
+                    search.addEventListener('input', function(e) {
+                        const term = e.target.value.toLowerCase();
+                        document.querySelectorAll('.role-group').forEach(function(group) {
+                            let visibleCount = 0;
+                            group.querySelectorAll('.role-chip').forEach(function(btn) {
+                                const label = btn.getAttribute('data-role-label');
+                                const visible = label.includes(term);
+                                btn.style.display = visible ? 'flex' : 'none';
+                                if (visible) visibleCount++;
+                            });
+                            group.style.display = visibleCount > 0 ? 'block' : 'none';
+                        });
+                    });
+                }
+            })();
             </script>
         </div>
     </div>
-
-    <p class="mt-6 text-center text-xs text-gray-400">&copy; {{ date('Y') }} ASYX Group. All rights reserved.</p>
 </div>
 @endsection

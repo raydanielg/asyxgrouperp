@@ -78,7 +78,7 @@ class User extends Authenticatable
 
     public function isSuperAdmin(): bool
     {
-        return $this->role === 'superadmin' || $this->hasRole('superadmin') || $this->hasRole('erp_super_administrator');
+        return $this->role === 'superadmin' || $this->hasRole('superadmin');
     }
 
     public function canSwitchCompany(): bool

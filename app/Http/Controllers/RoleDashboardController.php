@@ -20,6 +20,7 @@ use App\Models\Warehouse;
 use App\Models\PosSale;
 use App\Models\Order;
 use App\Models\Attendance;
+use App\Models\SalaryAdvanceRequest;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
@@ -57,17 +58,25 @@ class RoleDashboardController extends Controller
 
             $companies = null;
             $systemMode = null;
-            if ($role === 'erp_super_administrator') {
-                $companies = Company::withCount('users')->orderBy('is_group', 'desc')->orderBy('name')->get();
-                $systemMode = config('app.maintenance_mode', false) ? 'Maintenance' : 'Online';
+
+            // Salary advance summary for accountant / finance roles
+            $salaryAdvancePending = 0;
+            $salaryAdvanceApproved = 0;
+            $salaryAdvanceTotal = 0;
+            $recentSalaryAdvances = collect();
+            if (in_array($role, ['accountant', 'finance_manager', 'chief_accountant', 'finance_officer', 'payroll_officer', 'general_manager', 'managing_director'])) {
+                $salaryAdvancePending = SalaryAdvanceRequest::where('status', 'pending')->count();
+                $salaryAdvanceApproved = SalaryAdvanceRequest::where('status', 'approved')->count();
+                $salaryAdvanceTotal = SalaryAdvanceRequest::sum('amount') ?? 0;
+                $recentSalaryAdvances = SalaryAdvanceRequest::with('user')->latest()->take(5)->get();
             }
 
             $viewName = 'roles.' . str_replace('_', '-', $role) . '.dashboard';
             if (view()->exists($viewName)) {
-                return view($viewName, compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights', 'companies', 'systemMode'));
+                return view($viewName, compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights', 'companies', 'systemMode', 'salaryAdvancePending', 'salaryAdvanceApproved', 'salaryAdvanceTotal', 'recentSalaryAdvances'));
             }
 
-            return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights', 'companies', 'systemMode'));
+            return view('dashboard.role', compact('role', 'roleLabel', 'stats', 'recentItems', 'kpiCards', 'quickActions', 'money', 'chartData', 'secondaryKpis', 'aiInsights', 'companies', 'systemMode', 'salaryAdvancePending', 'salaryAdvanceApproved', 'salaryAdvanceTotal', 'recentSalaryAdvances'));
         } catch (\Throwable $e) {
             // Fail-safe: ensure no company/user ever sees a broken dashboard
             return $this->renderFallbackDashboard($e);
@@ -109,26 +118,6 @@ class RoleDashboardController extends Controller
         $stats = [];
 
         switch ($role) {
-            case 'erp_super_administrator':
-                $stats = [
-                    'totalCompanies' => Company::count(),
-                    'totalUsers' => User::count(),
-                    'totalRoles' => Role::count(),
-                    'totalPermissions' => Permission::count(),
-                    'totalEmployees' => Employee::count(),
-                    'totalSales' => SalesInvoice::sum('total_amount') ?? 0,
-                    'totalPurchases' => PurchaseInvoice::sum('total_amount') ?? 0,
-                    'totalExpenses' => Expense::sum('amount') ?? 0,
-                    'totalRevenues' => Revenue::sum('amount') ?? 0,
-                    'pendingLeaves' => Leave::where('status', 'pending')->count(),
-                    'openTickets' => HelpdeskTicket::where('status', 'open')->count(),
-                    'totalProjects' => Project::count(),
-                    'activeProjects' => Project::where('status', 'in_progress')->count(),
-                    'groupCompanies' => Company::where('is_group', true)->count(),
-                    'subsidiaryCompanies' => Company::where('is_group', false)->count(),
-                ];
-                break;
-
             case 'admin':
             case 'administrator':
             case 'admin_manager':
@@ -412,13 +401,6 @@ class RoleDashboardController extends Controller
         $items = [];
 
         switch ($role) {
-            case 'erp_super_administrator':
-                $items['recentCompanies'] = Company::latest()->take(5)->get();
-                $items['recentUsers'] = User::with('roles')->latest()->take(5)->get();
-                $items['recentTickets'] = HelpdeskTicket::latest()->take(5)->get();
-                $items['activeProjects'] = Project::where('status', 'in_progress')->latest()->take(5)->get();
-                break;
-
             case 'admin':
             case 'administrator':
             case 'admin_manager':
@@ -512,12 +494,6 @@ class RoleDashboardController extends Controller
         $money = fn($n) => 'TZS ' . number_format($n);
 
         return match ($role) {
-            'erp_super_administrator' => [
-                ['label' => 'Companies', 'value' => $stats['totalCompanies'] ?? 0, 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5', 'color' => 'emerald'],
-                ['label' => 'Total Users', 'value' => $stats['totalUsers'] ?? 0, 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'color' => 'sky'],
-                ['label' => 'Roles', 'value' => $stats['totalRoles'] ?? 0, 'icon' => 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', 'color' => 'violet'],
-                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'rose'],
-            ],
             'admin', 'administrator', 'admin_manager', 'managing_director', 'general_manager', 'erp_administrator' => [
                 ['label' => 'Total Users', 'value' => $stats['totalUsers'] ?? 0, 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'color' => 'emerald'],
                 ['label' => 'Total Sales', 'value' => $money($stats['totalSales'] ?? 0), 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'color' => 'sky'],
@@ -653,14 +629,6 @@ class RoleDashboardController extends Controller
     private function legacyQuickActionsForRole(string $role): array
     {
         return match ($role) {
-            'erp_super_administrator' => [
-                ['label' => 'Manage Companies', 'route' => 'admin.companies.index', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5'],
-                ['label' => 'Manage Users', 'route' => 'admin.users.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
-                ['label' => 'Roles & Permissions', 'route' => 'admin.roles.index', 'icon' => 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'],
-                ['label' => 'Intercompany', 'route' => 'admin.intercompany.index', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
-                ['label' => 'Consolidated', 'route' => 'admin.companies.consolidated', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
-                ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
-            ],
             'admin', 'administrator', 'admin_manager', 'erp_administrator' => [
                 ['label' => 'Manage Users', 'route' => 'admin.users.index', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
                 ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
@@ -797,7 +765,6 @@ class RoleDashboardController extends Controller
             'fleet_manager' => 'Fleet Manager',
             'employee_self_service' => 'Employee Self-Service',
             'manager_self_service' => 'Manager Self-Service',
-            'erp_super_administrator' => 'ERP Super Administrator',
             'erp_administrator' => 'ERP Administrator',
             'ict_administrator' => 'ICT Administrator',
             'network_engineer' => 'Network Engineer',
@@ -900,14 +867,6 @@ class RoleDashboardController extends Controller
         }
 
         switch ($role) {
-            case 'erp_super_administrator':
-                $data['title'] = 'New Users vs Companies (14 days)';
-                $data['values'] = $this->dailyCountsForRange(User::class, 'created_at');
-                $data['secondaryValues'] = $this->dailyCountsForRange(Company::class, 'created_at');
-                $data['secondaryLabels'] = $data['labels'];
-                $data['secondaryTitle'] = 'Companies';
-                break;
-
             case 'admin':
             case 'administrator':
             case 'admin_manager':
@@ -1009,14 +968,6 @@ class RoleDashboardController extends Controller
         $money = fn($n) => 'TZS ' . number_format($n);
 
         return match ($role) {
-            'erp_super_administrator' => [
-                ['label' => 'Group Companies', 'value' => $stats['groupCompanies'] ?? 0, 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'companies']],
-                ['label' => 'Subsidiaries', 'value' => $stats['subsidiaryCompanies'] ?? 0, 'color' => 'sky', 'route' => 'role.page', 'params' => ['module' => 'companies']],
-                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'violet', 'route' => 'role.page', 'params' => ['module' => 'employees']],
-                ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'projects']],
-                ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'rose', 'route' => 'role.page', 'params' => ['module' => 'leaves']],
-                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'role.page', 'params' => ['module' => 'tickets']],
-            ],
             'admin', 'administrator', 'admin_manager', 'erp_administrator' => [
                 ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'employees']],
                 ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'violet', 'route' => 'role.page', 'params' => ['module' => 'projects']],

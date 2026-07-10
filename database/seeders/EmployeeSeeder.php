@@ -13,7 +13,6 @@ class EmployeeSeeder extends Seeder
      * Map roles to realistic departments and designations.
      */
     private array $roleMeta = [
-        'erp_super_administrator' => ['IT', 'ERP Super Administrator'],
         'erp_administrator' => ['IT', 'ERP Administrator'],
         'ict_administrator' => ['IT', 'ICT Administrator'],
         'ict_engineer' => ['IT', 'ICT Engineer'],
