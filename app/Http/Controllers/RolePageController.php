@@ -651,6 +651,42 @@ class RolePageController extends Controller
                 $data['totalCount'] = Announcement::count();
                 break;
 
+            case 'documents':
+                $query = Document::with(['uploadedBy', 'project']);
+                if ($request->filled('category')) {
+                    $query->where('category', $request->category);
+                }
+                if ($request->filled('status')) {
+                    $query->where('status', $request->status);
+                }
+                if ($request->filled('search')) {
+                    $search = $request->search;
+                    $query->where(function ($q) use ($search) {
+                        $q->where('title', 'like', "%{$search}%")
+                          ->orWhere('document_number', 'like', "%{$search}%")
+                          ->orWhere('tags', 'like', "%{$search}%");
+                    });
+                }
+                $data['documents'] = $query->latest()->paginate(15)->withQueryString();
+                $data['todayCount'] = Document::whereDate('created_at', today())->count();
+                $data['weekCount'] = Document::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
+                $data['pendingCount'] = Document::where('status', 'pending_signature')->count();
+                $data['totalCount'] = Document::count();
+                $data['categories'] = [
+                    'policy' => ['label' => 'Company Policy', 'color' => 'blue'],
+                    'contract' => ['label' => 'Contract', 'color' => 'purple'],
+                    'minutes' => ['label' => 'Meeting Minutes', 'color' => 'amber'],
+                    'action_point' => ['label' => 'Action Points', 'color' => 'red'],
+                    'project_doc' => ['label' => 'Project Document', 'color' => 'emerald'],
+                    'tender' => ['label' => 'Tender', 'color' => 'indigo'],
+                    'hr' => ['label' => 'HR Document', 'color' => 'pink'],
+                    'legal' => ['label' => 'Legal', 'color' => 'gray'],
+                    'financial' => ['label' => 'Financial', 'color' => 'green'],
+                    'technical' => ['label' => 'Technical', 'color' => 'cyan'],
+                    'other' => ['label' => 'Other', 'color' => 'slate'],
+                ];
+                break;
+
             default:
                 $data['items'] = collect([]);
                 break;
