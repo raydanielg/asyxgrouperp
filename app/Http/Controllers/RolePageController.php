@@ -37,6 +37,12 @@ use App\Models\BankAccount;
 use App\Models\BankTransferAcc;
 use App\Models\JobCard;
 use App\Models\Document;
+use App\Models\ProjectTask;
+use App\Models\FixedAsset;
+use App\Models\CrmContact;
+use App\Models\SalesInvoice;
+use App\Models\PurchaseInvoice;
+use App\Models\CallCampaign;
 use Illuminate\Http\Request;
 
 class RolePageController extends Controller
@@ -759,6 +765,9 @@ class RolePageController extends Controller
             'inventory-transfers' => Transfer::class,
             'transfers' => Transfer::class,
             'pos-reports' => PosSale::class,
+            'assets' => FixedAsset::class,
+            'asset-assignment' => FixedAsset::class,
+            'asset-disposal' => FixedAsset::class,
         ];
 
         return $map[$module] ?? null;
