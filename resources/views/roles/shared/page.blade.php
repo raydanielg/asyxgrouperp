@@ -1809,6 +1809,31 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         @break
 
     @default
+        @php
+        $fallbackPermCreate = 'create-' . $module;
+        $fallbackPermEdit = 'edit-' . $module;
+        $fallbackPermDelete = 'delete-' . $module;
+        $fallbackRouteCreate = 'admin.' . $module . '.index';
+        $fallbackRouteEdit = 'admin.' . $module . '.edit';
+        $fallbackRouteDelete = 'admin.' . $module . '.destroy';
+        $hasCreate = (isset($permMap[$module]['create']) && auth()->user()->hasPermission($permMap[$module]['create'])) || auth()->user()->hasPermission($fallbackPermCreate);
+        $hasEdit = (isset($permMap[$module]['edit']) && auth()->user()->hasPermission($permMap[$module]['edit'])) || auth()->user()->hasPermission($fallbackPermEdit);
+        $hasDelete = (isset($permMap[$module]['delete']) && auth()->user()->hasPermission($permMap[$module]['delete'])) || auth()->user()->hasPermission($fallbackPermDelete);
+        $hasFallbackActions = $hasEdit || $hasDelete;
+        $records = $items ?? collect([]);
+        if ($records instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            $recordRows = $records->items();
+        } elseif ($records instanceof \Illuminate\Support\Collection) {
+            $recordRows = $records->all();
+        } elseif (is_array($records)) {
+            $recordRows = $records;
+        } else {
+            $recordRows = [];
+        }
+        $displayStats = collect(['todayCount', 'weekCount', 'pendingCount', 'totalCount'])->mapWithKeys(function($k) {
+            return [$k => ${$k} ?? 0];
+        });
+        @endphp
         <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
             <div class="relative z-10">
                 <h2 class="text-2xl font-bold">{{ ucwords(str_replace('-', ' ', $module)) }}</h2>
@@ -1816,28 +1841,85 @@ $hasActions = $canEdit || $canDelete || $canApprove;
             </div>
         </div>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">Today</p><p class="text-2xl font-bold text-gray-900 mt-1">0</p></div>
-            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">This Week</p><p class="text-2xl font-bold text-gray-900 mt-1">0</p></div>
-            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">Pending</p><p class="text-2xl font-bold text-gray-900 mt-1">0</p></div>
-            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">Total</p><p class="text-2xl font-bold text-gray-900 mt-1">0</p></div>
+            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">Today</p><p class="text-2xl font-bold text-gray-900 mt-1">{{ $todayCount ?? 0 }}</p></div>
+            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">This Week</p><p class="text-2xl font-bold text-gray-900 mt-1">{{ $weekCount ?? 0 }}</p></div>
+            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">Pending</p><p class="text-2xl font-bold text-gray-900 mt-1">{{ $pendingCount ?? 0 }}</p></div>
+            <div class="bg-white rounded-xl border p-4"><p class="text-[10px] font-medium text-gray-500 uppercase">Total</p><p class="text-2xl font-bold text-gray-900 mt-1">{{ $totalCount ?? 0 }}</p></div>
         </div>
         <div class="bg-white rounded-xl border p-6 mb-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-bold text-gray-900">Records</h3>
-                @if($canCreate && isset($routeMap[$module]['create']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['create']))
-                <a href="{{ route($routeMap[$module]['create']) }}" class="px-4 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors">Add New</a>
+                @if($hasCreate)
+                    @php
+                        $createRoute = isset($routeMap[$module]['create']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['create']) ? $routeMap[$module]['create'] : (\Illuminate\Support\Facades\Route::has($fallbackRouteCreate) ? $fallbackRouteCreate : null);
+                    @endphp
+                    @if($createRoute)
+                    <a href="{{ route($createRoute) }}" class="px-4 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors">Add New</a>
+                    @endif
                 @endif
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50 border-b"><tr><th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">#</th><th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Details</th><th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th><th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th></tr></thead>
-                    <tbody class="divide-y divide-gray-100"><tr><td colspan="4" class="px-4 py-8 text-center text-xs text-gray-400">No records yet. Use the <strong>Add New</strong> button to create the first record.</td></tr></tbody>
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">#</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Details</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
+                            @if($hasFallbackActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($recordRows as $idx => $item)
+                        <tr class="hover:bg-gray-50/50">
+                            <td class="px-4 py-3 text-xs text-gray-500">{{ $idx + 1 }}</td>
+                            <td class="px-4 py-3 text-xs font-medium text-gray-900">
+                                {{ $item->title ?? $item->name ?? $item->subject ?? $item->description ?? ('Record #' . ($item->id ?? '-')) }}
+                                @if($item->document_number ?? $item->invoice_number ?? $item->ticket_number ?? null)
+                                <p class="text-[10px] text-gray-400">{{ $item->document_number ?? $item->invoice_number ?? $item->ticket_number }}</p>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3">
+                                @php $s = $item->status ?? 'N/A'; @endphp
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ in_array($s, ['done','completed','signed','paid','active','approved']) ? 'bg-emerald-50 text-emerald-700' : (in_array($s, ['pending','in_progress','draft','pending_signature','open']) ? 'bg-amber-50 text-amber-700' : 'bg-gray-50 text-gray-700') }}">{{ ucfirst(str_replace('_', ' ', $s)) }}</span>
+                            </td>
+                            <td class="px-4 py-3 text-xs text-gray-500">{{ ($item->created_at ?? $item->date ?? null) ? \Carbon\Carbon::parse($item->created_at ?? $item->date)->format('d M Y') : '-' }}</td>
+                            @if($hasFallbackActions)
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-1">
+                                    @php
+                                        $editRoute = isset($routeMap[$module]['edit']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['edit']) ? $routeMap[$module]['edit'] : (\Illuminate\Support\Facades\Route::has($fallbackRouteEdit) ? $fallbackRouteEdit : null);
+                                        $deleteRoute = isset($routeMap[$module]['delete']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['delete']) ? $routeMap[$module]['delete'] : (\Illuminate\Support\Facades\Route::has($fallbackRouteDelete) ? $fallbackRouteDelete : null);
+                                    @endphp
+                                    @if($hasEdit && $editRoute)
+                                    <a href="{{ route($editRoute, $item) }}" class="text-emerald-500 hover:text-emerald-700 p-1 rounded hover:bg-emerald-50 transition-colors" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></a>
+                                    @endif
+                                    @if($hasDelete && $deleteRoute)
+                                    <form action="{{ route($deleteRoute, $item) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this record?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                    @endif
+                                </div>
+                            </td>
+                            @endif
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="{{ $hasFallbackActions ? 5 : 4 }}" class="px-4 py-8 text-center text-xs text-gray-400">
+                                No records yet. @if($hasCreate)<span>Use the <strong>Add New</strong> button to create the first record.</span>@endif
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
                 </table>
             </div>
+            @if($records instanceof \Illuminate\Contracts\Pagination\Paginator)
+            <div class="px-5 py-3 border-t">{{ $records->links() }}</div>
+            @endif
         </div>
+        @if(empty($recordRows) && !isset($todayCount))
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-amber-800 text-xs">
             <strong>Module in progress:</strong> Full CRUD and backend for {{ strtolower(str_replace('-', ' ', $module)) }} will be wired here. Admin has full access to all modules.
         </div>
+        @endif
     @endswitch
 </div>
 @endsection
