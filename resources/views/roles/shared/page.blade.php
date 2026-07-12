@@ -1695,6 +1695,119 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         </div>
         @break
 
+    @case('documents')
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl border p-4">
+                <p class="text-[10px] font-medium text-gray-500 uppercase">Today</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ $todayCount ?? 0 }}</p>
+            </div>
+            <div class="bg-white rounded-xl border p-4">
+                <p class="text-[10px] font-medium text-gray-500 uppercase">This Week</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ $weekCount ?? 0 }}</p>
+            </div>
+            <div class="bg-white rounded-xl border p-4">
+                <p class="text-[10px] font-medium text-gray-500 uppercase">Pending</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ $pendingCount ?? 0 }}</p>
+            </div>
+            <div class="bg-white rounded-xl border p-4">
+                <p class="text-[10px] font-medium text-gray-500 uppercase">Total</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ $totalCount ?? 0 }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border overflow-hidden mb-6">
+            <div class="px-5 py-4 border-b bg-gray-50/50">
+                <form method="GET" action="{{ route('role.page', ['module' => 'documents']) }}" class="flex flex-wrap items-center gap-3">
+                    <div class="relative flex-1 min-w-[200px]">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search documents..." class="w-full text-xs px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <select name="category" class="text-xs px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="">All Categories</option>
+                        @foreach($categories ?? [] as $key => $cat)
+                        <option value="{{ $key }}" {{ request('category') === $key ? 'selected' : '' }}>{{ $cat['label'] }}</option>
+                        @endforeach
+                    </select>
+                    <select name="status" class="text-xs px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="">All Status</option>
+                        <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="pending_signature" {{ request('status') === 'pending_signature' ? 'selected' : '' }}>Pending Signature</option>
+                        <option value="signed" {{ request('status') === 'signed' ? 'selected' : '' }}>Signed</option>
+                        <option value="archived" {{ request('status') === 'archived' ? 'selected' : '' }}>Archived</option>
+                    </select>
+                    <button type="submit" class="px-3 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors">Filter</button>
+                    @if(request()->hasAny(['search', 'category', 'status']))
+                    <a href="{{ route('role.page', ['module' => 'documents']) }}" class="px-3 py-2 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors">Clear</a>
+                    @endif
+                </form>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">#</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Details</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
+                            @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse(($documents ?? collect())->items() ?? [] as $doc)
+                        <tr class="hover:bg-gray-50/50">
+                            <td class="px-4 py-3 text-xs text-gray-500">{{ $loop->iteration + (($documents->currentPage() - 1) * $documents->perPage()) }}</td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-{{ ($categories[$doc->category]['color'] ?? 'slate') }}-100 flex items-center justify-center text-{{ ($categories[$doc->category]['color'] ?? 'slate') }}-700 flex-shrink-0">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-900">{{ $doc->title }}</p>
+                                        <p class="text-[10px] text-gray-400">{{ $doc->document_number }} &middot; {{ $categories[$doc->category]['label'] ?? ucfirst(str_replace('_', ' ', $doc->category)) }}</p>
+                                        @if($doc->project)
+                                        <p class="text-[10px] text-gray-400">Project: {{ $doc->project->title ?? $doc->project->name }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium
+                                    @if($doc->status === 'signed') bg-emerald-50 text-emerald-700
+                                    @elseif($doc->status === 'pending_signature') bg-amber-50 text-amber-700
+                                    @elseif($doc->status === 'archived') bg-gray-50 text-gray-700
+                                    @elseif($doc->status === 'draft') bg-sky-50 text-sky-700
+                                    @else bg-gray-50 text-gray-700 @endif">
+                                    {{ ucfirst(str_replace('_', ' ', $doc->status)) }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-xs text-gray-500">{{ $doc->created_at?->format('d M Y') }}</td>
+                            @if($hasActions)
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-1">
+                                    @if($canEdit && isset($routeMap[$module]['edit']))
+                                    <a href="{{ route($routeMap[$module]['edit'], $doc) }}" class="text-emerald-500 hover:text-emerald-700 p-1 rounded hover:bg-emerald-50 transition-colors" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></a>
+                                    @endif
+                                    @if($canDelete && isset($routeMap[$module]['delete']))
+                                    <form action="{{ route($routeMap[$module]['delete'], $doc) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this document?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                    @endif
+                                </div>
+                            </td>
+                            @endif
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="{{ $hasActions ? 5 : 4 }}" class="px-4 py-8 text-center text-gray-400 text-xs">
+                                No records yet. Use the Add New button to create the first record.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-5 py-3 border-t">{{ ($documents ?? null)?->links() ?? '' }}</div>
+        </div>
+        @break
+
     @default
         <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
             <div class="relative z-10">
