@@ -2,222 +2,240 @@
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
-<title>Invoice {{ $invoice->invoice_number }} &mdash; {{ config('app.name') }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASYX Group — Tax Invoice {{ $invoice->invoice_number }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
-
-  @page { margin: 10mm; size: A4; }
-  *{box-sizing:border-box;}
-  body{margin:0;background:#fff;color:#1C2321;font-family:'Inter',sans-serif;font-size:16px;line-height:1.4;}
-
-  .sheet{
-    width:190mm;
-    min-height:267mm;
-    padding:6mm;
-    position:relative;
-    overflow:hidden;
+  :root{
+    --plum:#5B2170;--plum-dark:#471957;--gold:#B06F2C;--gold-dark:#8F5721;
+    --cream:#F3EEDC;--navy:#14235A;--red:#D91F26;--ink:#1A1D26;
+    --line:#2B2E38;--stamp:#1B3FB4;--paper:#FFFFFF;
+    --paid:#2F7A3D;--due:#B23A2E;--partial:#C9A227;
   }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{background:#E9EAEE;}
+  body{font-family:'Inter',sans-serif;color:var(--ink);font-size:10pt;line-height:1.4;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{width:210mm;min-height:297mm;margin:10mm auto;background:var(--paper);box-shadow:0 4px 30px rgba(70,25,90,.20);display:flex;flex-direction:column;overflow:hidden;padding:10mm 12mm 0;position:relative;}
 
-  .stamp{
-    position:absolute;top:20px;right:-48px;
-    font-size:14px;font-weight:700;letter-spacing:.12em;
-    padding:6px 60px;
-    transform:rotate(35deg);
-    box-shadow:0 4px 10px rgba(0,0,0,.15);
-    z-index:10;
-  }
-  .stamp-paid{background:#2F7A3D;color:#fff;}
-  .stamp-partial{background:#C9A227;color:#23270F;}
-  .stamp-posted{background:#0F3D3E;color:#fff;}
-  .stamp-draft{background:#6E7570;color:#fff;}
-  .stamp-overdue{background:#B23A2E;color:#fff;}
+  .masthead{position:relative;height:32mm;margin-bottom:12mm;}
+  .head-plum{position:absolute;inset:0;background:var(--plum);clip-path:polygon(0 0,100% 0,100% 82%,26% 82%,16% 100%,0 100%);}
+  .head-cream{position:absolute;top:0;left:0;width:58%;height:9mm;background:var(--cream);clip-path:polygon(0 0,100% 0,92% 100%,7% 100%,0 55%);}
+  .co-name{position:absolute;top:6.2mm;left:30%;background:var(--cream);color:var(--plum);font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;font-size:11pt;letter-spacing:1.6px;padding:1.4mm 5mm;}
+  .doc-label{position:absolute;top:3.5mm;right:5mm;color:#fff;font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;font-size:24pt;letter-spacing:2.5px;line-height:1;}
+  .head-contact{position:absolute;top:14.5mm;left:30%;right:5mm;color:#EFE3F7;font-size:6.8pt;display:flex;flex-wrap:wrap;gap:1mm 4mm;align-items:center;}
+  .head-contact b{color:#F7C98B;}
+  .head-addr{position:absolute;top:14.5mm;right:5mm;text-align:right;color:#D9C6E6;font-size:5.6pt;line-height:1.4;max-width:40mm;}
+  .head-addr b{color:#fff;font-size:6pt;display:block;}
+  .tin-bar{position:absolute;left:26%;right:0;bottom:1.5mm;height:6mm;background:var(--gold);clip-path:polygon(3.5% 0,100% 0,100% 100%,0 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;font-size:10.5pt;letter-spacing:.6px;}
+  .logo{position:absolute;top:1.5mm;left:6mm;z-index:2;display:flex;flex-direction:column;align-items:center;background:transparent;}
+  .logo svg{width:16mm;height:16mm;}
+  .logo .name{font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;font-size:13pt;letter-spacing:4px;color:var(--gold);line-height:1.05;text-shadow:0 0 2px rgba(0,0,0,.25);}
+  .logo .grp{font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;font-size:6pt;letter-spacing:5px;color:#fff;}
+  .rule{height:1.1mm;background:var(--gold);margin:0 0 0;}
 
-  .head{
-    display:flex;justify-content:space-between;align-items:flex-start;
-    padding-bottom:12px;
-    border-bottom:1px solid #E3DDCB;
-    margin-bottom:16px;
-  }
-  .co-mark{display:flex;align-items:center;gap:12px;}
-  .co-icon img{height:55px;max-width:180px;object-fit:contain;}
-  .co-name{font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:#0F3D3E;}
-  .co-addr{font-size:14px;color:#6E7570;margin-top:4px;line-height:1.45;}
-  .co-tin{font-size:13px;color:#6E7570;margin-top:3px;}
+  .info{display:grid;grid-template-columns:1.15fr .85fr;gap:14mm;margin-bottom:9mm;}
+  .bill h3, .meta .k{font-weight:800;font-size:10.5pt;letter-spacing:.2px;}
+  .bill h3{margin-bottom:1.5mm;}
+  .bill .line{border-bottom:1px solid var(--ink);padding:1mm 2mm;font-weight:500;min-height:6.5mm;}
+  .meta{display:flex;flex-direction:column;gap:1.6mm;}
+  .meta .row{display:grid;grid-template-columns:auto 1fr;gap:3mm;align-items:end;}
+  .meta .v{border-bottom:1px solid var(--ink);text-align:center;padding:0 2mm .6mm;font-weight:600;min-height:5.5mm;}
 
-  .doc-title{text-align:right;}
-  .doc-title h1{font-family:'Fraunces',serif;font-size:26px;margin:0 0 6px;color:#1C2321;}
-  .doc-title .meta{font-size:14px;color:#6E7570;line-height:1.5;}
-  .doc-title .meta b{color:#1C2321;}
+  table{width:100%;border-collapse:collapse;}
+  .items th{background:var(--gold);color:#fff;font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;font-size:10pt;letter-spacing:.8px;padding:2mm;border:1.3px solid var(--line);text-transform:uppercase;}
+  .items th:first-child{background:var(--plum);}
+  .items td{border:1.3px solid var(--line);padding:2.5mm 2mm;vertical-align:middle;font-weight:500;}
+  .c{text-align:center;} .r{text-align:right;padding-right:3mm !important;}
+  .w-sn{width:10mm;} .w-qty{width:14mm;} .w-price{width:34mm;} .w-amt{width:36mm;}
 
-  .bill-row{display:flex;justify-content:space-between;margin-bottom:16px;}
-  .bill-to .lbl{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#6E7570;margin-bottom:4px;}
-  .bill-to b{display:block;font-size:17px;color:#1C2321;}
-  .bill-to .addr{font-size:14px;color:#6E7570;line-height:1.5;margin-top:3px;}
+  .totals td{border:1.3px solid var(--line);padding:1.8mm 3mm;}
+  .totals .k{font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;color:var(--navy);font-size:12pt;}
+  .totals .v{font-weight:700;text-align:right;font-size:11pt;}
+  .totals .grand .k{background:var(--navy);color:#fff;font-size:14pt;letter-spacing:.5px;}
+  .totals .grand .v{background:var(--navy);color:#fff;font-size:12pt;}
+  .no-border{border:none !important;}
 
-  table.lines{width:100%;border-collapse:collapse;font-size:16px;}
-  table.lines th{
-    text-align:left;font-size:13px;text-transform:uppercase;letter-spacing:.05em;
-    color:#6E7570;border-bottom:1.5px solid #1C2321;padding:8px 4px;
-  }
-  table.lines th.r, table.lines td.r{text-align:right;}
-  table.lines th.c, table.lines td.c{text-align:center;}
-  table.lines td{padding:10px 4px;border-bottom:1px solid #E3DDCB;color:#1C2321;}
-  table.lines tr{page-break-inside:avoid;}
+  .balance-box{margin-top:10px;padding:3mm 4mm;border-radius:4px;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+  .balance-box.paid{background:#E2F0E5;color:var(--paid);}
+  .balance-box.due{background:#FBE7E2;color:var(--due);}
+  .balance-box.partial{background:#FEF3C7;color:#92400E;}
 
-  .totals{margin-left:auto;width:260px;margin-top:12px;font-size:16px;}
-  .totals div{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #E3DDCB;color:#6E7570;}
-  .totals div b{color:#1C2321;font-weight:600;}
-  .totals .grand{font-weight:700;font-size:18px;border-bottom:none;color:#0F3D3E;padding-top:8px;}
-  .totals .grand b{color:#0F3D3E;}
+  .lower{display:grid;grid-template-columns:1fr 58mm;gap:8mm;margin-top:10mm;align-items:start;}
+  .terms h3{color:var(--red);font-weight:800;font-size:13pt;text-decoration:underline;text-underline-offset:2.5px;margin-bottom:2.5mm;letter-spacing:.3px;}
+  .terms ol{padding-left:5.5mm;font-weight:500;}
+  .terms li{margin-bottom:1.2mm;}
+  .notes{font-weight:500;margin-top:3mm;}
+  .thanks{font-weight:800;margin-top:10mm;font-size:10.5pt;}
+  .stamp{width:50mm;height:50mm;justify-self:center;transform:rotate(-6deg);opacity:.92;}
 
-  .balance-bar{
-    margin-top:16px;padding:12px 18px;border-radius:8px;
-    display:flex;justify-content:space-between;align-items:center;
-  }
-  .balance-bar.due{background:#FBE7E2;}
-  .balance-bar.paid{background:#E2F0E5;}
-  .balance-bar span{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
-  .balance-bar.due span{color:#B23A2E;}
-  .balance-bar.paid span{color:#2F7A3D;}
-  .balance-bar b{font-family:'JetBrains Mono',monospace;font-size:18px;}
-  .balance-bar.due b{color:#B23A2E;}
-  .balance-bar.paid b{color:#2F7A3D;}
+  .foot-wrap{margin-top:auto;padding-bottom:10mm;}
+  .foot{background:var(--plum);color:#F0E6F6;padding:3mm 8mm;font-size:6.9pt;line-height:1.6;text-align:center;font-weight:600;}
+  .foot-bars{display:flex;height:2mm;margin-top:1.2mm;}
+  .foot-bars .b1{flex:1.2;background:var(--red);}
+  .foot-bars .b2{flex:1;background:var(--navy);}
 
-  .notes-box{
-    margin-top:14px;padding:12px 14px;background:#FBF9F2;border-radius:6px;border:1px solid #E3DDCB;
-  }
-  .notes-box .lbl{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#6E7570;margin-bottom:4px;}
-  .notes-box p{font-size:15px;color:#1C2321;margin:0;line-height:1.4;}
+  .stamp-badge{position:absolute;top:18mm;right:6mm;background:var(--navy);color:#fff;font-family:'Barlow Semi Condensed',sans-serif;font-size:11pt;font-weight:700;letter-spacing:.08em;padding:2mm 8mm;transform:rotate(12deg);box-shadow:0 2px 6px rgba(0,0,0,.2);z-index:10;opacity:.9;border:2px solid #fff;}
 
-  .terms-box{
-    margin-top:16px;padding:14px 16px;background:#F5F7F6;border-radius:8px;border:1px solid #D8E3DE;
-  }
-  .terms-box .lbl{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#0F3D3E;font-weight:700;margin-bottom:6px;}
-  .terms-box .body{font-size:15px;color:#1C2321;line-height:1.5;white-space:pre-line;}
-
-  .thank-you{
-    margin-top:16px;padding:14px 18px;border-radius:8px;
-    background:linear-gradient(135deg,#0F3D3E 0%,#1A5A5B 100%);
-    color:#fff;text-align:center;
-  }
-  .thank-you .title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;letter-spacing:.02em;}
-  .thank-you .contact{font-size:13px;opacity:.85;margin-top:3px;}
-
-  .watermark{
-    position:absolute;
-    bottom:100px;left:50%;
-    transform:translateX(-50%) rotate(-30deg);
-    opacity:.05;pointer-events:none;z-index:0;
-  }
-  .watermark img{height:160px;object-fit:contain;filter:grayscale(100%);}
-
-  .foot{
-    margin-top:16px;padding-top:10px;border-top:1px solid #E3DDCB;
-    font-size:13px;color:#6E7570;text-align:center;
-  }
+  @page{size:A4;margin:0;}
+  @media print{html{background:none;}.sheet{margin:0;box-shadow:none;width:210mm;height:297mm;}}
 </style>
 </head>
 <body>
-  <div class="sheet">
-    @php $s = $invoice->status @endphp
-    <div class="stamp stamp-{{ $s }}">{{ strtoupper($s) }}</div>
+<div class="sheet">
+  @php $s = $invoice->status; @endphp
+  <div class="stamp-badge">{{ strtoupper($s) }}</div>
 
-    <div class="watermark">
-      <img src="{{ public_path('asyxgrouplogo.png') }}" alt="">
+  <header class="masthead">
+    <div class="head-plum"></div>
+    <div class="head-cream"></div>
+    <div class="co-name">ASYX GROUP COMPANY LIMITED</div>
+    <div class="doc-label">TAX INVOICE</div>
+    <div class="head-contact">
+      <span><b>☎</b> +255 755 432 071</span>
+      <span><b>✆</b> +255 625 001 100</span>
+      <span><b>✉</b> info@asyx.co.tz</span>
+      <span><b>◎</b> asyxgroupcompany</span>
+      <span><b>🌐</b> www.asyx.co.tz</span>
     </div>
-
-    <div class="head">
-      <div class="co-mark">
-        <div class="co-icon">
-          <img src="{{ public_path('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}">
-        </div>
-        <div>
-          <div class="co-name">{{ $company?->name ?? config('app.name') }}</div>
-          <div class="co-addr">{{ $company?->address ?? 'Dar es Salaam, Tanzania' }}</div>
-          <div class="co-tin">
-            @if($company?->tax_id)TIN: {{ $company->tax_id }}@endif
-            @if($company?->tax_id && $company?->vrn) &middot; @endif
-            @if($company?->vrn)VRN: {{ $company->vrn }}@endif
-          </div>
-        </div>
-      </div>
-      <div class="doc-title">
-        <h1>Invoice {{ $invoice->invoice_number }}</h1>
-        <div class="meta">
-          Invoice Date: <b>{{ $invoice->invoice_date->format('M d, Y') }}</b><br>
-          Due Date: <b>{{ $invoice->due_date->format('M d, Y') }}</b>
-        </div>
-      </div>
+    <div class="head-addr">
+      <b>TROPICAL CENTER, 3RD FLOOR</b>
+      New Bagamoyo Road · Plot No. 30/00, House No. 301 · P.O. Box 31587 · Dar es Salaam
     </div>
-
-    <div class="bill-row">
-      <div class="bill-to">
-        <div class="lbl">Invoiced To</div>
-        <b>{{ $invoice->customer?->name ?? 'N/A' }}</b>
-        <div class="addr">
-          {{ $invoice->customer?->email ?? '' }}<br>
-          {{ $invoice->customer?->phone ?? '' }}
-        </div>
-      </div>
+    <div class="tin-bar">TIN: 108-800-186&nbsp; | &nbsp;VRN: 40-009570-M</div>
+    <div class="logo">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M50 8 A42 42 0 1 0 92 50" fill="none" stroke="#D91F26" stroke-width="12" stroke-linecap="round"/>
+        <path d="M50 25 A25 25 0 1 1 25 50" fill="none" stroke="#14235A" stroke-width="12" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="6.5" fill="#B06F2C"/>
+      </svg>
+      <div class="name">ASYX</div>
+      <div class="grp">GROUP</div>
     </div>
+  </header>
+  <div class="rule"></div>
 
-    <table class="lines">
-      <tr><th>Description</th><th class="c">Qty</th><th class="r">Unit Price</th><th class="r">Total</th></tr>
-      @forelse($invoice->items as $item)
+  <section class="info" style="margin-top:10mm;">
+    <div class="bill">
+      <h3>INVOICE TO:</h3>
+      <div class="line">{{ $invoice->customer?->name ?? 'N/A' }}</div>
+      <div class="line">{{ $invoice->customer?->email ?? '' }}</div>
+      <div class="line">{{ $invoice->customer?->phone ?? '' }}</div>
+      <div class="line">{{ $invoice->customer?->address ?? '' }}</div>
+    </div>
+    <div class="meta">
+      <div class="row"><span class="k">INVOICE NO:</span><span class="v">{{ $invoice->invoice_number }}</span></div>
+      <div class="row"><span class="k">INVOICE DATE:</span><span class="v">{{ $invoice->invoice_date->format('d/m/Y') }}</span></div>
+      <div class="row"><span class="k">DUE DATE:</span><span class="v">{{ $invoice->due_date->format('d/m/Y') }}</span></div>
+    </div>
+  </section>
+
+  <table class="items">
+    <thead>
       <tr>
+        <th class="w-sn">S/N</th>
+        <th>Description</th>
+        <th class="w-qty">Qty</th>
+        <th class="w-price">Unit Price</th>
+        <th class="w-amt">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @forelse($invoice->items as $i => $item)
+      <tr>
+        <td class="c">{{ $i + 1 }}</td>
         <td>{{ $item->product_name }}</td>
         <td class="c">{{ $item->quantity }}</td>
-        <td class="r">{{ number_format($item->unit_price, 2) }} Tsh</td>
-        <td class="r">{{ number_format($item->total_amount, 2) }} Tsh</td>
+        <td class="r">{{ number_format($item->unit_price, 2) }}</td>
+        <td class="r">{{ number_format($item->total_amount, 2) }}</td>
       </tr>
       @empty
-      <tr><td colspan="4" style="padding:12px;text-align:center;color:#6E7570;">No items</td></tr>
+      <tr><td class="c">—</td><td>No items</td><td class="c">—</td><td class="r">—</td><td class="r">—</td></tr>
       @endforelse
-    </table>
+    </tbody>
+  </table>
 
-    <div class="totals">
-      <div><span>Sub Total</span><b>{{ number_format($invoice->subtotal, 2) }} Tsh</b></div>
-      @if($invoice->tax_amount > 0)
-      <div><span>18.00% VAT</span><b>{{ number_format($invoice->tax_amount, 2) }} Tsh</b></div>
-      @endif
-      @if($invoice->discount_amount > 0)
-      <div><span>Discount</span><b style="color:#B23A2E;">&minus;{{ number_format($invoice->discount_amount, 2) }} Tsh</b></div>
-      @endif
-      <div class="grand"><span>Total</span><b>{{ number_format($invoice->total_amount, 2) }} Tsh</b></div>
-    </div>
-
-    @if($invoice->status == 'paid')
-    <div class="balance-bar paid">
-      <span>Paid in Full</span>
-      <b>{{ number_format($invoice->paid_amount, 2) }} Tsh</b>
-    </div>
-    @else
-    <div class="balance-bar due">
-      <span>Balance Due</span>
-      <b>{{ number_format($invoice->balance_amount, 2) }} Tsh</b>
-    </div>
+  <table class="totals">
+    <tr>
+      <td class="no-border" style="width:52%;"></td>
+      <td class="k" style="width:24%;">Sub-Total:</td>
+      <td class="v" style="width:24%;">{{ number_format($invoice->subtotal, 2) }}</td>
+    </tr>
+    @if($invoice->tax_amount > 0)
+    <tr>
+      <td class="no-border"></td>
+      <td class="k">VAT (18%):</td>
+      <td class="v">{{ number_format($invoice->tax_amount, 2) }}</td>
+    </tr>
     @endif
-
-    @if($invoice->notes)
-    <div class="notes-box">
-      <div class="lbl">Notes</div>
-      <p>{{ $invoice->notes }}</p>
-    </div>
+    @if($invoice->discount_amount > 0)
+    <tr>
+      <td class="no-border"></td>
+      <td class="k">Discount:</td>
+      <td class="v">{{ number_format($invoice->discount_amount, 2) }}</td>
+    </tr>
     @endif
+    <tr class="grand">
+      <td class="no-border"></td>
+      <td class="k">GRAND TOTAL</td>
+      <td class="v">{{ number_format($invoice->total_amount, 2) }}</td>
+    </tr>
+  </table>
 
-    <div class="terms-box">
-      <div class="lbl">Terms & Conditions</div>
-      <div class="body">{{ $invoice->terms_and_conditions ?? "1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of " . config('app.name') . " until fully paid\n\nThank You For Your Business." }}</div>
-    </div>
-
-    <div class="thank-you">
-      <div class="title">Thank You For Your Business</div>
-      <div class="contact">For inquiries contact: {{ $company?->email ?? 'billing@asyxgroup.tz' }}</div>
-    </div>
-
-    <div class="foot">
-      PDF Generated on {{ now()->format('l, F jS, Y') }} &middot; {{ config('app.name') }}
-    </div>
+  <div class="balance-box {{ $s === 'paid' ? 'paid' : ($s === 'partial' ? 'partial' : 'due') }}">
+    <span>{{ $s === 'paid' ? 'PAID IN FULL' : ($s === 'partial' ? 'PARTIAL PAYMENT' : 'BALANCE DUE') }}</span>
+    <span>{{ number_format($s === 'paid' ? $invoice->paid_amount : $invoice->balance_amount, 2) }} TZS</span>
   </div>
+
+  <section class="lower">
+    <div class="terms">
+      <h3>TERMS &amp; CONDITIONS:</h3>
+      <ol>
+        <li>Prices Are Quoted in TZS</li>
+        <li>Prices are subject to change without prior notice</li>
+        <li>Payment terms must be strictly observed</li>
+        <li>Goods remain property of ASYX Group Company Limited until fully paid</li>
+      </ol>
+      @if($invoice->notes)
+      <div class="notes"><b>Notes:</b> {{ $invoice->notes }}</div>
+      @endif
+      <div class="thanks">Thank You For Your Business</div>
+    </div>
+
+    <svg class="stamp" viewBox="0 0 200 200" aria-label="Company stamp">
+      <defs>
+        <path id="arcTopInv" d="M 100,100 m -72,0 a 72,72 0 1,1 144,0"/>
+        <path id="arcBotInv" d="M 100,100 m -72,0 a 72,72 0 1,0 144,0"/>
+      </defs>
+      <circle cx="100" cy="100" r="94" fill="none" stroke="#1B3FB4" stroke-width="4"/>
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#1B3FB4" stroke-width="2"/>
+      <circle cx="100" cy="100" r="52" fill="none" stroke="#1B3FB4" stroke-width="2.5"/>
+      <text fill="#1B3FB4" font-family="Barlow Semi Condensed, sans-serif" font-weight="700" font-size="17" letter-spacing="2.5">
+        <textPath href="#arcTopInv" startOffset="50%" text-anchor="middle">ASYX GROUP COMPANY LIMITED</textPath>
+      </text>
+      <text fill="#1B3FB4" font-family="Barlow Semi Condensed, sans-serif" font-weight="700" font-size="15" letter-spacing="2">
+        <textPath href="#arcBotInv" startOffset="50%" text-anchor="middle">P. O. Box 4816, DAR ES SALAAM</textPath>
+      </text>
+      <text x="35" y="106" fill="#1B3FB4" font-size="16">★</text>
+      <text x="151" y="106" fill="#1B3FB4" font-size="16">★</text>
+      <g stroke="#1B3FB4" fill="#1B3FB4">
+        <path d="M100 62 A38 38 0 0 1 138 100 L118 100 A18 18 0 0 0 100 82 Z" opacity=".95"/>
+        <path d="M138 100 A38 38 0 0 1 100 138 L100 118 A18 18 0 0 0 118 100 Z" opacity=".8"/>
+        <path d="M100 138 A38 38 0 0 1 62 100 L82 100 A18 18 0 0 0 100 118 Z" opacity=".95"/>
+        <path d="M62 100 A38 38 0 0 1 100 62 L100 82 A18 18 0 0 0 82 100 Z" opacity=".8"/>
+      </g>
+    </svg>
+  </section>
+
+  <div class="foot-wrap">
+    <div class="foot">
+      Software and hardware distribution, Customized software and Mobile apps development and re-engineering,
+      enterprise software solutions, IT systems Security and Auditing, Computerized Systems Integration,
+      Artificial Intelligence (AI) and Machine Learning, Statistics and Big Data Analytics,
+      Customer Specific Annual Maintenance Support Contracts (AMCs) and ICT Consultancy and Training.
+    </div>
+    <div class="foot-bars"><div class="b1"></div><div class="b2"></div></div>
+  </div>
+</div>
 </body>
 </html>

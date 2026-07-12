@@ -13,7 +13,11 @@ class JobCard extends Model
 
     protected $casts = [
         'due_date' => 'date',
+        'report_date' => 'date',
         'resolved_at' => 'datetime',
+        'end_user_signed_at' => 'datetime',
+        'technician_signed_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     public function project()
@@ -29,5 +33,15 @@ class JobCard extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function parts()
+    {
+        return $this->hasMany(JobCardPart::class)->orderBy('sort_order');
     }
 }

@@ -801,6 +801,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/job-cards/{jobCard}/print', [$jobCtrl, 'print'])->name('job-cards.print');
     Route::patch('/job-cards/{jobCard}', [$jobCtrl, 'update'])->name('job-cards.update');
     Route::post('/job-cards/{jobCard}/status', [$jobCtrl, 'updateStatus'])->name('job-cards.status');
+    Route::post('/job-cards/{jobCard}/sign-off', [$jobCtrl, 'signOff'])->name('job-cards.sign-off');
+    Route::post('/job-cards/{jobCard}/approve-payment', [$jobCtrl, 'approvePayment'])->name('job-cards.approve-payment');
     Route::delete('/job-cards/{jobCard}', [$jobCtrl, 'destroy'])->name('job-cards.destroy');
 
     Route::get('/timesheets', [$ext, 'timesheetIndex'])->name('timesheets.index');
