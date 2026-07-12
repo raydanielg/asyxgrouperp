@@ -148,7 +148,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'project_accountant', 'label' => 'Project Accountant', 'perms' => ['view-dashboard', 'view-project-budgets', 'view-sales-invoices', 'create-sales-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-petty-cash', 'create-petty-cash', 'view-financial-reports', 'view-self-service', 'view-my-payslips']],
 
             // Technical
-            ['name' => 'senior_systems_engineer', 'label' => 'Senior Systems Engineer', 'perms' => ['view-dashboard', 'view-projects', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-documents', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'senior_systems_engineer', 'label' => 'Senior Systems Engineer', 'perms' => ['view-dashboard', 'view-projects', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-documents', 'create-documents', 'edit-documents', 'delete-documents', 'view-self-service', 'view-my-payslips']],
             ['name' => 'systems_engineer', 'label' => 'Systems Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-maintenance', 'view-self-service', 'view-my-payslips']],
             ['name' => 'support_engineer', 'label' => 'Support Engineer / Field Technician', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-site-reports', 'create-site-reports', 'view-assets', 'view-self-service', 'view-my-payslips']],
             ['name' => 'noc_engineer', 'label' => 'NOC Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-self-service', 'view-my-payslips']],
