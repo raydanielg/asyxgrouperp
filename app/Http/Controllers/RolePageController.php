@@ -688,10 +688,107 @@ class RolePageController extends Controller
                 break;
 
             default:
-                $data['items'] = collect([]);
+                $modelClass = $this->resolveModelClassForModule($module);
+                if ($modelClass && class_exists($modelClass)) {
+                    $data['items'] = $modelClass::latest()->paginate(15);
+                    $data['totalCount'] = $modelClass::count();
+                    if (in_array('status', (new $modelClass)->getFillable(), true) || method_exists($modelClass, 'getTable') && \Schema::hasColumn((new $modelClass)->getTable(), 'status')) {
+                        $data['pendingCount'] = $modelClass::whereIn('status', ['pending', 'open', 'in_progress', 'draft', 'pending_signature'])->count();
+                    }
+                    if (method_exists($modelClass, 'getTable') && \Schema::hasColumn((new $modelClass)->getTable(), 'created_at')) {
+                        $data['todayCount'] = $modelClass::whereDate('created_at', today())->count();
+                        $data['weekCount'] = $modelClass::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
+                    }
+                } else {
+                    $data['items'] = collect([]);
+                }
                 break;
         }
 
         return $data;
+    }
+
+    private function resolveModelClassForModule(string $module): ?string
+    {
+        $map = [
+            'team-review' => Project::class,
+            'resource-allocation' => Project::class,
+            'milestones' => Project::class,
+            'tasks' => ProjectTask::class,
+            'team-tasks' => ProjectTask::class,
+            'team-attendance' => Attendance::class,
+            'team-timesheets' => Timesheet::class,
+            'team-overview' => Employee::class,
+            'team-leaves' => Leave::class,
+            'escalations' => HelpdeskTicket::class,
+            'incidents' => HelpdeskTicket::class,
+            'site-visits' => HelpdeskTicket::class,
+            'knowledge-base' => HelpdeskTicket::class,
+            'sla-reports' => HelpdeskTicket::class,
+            'site-reports' => ProjectTask::class,
+            'service-reports' => HelpdeskTicket::class,
+            'call-statistics' => Call::class,
+            'shift-schedule' => Attendance::class,
+            'sales-forecast' => CrmDeal::class,
+            'market-analysis' => CrmLead::class,
+            'lead-source-reports' => CrmLead::class,
+            'project-profitability' => Project::class,
+            'tender-calendar' => Tender::class,
+            'tenders' => Tender::class,
+            'campaigns' => CrmCampaign::class,
+            'messages' => Message::class,
+            'announcements' => Announcement::class,
+            'vehicles' => Vehicle::class,
+            'fuel-logs' => FuelLog::class,
+            'driver-assignment' => Vehicle::class,
+            'trip-schedule' => Vehicle::class,
+            'deliveries' => Delivery::class,
+            'shipments' => Shipment::class,
+            'route-planning' => Delivery::class,
+            'visitors' => Visitor::class,
+            'appointments' => Appointment::class,
+            'calls' => Call::class,
+            'correspondence' => Correspondence::class,
+            'parcels' => Parcel::class,
+            'front-desk' => FrontDesk::class,
+            'departments' => Department::class,
+            'overtime' => Attendance::class,
+            'training-records' => TrainingRecord::class,
+            'certifications' => Certification::class,
+            'job-postings' => JobPosting::class,
+            'applications' => JobApplication::class,
+            'onboarding' => Employee::class,
+            'policies' => Policy::class,
+            'performance' => PerformanceReview::class,
+            'disciplinary' => DisciplinaryCase::class,
+            'salary-records' => Payroll::class,
+            'deductions' => PayrollDeduction::class,
+            'payslips' => Payroll::class,
+            'credit-limits' => CrmContact::class,
+            'overdue-accounts' => SalesInvoice::class,
+            'collections' => SalesInvoice::class,
+            'receivables-aging' => SalesInvoice::class,
+            'payables-aging' => PurchaseInvoice::class,
+            'cost-centres' => CostCentre::class,
+            'budget-vs-actual' => Budget::class,
+            'tax-management' => TaxRecord::class,
+            'bank-reconciliation' => BankAccount::class,
+            'lpos' => PurchaseInvoice::class,
+            'grns' => StockMovement::class,
+            'rfqs' => Rfq::class,
+            'purchase-requisitions' => PurchaseRequisition::class,
+            'stock-count' => StockMovement::class,
+            'reorder-levels' => Product::class,
+            'batch-tracking' => Product::class,
+            'barcodes' => Product::class,
+            'asset-assignment' => Asset::class,
+            'asset-maintenance' => AssetMaintenance::class,
+            'asset-disposal' => Asset::class,
+            'inventory-transfers' => Transfer::class,
+            'transfers' => Transfer::class,
+            'pos-reports' => PosSale::class,
+        ];
+
+        return $map[$module] ?? null;
     }
 }
