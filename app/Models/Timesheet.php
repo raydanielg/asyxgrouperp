@@ -21,4 +21,9 @@ class Timesheet extends Model
     {
         return $this->belongsTo(ProjectTask::class);
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }
