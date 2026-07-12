@@ -106,6 +106,7 @@ $permMap = [
     'team-leaves' => ['create' => 'apply-leave', 'edit' => 'approve-team-leaves', 'delete' => 'apply-leave'],
     'announcements' => ['create' => 'view-announcements', 'delete' => 'view-announcements'],
     'my-account' => ['edit' => 'view-self-service'],
+    'documents' => ['create' => 'create-documents', 'edit' => 'edit-documents', 'delete' => 'delete-documents'],
 ];
 $routeMap = [
     'employees' => ['create' => 'admin.employees.index', 'edit' => 'admin.employees.edit', 'delete' => 'admin.employees.destroy'],
@@ -209,6 +210,7 @@ $routeMap = [
     'team-leaves' => ['create' => 'admin.leaves.index', 'edit' => 'admin.leaves.index', 'delete' => 'admin.leaves.index'],
     'announcements' => ['create' => 'admin.announcements.index', 'delete' => 'admin.announcements.index'],
     'my-account' => ['edit' => 'admin.profile'],
+    'documents' => ['create' => 'admin.documents.create', 'edit' => 'admin.documents.edit', 'delete' => 'admin.documents.destroy'],
 ];
 $canCreate = isset($permMap[$module]['create']) && auth()->user()->hasPermission($permMap[$module]['create']);
 $canEdit = isset($permMap[$module]['edit']) && auth()->user()->hasPermission($permMap[$module]['edit']);
