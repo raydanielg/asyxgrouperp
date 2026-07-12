@@ -36,6 +36,7 @@ use App\Models\Bill;
 use App\Models\BankAccount;
 use App\Models\BankTransferAcc;
 use App\Models\JobCard;
+use App\Models\Document;
 use Illuminate\Http\Request;
 
 class RolePageController extends Controller
