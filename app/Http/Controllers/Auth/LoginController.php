@@ -16,7 +16,7 @@ class LoginController extends Controller
     {
         $user = auth()->user();
         if ($user->isAdmin()) {
-            return '/admin/dashboard';
+            return '/dashboard';
         }
         return '/dashboard';
     }

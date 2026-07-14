@@ -124,51 +124,28 @@
                             $roleGroups = [
                                 'Administration' => [
                                     ['admin@djanproject.com', 'Super Admin', 'emerald', 'admin12345'],
-                                    ['erp.administrator@djanproject.com', 'ERP Admin', 'teal'],
-                                    ['ict.administrator@djanproject.com', 'ICT Admin', 'cyan'],
+                                    ['system.admin@djanproject.com', 'System Admin', 'teal'],
                                 ],
                                 'Executive' => [
-                                    ['managing.director@djanproject.com', 'Managing Director', 'violet'],
-                                    ['general.manager@djanproject.com', 'General Manager', 'indigo'],
+                                    ['director@djanproject.com', 'Director', 'violet'],
                                 ],
                                 'Finance' => [
-                                    ['finance.director@djanproject.com', 'Finance Director', 'violet'],
                                     ['finance.manager@djanproject.com', 'Finance Manager', 'amber'],
                                     ['accountant@djanproject.com', 'Accountant', 'orange'],
                                 ],
-                                'Procurement & Inventory' => [
+                                'Procurement & Operations' => [
                                     ['procurement.manager@djanproject.com', 'Procurement Manager', 'amber'],
-                                    ['store.manager@djanproject.com', 'Store Manager', 'emerald'],
-                                    ['inventory.controller@djanproject.com', 'Inventory Controller', 'cyan'],
+                                    ['operations.manager@djanproject.com', 'Operations Manager', 'orange'],
                                 ],
-                                'Sales & CRM' => [
+                                'Sales & Projects' => [
                                     ['sales.manager@djanproject.com', 'Sales Manager', 'amber'],
-                                    ['crm.officer@djanproject.com', 'CRM Officer', 'pink'],
-                                ],
-                                'Projects' => [
-                                    ['project.director@djanproject.com', 'Project Director', 'violet'],
                                     ['project.manager@djanproject.com', 'Project Manager', 'indigo'],
-                                    ['project.engineer@djanproject.com', 'Project Engineer', 'cyan'],
                                 ],
                                 'Technical' => [
-                                    ['senior.systems.engineer@djanproject.com', 'Senior Systems Engineer', 'blue'],
-                                    ['network.engineer@djanproject.com', 'Network Engineer', 'cyan'],
-                                    ['support.engineer@djanproject.com', 'Support Engineer', 'emerald'],
-                                ],
-                                'Service & Operations' => [
-                                    ['service.desk.manager@djanproject.com', 'Service Desk Manager', 'rose'],
-                                    ['operations.officer@djanproject.com', 'Operations Officer', 'orange'],
-                                    ['fleet.manager@djanproject.com', 'Fleet Manager', 'amber'],
-                                ],
-                                'Call Center & SGR' => [
-                                    ['call.center.supervisor@djanproject.com', 'Call Center Supervisor', 'rose'],
-                                    ['sgr.supervisor@djanproject.com', 'SGR Supervisor', 'amber'],
-                                    ['sgr.parking.officer@djanproject.com', 'SGR Parking', 'amber'],
+                                    ['technical.manager@djanproject.com', 'Technical Manager', 'blue'],
                                 ],
                                 'HR' => [
                                     ['hr.manager@djanproject.com', 'HR Manager', 'sky'],
-                                    ['hr.officer@djanproject.com', 'HR Officer', 'cyan'],
-                                    ['employee.self.service@djanproject.com', 'Employee Self-Service', 'emerald'],
                                 ],
                             ];
                         @endphp

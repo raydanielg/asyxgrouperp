@@ -47,7 +47,7 @@ tr:nth-child(even) td { background: #f8fafc; }
 </div>
 
 {{-- Role-Specific Sections --}}
-@if(in_array($role, ['admin','administrator','admin_manager','director']))
+@if(in_array($role, ['admin','superadmin','director']))
   <div class="section-title">Recent Sales Invoices</div>
   <table>
     <tr><th>#</th><th>Customer</th><th>Date</th><th class="text-right">Amount</th><th class="text-right">Balance</th><th>Status</th></tr>
@@ -65,7 +65,7 @@ tr:nth-child(even) td { background: #f8fafc; }
   </table>
 @endif
 
-@if(in_array($role, ['admin','administrator','admin_manager','director','technical_manager','ict_officer','ict_engineer']))
+@if(in_array($role, ['admin','superadmin','director','technical_manager']))
   <div class="section-title">Open Support Tickets</div>
   <table>
     <tr><th>#</th><th>Subject</th><th>Priority</th><th>Status</th><th>Created</th></tr>
@@ -82,7 +82,7 @@ tr:nth-child(even) td { background: #f8fafc; }
   </table>
 @endif
 
-@if(in_array($role, ['finance_officer','auditor']))
+@if(in_array($role, ['finance_manager','accountant']))
   <div class="section-title">Recent Expenses</div>
   <table>
     <tr><th>#</th><th>Category</th><th>Date</th><th class="text-right">Amount</th></tr>
@@ -112,7 +112,7 @@ tr:nth-child(even) td { background: #f8fafc; }
   </table>
 @endif
 
-@if(in_array($role, ['hr_officer','supervisor']))
+@if(in_array($role, ['hr_manager']))
   <div class="section-title">Recent Employees</div>
   <table>
     <tr><th>#</th><th>Name</th><th>Department</th><th>Status</th><th>Phone</th></tr>
@@ -129,7 +129,7 @@ tr:nth-child(even) td { background: #f8fafc; }
   </table>
 @endif
 
-@if(in_array($role, ['receptionist','call_center_agent']))
+@if(in_array($role, ['sales_manager']))
   <div class="section-title">Recent Leads</div>
   <table>
     <tr><th>#</th><th>Name</th><th>Company</th><th>Status</th><th>Assigned To</th></tr>
@@ -146,7 +146,7 @@ tr:nth-child(even) td { background: #f8fafc; }
   </table>
 @endif
 
-@if(in_array($role, ['logistics_officer','operations_manager']))
+@if(in_array($role, ['procurement_manager','operations_manager']))
   <div class="section-title">Low Stock Products</div>
   <table>
     <tr><th>#</th><th>Name</th><th>SKU</th><th class="text-right">Stock</th><th class="text-right">Reorder Level</th></tr>
@@ -180,7 +180,7 @@ tr:nth-child(even) td { background: #f8fafc; }
   </table>
 @endif
 
-@if(in_array($role, ['cashier']))
+@if(false) {{-- cashier role removed --}}
   <div class="section-title">Recent POS Sales</div>
   <table>
     <tr><th>#</th><th>Reference</th><th class="text-right">Amount</th><th>Date</th></tr>

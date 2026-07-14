@@ -8,7 +8,7 @@
 
   {{-- Loading bar --}}
   <div style="width:180px; height:3px; background:#f0f0f0; border-radius:3px; overflow:hidden;">
-    <div style="height:100%; width:0%; background:linear-gradient(90deg, #A56035, #EC2226, #632871); animation: ls-loadfill 1.6s cubic-bezier(.6,0,.2,1) forwards; border-radius:3px;"></div>
+    <div style="height:100%; width:0%; background:linear-gradient(90deg, #5A0917, #F6891F, #5A0917); animation: ls-loadfill 1.6s cubic-bezier(.6,0,.2,1) forwards; border-radius:3px;"></div>
   </div>
 
 </div>

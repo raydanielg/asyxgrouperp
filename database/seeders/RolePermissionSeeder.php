@@ -58,9 +58,7 @@ class RolePermissionSeeder extends Seeder
             'Project Finance' => ['view-project-budgets', 'view-sales-invoices', 'create-sales-invoices'],
             'Engineer' => ['view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-projects'],
             'NOC' => ['view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets'],
-            'Call Center' => ['view-call-logs', 'create-call-logs', 'view-crm-leads', 'create-crm-leads', 'view-helpdesk-tickets', 'create-helpdesk-tickets'],
-            'SGR' => ['view-sgr', 'create-sgr-action-points', 'approve-sgr-action-points', 'view-sgr-reports'],
-            'SGR Parking Revenue' => ['view-sgr-parking-revenue', 'create-sgr-parking-revenue', 'approve-sgr-parking-revenue'],
+            'Call Center' => ['view-crm-leads', 'create-crm-leads', 'view-helpdesk-tickets', 'create-helpdesk-tickets'],
             'Training' => ['view-training', 'create-training', 'view-certifications', 'create-certifications'],
             'Time Attendance' => ['view-attendance', 'create-attendance', 'view-overtime', 'approve-overtime'],
             'Fleet' => ['view-vehicles', 'create-vehicles', 'edit-vehicles', 'view-fuel-logs', 'create-fuel-logs', 'view-maintenance', 'create-maintenance'],
@@ -97,107 +95,40 @@ class RolePermissionSeeder extends Seeder
 
         $permMap = DB::table('permissions')->pluck('id', 'name')->toArray();
 
+        // ═══════════════════════════════════════════════════════
+        // CONSOLIDATED ROLE STRUCTURE — 11 roles total.
+        // superadmin/admin = full system access.
+        // Every other business area has exactly ONE role.
+        // ═══════════════════════════════════════════════════════
         $roles = [
-            // System Administration
-            ['name' => 'erp_administrator', 'label' => 'ERP Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'view-roles', 'manage-roles', 'view-settings', 'view-reports', 'view-employees', 'view-attendance', 'view-leaves', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'ict_administrator', 'label' => 'ICT Administrator', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-settings', 'view-projects', 'view-employees', 'view-self-service', 'view-my-payslips']],
-
-            // Executive
-            ['name' => 'managing_director', 'label' => 'Managing Director', 'perms' => ['view-dashboard', 'view-reports', 'view-financial-reports', 'view-approvals', 'approve-final', 'view-companies', 'switch-companies', 'view-tenders', 'view-crm-contracts', 'view-employees', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'general_manager', 'label' => 'General Manager', 'perms' => ['view-dashboard', 'view-reports', 'view-financial-reports', 'view-approvals', 'approve-finance', 'approve-hr', 'approve-technical', 'view-projects', 'view-crm-leads', 'view-crm-deals', 'view-sales-invoices', 'view-employees', 'view-attendance', 'view-leaves', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'technical_manager', 'label' => 'Technical Manager', 'perms' => ['view-dashboard', 'view-projects', 'view-timesheets', 'view-bugs', 'create-bugs', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-lpos', 'approve-technical', 'view-assets', 'view-employees', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'operations_manager', 'label' => 'Operations Manager', 'perms' => ['view-dashboard', 'view-fleet', 'view-vehicles', 'view-fuel-logs', 'view-maintenance', 'view-helpdesk-tickets', 'view-products', 'view-warehouses', 'view-stock-movements', 'view-self-service', 'view-my-payslips']],
-
-            // Finance
-            ['name' => 'finance_manager', 'label' => 'Finance Manager', 'perms' => ['view-dashboard', 'view-reports', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-bills', 'view-bank-accounts', 'view-acc-transfers', 'view-budgets', 'view-journal-entries', 'create-journal-entries', 'view-financial-reports', 'view-petty-cash', 'create-petty-cash', 'view-bank-reconciliation', 'view-tax-management', 'view-approvals', 'approve-finance', 'view-payroll', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'chief_accountant', 'label' => 'Chief Accountant', 'perms' => ['view-dashboard', 'view-reports', 'view-journal-entries', 'create-journal-entries', 'view-financial-reports', 'view-petty-cash', 'create-petty-cash', 'view-bank-reconciliation', 'create-bank-reconciliation', 'view-tax-management', 'create-tax-management', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-bills', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'accountant', 'label' => 'Accountant', 'perms' => ['view-dashboard', 'view-journal-entries', 'create-journal-entries', 'view-financial-reports', 'view-petty-cash', 'create-petty-cash', 'view-sales-invoices', 'create-sales-invoices', 'view-purchase-invoices', 'create-purchase-invoices', 'view-expenses', 'create-expenses', 'view-cost-centres', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'accounts_receivable_officer', 'label' => 'Accounts Receivable Officer', 'perms' => ['view-dashboard', 'view-sales-invoices', 'create-sales-invoices', 'view-revenues', 'create-revenues', 'view-credit-limits', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'accounts_payable_officer', 'label' => 'Accounts Payable Officer', 'perms' => ['view-dashboard', 'view-purchase-invoices', 'create-purchase-invoices', 'view-expenses', 'create-expenses', 'view-bills', 'create-bills', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'cashier', 'label' => 'Cashier', 'perms' => ['view-dashboard', 'view-pos', 'create-pos', 'view-sales-invoices', 'view-revenues', 'create-revenues', 'view-petty-cash', 'create-petty-cash', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'payroll_officer', 'label' => 'Payroll Officer', 'perms' => ['view-dashboard', 'view-payroll', 'create-payroll', 'view-employees', 'view-payslips', 'create-payslips', 'view-attendance', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'budget_officer', 'label' => 'Budget Officer', 'perms' => ['view-dashboard', 'view-budgets', 'create-budgets', 'edit-budgets', 'view-reports', 'view-expenses', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'credit_controller', 'label' => 'Credit Controller', 'perms' => ['view-dashboard', 'view-credit-limits', 'edit-credit-limits', 'view-sales-invoices', 'view-self-service', 'view-my-payslips']],
-
-            // Procurement
-            ['name' => 'procurement_manager', 'label' => 'Procurement Manager', 'perms' => ['view-dashboard', 'view-suppliers', 'create-suppliers', 'edit-suppliers', 'delete-suppliers', 'view-rfqs', 'create-rfqs', 'view-lpos', 'create-lpos', 'view-purchase-requisitions', 'create-purchase-requisitions', 'view-approvals', 'approve-procurement', 'view-reports', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'procurement_officer', 'label' => 'Procurement Officer', 'perms' => ['view-dashboard', 'view-rfqs', 'create-rfqs', 'view-purchase-requisitions', 'create-purchase-requisitions', 'view-lpos', 'create-lpos', 'view-grns', 'create-grns', 'view-suppliers', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'tender_officer', 'label' => 'Tender Officer', 'perms' => ['view-dashboard', 'view-tenders', 'create-tenders', 'edit-tenders', 'view-documents', 'view-self-service', 'view-my-payslips']],
-
-            // Inventory
-            ['name' => 'store_manager', 'label' => 'Store Manager', 'perms' => ['view-dashboard', 'view-warehouses', 'create-warehouses', 'view-stock-movements', 'create-stock-movements', 'view-products', 'view-suppliers', 'view-transfers', 'view-reports', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'storekeeper', 'label' => 'Storekeeper', 'perms' => ['view-dashboard', 'view-stock-movements', 'create-stock-movements', 'view-grns', 'create-grns', 'view-products', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'inventory_controller', 'label' => 'Inventory Controller', 'perms' => ['view-dashboard', 'view-products', 'create-products', 'edit-products', 'view-stock-movements', 'view-warehouses', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'asset_officer', 'label' => 'Asset Officer', 'perms' => ['view-dashboard', 'view-assets', 'create-assets', 'edit-assets', 'view-employees', 'view-self-service', 'view-my-payslips']],
-
-            // Sales
-            ['name' => 'sales_manager', 'label' => 'Sales Manager', 'perms' => ['view-dashboard', 'view-crm-leads', 'view-crm-deals', 'view-sales-invoices', 'view-quotations', 'view-sales-proposals', 'view-reports', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'business_development_manager', 'label' => 'Business Development Manager', 'perms' => ['view-dashboard', 'view-crm-leads', 'create-crm-leads', 'edit-crm-leads', 'view-crm-deals', 'create-crm-deals', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'sales_executive', 'label' => 'Sales Executive', 'perms' => ['view-dashboard', 'view-crm-leads', 'create-crm-leads', 'view-crm-deals', 'create-crm-deals', 'view-quotations', 'create-quotations', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'crm_officer', 'label' => 'CRM Officer', 'perms' => ['view-dashboard', 'view-crm-contacts', 'create-crm-contacts', 'edit-crm-contacts', 'view-crm-leads', 'view-crm-deals', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'marketing_officer', 'label' => 'Marketing Officer', 'perms' => ['view-dashboard', 'view-campaigns', 'create-campaigns', 'view-crm-leads', 'view-self-service', 'view-my-payslips']],
-
-            // Projects
-            ['name' => 'project_director', 'label' => 'Project Director', 'perms' => ['view-dashboard', 'view-reports', 'view-projects', 'view-budgets', 'view-timesheets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'project_manager', 'label' => 'Project Manager', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets', 'create-timesheets', 'view-bugs', 'create-bugs', 'view-employees', 'view-crm-deals', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'technical_projects_manager', 'label' => 'Technical Projects Manager', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets', 'create-timesheets', 'view-bugs', 'create-bugs', 'view-employees', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'project_coordinator', 'label' => 'Project Coordinator', 'perms' => ['view-dashboard', 'view-projects', 'view-timesheets', 'create-timesheets', 'view-bugs', 'view-meetings', 'create-meetings', 'view-documents', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'project_engineer', 'label' => 'Project Engineer', 'perms' => ['view-dashboard', 'view-projects', 'view-timesheets', 'create-timesheets', 'view-site-reports', 'create-site-reports', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'site_supervisor', 'label' => 'Site Supervisor', 'perms' => ['view-dashboard', 'view-attendance', 'view-site-reports', 'create-site-reports', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'team_leader', 'label' => 'Team Leader', 'perms' => ['view-dashboard', 'view-team-timesheets', 'approve-team-timesheets', 'view-team-leaves', 'approve-team-leaves', 'view-team-attendance', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'project_accountant', 'label' => 'Project Accountant', 'perms' => ['view-dashboard', 'view-project-budgets', 'view-sales-invoices', 'create-sales-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-petty-cash', 'create-petty-cash', 'view-financial-reports', 'view-self-service', 'view-my-payslips']],
-
-            // Technical
-            ['name' => 'senior_systems_engineer', 'label' => 'Senior Systems Engineer', 'perms' => ['view-dashboard', 'view-projects', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-documents', 'create-documents', 'edit-documents', 'delete-documents', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'systems_engineer', 'label' => 'Systems Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-maintenance', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'support_engineer', 'label' => 'Support Engineer / Field Technician', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-site-reports', 'create-site-reports', 'view-assets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'noc_engineer', 'label' => 'NOC Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'network_engineer', 'label' => 'Network Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-projects', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'software_engineer', 'label' => 'Software Engineer', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-bugs', 'create-bugs', 'view-timesheets', 'create-timesheets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'cybersecurity_engineer', 'label' => 'Cybersecurity Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-assets', 'view-login-history', 'view-audit-logs', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'field_technician', 'label' => 'Field Technician', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-site-reports', 'create-site-reports', 'view-assets', 'view-maintenance', 'view-self-service', 'view-my-payslips']],
-
-            // Service Desk
-            ['name' => 'service_desk_manager', 'label' => 'Service Desk Manager', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-reports', 'view-call-logs', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'helpdesk_supervisor', 'label' => 'Helpdesk Supervisor', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-call-logs', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'helpdesk_officer', 'label' => 'Helpdesk Officer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'call_center_supervisor', 'label' => 'Call Center Supervisor', 'perms' => ['view-dashboard', 'view-call-logs', 'view-reports', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'call_center_agent', 'label' => 'Call Center Agent', 'perms' => ['view-dashboard', 'view-call-logs', 'create-call-logs', 'view-crm-leads', 'create-crm-leads', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'sgr_supervisor', 'label' => 'SGR Supervisor', 'perms' => ['view-dashboard', 'view-sgr', 'approve-sgr-action-points', 'view-sgr-reports', 'view-sgr-parking-revenue', 'approve-sgr-parking-revenue', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'sgr_agent', 'label' => 'SGR Agent', 'perms' => ['view-dashboard', 'view-sgr', 'create-sgr-action-points', 'view-sgr-reports', 'view-sgr-parking-revenue', 'create-sgr-parking-revenue', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'sgr_parking_officer', 'label' => 'SGR Parking Officer', 'perms' => ['view-dashboard', 'view-sgr-parking-revenue', 'create-sgr-parking-revenue', 'view-self-service', 'view-my-payslips']],
-
-            // HR
-            ['name' => 'hr_manager', 'label' => 'HR Manager', 'perms' => ['view-dashboard', 'view-employees', 'create-employees', 'edit-employees', 'view-attendance', 'view-payroll', 'view-leaves', 'approve-leaves', 'view-performance', 'view-training', 'view-recruitment', 'view-approvals', 'approve-hr', 'view-disciplinary', 'view-assets', 'view-policies', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'hr_officer', 'label' => 'HR Officer', 'perms' => ['view-dashboard', 'view-employees', 'create-employees', 'edit-employees', 'view-attendance', 'view-leaves', 'view-performance', 'view-training', 'view-recruitment', 'view-assets', 'view-policies', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'recruitment_officer', 'label' => 'Recruitment Officer', 'perms' => ['view-dashboard', 'view-recruitment', 'create-recruitment', 'view-job-postings', 'create-job-postings', 'view-applications', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'training_officer', 'label' => 'Training Officer', 'perms' => ['view-dashboard', 'view-training', 'create-training', 'view-certifications', 'create-certifications', 'view-employees', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'time_and_attendance_officer', 'label' => 'Time and Attendance Officer', 'perms' => ['view-dashboard', 'view-attendance', 'create-attendance', 'view-overtime', 'approve-overtime', 'view-employees', 'view-self-service', 'view-my-payslips']],
-
-            // Operations
-            ['name' => 'operations_officer', 'label' => 'Operations Officer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'view-fleet', 'view-vehicles', 'view-deliveries', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'fleet_manager', 'label' => 'Fleet Manager', 'perms' => ['view-dashboard', 'view-vehicles', 'create-vehicles', 'edit-vehicles', 'view-fuel-logs', 'create-fuel-logs', 'view-maintenance', 'create-maintenance', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'logistics_officer', 'label' => 'Logistics Officer', 'perms' => ['view-dashboard', 'view-deliveries', 'create-deliveries', 'view-shipments', 'create-shipments', 'view-vehicles', 'view-self-service', 'view-my-payslips']],
-
-            // Self-Service
-            ['name' => 'employee_self_service', 'label' => 'Employee Self-Service', 'perms' => ['view-self-service', 'view-my-payslips', 'apply-leave', 'view-my-attendance', 'view-my-timesheets', 'create-my-timesheets', 'view-announcements']],
-            ['name' => 'manager_self_service', 'label' => 'Manager Self-Service', 'perms' => ['view-self-service', 'view-my-payslips', 'apply-leave', 'view-my-attendance', 'view-my-timesheets', 'create-my-timesheets', 'view-team-overview', 'approve-team-leaves', 'view-team-attendance', 'approve-team-timesheets', 'view-announcements']],
-
-            // Legacy / Shared roles (also used in sidebar and seeders)
-            ['name' => 'receptionist', 'label' => 'Receptionist', 'perms' => ['view-dashboard', 'view-visitors', 'create-visitors', 'view-appointments', 'create-appointments', 'view-calls', 'create-calls', 'view-correspondence', 'create-correspondence', 'view-parcels', 'create-parcels', 'view-front-desk', 'view-departments', 'view-announcements', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'legal_officer', 'label' => 'Legal Officer', 'perms' => ['view-dashboard', 'view-crm-contracts', 'create-crm-contracts', 'edit-crm-contracts', 'view-documents', 'view-reports', 'view-projects', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'admin_manager', 'label' => 'Admin Manager', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'view-roles', 'manage-roles', 'view-login-history', 'view-employees', 'view-attendance', 'view-leaves', 'view-reports', 'view-settings', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'auditor', 'label' => 'Auditor', 'perms' => ['view-dashboard', 'view-reports', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-bills', 'view-bank-accounts', 'view-acc-transfers', 'view-warehouses', 'view-products', 'view-stock-movements', 'view-pos', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'ict_officer', 'label' => 'ICT Officer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-projects', 'view-bugs', 'create-bugs', 'view-assets', 'view-employees', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'ict_engineer', 'label' => 'ICT Engineer', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-projects', 'view-bugs', 'create-bugs', 'view-assets', 'view-employees', 'view-settings', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'supervisor', 'label' => 'Supervisor', 'perms' => ['view-dashboard', 'view-employees', 'view-attendance', 'create-attendance', 'view-leaves', 'view-projects', 'view-timesheets', 'view-sales-invoices', 'view-pos', 'view-products', 'view-warehouses', 'view-reports', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'administrator', 'label' => 'Administrator', 'perms' => ['view-dashboard', 'view-users', 'create-users', 'edit-users', 'delete-users', 'view-roles', 'manage-roles', 'view-settings', 'view-reports', 'view-employees', 'view-attendance', 'view-payroll', 'view-leaves', 'approve-leaves', 'view-performance', 'view-training', 'view-recruitment', 'view-assets', 'view-events', 'view-policies', 'view-crm-leads', 'view-crm-deals', 'view-crm-contracts', 'view-crm-contacts', 'view-bank-accounts', 'view-acc-transfers', 'view-expenses', 'create-expenses', 'view-revenues', 'create-revenues', 'view-bills', 'view-projects', 'view-timesheets', 'view-bugs', 'view-products', 'view-product-categories', 'view-suppliers', 'view-stock-movements', 'view-pos', 'view-sales-invoices', 'view-purchase-invoices', 'view-warehouses', 'view-helpdesk-tickets', 'view-self-service', 'view-my-payslips']],
-            ['name' => 'director', 'label' => 'Director', 'perms' => ['view-dashboard', 'view-reports', 'view-projects', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-employees', 'view-helpdesk-tickets', 'view-products', 'view-warehouses', 'view-pos', 'view-crm-leads', 'view-crm-deals', 'view-self-service', 'view-my-payslips']],
-            // Technician (legacy/shared)
-            ['name' => 'technician', 'label' => 'Technician', 'perms' => ['view-dashboard', 'view-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-projects', 'view-timesheets', 'create-timesheets', 'view-bugs', 'create-bugs', 'view-self-service', 'view-my-payslips']],
-            // Admin & Superadmin (used by AdminUserSeeder) — ALL permissions
+            // System Administration (kept both as top-level access roles)
             ['name' => 'admin', 'label' => 'System Admin', 'perms' => array_keys($allPermissions)],
             ['name' => 'superadmin', 'label' => 'Super Admin', 'perms' => array_keys($allPermissions)],
+
+            // Executive
+            ['name' => 'director', 'label' => 'Director', 'perms' => ['view-dashboard', 'view-reports', 'view-financial-reports', 'view-approvals', 'approve-final', 'view-companies', 'switch-companies', 'view-tenders', 'view-crm-contracts', 'view-employees', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-projects', 'view-helpdesk-tickets', 'view-crm-leads', 'view-crm-deals', 'view-products', 'view-warehouses', 'view-pos', 'view-self-service', 'view-my-payslips']],
+
+            // Finance
+            ['name' => 'accountant', 'label' => 'Accountant', 'perms' => ['view-dashboard', 'view-journal-entries', 'create-journal-entries', 'view-financial-reports', 'view-petty-cash', 'create-petty-cash', 'view-sales-invoices', 'create-sales-invoices', 'view-purchase-invoices', 'create-purchase-invoices', 'view-expenses', 'create-expenses', 'view-revenues', 'create-revenues', 'view-bills', 'create-bills', 'view-cost-centres', 'view-bank-accounts', 'view-acc-transfers', 'view-reports', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'finance_manager', 'label' => 'Finance Manager', 'perms' => ['view-dashboard', 'view-reports', 'view-sales-invoices', 'view-purchase-invoices', 'view-expenses', 'view-revenues', 'view-bills', 'view-bank-accounts', 'view-acc-transfers', 'view-budgets', 'create-budgets', 'edit-budgets', 'view-journal-entries', 'create-journal-entries', 'view-financial-reports', 'view-petty-cash', 'create-petty-cash', 'view-bank-reconciliation', 'create-bank-reconciliation', 'view-tax-management', 'create-tax-management', 'view-credit-limits', 'edit-credit-limits', 'view-approvals', 'approve-finance', 'view-payroll', 'create-payroll', 'view-self-service', 'view-my-payslips']],
+
+            // Procurement & Inventory (single manager role)
+            ['name' => 'procurement_manager', 'label' => 'Procurement Manager', 'perms' => ['view-dashboard', 'view-suppliers', 'create-suppliers', 'edit-suppliers', 'delete-suppliers', 'view-rfqs', 'create-rfqs', 'edit-rfqs', 'view-lpos', 'create-lpos', 'view-grns', 'create-grns', 'view-purchase-requisitions', 'create-purchase-requisitions', 'view-purchase-invoices', 'view-products', 'create-products', 'edit-products', 'view-product-categories', 'view-warehouses', 'create-warehouses', 'view-stock-movements', 'create-stock-movements', 'view-transfers', 'view-assets', 'create-assets', 'edit-assets', 'view-approvals', 'approve-procurement', 'view-reports', 'view-self-service', 'view-my-payslips']],
+
+            // Sales (single manager role)
+            ['name' => 'sales_manager', 'label' => 'Sales Manager', 'perms' => ['view-dashboard', 'view-crm-leads', 'create-crm-leads', 'edit-crm-leads', 'view-crm-deals', 'create-crm-deals', 'edit-crm-deals', 'view-crm-contacts', 'create-crm-contacts', 'edit-crm-contacts', 'view-sales-invoices', 'create-sales-invoices', 'view-quotations', 'create-quotations', 'view-sales-proposals', 'view-campaigns', 'create-campaigns', 'view-reports', 'view-self-service', 'view-my-payslips']],
+
+            // Projects (single manager role)
+            ['name' => 'project_manager', 'label' => 'Project Manager', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets', 'create-timesheets', 'view-bugs', 'create-bugs', 'view-employees', 'view-crm-deals', 'view-budgets', 'view-site-reports', 'create-site-reports', 'view-meetings', 'create-meetings', 'view-documents', 'view-reports', 'view-self-service', 'view-my-payslips']],
+
+            // Technical / IT (single manager role)
+            ['name' => 'technical_manager', 'label' => 'Technical Manager', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets', 'view-bugs', 'create-bugs', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-lpos', 'approve-technical', 'view-assets', 'create-assets', 'edit-assets', 'view-settings', 'view-employees', 'view-login-history', 'view-audit-logs', 'view-self-service', 'view-my-payslips']],
+
+            // Services & Operations (single manager role)
+            ['name' => 'operations_manager', 'label' => 'Operations Manager', 'perms' => ['view-dashboard', 'view-fleet', 'view-vehicles', 'create-vehicles', 'edit-vehicles', 'view-fuel-logs', 'create-fuel-logs', 'view-maintenance', 'create-maintenance', 'view-helpdesk-tickets', 'view-deliveries', 'create-deliveries', 'view-shipments', 'create-shipments', 'view-products', 'view-warehouses', 'view-stock-movements', 'view-reports', 'view-self-service', 'view-my-payslips']],
+
+            // HR (single manager role)
+            ['name' => 'hr_manager', 'label' => 'HR Manager', 'perms' => ['view-dashboard', 'view-employees', 'create-employees', 'edit-employees', 'view-attendance', 'create-attendance', 'view-overtime', 'approve-overtime', 'view-payroll', 'create-payroll', 'view-leaves', 'approve-leaves', 'view-performance', 'create-performance', 'view-training', 'create-training', 'view-certifications', 'create-certifications', 'view-recruitment', 'create-recruitment', 'view-job-postings', 'create-job-postings', 'view-applications', 'view-approvals', 'approve-hr', 'view-disciplinary', 'view-assets', 'view-policies', 'create-policies', 'view-events', 'create-events', 'view-self-service', 'view-my-payslips']],
         ];
 
         foreach ($roles as $roleData) {
@@ -229,6 +160,33 @@ class RolePermissionSeeder extends Seeder
                     ]);
                 }
             }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // Remove all roles that are NOT part of the consolidated
+        // structure above (and any users/pivots tied to them).
+        // ═══════════════════════════════════════════════════════
+        $keepRoles = array_column($roles, 'name');
+        $obsoleteRoles = DB::table('roles')->whereNotIn('name', $keepRoles)->get();
+
+        foreach ($obsoleteRoles as $obsolete) {
+            $userIds = DB::table('role_user')->where('role_id', $obsolete->id)->pluck('user_id')
+                ->merge(DB::table('users')->where('role', $obsolete->name)->pluck('id'))
+                ->unique();
+
+            foreach ($userIds as $userId) {
+                DB::table('role_user')->where('user_id', $userId)->delete();
+                try {
+                    DB::table('users')->where('id', $userId)->delete();
+                } catch (\Throwable $e) {
+                    // Referenced elsewhere (employees, created_by, etc.) — disable login instead
+                    DB::table('users')->where('id', $userId)->update(['is_enable_login' => false]);
+                }
+            }
+
+            DB::table('role_permission')->where('role_id', $obsolete->id)->delete();
+            DB::table('role_user')->where('role_id', $obsolete->id)->delete();
+            DB::table('roles')->where('id', $obsolete->id)->delete();
         }
     }
 }

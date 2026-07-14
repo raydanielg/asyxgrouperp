@@ -1,40 +1,16 @@
 @php
     $roleLabels = [
-        'admin' => 'System Admin', 'superadmin' => 'Super Admin', 'admin_manager' => 'Admin Manager',
-        'administrator' => 'Administrator', 'finance_officer' => 'Finance Officer',
-        'finance_manager' => 'Finance Manager', 'chief_accountant' => 'Chief Accountant',
-        'accountant' => 'Accountant', 'accounts_receivable_officer' => 'Accounts Receivable Officer',
-        'accounts_payable_officer' => 'Accounts Payable Officer', 'payroll_officer' => 'Payroll Officer',
-        'budget_officer' => 'Budget Officer', 'credit_controller' => 'Credit Controller',
-        'auditor' => 'Auditor', 'hr_officer' => 'HR Officer', 'hr_manager' => 'HR Manager',
-        'recruitment_officer' => 'Recruitment Officer', 'training_officer' => 'Training Officer',
-        'time_and_attendance_officer' => 'Time & Attendance Officer', 'legal_officer' => 'Legal Officer',
-        'receptionist' => 'Receptionist', 'logistics_officer' => 'Logistics Officer',
-        'technical_manager' => 'Technical Manager', 'technician' => 'Technician',
-        'ict_officer' => 'ICT Officer', 'ict_engineer' => 'ICT Engineer',
-        'ict_administrator' => 'ICT Administrator', 'project_manager' => 'Project Manager',
-        'project_director' => 'Project Director', 'project_coordinator' => 'Project Coordinator',
-        'project_engineer' => 'Project Engineer', 'project_accountant' => 'Project Accountant',
-        'technical_projects_manager' => 'Technical Projects Manager', 'site_supervisor' => 'Site Supervisor',
-        'team_leader' => 'Team Leader', 'operations_manager' => 'Operations Manager',
-        'operations_officer' => 'Operations Officer', 'fleet_manager' => 'Fleet Manager',
-        'call_center_agent' => 'Call Center Agent', 'call_center_supervisor' => 'Call Center Supervisor',
-        'helpdesk_officer' => 'Helpdesk Officer', 'helpdesk_supervisor' => 'Helpdesk Supervisor',
-        'service_desk_manager' => 'Service Desk Manager', 'cashier' => 'Cashier',
-        'supervisor' => 'Supervisor', 'director' => 'Director',
-        'managing_director' => 'Managing Director', 'general_manager' => 'General Manager',
-        'procurement_manager' => 'Procurement Manager', 'procurement_officer' => 'Procurement Officer',
-        'tender_officer' => 'Tender Officer', 'store_manager' => 'Store Manager',
-        'storekeeper' => 'Storekeeper', 'inventory_controller' => 'Inventory Controller',
-        'asset_officer' => 'Asset Officer', 'sales_manager' => 'Sales Manager',
-        'business_development_manager' => 'Business Development Manager', 'sales_executive' => 'Sales Executive',
-        'crm_officer' => 'CRM Officer', 'marketing_officer' => 'Marketing Officer',
-        'senior_systems_engineer' => 'Senior Systems Engineer', 'systems_engineer' => 'Systems Engineer',
-        'network_engineer' => 'Network Engineer', 'software_engineer' => 'Software Engineer',
-        'cybersecurity_engineer' => 'Cybersecurity Engineer', 'support_engineer' => 'Support Engineer',
-        'noc_engineer' => 'NOC Engineer', 'field_technician' => 'Field Technician',
-        'employee_self_service' => 'Employee Self-Service', 'manager_self_service' => 'Manager Self-Service',
-        'erp_administrator' => 'ERP Administrator',
+        'superadmin' => 'Super Admin',
+        'admin' => 'System Admin',
+        'director' => 'Director',
+        'accountant' => 'Accountant',
+        'finance_manager' => 'Finance Manager',
+        'procurement_manager' => 'Procurement Manager',
+        'sales_manager' => 'Sales Manager',
+        'project_manager' => 'Project Manager',
+        'technical_manager' => 'Technical Manager',
+        'operations_manager' => 'Operations Manager',
+        'hr_manager' => 'HR Manager',
     ];
     $roleLabel = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));
     $colorMap = [
@@ -67,20 +43,37 @@
 @endphp
 
 {{-- Welcome Banner --}}
+@php $hour = now()->hour; $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening'); @endphp
 <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
-    <div class="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mb-8"></div>
+    <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -mr-24 -mt-24"></div>
+    <div class="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-12 -mb-12"></div>
+    <div class="absolute top-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mt-12"></div>
     <div class="relative z-10 flex items-center justify-between">
-        <div>
-            <h2 class="text-2xl font-bold">Welcome, {{ auth()->user()->name }}</h2>
-            <p class="text-emerald-100 text-sm mt-1">{{ $roleLabel }} Dashboard</p>
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white font-bold text-xl border border-white/20">
+                {{ strtoupper(substr(auth()->user()->first_name ?? auth()->user()->name ?? 'U', 0, 1)) }}
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold">{{ $greeting }}, {{ auth()->user()->first_name ?? auth()->user()->name }}</h2>
+                <p class="text-emerald-100 text-sm mt-0.5">{{ $roleLabel }} Dashboard</p>
+            </div>
         </div>
         <div class="text-right">
             <p class="text-emerald-100 text-xs">{{ now()->format('l, d M Y') }}</p>
-            <p class="text-emerald-200 text-[10px] mt-1">{{ now()->format('H:i') }}</p>
+            <p class="text-emerald-200 text-lg font-mono font-bold mt-1 tracking-wider" id="liveClock">{{ now()->format('H:i:s') }}</p>
         </div>
     </div>
 </div>
+<script>
+setInterval(function() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+    const el = document.getElementById('liveClock');
+    if (el) el.textContent = h + ':' + m + ':' + s;
+}, 1000);
+</script>
 
 {{-- KPI Cards --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
@@ -136,7 +129,7 @@
 @endif
 
 {{-- Finance Salary Advance Widget --}}
-@if(in_array($role, ['accountant', 'finance_manager', 'chief_accountant', 'finance_officer', 'payroll_officer', 'general_manager', 'managing_director']))
+@if(in_array($role, ['accountant', 'finance_manager']))
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-6">
     <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl border border-amber-300 p-4 text-white">
         <span class="text-[10px] font-medium text-amber-50">Pending Salary Advances</span>
@@ -523,7 +516,7 @@
     </div>
     @endif
 
-    @if(!empty($recentItems['recentSales']) && $role === 'cashier')
+    @if(!empty($recentItems['recentSales']) && in_array($role, ['admin', 'superadmin', 'director']))
     <div class="bg-white rounded-xl border overflow-hidden flex flex-col">
         <div class="px-5 py-4 border-b flex items-center justify-between bg-gray-50/50">
             <div class="flex items-center gap-2">

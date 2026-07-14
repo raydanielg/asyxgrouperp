@@ -38,8 +38,8 @@ use App\Models\BankTransferAcc;
 use App\Models\JobCard;
 use App\Models\Document;
 use App\Models\ProjectTask;
+use App\Models\ProjectBug;
 use App\Models\FixedAsset;
-use App\Models\CallCampaign;
 use Illuminate\Http\Request;
 
 class RolePageController extends Controller
@@ -60,43 +60,17 @@ class RolePageController extends Controller
     private function getRoleLabel(string $role): string
     {
         $labels = [
-            'admin' => 'Administrator', 'director' => 'Director',
-            'admin_manager' => 'Admin Manager', 'administrator' => 'Administrator',
-            'finance_officer' => 'Finance Officer', 'auditor' => 'Auditor',
-            'hr_officer' => 'HR Officer', 'legal_officer' => 'Legal Officer',
-            'receptionist' => 'Receptionist', 'logistics_officer' => 'Logistics Officer',
-            'technical_manager' => 'Technical Manager', 'technician' => 'Technician',
-            'ict_officer' => 'ICT Officer', 'project_manager' => 'Project Manager',
-            'operations_manager' => 'Operations Manager', 'call_center_agent' => 'Call Center Agent',
-            'cashier' => 'Cashier', 'supervisor' => 'Supervisor', 'ict_engineer' => 'ICT Engineer',
-            'managing_director' => 'Managing Director', 'general_manager' => 'General Manager',
-            'finance_manager' => 'Finance Manager', 'chief_accountant' => 'Chief Accountant',
-            'accountant' => 'Accountant', 'accounts_receivable_officer' => 'Accounts Receivable Officer',
-            'accounts_payable_officer' => 'Accounts Payable Officer', 'payroll_officer' => 'Payroll Officer',
-            'budget_officer' => 'Budget Officer', 'credit_controller' => 'Credit Controller',
-            'procurement_manager' => 'Procurement Manager', 'procurement_officer' => 'Procurement Officer',
-            'tender_officer' => 'Tender Officer', 'store_manager' => 'Store Manager',
-            'storekeeper' => 'Storekeeper', 'inventory_controller' => 'Inventory Controller',
-            'asset_officer' => 'Asset Officer', 'sales_manager' => 'Sales Manager',
-            'business_development_manager' => 'Business Development Manager',
-            'sales_executive' => 'Sales Executive', 'crm_officer' => 'CRM Officer',
-            'marketing_officer' => 'Marketing Officer', 'project_director' => 'Project Director',
-            'technical_projects_manager' => 'Technical Projects Manager',
-            'project_coordinator' => 'Project Coordinator', 'project_engineer' => 'Project Engineer',
-            'site_supervisor' => 'Site Supervisor', 'team_leader' => 'Team Leader',
-            'project_accountant' => 'Project Accountant', 'senior_systems_engineer' => 'Senior Systems Engineer',
-            'systems_engineer' => 'Systems Engineer', 'support_engineer' => 'Support Engineer / Field Technician',
-            'noc_engineer' => 'NOC Engineer', 'service_desk_manager' => 'Service Desk Manager',
-            'helpdesk_supervisor' => 'Helpdesk Supervisor', 'helpdesk_officer' => 'Helpdesk Officer',
-            'call_center_supervisor' => 'Call Center Supervisor', 'recruitment_officer' => 'Recruitment Officer',
-            'training_officer' => 'Training Officer', 'time_and_attendance_officer' => 'Time and Attendance Officer',
-            'operations_officer' => 'Operations Officer', 'fleet_manager' => 'Fleet Manager',
-            'employee_self_service' => 'Employee Self-Service', 'manager_self_service' => 'Manager Self-Service',
-            'erp_administrator' => 'ERP Administrator',
-            'ict_administrator' => 'ICT Administrator', 'network_engineer' => 'Network Engineer',
-            'software_engineer' => 'Software Engineer', 'cybersecurity_engineer' => 'Cybersecurity Engineer',
-            'field_technician' => 'Field Technician',
-            'sgr_agent' => 'SGR Agent',
+            'superadmin' => 'Super Admin',
+            'admin' => 'System Admin',
+            'director' => 'Director',
+            'accountant' => 'Accountant',
+            'finance_manager' => 'Finance Manager',
+            'procurement_manager' => 'Procurement Manager',
+            'sales_manager' => 'Sales Manager',
+            'project_manager' => 'Project Manager',
+            'technical_manager' => 'Technical Manager',
+            'operations_manager' => 'Operations Manager',
+            'hr_manager' => 'HR Manager',
         ];
         return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
     }
@@ -111,103 +85,7 @@ class RolePageController extends Controller
         return \App\Support\RoleModules::allowedModules($role, auth()->user());
     }
 
-    /**
-     * @deprecated kept only for reference; module list now lives in App\Support\RoleModules.
-     */
-    private function legacyAllowedModulesForRole(string $role): array
-    {
-        return match ($role) {
-            'managing_director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'my-account', 'payslips', 'salary'],
-            'general_manager' => ['dashboard', 'reports', 'approvals', 'projects', 'leads', 'employees', 'my-account', 'payslips', 'salary'],
-            'technical_manager' => ['dashboard', 'tickets', 'projects', 'timesheets', 'bugs', 'lpos', 'assets', 'employees', 'my-account', 'payslips', 'salary'],
-            'operations_manager' => ['dashboard', 'products', 'warehouses', 'stock-movements', 'sales-invoices', 'purchase-invoices', 'projects', 'reports', 'my-account', 'payslips', 'salary'],
-
-            'finance_manager' => ['dashboard', 'journal-entries', 'purchase-invoices', 'sales-invoices', 'bank-accounts', 'budgets', 'reports', 'approvals', 'payroll', 'my-account', 'payslips', 'salary'],
-            'chief_accountant' => ['journal-entries', 'bank-reconciliation', 'reports', 'tax-management', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'my-account', 'payslips', 'salary'],
-            'accountant' => ['dashboard', 'journal-entries', 'sales-invoices', 'purchase-invoices', 'expenses', 'cost-centres', 'my-account', 'payslips', 'salary'],
-            'accounts_receivable_officer' => ['sales-invoices', 'receivables-aging', 'revenues', 'credit-notes', 'my-account', 'payslips', 'salary'],
-            'accounts_payable_officer' => ['purchase-invoices', 'acc-transfers', 'payables-aging', 'bills', 'my-account', 'payslips', 'salary'],
-            'payroll_officer' => ['payroll', 'salary-records', 'deductions', 'payslips', 'employees', 'my-account', 'salary'],
-            'budget_officer' => ['budgets', 'budget-vs-actual', 'cost-centres', 'reports', 'expenses', 'my-account', 'payslips', 'salary'],
-            'credit_controller' => ['credit-limits', 'overdue-accounts', 'collections', 'sales-invoices', 'my-account', 'payslips', 'salary'],
-
-            'procurement_manager' => ['dashboard', 'suppliers', 'rfqs', 'approvals', 'reports', 'lpos', 'purchase-requisitions', 'my-account', 'payslips', 'salary'],
-            'procurement_officer' => ['rfqs', 'purchase-requisitions', 'lpos', 'grns', 'suppliers', 'my-account', 'payslips', 'salary'],
-            'tender_officer' => ['tenders', 'tender-calendar', 'documents', 'tender-costing', 'my-account', 'payslips', 'salary'],
-
-            'store_manager' => ['dashboard', 'warehouses', 'transfers', 'reorder-levels', 'reports', 'stock-movements', 'products', 'suppliers', 'my-account', 'payslips', 'salary'],
-            'storekeeper' => ['stock-movements', 'grns', 'stock-count', 'products', 'my-account', 'payslips', 'salary'],
-            'inventory_controller' => ['products', 'batch-tracking', 'barcodes', 'reports', 'warehouses', 'my-account', 'payslips', 'salary'],
-            'asset_officer' => ['assets', 'asset-assignment', 'asset-maintenance', 'asset-disposal', 'employees', 'my-account', 'payslips', 'salary'],
-
-            'sales_manager' => ['dashboard', 'deals', 'sales-forecast', 'quotations', 'reports', 'crm-leads', 'sales-invoices', 'my-account', 'payslips', 'salary'],
-            'business_development_manager' => ['leads', 'deals', 'market-analysis', 'my-account', 'payslips', 'salary'],
-            'sales_executive' => ['leads', 'deals', 'quotations', 'calls', 'my-account', 'payslips', 'salary'],
-            'crm_officer' => ['contacts', 'calls', 'correspondence', 'leads', 'deals', 'my-account', 'payslips', 'salary'],
-            'marketing_officer' => ['campaigns', 'lead-source-reports', 'documents', 'my-account', 'payslips', 'salary'],
-
-            'project_director' => ['dashboard', 'reports', 'projects', 'budgets', 'timesheets', 'my-account', 'payslips', 'salary'],
-            'project_manager' => ['dashboard', 'projects', 'timesheets', 'bugs', 'employees', 'deals', 'my-account', 'payslips', 'salary'],
-            'technical_projects_manager' => ['projects', 'resource-allocation', 'milestones', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
-            'project_coordinator' => ['tasks', 'documents', 'meetings', 'projects', 'my-account', 'payslips', 'salary'],
-            'project_engineer' => ['tasks', 'site-reports', 'timesheets', 'projects', 'my-account', 'payslips', 'salary'],
-            'site_supervisor' => ['attendance', 'site-reports', 'incidents', 'tickets', 'my-account', 'payslips', 'salary'],
-            'team_leader' => ['team-tasks', 'team-attendance', 'team-timesheets', 'my-account', 'payslips', 'salary'],
-            'project_accountant' => ['budget-vs-actual', 'sales-invoices', 'cost-centres', 'expenses', 'revenues', 'my-account', 'payslips', 'salary'],
-
-            'senior_systems_engineer' => ['projects', 'documents', 'team-review', 'tickets', 'my-account', 'payslips', 'salary'],
-            'systems_engineer' => ['tickets', 'assets', 'asset-maintenance', 'my-account', 'payslips', 'salary'],
-            'support_engineer' => ['site-visits', 'service-reports', 'assets', 'tickets', 'job-cards', 'my-account', 'payslips', 'salary'],
-            'noc_engineer' => ['dashboard', 'tickets', 'escalations', 'assets', 'my-account', 'payslips', 'salary'],
-
-            'service_desk_manager' => ['dashboard', 'tickets', 'sla-reports', 'reports', 'call-logs', 'my-account', 'payslips', 'salary'],
-            'helpdesk_supervisor' => ['tickets', 'reports', 'escalations', 'call-logs', 'my-account', 'payslips', 'salary'],
-            'helpdesk_officer' => ['tickets', 'knowledge-base', 'calls', 'my-account', 'payslips', 'salary'],
-            'call_center_supervisor' => ['call-statistics', 'shift-schedule', 'sla-reports', 'my-account', 'payslips', 'salary'],
-            'call_center_agent' => ['call-logs', 'leads', 'tickets', 'my-account', 'payslips', 'salary'],
-
-            'hr_manager' => ['dashboard', 'employees', 'recruitment', 'leaves', 'payroll', 'disciplinary', 'performance', 'my-account', 'payslips', 'salary'],
-            'hr_officer' => ['dashboard', 'employees', 'attendance', 'leaves', 'performance', 'training', 'recruitment', 'assets', 'policies', 'my-account', 'payslips', 'salary'],
-            'recruitment_officer' => ['job-postings', 'applications', 'onboarding', 'my-account', 'payslips', 'salary'],
-            'training_officer' => ['training', 'training-records', 'certifications', 'employees', 'my-account', 'payslips', 'salary'],
-            'time_and_attendance_officer' => ['dashboard', 'attendance', 'shift-schedule', 'overtime', 'employees', 'my-account', 'payslips', 'salary'],
-
-            'operations_officer' => ['operations-log', 'operations-tasks', 'helpdesk-tickets', 'my-account', 'payslips', 'salary'],
-            'fleet_manager' => ['vehicles', 'driver-assignment', 'fuel-logs', 'trip-schedule', 'my-account', 'payslips', 'salary'],
-            'logistics_officer' => ['deliveries', 'shipments', 'route-planning', 'my-account', 'payslips', 'salary'],
-
-            'employee_self_service' => ['my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'announcements', 'salary'],
-            'manager_self_service' => ['my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'team-overview', 'team-leaves', 'team-timesheets', 'announcements', 'salary'],
-
-            'director' => ['reports', 'projects', 'sales-dashboard', 'employees', 'sales-invoices', 'purchase-invoices', 'expenses', 'tickets', 'payslips', 'salary', 'my-account'],
-            'finance_officer' => ['sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'bank-accounts', 'transfers', 'salary-advance', 'reports', 'payslips', 'salary', 'my-account'],
-            'hr_officer' => ['employees', 'attendance', 'payroll', 'leaves', 'performance', 'training', 'recruitment', 'assets', 'policies', 'payslips', 'salary', 'my-account'],
-            'auditor' => ['sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'bank-accounts', 'reports', 'warehouses', 'products', 'stock-movements', 'pos', 'payslips', 'salary', 'my-account'],
-            'admin_manager' => ['users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'payslips', 'salary', 'my-account'],
-            'cashier' => ['pos', 'pos-reports', 'sales-invoices', 'products', 'revenues', 'payslips', 'salary', 'my-account'],
-            'technical_manager' => ['tickets', 'projects', 'timesheets', 'bugs', 'employees', 'payslips', 'salary', 'my-account'],
-            'technician' => ['tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'payslips', 'salary', 'my-account'],
-            'ict_officer' => ['tickets', 'projects', 'bugs', 'assets', 'employees', 'payslips', 'salary', 'my-account'],
-            'ict_engineer' => ['tickets', 'projects', 'bugs', 'assets', 'settings', 'payslips', 'salary', 'my-account'],
-            'project_manager' => ['projects', 'timesheets', 'bugs', 'deals', 'reports', 'payslips', 'salary', 'my-account'],
-            'operations_manager' => ['products', 'warehouses', 'stock-movements', 'sales-invoices', 'purchase-invoices', 'projects', 'reports', 'payslips', 'salary', 'my-account'],
-            'logistics_officer' => ['products', 'warehouses', 'stock-movements', 'suppliers', 'inventory-transfers', 'purchase-invoices', 'payslips', 'salary', 'my-account'],
-            'receptionist' => ['visitors', 'appointments', 'calls', 'correspondence', 'parcels', 'front-desk', 'departments', 'announcements', 'messages', 'salary-advance', 'reports', 'my-account', 'payslips', 'salary'],
-            'call_center_agent' => ['leads', 'contacts', 'tickets', 'payslips', 'salary', 'my-account'],
-            'legal_officer' => ['contracts', 'contacts', 'projects', 'reports', 'payslips', 'salary', 'my-account'],
-            'supervisor' => ['employees', 'attendance', 'leaves', 'projects', 'pos', 'products', 'reports', 'payslips', 'salary', 'my-account'],
-            'administrator' => ['users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports', 'payslips', 'salary', 'my-account'],
-
-            'erp_administrator' => ['dashboard', 'users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'my-account', 'payslips', 'salary'],
-            'ict_administrator' => ['dashboard', 'tickets', 'projects', 'assets', 'settings', 'employees', 'my-account', 'payslips', 'salary'],
-            'network_engineer' => ['tickets', 'assets', 'projects', 'my-account', 'payslips', 'salary'],
-            'software_engineer' => ['projects', 'bugs', 'timesheets', 'my-account', 'payslips', 'salary'],
-            'cybersecurity_engineer' => ['tickets', 'assets', 'my-account', 'payslips', 'salary'],
-            'field_technician' => ['tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
-            'sgr_agent' => ['dashboard', 'import-action-points', 'action-points-reports', 'my-account', 'payslips', 'salary'],
-            default => [],
-        };
-    }
+    // legacyAllowedModulesForRole removed – module list now lives in App\Support\RoleModules.
 
     public function page(Request $request, string $module)
     {
@@ -385,9 +263,10 @@ class RolePageController extends Controller
                 break;
 
             case 'projects':
-                $data['projects'] = Project::latest()->paginate(10);
+                $data['projects'] = Project::with(['manager', 'employees'])->latest()->paginate(10);
                 $data['activeProjects'] = Project::where('status', 'in_progress')->count();
                 $data['completedProjects'] = Project::where('status', 'completed')->count();
+                $data['assignedEmployeesCount'] = \DB::table('employee_project')->where('is_active', true)->distinct('employee_id')->count('employee_id');
                 break;
 
             case 'employees':
@@ -525,7 +404,10 @@ class RolePageController extends Controller
                 break;
 
             case 'bugs':
-                $data['projects'] = Project::latest()->paginate(10);
+                $data['bugs'] = ProjectBug::with(['project', 'assignedTo'])->latest()->paginate(10);
+                $data['openBugs'] = ProjectBug::where('status', 'open')->count();
+                $data['resolvedBugs'] = ProjectBug::where('status', 'resolved')->count();
+                $data['criticalBugs'] = ProjectBug::where('severity', 'critical')->count();
                 break;
 
             case 'assets':
@@ -550,25 +432,6 @@ class RolePageController extends Controller
                 $data['openCards'] = JobCard::where('assigned_to', $userId)->where('status', 'open')->count();
                 $data['inProgressCards'] = JobCard::where('assigned_to', $userId)->where('status', 'in_progress')->count();
                 $data['resolvedCards'] = JobCard::where('assigned_to', $userId)->where('status', 'resolved')->count();
-                break;
-
-            case 'import-action-points':
-                $userId = auth()->id();
-                $data['totalUploaded'] = \App\Models\SgrActionPoint::where('created_by', $userId)->count();
-                $data['pendingApproval'] = \App\Models\SgrActionPoint::where('created_by', $userId)->where('approval_status', 'pending')->count();
-                $data['approvedCount'] = \App\Models\SgrActionPoint::where('created_by', $userId)->where('approval_status', 'approved')->count();
-                $data['recentBatches'] = \App\Models\SgrActionPoint::where('created_by', $userId)->select('import_batch', 'source_filename', 'created_at')->distinct()->orderBy('created_at', 'desc')->take(5)->get();
-                break;
-
-            case 'action-points-reports':
-                $userId = auth()->id();
-                $query = \App\Models\SgrActionPoint::where('created_by', $userId);
-                $data['total'] = (clone $query)->count();
-                $data['overdue'] = (clone $query)->where('due_date', '<', now())->where('status', '!=', 'Completed')->count();
-                $data['completed'] = (clone $query)->where('status', 'Completed')->count();
-                $data['pendingCount'] = (clone $query)->where('status', 'Pending')->count();
-                $data['actionPoints'] = (clone $query)->when(request('status'), fn($q, $v) => $q->where('status', $v))->when(request('approval_status'), fn($q, $v) => $q->where('approval_status', $v))->latest()->paginate(15);
-                $data['statuses'] = \App\Models\SgrActionPoint::where('created_by', $userId)->select('status')->distinct()->pluck('status');
                 break;
 
             case 'sales-dashboard':
@@ -736,7 +599,7 @@ class RolePageController extends Controller
             'market-analysis' => CrmLead::class,
             'lead-source-reports' => CrmLead::class,
             'project-profitability' => Project::class,
-            'campaigns' => CallCampaign::class,
+            'campaigns' => \App\Models\Announcement::class,
             'messages' => Message::class,
             'announcements' => Announcement::class,
             'visitors' => Visitor::class,

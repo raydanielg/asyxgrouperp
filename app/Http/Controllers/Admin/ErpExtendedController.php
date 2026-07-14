@@ -605,7 +605,7 @@ class ErpExtendedController extends Controller
             $phone = $application->phone ?: 'N/A';
             $jobTitle = $application->jobPosting ? $application->jobPosting->title : 'N/A';
             $status = ucfirst($application->status);
-            $reviewUrl = url('/admin/applications/' . $application->id);
+            $reviewUrl = route('admin.applications.show', $application->id);
 
             foreach ($hrUsers as $toEmail) {
                 Mail::raw(

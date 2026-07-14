@@ -299,11 +299,33 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         @break
 
     @case('projects')
+        {{-- Stats Row --}}
+        <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-3 border-b">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Active Projects</span>
+                <p class="text-xl font-bold text-emerald-900 mt-1">{{ $activeProjects ?? 0 }}</p>
+            </div>
+            <div class="bg-sky-50 border border-sky-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Completed</span>
+                <p class="text-xl font-bold text-sky-900 mt-1">{{ $completedProjects ?? 0 }}</p>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Total Projects</span>
+                <p class="text-xl font-bold text-amber-900 mt-1">{{ ($projects ?? collect())->total() ?? 0 }}</p>
+            </div>
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-violet-600 uppercase tracking-wider">Assigned Employees</span>
+                <p class="text-xl font-bold text-violet-900 mt-1">{{ $assignedEmployeesCount ?? 0 }}</p>
+            </div>
+        </div>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 border-b">
                     <tr>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Project</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Manager</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Budget</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Assigned Team</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Due Date</th>
                         @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
@@ -312,7 +334,26 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                 <tbody class="divide-y divide-gray-100">
         @foreach(($projects ?? collect())->items() ?? [] as $project)
                     <tr class="hover:bg-gray-50/50">
-                        <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $project->name }}</td>
+                        <td class="px-4 py-3">
+                            <div class="text-xs font-medium text-gray-900">{{ $project->title }}</div>
+                            <div class="text-[10px] text-gray-400">{{ $project->project_number }}</div>
+                        </td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $project->manager?->name ?? '—' }}</td>
+                        <td class="px-4 py-3 text-xs font-medium text-gray-700">{{ $money($project->budget ?? 0) }}</td>
+                        <td class="px-4 py-3">
+                            @if($project->employees && $project->employees->count() > 0)
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach($project->employees->take(3) as $emp)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">{{ $emp->first_name }} {{ $emp->last_name }}</span>
+                                    @endforeach
+                                    @if($project->employees->count() > 3)
+                                        <span class="text-[10px] text-gray-400">+{{ $project->employees->count() - 3 }} more</span>
+                                    @endif
+                                </div>
+                            @else
+                                <span class="text-[10px] text-gray-400">No team assigned</span>
+                            @endif
+                        </td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($project->status === 'in_progress') ? 'bg-sky-50 text-sky-700' : (($project->status === 'completed') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $project->due_date?->format('d M Y') ?? '-' }}</td>
                         @if($hasActions)
@@ -332,6 +373,71 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         <div class="px-5 py-3 border-t">{{ ($projects ?? null)?->links() ?? '' }}</div>
         @break
 
+    @case('bugs')
+        {{-- Stats Row --}}
+        <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-3 border-b">
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-rose-600 uppercase tracking-wider">Open Bugs</span>
+                <p class="text-xl font-bold text-rose-900 mt-1">{{ $openBugs ?? 0 }}</p>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Resolved</span>
+                <p class="text-xl font-bold text-emerald-900 mt-1">{{ $resolvedBugs ?? 0 }}</p>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Total Bugs</span>
+                <p class="text-xl font-bold text-amber-900 mt-1">{{ ($bugs ?? collect())->total() ?? 0 }}</p>
+            </div>
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-violet-600 uppercase tracking-wider">Critical</span>
+                <p class="text-xl font-bold text-violet-900 mt-1">{{ $criticalBugs ?? 0 }}</p>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Bug</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Project</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Severity</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Assigned To</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
+                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+        @foreach(($bugs ?? collect())->items() ?? [] as $bug)
+                    <tr class="hover:bg-gray-50/50">
+                        <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $bug->title }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $bug->project?->title ?? '—' }}</td>
+                        <td class="px-4 py-3">
+                            @php $sevColors = ['critical' => 'bg-rose-50 text-rose-700', 'high' => 'bg-orange-50 text-orange-700', 'medium' => 'bg-amber-50 text-amber-700', 'low' => 'bg-sky-50 text-sky-700']; @endphp
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $sevColors[$bug->severity] ?? 'bg-gray-50 text-gray-700' }}">{{ ucfirst($bug->severity) }}</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            @php $statusColors = ['open' => 'bg-rose-50 text-rose-700', 'in_progress' => 'bg-sky-50 text-sky-700', 'resolved' => 'bg-emerald-50 text-emerald-700', 'closed' => 'bg-gray-100 text-gray-600']; @endphp
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $statusColors[$bug->status] ?? 'bg-gray-50 text-gray-700' }}">{{ ucfirst(str_replace('_', ' ', $bug->status)) }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $bug->assignedTo?->name ?? 'Unassigned' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">{{ $bug->created_at?->format('d M Y') ?? '-' }}</td>
+                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $bug) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this bug?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                        @endif
+                    </tr>
+        @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="px-5 py-3 border-t">{{ ($bugs ?? null)?->links() ?? '' }}</div>
+        @break
+
     @case('employees')
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -348,7 +454,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         @foreach(($employees ?? collect())->items() ?? [] as $emp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
-                        <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->position ?? '-' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->designation ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->department ?? '-' }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($emp->status ?? '') === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-600' }}">{{ ucfirst($emp->status ?? 'N/A') }}</span></td>
                         @if($hasActions)
@@ -536,7 +642,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                 <tbody class="divide-y divide-gray-100">
         @foreach(($tickets ?? collect())->items() ?? [] as $ticket)
                     <tr class="hover:bg-gray-50/50">
-                        <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $ticket->subject ?? 'Ticket #' . $ticket->id }}</td>
+                        <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $ticket->title ?? 'Ticket #' . $ticket->id }}</td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($ticket->status === 'open') ? 'bg-rose-50 text-rose-700' : (($ticket->status === 'resolved') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst(str_replace('_', ' ', $ticket->status ?? '')) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($ticket->priority ?? '-') }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $ticket->created_at->format('d M Y') }}</td>
@@ -1118,7 +1224,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         @foreach(($employees ?? collect())->items() ?? [] as $emp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
-                        <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->position ?? '-' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->designation ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($emp->salary ?? 0) }}</td>
                         @if($hasActions)
                         <td class="px-4 py-3 text-right">

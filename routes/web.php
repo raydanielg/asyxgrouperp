@@ -3,31 +3,52 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect()->route('login');
 })->name('home');
 
 Route::get('/about', function () {
-    return view('pages.about');
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect()->route('login');
 })->name('about');
 
 Route::get('/services', function () {
-    return view('pages.services');
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect()->route('login');
 })->name('services');
 
 Route::get('/sectors-clients', function () {
-    return view('pages.sectors');
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect()->route('login');
 })->name('sectors');
 
 Route::get('/why-asyx', function () {
-    return view('pages.why-asyx');
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect()->route('login');
 })->name('why-asyx');
 
 Route::get('/contact', function () {
-    return view('pages.contact');
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect()->route('login');
 })->name('contact');
 
 Route::get('/hosting', function () {
-    return view('pages.hosting');
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect()->route('login');
 })->name('hosting');
 
 // Public Documentation
@@ -256,8 +277,6 @@ Route::patch('/follow-ups/{followUp}/complete', function (\Illuminate\Http\Reque
 Route::get('/dashboard', [App\Http\Controllers\RoleDashboardController::class, 'index'])->name('role.dashboard')->middleware('auth', 'route-permission');
 Route::get('/dashboard/report-pdf', [App\Http\Controllers\RoleDashboardController::class, 'reportPdf'])->name('role.dashboard.report-pdf')->middleware('auth', 'route-permission');
 
-Route::get('/role/{module}', [App\Http\Controllers\RolePageController::class, 'page'])->name('role.page')->middleware('auth', 'route-permission');
-
 // Reception AJAX routes (used by receptionist role pages)
 Route::prefix('reception')->middleware('auth', 'route-permission')->group(function () {
     Route::get('visitors', [App\Http\Controllers\Reception\VisitorController::class, 'index'])->name('reception.visitors.index');
@@ -326,15 +345,14 @@ Route::prefix('reception')->middleware('auth', 'route-permission')->group(functi
     Route::post('salary-advance/{salaryAdvanceRequest}/status', [App\Http\Controllers\SalaryAdvanceController::class, 'markStatus'])->name('reception.salary-advance.status');
 });
 
-// Admin Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])->group(function () {
-    // Dashboard
-    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+// App Routes (no URL prefix — clean URLs like /employees, /sales-invoices)
+// Route names keep admin. prefix so all route('admin.xxx') calls remain unchanged
+Route::name('admin.')->middleware(['auth', 'route-permission'])->group(function () {
+    // Profile
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
     Route::match(['put', 'patch'], '/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::post('/profile/avatar', [App\Http\Controllers\ProfileController::class, 'updateAvatar'])->name('profile.avatar');
-    Route::get('/users', [App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users');
     Route::get('/reports', [App\Http\Controllers\Admin\DashboardController::class, 'reports'])->name('reports');
 
     // ═══ Multi-Company ═══
@@ -406,43 +424,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/documents/{document}/upload-version', [$docCtrl, 'uploadVersion'])->name('documents.upload-version');
     Route::get('/projects/{project}/documents', [$docCtrl, 'projectDocuments'])->name('projects.documents');
     Route::delete('/documents/{document}', [$docCtrl, 'destroy'])->name('documents.destroy');
-
-    // ═══ Call Center ═══
-    $ccCtrl = App\Http\Controllers\Admin\CallCenterController::class;
-    Route::get('/call-center', [$ccCtrl, 'index'])->name('call-center.index');
-    Route::post('/call-center/campaigns', [$ccCtrl, 'storeCampaign'])->name('call-center.campaigns.store');
-    Route::post('/call-center/calls', [$ccCtrl, 'storeCall'])->name('call-center.calls.store');
-    Route::get('/call-center/calls', [$ccCtrl, 'calls'])->name('call-center.calls');
-    Route::get('/call-center/action-points', [$ccCtrl, 'actionPointsImport'])->name('call-center.action-points.import');
-    Route::post('/call-center/action-points/upload', [$ccCtrl, 'actionPointsUpload'])->name('call-center.action-points.upload');
-    Route::post('/call-center/action-points', [$ccCtrl, 'actionPointsStore'])->name('call-center.action-points.store');
-    Route::get('/call-center/action-points/reports', [$ccCtrl, 'actionPointsReports'])->name('call-center.action-points.reports');
-    Route::post('/call-center/action-points/approve', [$ccCtrl, 'actionPointsApprove'])->name('call-center.action-points.approve');
-    Route::get('/call-center/action-points/pending', [$ccCtrl, 'actionPointsPending'])->name('call-center.action-points.pending');
-    Route::get('/call-center/tickets', [$ccCtrl, 'tickets'])->name('call-center.tickets');
-    Route::post('/call-center/tickets', [$ccCtrl, 'storeTicket'])->name('call-center.tickets.store');
-    Route::post('/call-center/tickets/{ticket}', [$ccCtrl, 'updateTicket'])->name('call-center.tickets.update');
-    Route::get('/call-center/download-template', [$ccCtrl, 'downloadTemplate'])->name('call-center.download-template');
-
-    // ═══ SGR (Standard Gauge Railway) ═══
-    $sgrCtrl = App\Http\Controllers\Admin\SgrController::class;
-    Route::get('/sgr', [$sgrCtrl, 'index'])->name('sgr.index');
-    Route::get('/sgr/action-points', [$sgrCtrl, 'actionPointsImport'])->name('sgr.action-points.import');
-    Route::post('/sgr/action-points/upload', [$sgrCtrl, 'actionPointsUpload'])->name('sgr.action-points.upload');
-    Route::post('/sgr/action-points', [$sgrCtrl, 'actionPointsStore'])->name('sgr.action-points.store');
-    Route::get('/sgr/action-points/reports', [$sgrCtrl, 'actionPointsReports'])->name('sgr.action-points.reports');
-    Route::post('/sgr/action-points/approve', [$sgrCtrl, 'actionPointsApprove'])->name('sgr.action-points.approve');
-    Route::get('/sgr/action-points/pending', [$sgrCtrl, 'actionPointsPending'])->name('sgr.action-points.pending');
-    Route::get('/sgr/download-template', [$sgrCtrl, 'downloadTemplate'])->name('sgr.download-template');
-
-    // ═══ SGR Parking Revenue Collection ═══
-    $sgrParkingCtrl = App\Http\Controllers\Admin\SgrParkingRevenueController::class;
-    Route::get('/sgr/parking-revenue', [$sgrParkingCtrl, 'index'])->name('sgr.parking-revenue.index');
-    Route::get('/sgr/parking-revenue/import', [$sgrParkingCtrl, 'import'])->name('sgr.parking-revenue.import');
-    Route::post('/sgr/parking-revenue/upload', [$sgrParkingCtrl, 'upload'])->name('sgr.parking-revenue.upload');
-    Route::post('/sgr/parking-revenue', [$sgrParkingCtrl, 'store'])->name('sgr.parking-revenue.store');
-    Route::get('/sgr/parking-revenue/reports', [$sgrParkingCtrl, 'reports'])->name('sgr.parking-revenue.reports');
-    Route::get('/sgr/parking-revenue/download-template', [$sgrParkingCtrl, 'downloadTemplate'])->name('sgr.parking-revenue.download-template');
 
     // ═══ Cost Centers ═══
     $ccCtrl = App\Http\Controllers\Admin\CostCenterController::class;
@@ -582,11 +563,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/notification-templates', [$erp, 'notificationTemplateIndex'])->name('notification-templates.index');
     Route::get('/notification-templates/{notificationTemplate}/edit', [$erp, 'notificationTemplateEdit'])->name('notification-templates.edit');
     Route::patch('/notification-templates/{notificationTemplate}', [$erp, 'notificationTemplateUpdate'])->name('notification-templates.update');
-
-    // Profile
-    Route::get('/profile', [$erp, 'profile'])->name('profile');
-    Route::patch('/profile', [$erp, 'profileUpdate'])->name('profile.update');
-    Route::patch('/profile/password', [$erp, 'passwordUpdate'])->name('password.update');
 
     // User Management (ERP)
     Route::get('/users-manage', [$erp, 'userIndex'])->name('users-index');
@@ -950,14 +926,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/contracts/{contract}', [$contractCtrl, 'destroy'])->name('contracts.destroy');
 });
 
-// ═══════════════════════════════════════════════════════
-//  SGR AGENT ROUTES (outside admin prefix so agents without
-//  full admin permissions can still upload & store action points)
-// ═══════════════════════════════════════════════════════
-Route::prefix('sgr')->name('sgr.')->middleware('auth')->group(function () {
-    $sgrCtrl = App\Http\Controllers\Admin\SgrController::class;
-    Route::get('/action-points/reports', [$sgrCtrl, 'actionPointsReports'])->name('action-points.reports');
-    Route::post('/action-points/upload', [$sgrCtrl, 'actionPointsUpload'])->name('action-points.upload');
-    Route::post('/action-points/store', [$sgrCtrl, 'actionPointsStore'])->name('action-points.store');
-    Route::get('/action-points/pending', [$sgrCtrl, 'actionPointsPending'])->name('action-points.pending');
-});
+// Role-based module pages — fallback for modules without dedicated admin routes
+// Must be last so all explicit routes match first
+Route::get('/{module}', [App\Http\Controllers\RolePageController::class, 'page'])->name('role.page')->middleware('auth', 'route-permission')->where('module', '[a-z0-9-]+');

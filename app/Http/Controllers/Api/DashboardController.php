@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, SalesInvoice, PurchaseInvoice, SalesProposal, Expense, Revenue, Employee, Leave, CrmLead, CrmDeal, CrmContact, CrmContract, Project, HelpdeskTicket, Product, Warehouse, PosSale, Order, Attendance, Payroll, StockMovement, Transfer, Vehicle, FixedAsset, Document, AuditLog, CallLog, CallCampaign, Lpo, Grn, DeliveryNote, Quotation, Tender, VendorInvoice, VendorPayment, OfficeExpense, ClientReceipt, ProjectBudget};
+use App\Models\{User, SalesInvoice, PurchaseInvoice, SalesProposal, Expense, Revenue, Employee, Leave, CrmLead, CrmDeal, CrmContact, CrmContract, Project, HelpdeskTicket, Product, Warehouse, PosSale, Order, Attendance, Payroll, StockMovement, Transfer, Vehicle, FixedAsset, Document, AuditLog, Lpo, Grn, DeliveryNote, Quotation, Tender, VendorInvoice, VendorPayment, OfficeExpense, ClientReceipt, ProjectBudget};
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller

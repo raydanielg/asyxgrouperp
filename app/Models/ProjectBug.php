@@ -14,4 +14,14 @@ class ProjectBug extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function reportedBy()
+    {
+        return $this->belongsTo(User::class, 'reported_by');
+    }
 }

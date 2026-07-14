@@ -235,7 +235,7 @@ function editDeal(id, title, leadId, value, stage, closeDate, assignedTo, notes,
     if (assignedTo) document.getElementById('editAssignedTo').value = assignedTo;
     document.getElementById('editNotes').value = notes;
     document.getElementById('editStatus').value = status;
-    document.getElementById('editDealForm').action = '/admin/crm-deals/' + id;
+    document.getElementById('editDealForm').action = '{{ route("admin.crm-deals.update", "") }}' + id;
     document.getElementById('editModal').classList.remove('hidden');
 }
 </script>

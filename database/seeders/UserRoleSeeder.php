@@ -14,26 +14,21 @@ class UserRoleSeeder extends Seeder
     {
         $now = now();
 
+        // Consolidated 11-role structure. superadmin/admin are seeded
+        // separately below with fixed credentials.
         $allRoles = [
-            'erp_administrator', 'ict_administrator',
-            'managing_director', 'general_manager', 'technical_manager', 'operations_manager',
-            'finance_manager', 'chief_accountant', 'accountant', 'accounts_receivable_officer', 'accounts_payable_officer', 'cashier', 'payroll_officer', 'budget_officer', 'credit_controller',
-            'finance_director', 'tax_officer', 'treasury_officer', 'cost_accountant', 'collections_officer',
-            'procurement_manager', 'procurement_officer', 'tender_officer',
-            'store_manager', 'storekeeper', 'inventory_controller', 'asset_officer',
-            'sales_manager', 'business_development_manager', 'sales_executive', 'crm_officer', 'marketing_officer',
-            'project_director', 'project_manager', 'technical_projects_manager', 'project_coordinator', 'project_engineer', 'site_supervisor', 'team_leader', 'project_accountant',
-            'senior_systems_engineer', 'systems_engineer', 'network_engineer', 'software_engineer', 'cybersecurity_engineer', 'support_engineer', 'field_technician', 'noc_engineer',
-            'service_desk_manager', 'helpdesk_supervisor', 'helpdesk_officer', 'call_center_supervisor', 'call_center_agent',
-            'sgr_supervisor', 'sgr_agent', 'sgr_parking_officer',
-            'hr_manager', 'hr_officer', 'recruitment_officer', 'training_officer', 'time_and_attendance_officer',
-            'operations_officer', 'fleet_manager', 'logistics_officer',
-            'employee_self_service', 'manager_self_service',
-            'finance_officer',
-            'receptionist', 'legal_officer', 'admin_manager', 'auditor', 'ict_officer', 'ict_engineer', 'supervisor', 'director', 'administrator', 'technician',
+            'director',
+            'accountant', 'finance_manager',
+            'procurement_manager',
+            'sales_manager',
+            'project_manager',
+            'technical_manager',
+            'operations_manager',
+            'hr_manager',
         ];
 
-        $companies = \App\Models\Company::where('is_active', true)->get();
+        $company = \App\Models\Company::where('short_code', 'ASYX')->first();
+        $companyId = $company?->id;
         $users = [];
         foreach ($allRoles as $index => $roleName) {
             $label = ucwords(str_replace('_', ' ', $roleName));
@@ -46,17 +41,12 @@ class UserRoleSeeder extends Seeder
                 'phone' => '+25570000' . str_pad($index + 100, 4, '0', STR_PAD_LEFT),
                 'password' => 'password123',
                 'role' => $roleName,
-                'company_index' => $index % max(1, $companies->count()),
             ];
         }
 
         foreach ($users as $userData) {
             $roleName = $userData['role'];
-            $companyIndex = $userData['company_index'] ?? 0;
-            unset($userData['role'], $userData['company_index']);
-
-            $company = $companies->get($companyIndex);
-            $companyId = $company?->id;
+            unset($userData['role']);
 
             $user = User::where('email', $userData['email'])->first();
 
@@ -87,7 +77,6 @@ class UserRoleSeeder extends Seeder
         }
 
         // Ensure admin user exists
-        $group = \App\Models\Company::where('is_group', true)->first();
         $admin = User::where('email', 'admin@djanproject.com')->first();
         if (!$admin) {
             $admin = User::create([
@@ -96,19 +85,45 @@ class UserRoleSeeder extends Seeder
                 'last_name' => 'Admin',
                 'email' => 'admin@djanproject.com',
                 'phone' => '+255700000000',
-                'company_id' => $group?->id,
+                'company_id' => $companyId,
                 'password' => Hash::make('password123'),
                 'role' => 'admin',
                 'email_verified_at' => $now,
             ]);
-        } elseif ($group && !$admin->company_id) {
-            $admin->update(['company_id' => $group->id]);
+        } elseif ($companyId && !$admin->company_id) {
+            $admin->update(['company_id' => $companyId]);
         }
 
         $adminRole = Role::where('name', 'admin')->first();
         if ($adminRole) {
             DB::table('role_user')->updateOrInsert(
                 ['user_id' => $admin->id, 'role_id' => $adminRole->id],
+                ['created_at' => $now, 'updated_at' => $now]
+            );
+        }
+
+        // Ensure superadmin user exists
+        $superadmin = User::where('email', 'superadmin@djanproject.com')->first();
+        if (!$superadmin) {
+            $superadmin = User::create([
+                'name' => 'Super Administrator',
+                'first_name' => 'Super',
+                'last_name' => 'Administrator',
+                'email' => 'superadmin@djanproject.com',
+                'phone' => '+255700000001',
+                'company_id' => $companyId,
+                'password' => Hash::make('password123'),
+                'role' => 'superadmin',
+                'email_verified_at' => $now,
+            ]);
+        } elseif ($companyId && !$superadmin->company_id) {
+            $superadmin->update(['company_id' => $companyId]);
+        }
+
+        $superadminRole = Role::where('name', 'superadmin')->first();
+        if ($superadminRole) {
+            DB::table('role_user')->updateOrInsert(
+                ['user_id' => $superadmin->id, 'role_id' => $superadminRole->id],
                 ['created_at' => $now, 'updated_at' => $now]
             );
         }

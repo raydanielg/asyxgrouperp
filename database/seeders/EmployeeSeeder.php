@@ -13,83 +13,17 @@ class EmployeeSeeder extends Seeder
      * Map roles to realistic departments and designations.
      */
     private array $roleMeta = [
-        'erp_administrator' => ['IT', 'ERP Administrator'],
-        'ict_administrator' => ['IT', 'ICT Administrator'],
-        'ict_engineer' => ['IT', 'ICT Engineer'],
-        'ict_officer' => ['IT', 'ICT Officer'],
-        'senior_systems_engineer' => ['IT', 'Senior Systems Engineer'],
-        'systems_engineer' => ['IT', 'Systems Engineer'],
-        'network_engineer' => ['IT', 'Network Engineer'],
-        'software_engineer' => ['IT', 'Software Engineer'],
-        'cybersecurity_engineer' => ['IT', 'Cybersecurity Engineer'],
-        'support_engineer' => ['IT', 'Support Engineer'],
-        'field_technician' => ['IT', 'Field Technician'],
-        'technician' => ['IT', 'Technician'],
-        'noc_engineer' => ['IT', 'NOC Engineer'],
-        'service_desk_manager' => ['IT', 'Service Desk Manager'],
-        'helpdesk_supervisor' => ['IT', 'Helpdesk Supervisor'],
-        'helpdesk_officer' => ['IT', 'Helpdesk Officer'],
-        'technical_manager' => ['IT', 'Technical Manager'],
-
-        'managing_director' => ['Executive', 'Managing Director'],
-        'general_manager' => ['Executive', 'General Manager'],
+        'superadmin' => ['Executive', 'Super Admin'],
+        'admin' => ['Administration', 'System Admin'],
         'director' => ['Executive', 'Director'],
-        'admin_manager' => ['Administration', 'Admin Manager'],
-        'administrator' => ['Administration', 'Administrator'],
-
-        'finance_manager' => ['Finance', 'Finance Manager'],
-        'finance_officer' => ['Finance', 'Finance Officer'],
-        'chief_accountant' => ['Finance', 'Chief Accountant'],
         'accountant' => ['Finance', 'Accountant'],
-        'accounts_receivable_officer' => ['Finance', 'Accounts Receivable Officer'],
-        'accounts_payable_officer' => ['Finance', 'Accounts Payable Officer'],
-        'cashier' => ['Finance', 'Cashier'],
-        'payroll_officer' => ['Finance', 'Payroll Officer'],
-        'budget_officer' => ['Finance', 'Budget Officer'],
-        'credit_controller' => ['Finance', 'Credit Controller'],
-        'auditor' => ['Finance', 'Auditor'],
-
+        'finance_manager' => ['Finance', 'Finance Manager'],
         'procurement_manager' => ['Procurement', 'Procurement Manager'],
-        'procurement_officer' => ['Procurement', 'Procurement Officer'],
-        'tender_officer' => ['Procurement', 'Tender Officer'],
-        'logistics_officer' => ['Procurement', 'Logistics Officer'],
-        'store_manager' => ['Procurement', 'Store Manager'],
-        'storekeeper' => ['Procurement', 'Storekeeper'],
-        'inventory_controller' => ['Procurement', 'Inventory Controller'],
-        'asset_officer' => ['Procurement', 'Asset Officer'],
-
         'sales_manager' => ['Sales', 'Sales Manager'],
-        'business_development_manager' => ['Sales', 'Business Development Manager'],
-        'sales_executive' => ['Sales', 'Sales Executive'],
-        'crm_officer' => ['Sales', 'CRM Officer'],
-        'marketing_officer' => ['Sales', 'Marketing Officer'],
-        'call_center_supervisor' => ['Sales', 'Call Center Supervisor'],
-        'call_center_agent' => ['Sales', 'Call Center Agent'],
-
-        'project_director' => ['Projects', 'Project Director'],
         'project_manager' => ['Projects', 'Project Manager'],
-        'technical_projects_manager' => ['Projects', 'Technical Projects Manager'],
-        'project_coordinator' => ['Projects', 'Project Coordinator'],
-        'project_engineer' => ['Projects', 'Project Engineer'],
-        'site_supervisor' => ['Projects', 'Site Supervisor'],
-        'team_leader' => ['Projects', 'Team Leader'],
-        'project_accountant' => ['Projects', 'Project Accountant'],
-
-        'hr_manager' => ['Human Resources', 'HR Manager'],
-        'hr_officer' => ['Human Resources', 'HR Officer'],
-        'recruitment_officer' => ['Human Resources', 'Recruitment Officer'],
-        'training_officer' => ['Human Resources', 'Training Officer'],
-        'time_and_attendance_officer' => ['Human Resources', 'Time & Attendance Officer'],
-
+        'technical_manager' => ['IT', 'Technical Manager'],
         'operations_manager' => ['Operations', 'Operations Manager'],
-        'operations_officer' => ['Operations', 'Operations Officer'],
-        'fleet_manager' => ['Operations', 'Fleet Manager'],
-        'supervisor' => ['Operations', 'Supervisor'],
-
-        'employee_self_service' => ['General', 'Employee'],
-        'manager_self_service' => ['General', 'Manager'],
-        'receptionist' => ['Administration', 'Receptionist'],
-        'legal_officer' => ['Administration', 'Legal Officer'],
+        'hr_manager' => ['Human Resources', 'HR Manager'],
     ];
 
     public function run(): void
@@ -172,6 +106,9 @@ class EmployeeSeeder extends Seeder
             ]);
         }
 
+        $company = \App\Models\Company::where('short_code', 'ASYX')->first();
+        $companyId = $company?->id;
+
         // Add a few extra employees without user accounts so HR can see the difference
         $extraEmployees = [
             ['John', 'Doe', 'john.doe@asyxgroup.co.tz', 'Human Resources', 'HR Assistant'],
@@ -201,7 +138,7 @@ class EmployeeSeeder extends Seeder
                 'status' => 'active',
                 'joining_date' => $now->copy()->subMonths(rand(1, 24)),
                 'salary' => rand(400000, 2500000),
-                'company_id' => null,
+                'company_id' => $companyId,
                 'created_by' => 1,
             ]);
         }

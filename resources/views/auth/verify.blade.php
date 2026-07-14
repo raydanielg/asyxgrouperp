@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('title', 'Verify Email - ' . config('app.name', 'Laravel'))
 

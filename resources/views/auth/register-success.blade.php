@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('title', 'Registration Successful - ' . config('app.name', 'Laravel'))
 

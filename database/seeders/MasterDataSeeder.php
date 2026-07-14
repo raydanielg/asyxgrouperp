@@ -38,7 +38,6 @@ use App\Models\Vehicle;
 use App\Models\VehicleMaintenance;
 use App\Models\FuelLog;
 use App\Models\Document;
-use App\Models\CallLog;
 use App\Models\HelpdeskCategory;
 use App\Models\HelpdeskTicket;
 use App\Models\User;
@@ -52,8 +51,8 @@ class MasterDataSeeder extends Seeder
 {
     public function run(): void
     {
-        $companies = \App\Models\Company::where('is_group', false)->get();
-        $group = \App\Models\Company::where('is_group', true)->first();
+        $company = \App\Models\Company::where('short_code', 'ASYX')->first();
+        $companyId = $company?->id;
         $admin = User::where('email', 'admin@djanproject.com')->first();
         $now = now();
         $employees = []; $users = []; $products = []; $suppliers = []; $projects = [];
@@ -99,12 +98,11 @@ class MasterDataSeeder extends Seeder
         ];
 
         foreach ($empData as $i => $e) {
-            $company = $companies->get($i % $companies->count());
             $empId = 'EMP-' . str_pad($i + 1, 4, '0', STR_PAD_LEFT);
             $emp = Employee::updateOrCreate(
                 ['employee_id' => $empId],
                 [
-                    'company_id' => $company->id,
+                    'company_id' => $companyId,
                     'first_name' => $e['f'],
                     'last_name' => $e['l'],
                     'email' => $e['e'],
@@ -124,7 +122,7 @@ class MasterDataSeeder extends Seeder
             $user = User::updateOrCreate(
                 ['email' => $e['e']],
                 [
-                    'company_id' => $company->id,
+                    'company_id' => $companyId,
                     'name' => $e['f'] . ' ' . $e['l'],
                     'first_name' => $e['f'],
                     'last_name' => $e['l'],
@@ -170,11 +168,11 @@ class MasterDataSeeder extends Seeder
         }
         $cats = ProductCategory::all();
 
-        foreach (['Main Warehouse - Dar','Parktech Warehouse','Motisha Storage','Terkmark Warehouse','Glovin Inventory'] as $i => $wn) {
+        foreach (['Main Warehouse - Dar','Secondary Warehouse','Storage Unit A','Storage Unit B'] as $i => $wn) {
             Warehouse::updateOrCreate([
                 'name' => $wn,
             ], [
-                'company_id' => $companies->get($i % $companies->count())->id,
+                'company_id' => $companyId,
                 'name' => $wn, 'address' => 'Dar es Salaam', 'city' => 'Dar es Salaam', 'zip_code' => '14111',
                 'creator_id' => $admin->id, 'created_by' => $admin->id, 'is_active' => true,
             ]);
@@ -205,7 +203,7 @@ class MasterDataSeeder extends Seeder
             $products[] = Product::updateOrCreate([
                 'product_code' => $pd['code'],
             ], [
-                'company_id' => $companies->random()->id, 'category_id' => $cat->id,
+                'company_id' => $companyId, 'category_id' => $cat->id,
                 'name' => $pd['name'], 'product_code' => $pd['code'],
                 'sale_price' => $pd['sp'], 'purchase_price' => $pd['pp'],
                 'stock_quantity' => $pd['q'], 'reorder_level' => 10, 'is_active' => true,
@@ -221,7 +219,7 @@ class MasterDataSeeder extends Seeder
             $suppliers[] = Supplier::updateOrCreate([
                 'email' => $sd['e'],
             ], [
-                'company_id' => $companies->random()->id, 'name' => $sd['n'],
+                'company_id' => $companyId, 'name' => $sd['n'],
                 'contact_person' => 'Contact', 'phone' => $sd['p'], 'email' => $sd['e'],
                 'address' => 'Dar es Salaam', 'is_active' => true,
             ]);
@@ -234,7 +232,7 @@ class MasterDataSeeder extends Seeder
         $orgs = ['CRDB Bank','NMB Bank','TPA','Vodacom','TANESCO','DIT'];
         foreach ($titles as $i => $t) {
             Tender::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'tender_number' => 'TND-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                 'title' => $t, 'client_name' => 'Client ' . chr(65+$i),
                 'client_organization' => $orgs[$i], 'estimated_value' => rand(20000000, 500000000),
@@ -257,7 +255,7 @@ class MasterDataSeeder extends Seeder
         $leads = [];
         foreach ($leadData as $i => $ld) {
             $lead = CrmLead::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'lead_number' => 'LEAD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                 'first_name' => $ld['f'],'last_name' => $ld['l'],'email' => $ld['e'],'phone' => $ld['p'],
                 'company' => $ld['c'],'source' => ['Website','Referral','Tender'][rand(0,2)],
@@ -311,7 +309,7 @@ class MasterDataSeeder extends Seeder
         $taskNames = ['Site Survey','Requirements','Design','Procurement','Installation','Testing','Handover'];
         foreach ($projData as $i => $pd) {
             $proj = Project::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'project_number' => 'PRJ-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
                 'title' => $pd['t'], 'budget' => $pd['b'],
                 'description' => 'Project: ' . $pd['t'],
@@ -342,6 +340,93 @@ class MasterDataSeeder extends Seeder
         }
 
         // ═══════════════════════════════════════
+        // PROJECT BUGS
+        // ═══════════════════════════════════════
+        $bugTitles = ['Login page crash on mobile', 'API returns 500 on large payload', 'Date picker off by one day', 'Export CSV missing columns', 'Search not filtering special chars', 'Memory leak in report generation', 'Email notification not sending', 'Dashboard chart not rendering', 'File upload size limit too low', 'Password reset token expired', 'Duplicate entries on double submit', 'Pagination breaks on filter', 'Dark mode text invisible', 'Session timeout too aggressive', 'Currency symbol not displaying'];
+        $severities = ['critical', 'high', 'medium', 'low'];
+        $bugStatuses = ['open', 'in_progress', 'resolved', 'closed'];
+        for ($i = 0; $i < 15; $i++) {
+            \App\Models\ProjectBug::create([
+                'company_id' => $companyId,
+                'project_id' => $projects[array_rand($projects)]->id,
+                'title' => $bugTitles[$i],
+                'description' => 'Bug description: ' . $bugTitles[$i],
+                'severity' => $severities[array_rand($severities)],
+                'status' => $bugStatuses[array_rand($bugStatuses)],
+                'reported_by' => $users[array_rand($users)]->id,
+                'assigned_to' => $users[array_rand($users)]->id,
+            ]);
+        }
+
+        // Assign employees to projects (employee_project pivot)
+        $allEmployees = Employee::where('company_id', $companyId)->get()->all();
+        $projectRoles = ['Project Lead', 'Developer', 'Technician', 'Engineer', 'Supervisor', 'Analyst'];
+        foreach ($projects as $proj) {
+            $assignedCount = rand(3, min(6, count($allEmployees)));
+            $shuffled = $allEmployees;
+            shuffle($shuffled);
+            foreach (array_slice($shuffled, 0, $assignedCount) as $emp) {
+                \DB::table('employee_project')->updateOrInsert(
+                    ['employee_id' => $emp->id, 'project_id' => $proj->id],
+                    [
+                        'role' => $projectRoles[array_rand($projectRoles)],
+                        'assigned_from' => now()->subDays(rand(10, 80))->format('Y-m-d'),
+                        'assigned_until' => $proj->due_date?->format('Y-m-d'),
+                        'is_active' => $proj->status !== 'completed',
+                        'created_at' => now(), 'updated_at' => now(),
+                    ]
+                );
+            }
+        }
+
+        // Ensure every employee with a user account is assigned to at least 1 project
+        $employeesWithUsers = Employee::where('company_id', $companyId)->whereHas('user')->get();
+        foreach ($employeesWithUsers as $emp) {
+            $alreadyAssigned = \DB::table('employee_project')->where('employee_id', $emp->id)->count();
+            if ($alreadyAssigned === 0 && count($projects) > 0) {
+                $proj = $projects[array_rand($projects)];
+                \DB::table('employee_project')->updateOrInsert(
+                    ['employee_id' => $emp->id, 'project_id' => $proj->id],
+                    [
+                        'role' => $projectRoles[array_rand($projectRoles)],
+                        'assigned_from' => now()->subDays(rand(10, 80))->format('Y-m-d'),
+                        'assigned_until' => $proj->due_date?->format('Y-m-d'),
+                        'is_active' => $proj->status !== 'completed',
+                        'created_at' => now(), 'updated_at' => now(),
+                    ]
+                );
+            }
+        }
+
+        // ═══════════════════════════════════════
+        // PAYROLLS — generate for all employees
+        // ═══════════════════════════════════════
+        $payrollMonths = ['January','February','March','April','May','June'];
+        foreach ($allEmployees as $emp) {
+            foreach ($payrollMonths as $idx => $m) {
+                $basic = $emp->salary ?? rand(800000, 3500000);
+                $allowances = round($basic * 0.15);
+                $deductions = round($basic * 0.10);
+                $net = $basic + $allowances - $deductions;
+                \App\Models\Payroll::updateOrCreate(
+                    ['payroll_number' => 'PAY-' . $emp->id . '-' . now()->year . '-' . str_pad($idx + 1, 2, '0', STR_PAD_LEFT)],
+                    [
+                        'employee_id' => $emp->id,
+                        'company_id' => $companyId,
+                        'month' => $m,
+                        'year' => now()->year,
+                        'basic_salary' => $basic,
+                        'allowances' => $allowances,
+                        'deductions' => $deductions,
+                        'net_salary' => $net,
+                        'status' => $idx < 5 ? 'paid' : 'pending',
+                        'created_by' => $admin->id,
+                    ]
+                );
+            }
+        }
+
+        // ═══════════════════════════════════════
         // SALES INVOICES
         // ═══════════════════════════════════════
         $sOpts = ['draft','posted','paid','overdue','partial'];
@@ -349,7 +434,7 @@ class MasterDataSeeder extends Seeder
             $st = $sOpts[array_rand($sOpts)]; $total = rand(500000, 50000000);
             $paid = $st === 'paid' ? $total : ($st === 'partial' ? $total * rand(1, 9) / 10 : 0);
             $inv = SalesInvoice::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'customer_id' => $users[array_rand($users)]->id,
                 'invoice_number' => 'INV-' . now()->format('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'invoice_date' => now()->subDays(rand(1, 60)),
@@ -369,7 +454,7 @@ class MasterDataSeeder extends Seeder
             $st = $sOpts[array_rand($sOpts)]; $total = rand(300000, 30000000);
             $paid = $st === 'paid' ? $total : ($st === 'partial' ? $total * rand(1, 9) / 10 : 0);
             PurchaseInvoice::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'vendor_id' => $users[array_rand($users)]->id,
                 'invoice_number' => 'PINV-' . now()->format('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'invoice_date' => now()->subDays(rand(1, 45)),
@@ -384,7 +469,7 @@ class MasterDataSeeder extends Seeder
         for ($i = 1; $i <= 12; $i++) {
             $total = rand(1000000, 30000000);
             SalesProposal::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'customer_id' => $users[array_rand($users)]->id,
                 'proposal_number' => 'PRO-' . now()->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
                 'proposal_date' => now()->subDays(rand(1, 30)),
@@ -400,21 +485,21 @@ class MasterDataSeeder extends Seeder
         // ═══════════════════════════════════════
         for ($i = 1; $i <= 12; $i++) {
             Expense::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'expense_number' => 'EXP-' . now()->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
                 'amount' => rand(50000, 5000000), 'expense_date' => now()->subDays(rand(0, 60)),
                 'category' => ['Operations','Travel','Utilities','Maintenance'][rand(0,3)],
                 'payee' => 'Payee ' . $i, 'payment_method' => 'bank', 'created_by' => $admin->id,
             ]);
             Revenue::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'revenue_number' => 'REV-' . now()->format('Ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
                 'amount' => rand(500000, 10000000), 'revenue_date' => now()->subDays(rand(0, 60)),
                 'category' => ['Services','Products','Consulting'][rand(0,2)], 'payer' => 'Client ' . $i,
                 'notes' => 'Revenue ' . $i, 'created_by' => $admin->id,
             ]);
             Bill::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'bill_number' => 'BILL-' . now()->format('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'vendor_name' => 'Vendor ' . $i, 'amount' => rand(200000, 3000000),
                 'paid_amount' => rand(0, 3000000), 'bill_date' => now()->subDays(rand(1, 30)),
@@ -426,7 +511,7 @@ class MasterDataSeeder extends Seeder
         $banks = [['n'=>'CRDB Bank - TZS','b'=>'CRDB Bank','c'=>'TZS'],['n'=>'NMB Bank - USD','b'=>'NMB Bank','c'=>'USD'],['n'=>'NBC Bank - Ops','b'=>'NBC Bank','c'=>'TZS']];
         foreach ($banks as $i => $bk) {
             BankAccount::create([
-                'company_id' => $companies->get($i % $companies->count())->id,
+                'company_id' => $companyId,
                 'account_name' => $bk['n'], 'account_number' => '01' . str_pad((string)rand(10000000,99999999),10,'0',STR_PAD_LEFT),
                 'bank_name' => $bk['b'], 'currency' => $bk['c'],
                 'opening_balance' => rand(10000000, 100000000),
@@ -471,7 +556,7 @@ class MasterDataSeeder extends Seeder
 
         foreach (['Senior Network Engineer','Project Manager','Sales Executive'] as $i => $jt) {
             JobPosting::create([
-                'company_id' => $companies->random()->id, 'title' => $jt,
+                'company_id' => $companyId, 'title' => $jt,
                 'department' => ['Technical','Projects','Sales'][$i],
                 'description' => 'Looking for an experienced professional',
                 'requirements' => "3+ years experience\nDegree required",
@@ -493,7 +578,7 @@ class MasterDataSeeder extends Seeder
         for ($i = 1; $i <= 20; $i++) {
             $titles = ['Internet issue','Printer problem','Email setup','Software install','Access request','VPN issue','Server alert','Password reset','System error','Network slow'];
             HelpdeskTicket::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'ticket_id' => 'TKT-' . now()->format('Ymd') . '-' . str_pad($i,4,'0',STR_PAD_LEFT),
                 'title' => $titles[($i - 1) % count($titles)],
                 'description' => 'Issue description', 'category_id' => $tCats->random()->id,
@@ -508,7 +593,7 @@ class MasterDataSeeder extends Seeder
         // ═══════════════════════════════════════
         foreach (['Laptop','Server','Switch','Printer','UPS','Furniture'] as $at) {
             FixedAsset::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'asset_number' => 'AST-' . strtoupper(Str::random(8)),
                 'asset_tag' => 'TAG-' . strtoupper(Str::random(6)),
                 'name' => $at, 'category' => $at,
@@ -521,7 +606,7 @@ class MasterDataSeeder extends Seeder
                 'net_book_value' => rand(200000, 3000000),
                 'status' => ['active','under_maintenance','disposed'][rand(0,2)],
                 'location' => 'Dar es Salaam',
-                'assigned_to' => $employees[array_rand($employees)]->id,
+                'assigned_to' => $users[array_rand($users)]->id,
                 'created_by' => $admin->id,
             ]);
         }
@@ -537,13 +622,13 @@ class MasterDataSeeder extends Seeder
             $v = Vehicle::updateOrCreate(
                 ['registration_number' => $vd['reg']],
                 [
-                    'company_id' => $companies->random()->id,
+                    'company_id' => $companyId,
                     'vehicle_number' => 'VEH-' . strtoupper(Str::random(6)),
                     'make' => $vd['mk'], 'model' => $vd['md'],
                     'year' => $vd['y'], 'fuel_type' => $vd['ft'],
                     'status' => 'active', 'odometer_reading' => rand(5000, 80000),
                     'insurance_expiry' => now()->addMonths(rand(1, 11)),
-                    'assigned_to' => $employees[array_rand($employees)]->id,
+                    'assigned_to' => $users[array_rand($users)]->id,
                 ]
             );
             VehicleMaintenance::create(['vehicle_id'=>$v->id,'maintenance_type'=>'service','description'=>'Regular service','service_date'=>now()->subDays(rand(5,60)),'cost'=>rand(200000,1500000),'service_provider'=>'Auto Center','status'=>'completed']);
@@ -555,28 +640,12 @@ class MasterDataSeeder extends Seeder
         // ═══════════════════════════════════════
         foreach (['Contract','Invoice','Report','Proposal','Policy'] as $i => $dt) {
             Document::create([
-                'company_id' => $companies->random()->id,
+                'company_id' => $companyId,
                 'document_number' => 'DOC-' . now()->format('Ymd') . '-' . str_pad($i+1, 3, '0', STR_PAD_LEFT),
                 'title' => $dt . ' ' . ($i+1), 'category' => strtolower($dt),
                 'status' => 'active', 'file_path' => '/documents/sample-' . ($i+1) . '.pdf',
                 'file_type' => 'application/pdf', 'file_size' => rand(100000, 5000000),
                 'version' => '1.0', 'uploaded_by' => $admin->id,
-            ]);
-        }
-
-        // ═══════════════════════════════════════
-        // CALL LOGS
-        // ═══════════════════════════════════════
-        for ($i = 1; $i <= 10; $i++) {
-            CallLog::create([
-                'company_id' => $companies->random()->id,
-                'caller_name' => 'Caller ' . $i,
-                'caller_phone' => '2557' . str_pad((string)rand(10000000,99999999),8,'0',STR_PAD_LEFT),
-                'call_direction' => ['inbound','outbound'][rand(0,1)],
-                'call_start' => now()->subHours(rand(1, 72)),
-                'duration_seconds' => rand(30, 1800),
-                'status' => ['completed','missed','failed'][rand(0,2)],
-                'agent_id' => $users[array_rand($users)]->id,
             ]);
         }
 
@@ -588,7 +657,7 @@ class MasterDataSeeder extends Seeder
         Setting::set('timezone', 'Africa/Dar_es_Salaam');
 
         AuditLog::create([
-            'user_id' => $admin->id, 'company_id' => $group?->id,
+            'user_id' => $admin->id, 'company_id' => $companyId,
             'action' => 'system_seeded', 'module' => 'System',
             'new_values' => json_encode(['message' => 'Master data seeded']),
             'ip_address' => '127.0.0.1',

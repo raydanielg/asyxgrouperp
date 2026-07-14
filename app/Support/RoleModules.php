@@ -19,88 +19,22 @@ class RoleModules
      * Curated modules per known role, in display order.
      */
     private const CURATED = [
-        'managing_director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'my-account', 'payslips', 'salary'],
-        'general_manager' => ['dashboard', 'reports', 'approvals', 'projects', 'leads', 'employees', 'my-account', 'payslips', 'salary'],
-        'technical_manager' => ['dashboard', 'tickets', 'projects', 'timesheets', 'bugs', 'lpos', 'assets', 'employees', 'my-account', 'payslips', 'salary'],
-        'operations_manager' => ['dashboard', 'products', 'warehouses', 'stock-movements', 'sales-invoices', 'purchase-invoices', 'projects', 'reports', 'my-account', 'payslips', 'salary'],
+        'director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'projects', 'leads', 'deals', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'tickets', 'products', 'warehouses', 'pos', 'my-account', 'payslips', 'salary'],
 
-        'finance_manager' => ['dashboard', 'journal-entries', 'petty-cash', 'financial-reports', 'purchase-invoices', 'sales-invoices', 'bank-accounts', 'budgets', 'reports', 'approvals', 'payroll', 'my-account', 'payslips', 'salary'],
-        'finance_officer' => ['dashboard', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'bank-accounts', 'transfers', 'reports', 'my-account', 'payslips', 'salary'],
-        'chief_accountant' => ['dashboard', 'journal-entries', 'petty-cash', 'financial-reports', 'bank-reconciliation', 'reports', 'tax-management', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'my-account', 'payslips', 'salary'],
-        'accountant' => ['dashboard', 'journal-entries', 'petty-cash', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'cost-centres', 'financial-reports', 'reports', 'approvals', 'bank-accounts', 'acc-transfers', 'budgets', 'budget-vs-actual', 'tax-management', 'payroll', 'my-account', 'payslips', 'salary'],
-        'accounts_receivable_officer' => ['dashboard', 'sales-invoices', 'receivables-aging', 'revenues', 'credit-notes', 'my-account', 'payslips', 'salary'],
-        'accounts_payable_officer' => ['dashboard', 'purchase-invoices', 'acc-transfers', 'payables-aging', 'bills', 'my-account', 'payslips', 'salary'],
-        'payroll_officer' => ['dashboard', 'payroll', 'salary-records', 'deductions', 'payslips', 'employees', 'my-account', 'salary'],
-        'budget_officer' => ['dashboard', 'budgets', 'budget-vs-actual', 'cost-centres', 'reports', 'expenses', 'my-account', 'payslips', 'salary'],
-        'credit_controller' => ['dashboard', 'credit-limits', 'overdue-accounts', 'collections', 'sales-invoices', 'my-account', 'payslips', 'salary'],
-        'cashier' => ['dashboard', 'pos', 'pos-reports', 'sales-invoices', 'products', 'revenues', 'my-account', 'payslips', 'salary'],
+        'accountant' => ['dashboard', 'journal-entries', 'petty-cash', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'cost-centres', 'financial-reports', 'reports', 'bank-accounts', 'acc-transfers', 'my-account', 'payslips', 'salary'],
+        'finance_manager' => ['dashboard', 'journal-entries', 'petty-cash', 'financial-reports', 'purchase-invoices', 'sales-invoices', 'bank-accounts', 'acc-transfers', 'budgets', 'reports', 'approvals', 'payroll', 'my-account', 'payslips', 'salary'],
 
-        'procurement_manager' => ['dashboard', 'suppliers', 'rfqs', 'approvals', 'reports', 'lpos', 'purchase-requisitions', 'my-account', 'payslips', 'salary'],
-        'procurement_officer' => ['dashboard', 'rfqs', 'purchase-requisitions', 'lpos', 'grns', 'suppliers', 'my-account', 'payslips', 'salary'],
-        'tender_officer' => ['dashboard', 'tenders', 'tender-calendar', 'documents', 'tender-costing', 'my-account', 'payslips', 'salary'],
+        'procurement_manager' => ['dashboard', 'suppliers', 'rfqs', 'lpos', 'grns', 'purchase-requisitions', 'products', 'warehouses', 'stock-movements', 'transfers', 'assets', 'approvals', 'reports', 'my-account', 'payslips', 'salary'],
 
-        'store_manager' => ['dashboard', 'warehouses', 'transfers', 'reorder-levels', 'reports', 'stock-movements', 'products', 'suppliers', 'my-account', 'payslips', 'salary'],
-        'storekeeper' => ['dashboard', 'stock-movements', 'grns', 'stock-count', 'products', 'my-account', 'payslips', 'salary'],
-        'inventory_controller' => ['dashboard', 'products', 'batch-tracking', 'barcodes', 'reports', 'warehouses', 'my-account', 'payslips', 'salary'],
-        'asset_officer' => ['dashboard', 'assets', 'asset-assignment', 'asset-maintenance', 'asset-disposal', 'employees', 'my-account', 'payslips', 'salary'],
+        'sales_manager' => ['dashboard', 'leads', 'deals', 'contacts', 'sales-invoices', 'quotations', 'campaigns', 'reports', 'my-account', 'payslips', 'salary'],
 
-        'sales_manager' => ['dashboard', 'deals', 'sales-forecast', 'quotations', 'reports', 'leads', 'sales-invoices', 'my-account', 'payslips', 'salary'],
-        'business_development_manager' => ['dashboard', 'leads', 'deals', 'market-analysis', 'my-account', 'payslips', 'salary'],
-        'sales_executive' => ['dashboard', 'leads', 'deals', 'quotations', 'calls', 'my-account', 'payslips', 'salary'],
-        'crm_officer' => ['dashboard', 'contacts', 'calls', 'correspondence', 'leads', 'deals', 'my-account', 'payslips', 'salary'],
-        'marketing_officer' => ['dashboard', 'campaigns', 'lead-source-reports', 'documents', 'my-account', 'payslips', 'salary'],
+        'project_manager' => ['dashboard', 'projects', 'timesheets', 'bugs', 'employees', 'deals', 'budgets', 'site-reports', 'meetings', 'documents', 'reports', 'my-account', 'payslips', 'salary'],
 
-        'project_director' => ['dashboard', 'reports', 'projects', 'budgets', 'timesheets', 'my-account', 'payslips', 'salary'],
-        'project_manager' => ['dashboard', 'projects', 'timesheets', 'bugs', 'employees', 'deals', 'reports', 'my-account', 'payslips', 'salary'],
-        'technical_projects_manager' => ['dashboard', 'projects', 'resource-allocation', 'milestones', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
-        'project_coordinator' => ['dashboard', 'tasks', 'documents', 'meetings', 'projects', 'my-account', 'payslips', 'salary'],
-        'project_engineer' => ['dashboard', 'tasks', 'site-reports', 'timesheets', 'projects', 'my-account', 'payslips', 'salary'],
-        'site_supervisor' => ['dashboard', 'attendance', 'site-reports', 'incidents', 'tickets', 'my-account', 'payslips', 'salary'],
-        'team_leader' => ['dashboard', 'team-tasks', 'team-attendance', 'team-timesheets', 'my-account', 'payslips', 'salary'],
-        'project_accountant' => ['dashboard', 'budget-vs-actual', 'sales-invoices', 'cost-centres', 'expenses', 'revenues', 'my-account', 'payslips', 'salary'],
+        'technical_manager' => ['dashboard', 'projects', 'bugs', 'tickets', 'settings', 'employees', 'my-account', 'payslips', 'salary'],
 
-        'senior_systems_engineer' => ['dashboard', 'projects', 'documents', 'team-review', 'tickets', 'my-account', 'payslips', 'salary'],
-        'systems_engineer' => ['dashboard', 'tickets', 'assets', 'asset-maintenance', 'my-account', 'payslips', 'salary'],
-        'support_engineer' => ['dashboard', 'site-visits', 'service-reports', 'assets', 'tickets', 'job-cards', 'my-account', 'payslips', 'salary'],
-        'noc_engineer' => ['dashboard', 'tickets', 'escalations', 'assets', 'my-account', 'payslips', 'salary'],
-        'network_engineer' => ['dashboard', 'tickets', 'assets', 'projects', 'my-account', 'payslips', 'salary'],
-        'software_engineer' => ['dashboard', 'projects', 'bugs', 'timesheets', 'my-account', 'payslips', 'salary'],
-        'cybersecurity_engineer' => ['dashboard', 'tickets', 'assets', 'my-account', 'payslips', 'salary'],
-        'field_technician' => ['dashboard', 'tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
-        'technician' => ['dashboard', 'tickets', 'projects', 'job-cards', 'timesheets', 'bugs', 'my-account', 'payslips', 'salary'],
+        'operations_manager' => ['dashboard', 'vehicles', 'fuel-logs', 'maintenance', 'tickets', 'deliveries', 'shipments', 'products', 'warehouses', 'stock-movements', 'reports', 'my-account', 'payslips', 'salary'],
 
-        'service_desk_manager' => ['dashboard', 'tickets', 'sla-reports', 'reports', 'call-statistics', 'my-account', 'payslips', 'salary'],
-        'helpdesk_supervisor' => ['dashboard', 'tickets', 'reports', 'escalations', 'call-statistics', 'my-account', 'payslips', 'salary'],
-        'helpdesk_officer' => ['dashboard', 'tickets', 'knowledge-base', 'calls', 'my-account', 'payslips', 'salary'],
-        'call_center_supervisor' => ['dashboard', 'call-statistics', 'shift-schedule', 'sla-reports', 'my-account', 'payslips', 'salary'],
-        'call_center_agent' => ['dashboard', 'leads', 'contacts', 'tickets', 'my-account', 'payslips', 'salary'],
-        'receptionist' => ['dashboard', 'visitors', 'appointments', 'calls', 'correspondence', 'parcels', 'front-desk', 'departments', 'announcements', 'messages', 'salary-advance', 'my-account', 'payslips', 'salary'],
-
-        'hr_manager' => ['dashboard', 'employees', 'recruitment', 'leaves', 'payroll', 'disciplinary', 'performance', 'my-account', 'payslips', 'salary'],
-        'hr_officer' => ['dashboard', 'employees', 'attendance', 'leaves', 'performance', 'training', 'recruitment', 'assets', 'policies', 'my-account', 'payslips', 'salary'],
-        'recruitment_officer' => ['dashboard', 'job-postings', 'applications', 'onboarding', 'my-account', 'payslips', 'salary'],
-        'training_officer' => ['dashboard', 'training', 'training-records', 'certifications', 'employees', 'my-account', 'payslips', 'salary'],
-        'time_and_attendance_officer' => ['dashboard', 'attendance', 'shift-schedule', 'overtime', 'employees', 'my-account', 'payslips', 'salary'],
-
-        'operations_officer' => ['dashboard', 'operations-log', 'operations-tasks', 'tickets', 'my-account', 'payslips', 'salary'],
-        'fleet_manager' => ['dashboard', 'vehicles', 'driver-assignment', 'fuel-logs', 'trip-schedule', 'my-account', 'payslips', 'salary'],
-        'logistics_officer' => ['dashboard', 'deliveries', 'shipments', 'route-planning', 'products', 'warehouses', 'my-account', 'payslips', 'salary'],
-
-        'legal_officer' => ['dashboard', 'contracts', 'contacts', 'projects', 'reports', 'my-account', 'payslips', 'salary'],
-        'supervisor' => ['dashboard', 'employees', 'attendance', 'leaves', 'projects', 'pos', 'products', 'reports', 'my-account', 'payslips', 'salary'],
-        'director' => ['dashboard', 'reports', 'projects', 'sales-dashboard', 'employees', 'sales-invoices', 'purchase-invoices', 'expenses', 'tickets', 'my-account', 'payslips', 'salary'],
-        'admin_manager' => ['dashboard', 'users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'my-account', 'payslips', 'salary'],
-        'administrator' => ['dashboard', 'users', 'roles', 'employees', 'projects', 'products', 'settings', 'reports', 'my-account', 'payslips', 'salary'],
-
-        'erp_administrator' => ['dashboard', 'users', 'roles', 'employees', 'attendance', 'leaves', 'reports', 'settings', 'my-account', 'payslips', 'salary'],
-        'ict_administrator' => ['dashboard', 'tickets', 'projects', 'assets', 'settings', 'employees', 'my-account', 'payslips', 'salary'],
-        'ict_officer' => ['dashboard', 'tickets', 'projects', 'bugs', 'assets', 'employees', 'my-account', 'payslips', 'salary'],
-        'ict_engineer' => ['dashboard', 'tickets', 'projects', 'bugs', 'assets', 'settings', 'my-account', 'payslips', 'salary'],
-
-        'employee_self_service' => ['dashboard', 'my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'announcements', 'salary'],
-        'manager_self_service' => ['dashboard', 'my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'team-overview', 'team-leaves', 'team-timesheets', 'announcements', 'salary'],
-
-        'sgr_agent' => ['dashboard', 'import-action-points', 'action-points-reports', 'my-account', 'payslips', 'salary'],
+        'hr_manager' => ['dashboard', 'employees', 'attendance', 'leaves', 'payroll', 'performance', 'training', 'recruitment', 'approvals', 'assets', 'policies', 'my-account', 'payslips', 'salary'],
     ];
 
     /**

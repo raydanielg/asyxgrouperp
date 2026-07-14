@@ -25,7 +25,7 @@
         @keyframes ajaxProgress { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
         .toast-in { animation: toastIn 0.4s cubic-bezier(0.16,1,0.3,1) both; }
         .toast-out { animation: toastOut 0.3s ease-in both; }
-        .ajax-loader { position:fixed; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, #024938, #f9ac00, #024938); background-size: 200% 100%; animation: ajaxProgress 1s linear infinite; z-index:9999; display:none; }
+        .ajax-loader { position:fixed; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, #5A0917, #F6891F, #5A0917); background-size: 200% 100%; animation: ajaxProgress 1s linear infinite; z-index:9999; display:none; }
         .page-transition { animation: simpleFadeIn 0.35s ease-out both; }
     </style>
     <script>
@@ -33,8 +33,8 @@
             theme: {
                 extend: {
                     colors: {
-                        emerald: { 50:'#e6f5f1',100:'#b3e0d4',200:'#80cbc0',300:'#4db5a8',400:'#1a9f8e',500:'#024938',600:'#023d30',700:'#013028',800:'#01241f',900:'#001816' },
-                        gold: { 50:'#fff5e0',100:'#ffe6b3',200:'#ffd680',300:'#ffc64d',400:'#ffb71a',500:'#f9ac00',600:'#d49700',700:'#b07c00',800:'#8c6100',900:'#684600' }
+                        emerald: { 50:'#FBEDEF',100:'#F5D0D6',200:'#E8A1AD',300:'#D4738A',400:'#C55B6E',500:'#7C1528',600:'#6B0F22',700:'#5A0917',800:'#4A0712',900:'#3A050E' },
+                        gold: { 50:'#FFF4E6',100:'#FFE0BF',200:'#FCC78F',300:'#F9A54E',400:'#F6891F',500:'#D66F0E',600:'#B85A0A',700:'#9A4808',800:'#7A3D05',900:'#5C2E03' }
                     }
                 }
             }
@@ -47,8 +47,8 @@
     @include('partials.loading-screen', ['variant' => 'auth'])
 
     {{-- Auth Background --}}
-    <div class="fixed inset-0 z-0 bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
-        <div class="absolute inset-0" style="background-image: radial-gradient(rgba(2,73,56,0.18) 2px, transparent 2.5px); background-size: 18px 18px;"></div>
+    <div class="fixed inset-0 z-0 bg-gradient-to-br from-[#F7F4F1] via-white to-emerald-50/30">
+        <div class="absolute inset-0" style="background-image: radial-gradient(rgba(90,9,23,0.18) 2px, transparent 2.5px); background-size: 18px 18px;"></div>
         <div class="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-emerald-500/8 rounded-full blur-3xl"></div>
         <div class="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-gold-500/8 rounded-full blur-3xl"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-400/5 rounded-full blur-3xl"></div>
