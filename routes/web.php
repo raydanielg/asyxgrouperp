@@ -356,9 +356,9 @@ Route::prefix('reception')->middleware('auth', 'route-permission')->group(functi
     Route::post('salary-advance/{salaryAdvanceRequest}/status', [App\Http\Controllers\SalaryAdvanceController::class, 'markStatus'])->name('reception.salary-advance.status');
 });
 
-// App Routes (no URL prefix — clean URLs like /employees, /sales-invoices)
+// App Routes — all admin URLs use /admin/ prefix
 // Route names keep admin. prefix so all route('admin.xxx') calls remain unchanged
-Route::name('admin.')->middleware(['auth', 'route-permission'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])->group(function () {
     // Profile
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
     Route::match(['put', 'patch'], '/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
