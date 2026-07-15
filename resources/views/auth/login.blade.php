@@ -106,12 +106,13 @@
             {{-- Sliding Demo Roles Sidebar (inside card) --}}
             <div id="demoSidebar" class="absolute inset-0 z-20 bg-white/95 backdrop-blur-xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col rounded-3xl">
                 {{-- Sidebar header --}}
-                <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-6 py-4 flex items-center justify-between shrink-0">
-                    <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 px-6 py-4 flex items-center justify-between shrink-0 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -mr-10 -mt-10"></div>
+                    <div class="relative flex items-center gap-2">
                         <svg class="w-5 h-5 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <span class="text-white font-bold text-sm">Select Demo Role</span>
                     </div>
-                    <button type="button" id="closeDemoSidebar" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                    <button type="button" id="closeDemoSidebar" class="relative w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
@@ -166,8 +167,8 @@
                                 </div>
                                 <div class="space-y-2">
                                     @foreach($items as $r)
-                                        <button type="button" data-role-label="{{ strtolower($r[1]) }} {{ strtolower($groupName) }}" onclick="quickLogin('{{ $r[0] }}', '{{ $r[3] ?? 'password123' }}')" class="role-chip w-full px-4 py-3 rounded-xl border border-gray-200 bg-white hover:border-{{ $r[2] }}-400 hover:bg-{{ $r[2] }}-50 transition-all flex items-center gap-3 group">
-                                            <span class="w-10 h-10 rounded-lg bg-{{ $r[2] }}-100 text-{{ $r[2] }}-600 flex items-center justify-center flex-shrink-0 font-bold text-sm">{{ strtoupper(substr($r[1], 0, 1)) }}</span>
+                                        <button type="button" data-role-label="{{ strtolower($r[1]) }} {{ strtolower($groupName) }}" onclick="quickLogin('{{ $r[0] }}', '{{ $r[3] ?? 'password123' }}')" class="role-chip w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white hover:border-{{ $r[2] }}-400 hover:bg-{{ $r[2] }}-50 hover:shadow-md transition-all flex items-center gap-3 group">
+                                            <span class="w-10 h-10 rounded-xl bg-{{ $r[2] }}-100 text-{{ $r[2] }}-600 flex items-center justify-center flex-shrink-0 font-bold text-sm group-hover:scale-110 transition-transform">{{ strtoupper(substr($r[1], 0, 1)) }}</span>
                                             <div class="flex-1 text-left">
                                                 <p class="text-sm font-bold text-gray-700 group-hover:text-{{ $r[2] }}-700 leading-tight">{{ $r[1] }}</p>
                                                 <p class="text-[10px] text-gray-400 mt-0.5">Demo login</p>
@@ -182,8 +183,8 @@
                 </div>
 
                 {{-- Sidebar footer --}}
-                <div class="p-4 border-t border-gray-100 bg-gray-50 shrink-0">
-                    <p class="text-center text-[10px] text-gray-400">Click any role to auto-fill &amp; login instantly</p>
+                <div class="p-4 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-emerald-50/30 shrink-0">
+                    <p class="text-center text-[10px] text-gray-400 font-medium">Click any role to auto-fill &amp; login instantly</p>
                 </div>
             </div>
             <script>

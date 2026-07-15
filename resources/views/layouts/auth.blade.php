@@ -23,6 +23,7 @@
         @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
         @keyframes fadeInDown { from { opacity:0; transform:translateY(-24px); } to { opacity:1; transform:translateY(0); } }
         @keyframes slowZoom { 0% { transform:scale(1); } 100% { transform:scale(1.08); } }
+        @keyframes floatOrb { 0%,100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-20px) scale(1.05); } }
         .auth-card-entrance { animation: fadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) both; }
         .auth-header-entrance { animation: fadeInDown 0.6s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
         .auth-field-entrance { animation: simpleFadeIn 0.5s cubic-bezier(0.16,1,0.3,1) both; }
@@ -32,8 +33,10 @@
         .page-transition { animation: simpleFadeIn 0.35s ease-out both; }
         .brand-bg { background-image: radial-gradient(rgba(255,255,255,0.12) 2px, transparent 2.5px); background-size: 22px 22px; }
         .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); }
+        .glass-strong { background: rgba(255,255,255,0.12); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.18); }
         @keyframes kenBurns { 0% { transform:scale(1) translate(0,0); } 100% { transform:scale(1.12) translate(-2%,-2%); } }
         .slide-image { animation: kenBurns 16s ease-in-out infinite alternate; }
+        .float-anim { animation: floatOrb 8s ease-in-out infinite; }
     </style>
     <script>
         tailwind.config = {
@@ -64,8 +67,8 @@
             <div class="absolute inset-0 brand-bg opacity-40"></div>
 
             {{-- Floating orbs --}}
-            <div class="absolute top-1/4 left-10 w-64 h-64 bg-gold-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s;"></div>
-            <div class="absolute bottom-1/4 right-10 w-80 h-80 bg-emerald-400/8 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s;"></div>
+            <div class="absolute top-1/4 left-10 w-64 h-64 bg-gold-400/10 rounded-full blur-3xl float-anim"></div>
+            <div class="absolute bottom-1/4 right-10 w-80 h-80 bg-emerald-400/8 rounded-full blur-3xl float-anim" style="animation-delay: 3s;"></div>
 
             {{-- Top brand bar --}}
             <div class="absolute top-0 left-0 right-0 p-8 flex items-center justify-between z-10">
@@ -245,14 +248,7 @@
                 icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
             },
             {
-                title: 'Multi-Company Management',
-                desc: 'Seamlessly manage multiple subsidiaries with consolidated reports, intercompany transactions, and unified operations.',
-                featureTitle: 'Group Consolidation',
-                featureDesc: 'Switch between companies, view group-wide performance, and streamline intercompany processes.',
-                icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'
-            },
-            {
-                title: 'Project Management Made Simple',
+                title: 'Seamless Project Management',
                 desc: 'Plan, track, and deliver projects on time and within budget — from tenders and quotations to final delivery and invoicing.',
                 featureTitle: 'Complete Project Lifecycle',
                 featureDesc: 'Tenders, budgets, timesheets, tasks, milestones, and reporting — all in one place.',
@@ -271,6 +267,13 @@
                 featureTitle: 'Enterprise Accounting',
                 featureDesc: 'Journal entries, petty cash, cost centres, payroll, and real-time financial reports.',
                 icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+            },
+            {
+                title: 'Inventory & Warehouse Management',
+                desc: 'Track stock across multiple warehouses, manage suppliers, and optimize your supply chain with real-time inventory visibility.',
+                featureTitle: 'Supply Chain Control',
+                featureDesc: 'Multi-warehouse tracking, stock movements, supplier management, and more.',
+                icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'
             },
             {
                 title: 'Secure & Audited',
