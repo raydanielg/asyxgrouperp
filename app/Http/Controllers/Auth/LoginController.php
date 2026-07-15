@@ -10,13 +10,13 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/admin/dashboard';
 
     protected function redirectTo(): string
     {
         $user = auth()->user();
-        if ($user->isAdmin()) {
-            return '/dashboard';
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
+            return '/admin/dashboard';
         }
         return '/dashboard';
     }

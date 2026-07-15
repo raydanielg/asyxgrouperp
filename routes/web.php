@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
+            return redirect('/admin/dashboard');
+        }
         return redirect('/dashboard');
     }
     return app(App\Http\Controllers\Auth\LoginController::class)->showLoginForm();
@@ -11,42 +15,48 @@ Route::get('/', function () {
 
 Route::get('/about', function () {
     if (auth()->check()) {
-        return redirect('/dashboard');
+        $user = auth()->user();
+        return redirect($user->isAdmin() || $user->isSuperAdmin() ? '/admin/dashboard' : '/dashboard');
     }
     return redirect('/');
 })->name('about');
 
 Route::get('/services', function () {
     if (auth()->check()) {
-        return redirect('/dashboard');
+        $user = auth()->user();
+        return redirect($user->isAdmin() || $user->isSuperAdmin() ? '/admin/dashboard' : '/dashboard');
     }
     return redirect('/');
 })->name('services');
 
 Route::get('/sectors-clients', function () {
     if (auth()->check()) {
-        return redirect('/dashboard');
+        $user = auth()->user();
+        return redirect($user->isAdmin() || $user->isSuperAdmin() ? '/admin/dashboard' : '/dashboard');
     }
     return redirect('/');
 })->name('sectors');
 
 Route::get('/why-asyx', function () {
     if (auth()->check()) {
-        return redirect('/dashboard');
+        $user = auth()->user();
+        return redirect($user->isAdmin() || $user->isSuperAdmin() ? '/admin/dashboard' : '/dashboard');
     }
     return redirect('/');
 })->name('why-asyx');
 
 Route::get('/contact', function () {
     if (auth()->check()) {
-        return redirect('/dashboard');
+        $user = auth()->user();
+        return redirect($user->isAdmin() || $user->isSuperAdmin() ? '/admin/dashboard' : '/dashboard');
     }
     return redirect('/');
 })->name('contact');
 
 Route::get('/hosting', function () {
     if (auth()->check()) {
-        return redirect('/dashboard');
+        $user = auth()->user();
+        return redirect($user->isAdmin() || $user->isSuperAdmin() ? '/admin/dashboard' : '/dashboard');
     }
     return redirect('/');
 })->name('hosting');
@@ -182,7 +192,8 @@ Auth::routes(['reset' => false, 'register' => false, 'login' => false]);
 // Custom login routes — GET /login redirects to / so URL never shows /login
 Route::get('/login', function () {
     if (auth()->check()) {
-        return redirect('/dashboard');
+        $user = auth()->user();
+        return redirect($user->isAdmin() || $user->isSuperAdmin() ? '/admin/dashboard' : '/dashboard');
     }
     return redirect('/');
 });
@@ -359,6 +370,9 @@ Route::prefix('reception')->middleware('auth', 'route-permission')->group(functi
 // App Routes — all admin URLs use /admin/ prefix
 // Route names keep admin. prefix so all route('admin.xxx') calls remain unchanged
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
     // Profile
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
     Route::match(['put', 'patch'], '/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
