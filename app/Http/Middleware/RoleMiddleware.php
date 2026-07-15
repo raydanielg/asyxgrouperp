@@ -15,8 +15,8 @@ class RoleMiddleware
 
         $user = auth()->user();
 
-        // Admin has access to everything
-        if ($user->isAdmin()) {
+        // Admin and SuperAdmin have access to everything
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
             return $next($request);
         }
 

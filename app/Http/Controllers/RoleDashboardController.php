@@ -153,7 +153,7 @@ class RoleDashboardController extends Controller
                     'totalDealValue' => CrmDeal::sum('value') ?? 0,
                     'lowStockProducts' => Product::whereColumn('stock_quantity', '<=', 'reorder_level')->where('reorder_level', '>', 0)->count(),
                     'pendingTransfers' => \App\Models\Transfer::where('status', 'pending')->count() ?? 0,
-                    'totalSalesReturns' => \App\Models\SalesReturn::count() ?? 0,
+                    'totalSalesReturns' => \App\Models\SalesInvoiceReturn::count() ?? 0,
                     'totalPurchaseReturns' => \App\Models\PurchaseReturn::count() ?? 0,
                     'totalTransfers' => \App\Models\Transfer::count() ?? 0,
                     'overdueInvoices' => SalesInvoice::where('due_date', '<', now())->where('status', '!=', 'paid')->count(),

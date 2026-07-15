@@ -131,7 +131,7 @@ class CheckRoutePermission
             return $next($request);
         }
 
-        if ($user->role === 'admin' || $user->hasRole('admin')) {
+        if ($user->role === 'admin' || $user->role === 'superadmin' || $user->hasRole('admin') || $user->hasRole('superadmin')) {
             return $next($request);
         }
 
