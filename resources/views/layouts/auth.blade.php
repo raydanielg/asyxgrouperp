@@ -59,29 +59,50 @@
             <img src="{{ asset('serious-expert-expressing-support-colleague (1).jpg') }}" alt="ASYX ERP" class="absolute inset-0 w-full h-full object-cover slide-image">
 
             {{-- Gradient overlays --}}
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/85 via-emerald-800/60 to-emerald-900/85"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/90 via-transparent to-emerald-900/40"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/90 via-emerald-800/70 to-emerald-950/90"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-transparent to-emerald-900/50"></div>
             <div class="absolute inset-0 brand-bg opacity-40"></div>
 
+            {{-- Floating orbs --}}
+            <div class="absolute top-1/4 left-10 w-64 h-64 bg-gold-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s;"></div>
+            <div class="absolute bottom-1/4 right-10 w-80 h-80 bg-emerald-400/8 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s;"></div>
+
+            {{-- Top brand bar --}}
+            <div class="absolute top-0 left-0 right-0 p-8 flex items-center justify-between z-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
+                        <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX" class="w-8 h-8 object-contain">
+                    </div>
+                    <div>
+                        <span class="text-white font-extrabold text-lg tracking-tight">ASYX</span><span class="text-gold-400 font-extrabold text-lg tracking-tight"> GROUP</span>
+                        <p class="text-emerald-200/60 text-[10px] font-medium tracking-wide uppercase">Enterprise Resource Planning</p>
+                    </div>
+                </div>
+                <div class="glass rounded-full px-4 py-2 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-emerald-100 text-[10px] font-semibold uppercase tracking-wider">System Online</span>
+                </div>
+            </div>
+
             {{-- Slide text content --}}
-            <div class="absolute inset-0 p-12 flex flex-col justify-end pb-20">
+            <div class="absolute inset-0 p-12 flex flex-col justify-end pb-20 z-10">
                 <div id="slideText" class="max-w-lg transition-all duration-700 ease-in-out" style="opacity: 1; transform: translateY(0);">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-400/20 border border-gold-400/30 text-gold-300 text-xs font-bold uppercase tracking-wider mb-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold-400/20 border border-gold-400/30 text-gold-300 text-xs font-bold uppercase tracking-wider mb-5">
                         <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
                         ASYX ERP Platform
                     </div>
-                    <h2 id="slideTitle" class="text-5xl font-extrabold text-white leading-tight">Powerful Business Operations</h2>
-                    <p id="slideDesc" class="mt-4 text-white/90 text-lg leading-relaxed">Streamline your entire organization with one integrated ERP system built for growth.</p>
+                    <h2 id="slideTitle" class="text-5xl font-extrabold text-white leading-tight tracking-tight">Powerful Business Operations</h2>
+                    <p id="slideDesc" class="mt-4 text-white/80 text-lg leading-relaxed font-light">Streamline your entire organization with one integrated ERP system built for growth.</p>
 
                     {{-- Dynamic feature card --}}
-                    <div id="slideFeature" class="mt-8 glass rounded-xl p-5 max-w-sm">
+                    <div id="slideFeature" class="mt-8 glass rounded-2xl p-5 max-w-sm">
                         <div class="flex items-start gap-4">
-                            <div id="slideIcon" class="w-12 h-12 rounded-lg bg-gold-400/20 flex items-center justify-center flex-shrink-0">
+                            <div id="slideIcon" class="w-12 h-12 rounded-xl bg-gold-400/20 flex items-center justify-center flex-shrink-0 border border-gold-400/20">
                                 <svg class="w-6 h-6 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                             </div>
                             <div>
                                 <p id="slideFeatureTitle" class="text-white font-bold text-base">Business Intelligence</p>
-                                <p id="slideFeatureDesc" class="text-emerald-100 text-sm mt-1">Real-time dashboards & reports across all companies.</p>
+                                <p id="slideFeatureDesc" class="text-emerald-100/70 text-sm mt-1 font-light">Real-time dashboards & reports across all companies.</p>
                             </div>
                         </div>
                     </div>
@@ -102,16 +123,16 @@
                 <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="9"></button>
             </div>
 
-            <div class="absolute bottom-8 left-12 text-emerald-200/70 text-xs">
+            <div class="absolute bottom-8 left-12 text-emerald-200/50 text-xs z-10">
                 &copy; {{ date('Y') }} ASYX Group. All rights reserved.
             </div>
         </div>
 
         {{-- Right side: auth card --}}
-        <div class="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 relative overflow-y-auto bg-gradient-to-br from-gray-50 via-white to-emerald-50/40">
-            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(90,9,23,0.06) 2px, transparent 2.5px); background-size: 18px 18px;"></div>
-            <div class="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-emerald-500/5 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-gold-500/5 rounded-full blur-3xl"></div>
+        <div class="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 relative overflow-y-auto bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(90,9,23,0.04) 2px, transparent 2.5px); background-size: 20px 20px;"></div>
+            <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-emerald-500/4 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-gold-500/4 rounded-full blur-3xl"></div>
 
             @yield('content')
         </div>

@@ -3,15 +3,24 @@
 @section('title', 'Login - ' . config('app.name', 'Laravel'))
 
 @section('content')
-<div class="w-full max-w-md" style="animation: simpleFadeIn 0.4s ease-out both;">
-    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden relative">
+<div class="w-full max-w-md relative" style="animation: simpleFadeIn 0.4s ease-out both;">
+    {{-- Floating decorative orbs --}}
+    <div class="absolute -top-8 -right-8 w-32 h-32 bg-emerald-200/30 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="absolute -bottom-8 -left-8 w-40 h-40 bg-gold-200/20 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 overflow-hidden relative">
         {{-- Header --}}
-        <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-8 py-8 text-center">
-            <div class="w-20 h-20 mx-auto bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group" class="w-16 h-16 object-contain">
+        <div class="relative bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 px-8 py-10 text-center overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-gold-400/10 rounded-full -ml-12 -mb-12"></div>
+            <div class="absolute inset-0 brand-bg opacity-30"></div>
+            <div class="relative z-10">
+                <div class="w-20 h-20 mx-auto bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4 border border-white/20 shadow-lg">
+                    <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX Group" class="w-16 h-16 object-contain">
+                </div>
+                <h2 class="text-2xl font-extrabold text-white tracking-tight">Welcome Back</h2>
+                <p class="text-emerald-100/80 text-sm mt-1.5">Sign in to your ASYX ERP account</p>
             </div>
-            <h2 class="text-2xl font-extrabold text-white">Welcome Back</h2>
-            <p class="text-emerald-100 text-sm mt-1">Sign in to your account</p>
         </div>
 
         {{-- Form --}}
@@ -34,7 +43,7 @@
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
                         </div>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
-                            class="w-full pl-11 pr-4 py-2.5 rounded-lg border @error('email') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
+                            class="w-full pl-11 pr-4 py-3 rounded-xl border @error('email') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-sm bg-gray-50/50 hover:bg-white focus:bg-white"
                             placeholder="you@example.com">
                     </div>
                     @error('email')
@@ -50,7 +59,7 @@
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
                         <input id="password" type="password" name="password" required autocomplete="current-password"
-                            class="w-full pl-11 pr-10 py-2.5 rounded-lg border @error('password') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
+                            class="w-full pl-11 pr-10 py-3 rounded-xl border @error('password') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 outline-none transition-all text-sm bg-gray-50/50 hover:bg-white focus:bg-white"
                             placeholder="Enter your password">
                         <button type="button" onclick="var p=document.getElementById('password');p.type=p.type==='password'?'text':'password'" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -74,28 +83,28 @@
                 </div>
 
                 {{-- Submit --}}
-                <button type="submit" id="loginBtn" class="w-full py-3 text-sm font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                <button type="submit" id="loginBtn" class="w-full py-3.5 text-sm font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-xl shadow-lg hover:shadow-xl hover:shadow-gold-300/50 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transform hover:-translate-y-0.5 active:translate-y-0">
                     <svg id="btnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                    <span id="loginBtnText">Sign In</span>
+                    <span id="loginBtnText">Sign In to Dashboard</span>
                 </button>
             </form>
 
             {{-- Demo Quick Login Toggle --}}
-            <div class="mt-6">
-                <div class="flex items-center gap-2 mb-3">
-                    <div class="flex-1 h-px bg-gray-200"></div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Demo Access</span>
-                    <div class="flex-1 h-px bg-gray-200"></div>
+            <div class="mt-7">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 px-2">Demo Access</span>
+                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
                 </div>
 
-                <button type="button" id="quickLoginToggle" class="w-full py-2.5 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group">
-                    <svg class="w-4 h-4 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <button type="button" id="quickLoginToggle" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-xs font-bold transition-all shadow-lg hover:shadow-xl hover:shadow-emerald-300/40 flex items-center justify-center gap-2 group transform hover:-translate-y-0.5 active:translate-y-0">
+                    <svg class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Quick Login as Demo Role
                 </button>
             </div>
 
             {{-- Sliding Demo Roles Sidebar (inside card) --}}
-            <div id="demoSidebar" class="absolute inset-0 z-20 bg-white transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col rounded-2xl">
+            <div id="demoSidebar" class="absolute inset-0 z-20 bg-white/95 backdrop-blur-xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col rounded-3xl">
                 {{-- Sidebar header --}}
                 <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-6 py-4 flex items-center justify-between shrink-0">
                     <div class="flex items-center gap-2">
