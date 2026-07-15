@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('shield.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('shield.png') }}">
     <title>@yield('title', 'ASYX Group - Smart Technology. Secure Infrastructure. Sustainable Growth.')</title>
     <meta name="description" content="ASYX Group - Trusted technology partner for government, parastatals and regulated enterprises in Tanzania. Smart Technology, Secure Infrastructure, Sustainable Growth.">
     <link rel="preconnect" href="https://fonts.googleapis.com">

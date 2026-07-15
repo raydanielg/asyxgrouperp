@@ -6,49 +6,49 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
     }
-    return redirect()->route('login');
+    return app(App\Http\Controllers\Auth\LoginController::class)->showLoginForm();
 })->name('home');
 
 Route::get('/about', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
     }
-    return redirect()->route('login');
+    return redirect('/');
 })->name('about');
 
 Route::get('/services', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
     }
-    return redirect()->route('login');
+    return redirect('/');
 })->name('services');
 
 Route::get('/sectors-clients', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
     }
-    return redirect()->route('login');
+    return redirect('/');
 })->name('sectors');
 
 Route::get('/why-asyx', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
     }
-    return redirect()->route('login');
+    return redirect('/');
 })->name('why-asyx');
 
 Route::get('/contact', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
     }
-    return redirect()->route('login');
+    return redirect('/');
 })->name('contact');
 
 Route::get('/hosting', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
     }
-    return redirect()->route('login');
+    return redirect('/');
 })->name('hosting');
 
 // Public Documentation
@@ -177,7 +177,18 @@ Route::get('/careers', [\App\Http\Controllers\Admin\ErpExtendedController::class
 Route::get('/careers/{jobPosting}/apply', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersApplyForm'])->name('careers.apply');
 Route::post('/careers/{jobPosting}/apply', [\App\Http\Controllers\Admin\ErpExtendedController::class, 'careersApplySubmit'])->name('careers.apply.submit');
 
-Auth::routes(['reset' => false, 'register' => false]);
+Auth::routes(['reset' => false, 'register' => false, 'login' => false]);
+
+// Custom login routes — GET /login redirects to / so URL never shows /login
+Route::get('/login', function () {
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect('/');
+});
+
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 // Registration disabled — show notice
 Route::get('/register', function () {
