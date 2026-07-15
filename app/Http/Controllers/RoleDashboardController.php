@@ -103,6 +103,7 @@ class RoleDashboardController extends Controller
 
     private function getUserRole($user): string
     {
+        if ($user->isSuperAdmin()) return 'superadmin';
         if ($user->isAdmin()) return 'admin';
 
         // Check role_user pivot
@@ -118,8 +119,48 @@ class RoleDashboardController extends Controller
         $stats = [];
 
         switch ($role) {
-            case 'admin':
             case 'superadmin':
+                $stats = [
+                    'totalUsers' => User::count(),
+                    'totalEmployees' => Employee::count(),
+                    'totalSales' => SalesInvoice::sum('total_amount') ?? 0,
+                    'totalPurchases' => PurchaseInvoice::sum('total_amount') ?? 0,
+                    'totalExpenses' => Expense::sum('amount') ?? 0,
+                    'totalRevenues' => Revenue::sum('amount') ?? 0,
+                    'pendingLeaves' => Leave::where('status', 'pending')->count(),
+                    'openTickets' => HelpdeskTicket::where('status', 'open')->count(),
+                    'totalProjects' => Project::count(),
+                    'activeProjects' => Project::where('status', 'in_progress')->count(),
+                    'totalCompanies' => \App\Models\Company::count(),
+                    'totalProducts' => Product::count(),
+                    'totalLeads' => CrmLead::count(),
+                    'totalDeals' => CrmDeal::count(),
+                    'totalProposals' => SalesProposal::count(),
+                    'totalWarehouses' => Warehouse::count(),
+                    'totalPosSales' => PosSale::count(),
+                    'totalOrders' => Order::count(),
+                    'monthRevenues' => Revenue::whereMonth('revenue_date', now()->month)->sum('amount') ?? 0,
+                    'monthExpenses' => Expense::whereMonth('expense_date', now()->month)->sum('amount') ?? 0,
+                    'salesBalance' => SalesInvoice::sum('balance_amount') ?? 0,
+                    'inProgressTickets' => HelpdeskTicket::where('status', 'in_progress')->count(),
+                    'resolvedTickets' => HelpdeskTicket::where('status', 'resolved')->count(),
+                    'completedProjects' => Project::where('status', 'completed')->count(),
+                    'activeEmployees' => Employee::where('status', 'active')->count(),
+                    'todayAttendance' => Attendance::whereDate('date', today())->where('status', 'present')->count(),
+                    'newLeads' => CrmLead::where('status', 'new')->count(),
+                    'qualifiedLeads' => CrmLead::where('status', 'qualified')->count(),
+                    'openDeals' => CrmDeal::where('status', 'open')->count(),
+                    'totalDealValue' => CrmDeal::sum('value') ?? 0,
+                    'lowStockProducts' => Product::whereColumn('stock_quantity', '<=', 'reorder_level')->where('reorder_level', '>', 0)->count(),
+                    'pendingTransfers' => \App\Models\Transfer::where('status', 'pending')->count() ?? 0,
+                    'totalSalesReturns' => \App\Models\SalesReturn::count() ?? 0,
+                    'totalPurchaseReturns' => \App\Models\PurchaseReturn::count() ?? 0,
+                    'totalTransfers' => \App\Models\Transfer::count() ?? 0,
+                    'overdueInvoices' => SalesInvoice::where('due_date', '<', now())->where('status', '!=', 'paid')->count(),
+                ];
+                break;
+
+            case 'admin':
                 $stats = [
                     'totalUsers' => User::count(),
                     'totalEmployees' => Employee::count(),
@@ -250,8 +291,23 @@ class RoleDashboardController extends Controller
         $items = [];
 
         switch ($role) {
-            case 'admin':
             case 'superadmin':
+                $items['recentUsers'] = User::with('roles')->latest()->take(5)->get();
+                $items['recentSales'] = SalesInvoice::with('customer')->latest()->take(5)->get();
+                $items['recentTickets'] = HelpdeskTicket::latest()->take(5)->get();
+                $items['activeProjects'] = Project::where('status', 'in_progress')->latest()->take(5)->get();
+                $items['recentExpenses'] = Expense::latest()->take(5)->get();
+                $items['recentRevenues'] = Revenue::latest()->take(5)->get();
+                $items['recentPurchases'] = PurchaseInvoice::with('vendor')->latest()->take(5)->get();
+                $items['recentLeads'] = CrmLead::latest()->take(5)->get();
+                $items['openDeals'] = CrmDeal::where('status', 'open')->latest()->take(5)->get();
+                $items['lowStockProducts'] = Product::whereColumn('stock_quantity', '<=', 'reorder_level')->where('reorder_level', '>', 0)->take(5)->get();
+                $items['pendingLeaves'] = Leave::where('status', 'pending')->latest()->take(5)->get();
+                $items['recentAttendance'] = Attendance::with('employee')->whereDate('date', today())->latest()->take(5)->get();
+                $items['recentTransfers'] = \App\Models\Transfer::latest()->take(5)->get();
+                break;
+
+            case 'admin':
             case 'director':
                 $items['recentUsers'] = User::with('roles')->latest()->take(5)->get();
                 $items['recentSales'] = SalesInvoice::with('customer')->latest()->take(5)->get();
@@ -301,13 +357,13 @@ class RoleDashboardController extends Controller
         $money = fn($n) => 'TZS ' . number_format($n);
 
         return match ($role) {
-            'admin', 'superadmin' => [
+            'superadmin' => [
                 ['label' => 'Total Users', 'value' => $stats['totalUsers'] ?? 0, 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'color' => 'emerald'],
                 ['label' => 'Total Sales', 'value' => $money($stats['totalSales'] ?? 0), 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'color' => 'sky'],
                 ['label' => 'Total Expenses', 'value' => $money($stats['totalExpenses'] ?? 0), 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', 'color' => 'amber'],
                 ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'rose'],
             ],
-            'director' => [
+            'admin' => [
                 ['label' => 'Total Revenue', 'value' => $money($stats['totalRevenues'] ?? 0), 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'emerald'],
                 ['label' => 'Total Expenses', 'value' => $money($stats['totalExpenses'] ?? 0), 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', 'color' => 'amber'],
                 ['label' => 'Outstanding', 'value' => $money($stats['salesBalance'] ?? 0), 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'color' => 'rose'],
@@ -496,8 +552,15 @@ class RoleDashboardController extends Controller
         }
 
         switch ($role) {
-            case 'admin':
             case 'superadmin':
+                $data['title'] = 'Revenue vs Expenses (14 days)';
+                $data['values'] = $this->dailySumsForRange(Revenue::class, 'revenue_date', 'amount');
+                $data['secondaryValues'] = $this->dailySumsForRange(Expense::class, 'expense_date', 'amount');
+                $data['secondaryLabels'] = $data['labels'];
+                $data['secondaryTitle'] = 'Expenses';
+                break;
+
+            case 'admin':
             case 'director':
                 $data['title'] = 'Sales vs Purchases (14 days)';
                 $data['values'] = $this->dailySumsForRange(SalesInvoice::class, 'created_at', 'total_amount');
@@ -555,7 +618,29 @@ class RoleDashboardController extends Controller
         $money = fn($n) => 'TZS ' . number_format($n);
 
         return match ($role) {
-            'admin', 'superadmin' => [
+            'superadmin' => [
+                ['label' => 'Companies', 'value' => $stats['totalCompanies'] ?? 0, 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'companies']],
+                ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'sky', 'route' => 'role.page', 'params' => ['module' => 'employees']],
+                ['label' => 'Products', 'value' => $stats['totalProducts'] ?? 0, 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'products']],
+                ['label' => 'Leads', 'value' => $stats['totalLeads'] ?? 0, 'color' => 'rose', 'route' => 'role.page', 'params' => ['module' => 'leads']],
+                ['label' => 'Deals', 'value' => $stats['totalDeals'] ?? 0, 'color' => 'violet', 'route' => 'role.page', 'params' => ['module' => 'deals']],
+                ['label' => 'Warehouses', 'value' => $stats['totalWarehouses'] ?? 0, 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'warehouses']],
+                ['label' => 'POS Sales', 'value' => $stats['totalPosSales'] ?? 0, 'color' => 'sky', 'route' => 'role.page', 'params' => ['module' => 'pos']],
+                ['label' => 'Orders', 'value' => $stats['totalOrders'] ?? 0, 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'orders']],
+                ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'violet', 'route' => 'role.page', 'params' => ['module' => 'projects']],
+                ['label' => 'Active Projects', 'value' => $stats['activeProjects'] ?? 0, 'color' => 'sky', 'route' => 'role.page', 'params' => ['module' => 'projects']],
+                ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'leaves']],
+                ['label' => 'Open Tickets', 'value' => $stats['openTickets'] ?? 0, 'color' => 'rose', 'route' => 'role.page', 'params' => ['module' => 'tickets']],
+                ['label' => 'Low Stock', 'value' => $stats['lowStockProducts'] ?? 0, 'color' => 'rose', 'route' => 'role.page', 'params' => ['module' => 'products']],
+                ['label' => 'Overdue', 'value' => $stats['overdueInvoices'] ?? 0, 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'sales-invoices']],
+                ['label' => 'Total Revenues', 'value' => $money($stats['totalRevenues'] ?? 0), 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'revenues']],
+                ['label' => 'Month Revenue', 'value' => $money($stats['monthRevenues'] ?? 0), 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'revenues']],
+                ['label' => 'Month Expenses', 'value' => $money($stats['monthExpenses'] ?? 0), 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'expenses']],
+                ['label' => 'Outstanding', 'value' => $money($stats['salesBalance'] ?? 0), 'color' => 'rose', 'route' => 'role.page', 'params' => ['module' => 'sales-invoices']],
+                ['label' => 'Deal Value', 'value' => $money($stats['totalDealValue'] ?? 0), 'color' => 'violet', 'route' => 'role.page', 'params' => ['module' => 'deals']],
+                ['label' => 'Today Present', 'value' => $stats['todayAttendance'] ?? 0, 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'attendance']],
+            ],
+            'admin' => [
                 ['label' => 'Employees', 'value' => $stats['totalEmployees'] ?? 0, 'color' => 'emerald', 'route' => 'role.page', 'params' => ['module' => 'employees']],
                 ['label' => 'Projects', 'value' => $stats['totalProjects'] ?? 0, 'color' => 'violet', 'route' => 'role.page', 'params' => ['module' => 'projects']],
                 ['label' => 'Pending Leaves', 'value' => $stats['pendingLeaves'] ?? 0, 'color' => 'amber', 'route' => 'role.page', 'params' => ['module' => 'leaves']],
