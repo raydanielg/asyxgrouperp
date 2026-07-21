@@ -380,6 +380,90 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/profile/avatar', [App\Http\Controllers\ProfileController::class, 'updateAvatar'])->name('profile.avatar');
     Route::get('/reports', [App\Http\Controllers\Admin\DashboardController::class, 'reports'])->name('reports');
 
+    // ═══ Comprehensive Reports ═══
+    $reportCtrl = App\Http\Controllers\Admin\ReportController::class;
+    Route::get('/reports/index', [$reportCtrl, 'index'])->name('reports.index');
+    // Finance
+    Route::get('/reports/profit-loss', [$reportCtrl, 'profitLoss'])->name('reports.profit-loss');
+    Route::get('/reports/revenue', [$reportCtrl, 'revenue'])->name('reports.revenue');
+    Route::get('/reports/expenses', [$reportCtrl, 'expenses'])->name('reports.expenses');
+    Route::get('/reports/cash-flow', [$reportCtrl, 'cashFlow'])->name('reports.cash-flow');
+    Route::get('/reports/balance-sheet', [$reportCtrl, 'balanceSheet'])->name('reports.balance-sheet');
+    Route::get('/reports/bank-accounts', [$reportCtrl, 'bankAccounts'])->name('reports.bank-accounts');
+    Route::get('/reports/chart-accounts', [$reportCtrl, 'chartAccounts'])->name('reports.chart-accounts');
+    Route::get('/reports/journal-entries', [$reportCtrl, 'journalEntries'])->name('reports.journal-entries');
+    Route::get('/reports/bills', [$reportCtrl, 'bills'])->name('reports.bills');
+    Route::get('/reports/client-receipts', [$reportCtrl, 'clientReceipts'])->name('reports.client-receipts');
+    Route::get('/reports/vendor-invoices', [$reportCtrl, 'vendorInvoices'])->name('reports.vendor-invoices');
+    Route::get('/reports/cost-centers', [$reportCtrl, 'costCenters'])->name('reports.cost-centers');
+    Route::get('/reports/office-expenses', [$reportCtrl, 'officeExpenses'])->name('reports.office-expenses');
+    Route::get('/reports/budget', [$reportCtrl, 'budget'])->name('reports.budget');
+    // Sales
+    Route::get('/reports/sales-invoices', [$reportCtrl, 'salesInvoices'])->name('reports.sales-invoices');
+    Route::get('/reports/sales-returns', [$reportCtrl, 'salesReturns'])->name('reports.sales-returns');
+    Route::get('/reports/sales-proposals', [$reportCtrl, 'salesProposals'])->name('reports.sales-proposals');
+    Route::get('/reports/sales-by-customer', [$reportCtrl, 'salesByCustomer'])->name('reports.sales-by-customer');
+    Route::get('/reports/sales-by-status', [$reportCtrl, 'salesByStatus'])->name('reports.sales-by-status');
+    Route::get('/reports/receivables', [$reportCtrl, 'receivables'])->name('reports.receivables');
+    Route::get('/reports/overdue-invoices', [$reportCtrl, 'overdueInvoices'])->name('reports.overdue-invoices');
+    // Purchases & Procurement
+    Route::get('/reports/purchase-invoices', [$reportCtrl, 'purchaseInvoices'])->name('reports.purchase-invoices');
+    Route::get('/reports/purchase-returns', [$reportCtrl, 'purchaseReturns'])->name('reports.purchase-returns');
+    Route::get('/reports/tenders', [$reportCtrl, 'tenders'])->name('reports.tenders');
+    Route::get('/reports/quotations', [$reportCtrl, 'quotations'])->name('reports.quotations');
+    Route::get('/reports/lpos', [$reportCtrl, 'lpos'])->name('reports.lpos');
+    Route::get('/reports/grns', [$reportCtrl, 'grns'])->name('reports.grns');
+    Route::get('/reports/delivery-notes', [$reportCtrl, 'deliveryNotes'])->name('reports.delivery-notes');
+    Route::get('/reports/payables', [$reportCtrl, 'payables'])->name('reports.payables');
+    // Inventory
+    Route::get('/reports/products', [$reportCtrl, 'products'])->name('reports.products');
+    Route::get('/reports/low-stock', [$reportCtrl, 'lowStock'])->name('reports.low-stock');
+    Route::get('/reports/stock-movements', [$reportCtrl, 'stockMovements'])->name('reports.stock-movements');
+    Route::get('/reports/warehouses', [$reportCtrl, 'warehouses'])->name('reports.warehouses');
+    Route::get('/reports/transfers', [$reportCtrl, 'transfers'])->name('reports.transfers');
+    Route::get('/reports/product-categories', [$reportCtrl, 'productCategories'])->name('reports.product-categories');
+    // HR & Payroll
+    Route::get('/reports/employees', [$reportCtrl, 'employees'])->name('reports.employees');
+    Route::get('/reports/attendance', [$reportCtrl, 'attendance'])->name('reports.attendance');
+    Route::get('/reports/leaves', [$reportCtrl, 'leaves'])->name('reports.leaves');
+    Route::get('/reports/payroll', [$reportCtrl, 'payroll'])->name('reports.payroll');
+    Route::get('/reports/performance', [$reportCtrl, 'performance'])->name('reports.performance');
+    Route::get('/reports/training', [$reportCtrl, 'training'])->name('reports.training');
+    Route::get('/reports/bonuses', [$reportCtrl, 'bonuses'])->name('reports.bonuses');
+    Route::get('/reports/recruitment', [$reportCtrl, 'recruitment'])->name('reports.recruitment');
+    // CRM
+    Route::get('/reports/leads', [$reportCtrl, 'leads'])->name('reports.leads');
+    Route::get('/reports/deals', [$reportCtrl, 'deals'])->name('reports.deals');
+    Route::get('/reports/contacts', [$reportCtrl, 'contacts'])->name('reports.contacts');
+    Route::get('/reports/pipeline', [$reportCtrl, 'pipeline'])->name('reports.pipeline');
+    Route::get('/reports/contracts', [$reportCtrl, 'contracts'])->name('reports.contracts');
+    // Projects
+    Route::get('/reports/projects', [$reportCtrl, 'projects'])->name('reports.projects');
+    Route::get('/reports/project-tasks', [$reportCtrl, 'projectTasks'])->name('reports.project-tasks');
+    Route::get('/reports/project-bugs', [$reportCtrl, 'projectBugs'])->name('reports.project-bugs');
+    Route::get('/reports/project-budgets', [$reportCtrl, 'projectBudgets'])->name('reports.project-budgets');
+    Route::get('/reports/timesheets', [$reportCtrl, 'timesheets'])->name('reports.timesheets');
+    // POS & Retail
+    Route::get('/reports/pos-sales', [$reportCtrl, 'posSales'])->name('reports.pos-sales');
+    Route::get('/reports/pos-summary', [$reportCtrl, 'posSummary'])->name('reports.pos-summary');
+    Route::get('/reports/orders', [$reportCtrl, 'orders'])->name('reports.orders');
+    // Bookings & Appointments
+    Route::get('/reports/appointments', [$reportCtrl, 'appointments'])->name('reports.appointments');
+    Route::get('/reports/visitors', [$reportCtrl, 'visitors'])->name('reports.visitors');
+    Route::get('/reports/front-desk', [$reportCtrl, 'frontDesk'])->name('reports.front-desk');
+    // Fleet & Assets
+    Route::get('/reports/vehicles', [$reportCtrl, 'vehicles'])->name('reports.vehicles');
+    Route::get('/reports/fuel-logs', [$reportCtrl, 'fuelLogs'])->name('reports.fuel-logs');
+    Route::get('/reports/maintenance', [$reportCtrl, 'maintenance'])->name('reports.maintenance');
+    Route::get('/reports/fixed-assets', [$reportCtrl, 'fixedAssets'])->name('reports.fixed-assets');
+    Route::get('/reports/depreciation', [$reportCtrl, 'depreciation'])->name('reports.depreciation');
+    // Helpdesk
+    Route::get('/reports/tickets', [$reportCtrl, 'tickets'])->name('reports.tickets');
+    Route::get('/reports/tickets-by-category', [$reportCtrl, 'ticketsByCategory'])->name('reports.tickets-by-category');
+    // User Management
+    Route::get('/reports/users', [$reportCtrl, 'users'])->name('reports.users');
+    Route::get('/reports/user-activity', [$reportCtrl, 'userActivity'])->name('reports.user-activity');
+
     // ═══ Multi-Company ═══
     $companyCtrl = App\Http\Controllers\Admin\CompanyController::class;
     Route::get('/companies', [$companyCtrl, 'index'])->name('companies.index');
