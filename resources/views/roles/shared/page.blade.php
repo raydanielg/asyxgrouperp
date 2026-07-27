@@ -336,6 +336,9 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Manager</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Budget</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Assigned Team</th>
+                        @if(auth()->user()->hasPermission('view-job-cards'))
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Job Cards</th>
+                        @endif
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Due Date</th>
                         <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>
@@ -364,6 +367,14 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                                 <span class="text-[10px] text-gray-400">No team assigned</span>
                             @endif
                         </td>
+                        @if(auth()->user()->hasPermission('view-job-cards'))
+                        <td class="px-4 py-3">
+                            <a href="{{ route('admin.job-cards.index') }}?project_id={{ $project->id }}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                {{ $project->job_cards_count ?? 0 }}
+                            </a>
+                        </td>
+                        @endif
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($project->status === 'in_progress') ? 'bg-sky-50 text-sky-700' : (($project->status === 'completed') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $project->due_date?->format('d M Y') ?? '-' }}</td>
                         <td class="px-4 py-3">
@@ -371,6 +382,11 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                                 <a href="{{ route('admin.projects.show', $project) }}" class="text-sky-600 hover:text-sky-700 p-1 rounded hover:bg-sky-50 transition-colors" title="View">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
+                                @if(auth()->user()->hasPermission('create-job-cards'))
+                                <a href="{{ route('role.page', ['module' => 'job-cards']) }}?project_id={{ $project->id }}" class="text-indigo-600 hover:text-indigo-700 p-1 rounded hover:bg-indigo-50 transition-colors" title="New Job Card for this project">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7v3m0 0v3m0-3h3m-3 0h-3"/></svg>
+                                </a>
+                                @endif
                                 @if($canDelete && isset($routeMap[$module]['delete']))
                                 <form action="{{ route($routeMap[$module]['delete'], $project) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this project?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
                                 @endif
@@ -545,6 +561,87 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         <div class="px-5 py-3 border-t">{{ ($bugs ?? null)?->links() ?? '' }}</div>
         @break
 
+    @case('timesheets')
+        {{-- Stats Row --}}
+        <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-3 border-b">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Total Hours</span>
+                <p class="text-xl font-bold text-emerald-900 mt-1">{{ number_format($totalHours ?? 0, 1) }}</p>
+            </div>
+            <div class="bg-sky-50 border border-sky-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">This Week</span>
+                <p class="text-xl font-bold text-sky-900 mt-1">{{ number_format($weekHours ?? 0, 1) }}</p>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">This Month</span>
+                <p class="text-xl font-bold text-amber-900 mt-1">{{ number_format($monthHours ?? 0, 1) }}</p>
+            </div>
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-violet-600 uppercase tracking-wider">Entries</span>
+                <p class="text-xl font-bold text-violet-900 mt-1">{{ ($timesheets ?? collect())->total() ?? 0 }}</p>
+            </div>
+        </div>
+        @if($canCreate)
+        <div class="px-5 py-3 border-b">
+            <button onclick="document.getElementById('roleCreateTimesheetModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                Log Time
+            </button>
+        </div>
+        @endif
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Project</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Employee</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Description</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Hours</th>
+                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+        @forelse(($timesheets ?? collect())->items() ?? [] as $ts)
+                    <tr class="hover:bg-gray-50/50">
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $ts->date?->format('d M Y') ?? '-' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-900 font-medium">{{ $ts->project?->title ?? '—' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $ts->employee?->full_name ?? (($ts->employee?->first_name ?? '') . ' ' . ($ts->employee?->last_name ?? '')) ?: '—' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500 max-w-[240px] truncate">{{ $ts->description ?? '—' }}</td>
+                        <td class="px-4 py-3 text-xs font-semibold text-emerald-700">{{ $ts->hours }}h</td>
+                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $ts) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this entry?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                        @endif
+                    </tr>
+        @empty
+                    <tr><td colspan="6" class="px-4 py-8 text-center text-xs text-gray-400">No timesheet entries yet.</td></tr>
+        @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div class="px-5 py-3 border-t">{{ ($timesheets ?? null)?->links() ?? '' }}</div>
+        @if($canCreate)
+        <div id="roleCreateTimesheetModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+            <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Log Time</h3>
+                <form method="POST" action="{{ route('admin.timesheets.store') }}" class="space-y-3">@csrf
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Project *</label><select name="project_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Select project</option>@foreach(($projects ?? collect()) as $p)<option value="{{ $p->id }}">{{ $p->title }}</option>@endforeach</select></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Date *</label><input name="date" type="date" required value="{{ now()->toDateString() }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Hours *</label><input name="hours" type="number" step="0.25" min="0" max="24" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
+                    <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('roleCreateTimesheetModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save</button></div>
+                </form>
+            </div>
+        </div>
+        @endif
+        @break
+
     @case('job-cards')
         {{-- Stats Row --}}
         <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-3 border-b">
@@ -566,11 +663,37 @@ $hasActions = $canEdit || $canDelete || $canApprove;
             </div>
         </div>
         @if($canCreate)
-        <div class="px-5 py-3 border-b">
+        <div class="px-5 py-3 border-b flex items-center justify-between">
             <button onclick="document.getElementById('roleCreateJobCardModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                 New Job Card
             </button>
+            @if($filterProjectId ?? null)
+                @php $filteredProject = ($projects ?? collect())->firstWhere('id', (int) $filterProjectId); @endphp
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-gray-400">Filtered by project:</span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-indigo-50 text-indigo-700">{{ $filteredProject->title ?? ('#' . $filterProjectId) }}</span>
+                    <a href="{{ route('role.page', ['module' => 'job-cards']) }}" class="text-[10px] text-gray-400 hover:text-gray-600">Clear ×</a>
+                </div>
+            @endif
+        </div>
+        @endif
+        {{-- Technician Workload Overview (Managers only) --}}
+        @if(!empty($technicianWorkload) && $technicianWorkload->count() > 0)
+        <div class="px-5 py-4 border-b bg-gray-50/50">
+            <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">Technician Workload</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                @foreach($technicianWorkload as $tw)
+                <div class="bg-white border border-gray-200 rounded-lg p-3">
+                    <p class="text-xs font-semibold text-gray-900 truncate">{{ $tw['name'] }}</p>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 font-medium">{{ $tw['open'] }} open</span>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 font-medium">{{ $tw['in_progress'] }} active</span>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-medium">{{ $tw['resolved'] }} done</span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
         </div>
         @endif
         <div class="overflow-x-auto">
@@ -676,6 +799,16 @@ $hasActions = $canEdit || $canDelete || $canApprove;
             container.appendChild(row);
             jcPartIndex++;
         }
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get('project_id');
+            if (projectId) {
+                const modal = document.getElementById('roleCreateJobCardModal');
+                const select = modal?.querySelector('select[name="project_id"]');
+                if (select) select.value = projectId;
+                modal?.classList.remove('hidden');
+            }
+        })();
         </script>
         @endif
         @break
@@ -1820,7 +1953,6 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         </div>
         @break
 
-    @case('timesheets')
     @case('bugs')
     @case('assets')
     @case('policies')

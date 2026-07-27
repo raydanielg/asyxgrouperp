@@ -1588,6 +1588,9 @@ class ErpExtendedController extends Controller
             'hours' => 'required|numeric|min:0.01',
             'description' => 'nullable|string',
         ]);
+        if (empty($data['employee_id'])) {
+            $data['employee_id'] = auth()->user()->employee?->id;
+        }
         Timesheet::create($data);
         return back()->with('success', 'Timesheet entry added.');
     }

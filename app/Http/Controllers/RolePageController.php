@@ -263,7 +263,7 @@ class RolePageController extends Controller
                 break;
 
             case 'projects':
-                $data['projects'] = Project::with(['manager', 'employees'])->latest()->paginate(10);
+                $data['projects'] = Project::with(['manager', 'employees'])->withCount('jobCards')->latest()->paginate(10);
                 $data['activeProjects'] = Project::where('status', 'in_progress')->count();
                 $data['completedProjects'] = Project::where('status', 'completed')->count();
                 $data['assignedEmployeesCount'] = \DB::table('employee_project')->where('is_active', true)->distinct('employee_id')->count('employee_id');
@@ -342,9 +342,21 @@ class RolePageController extends Controller
                 break;
 
             case 'tickets':
-                $data['tickets'] = HelpdeskTicket::latest()->paginate(10);
-                $data['openTickets'] = HelpdeskTicket::where('status', 'open')->count();
-                $data['resolvedTickets'] = HelpdeskTicket::where('status', 'resolved')->count();
+                $tkUser = auth()->user();
+                $tkManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'operations_manager'];
+                $tkQuery = HelpdeskTicket::query();
+                $tkStatsQuery = HelpdeskTicket::query();
+                if (!in_array($tkUser->role, $tkManagerRoles, true)) {
+                    $tkQuery->where(function ($q) use ($tkUser) {
+                        $q->where('assigned_to', $tkUser->id)->orWhere('created_by', $tkUser->id);
+                    });
+                    $tkStatsQuery->where(function ($q) use ($tkUser) {
+                        $q->where('assigned_to', $tkUser->id)->orWhere('created_by', $tkUser->id);
+                    });
+                }
+                $data['tickets'] = $tkQuery->latest()->paginate(10);
+                $data['openTickets'] = (clone $tkStatsQuery)->where('status', 'open')->count();
+                $data['resolvedTickets'] = (clone $tkStatsQuery)->where('status', 'resolved')->count();
                 break;
 
             case 'leads':
@@ -402,14 +414,33 @@ class RolePageController extends Controller
                 break;
 
             case 'timesheets':
-                $data['projects'] = Project::latest()->paginate(10);
+                $tsUser = auth()->user();
+                $tsQuery = \App\Models\Timesheet::with(['project', 'task', 'employee']);
+                $managerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director'];
+                if (!in_array($tsUser->role, $managerRoles, true)) {
+                    $tsEmployeeId = $tsUser->employee?->id;
+                    $tsQuery->where('employee_id', $tsEmployeeId);
+                }
+                $data['timesheets'] = $tsQuery->latest('date')->paginate(15);
+                $data['totalHours'] = (clone $tsQuery)->sum('hours') ?? 0;
+                $data['weekHours'] = (clone $tsQuery)->whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()])->sum('hours') ?? 0;
+                $data['monthHours'] = (clone $tsQuery)->whereMonth('date', now()->month)->sum('hours') ?? 0;
+                $data['projects'] = Project::orderBy('title')->get();
                 break;
 
             case 'bugs':
-                $data['bugs'] = ProjectBug::with(['project', 'assignedTo'])->latest()->paginate(10);
-                $data['openBugs'] = ProjectBug::where('status', 'open')->count();
-                $data['resolvedBugs'] = ProjectBug::where('status', 'resolved')->count();
-                $data['criticalBugs'] = ProjectBug::where('severity', 'critical')->count();
+                $bugUser = auth()->user();
+                $bugManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director'];
+                $bugQuery = ProjectBug::with(['project', 'assignedTo']);
+                $bugStatsQuery = ProjectBug::query();
+                if (!in_array($bugUser->role, $bugManagerRoles, true)) {
+                    $bugQuery->where('assigned_to', $bugUser->id);
+                    $bugStatsQuery->where('assigned_to', $bugUser->id);
+                }
+                $data['bugs'] = $bugQuery->latest()->paginate(10);
+                $data['openBugs'] = (clone $bugStatsQuery)->where('status', 'open')->count();
+                $data['resolvedBugs'] = (clone $bugStatsQuery)->where('status', 'resolved')->count();
+                $data['criticalBugs'] = (clone $bugStatsQuery)->where('severity', 'critical')->count();
                 break;
 
             case 'assets':
@@ -427,11 +458,15 @@ class RolePageController extends Controller
             case 'job-cards':
                 $userId = auth()->id();
                 $userRole = auth()->user()->role;
+                $filterProjectId = request('project_id');
                 $jcQuery = JobCard::with('project', 'assignedTo', 'createdBy');
                 if ($userRole === 'technician') {
                     $jcQuery->where(function ($q) use ($userId) {
                         $q->where('assigned_to', $userId)->orWhere('created_by', $userId);
                     });
+                }
+                if ($filterProjectId) {
+                    $jcQuery->where('project_id', $filterProjectId);
                 }
                 $data['jobCards'] = $jcQuery->latest()->paginate(15);
                 $statsQuery = JobCard::query();
@@ -446,6 +481,20 @@ class RolePageController extends Controller
                 $data['resolvedCards'] = (clone $statsQuery)->where('status', 'resolved')->count();
                 $data['projects'] = Project::where('status', 'in_progress')->orWhere('status', 'planning')->get();
                 $data['technicians'] = User::where('role', 'technician')->orWhereHas('roles', fn($q) => $q->where('name', 'technician'))->get();
+                $data['filterProjectId'] = $filterProjectId;
+
+                // Technician workload overview — useful for technical_manager / project_manager oversight
+                if (in_array($userRole, ['technical_manager', 'project_manager', 'admin', 'superadmin'])) {
+                    $data['technicianWorkload'] = $data['technicians']->map(function ($tech) {
+                        return [
+                            'name' => $tech->name,
+                            'open' => JobCard::where('assigned_to', $tech->id)->where('status', 'open')->count(),
+                            'in_progress' => JobCard::where('assigned_to', $tech->id)->where('status', 'in_progress')->count(),
+                            'resolved' => JobCard::where('assigned_to', $tech->id)->where('status', 'resolved')->count(),
+                            'total' => JobCard::where('assigned_to', $tech->id)->count(),
+                        ];
+                    })->sortByDesc('total')->values();
+                }
                 break;
 
             case 'sales-dashboard':

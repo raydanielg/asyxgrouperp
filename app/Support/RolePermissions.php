@@ -181,6 +181,7 @@ class RolePermissions
         // Technical / IT
         'technical_manager' => [
             'view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets',
+            'create-timesheets',
             'view-bugs', 'create-bugs', 'view-helpdesk-tickets', 'create-helpdesk-tickets',
             'edit-helpdesk-tickets', 'view-lpos', 'approve-technical', 'view-assets', 'create-assets',
             'edit-assets', 'view-settings', 'view-employees', 'view-login-history', 'view-audit-logs',
