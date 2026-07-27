@@ -1163,6 +1163,16 @@ class ErpExtendedController extends Controller
             'description' => 'nullable|string|max:255',
         ]);
         $bankAccount->increment('current_balance', $data['amount']);
+
+        \App\Models\Revenue::create([
+            'bank_account_id' => $bankAccount->id,
+            'revenue_number' => 'REV-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'notes' => $data['description'] ?? 'Manual balance addition',
+            'amount' => $data['amount'],
+            'revenue_date' => now(),
+            'created_by' => auth()->id(),
+        ]);
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Balance added successfully.', 'new_balance' => $bankAccount->fresh()->current_balance]);
         }
@@ -1182,6 +1192,16 @@ class ErpExtendedController extends Controller
             return back()->with('error', 'Insufficient balance.');
         }
         $bankAccount->decrement('current_balance', $data['amount']);
+
+        \App\Models\Expense::create([
+            'bank_account_id' => $bankAccount->id,
+            'expense_number' => 'EXP-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+            'notes' => $data['description'] ?? 'Manual balance deduction',
+            'amount' => $data['amount'],
+            'expense_date' => now(),
+            'created_by' => auth()->id(),
+        ]);
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Balance deducted successfully.', 'new_balance' => $bankAccount->fresh()->current_balance]);
         }
@@ -1194,7 +1214,7 @@ class ErpExtendedController extends Controller
 
         // Revenues (incoming)
         $revenues = \App\Models\Revenue::where('bank_account_id', $bankAccount->id)
-            ->select('id', 'description', 'amount', 'revenue_date as raw_date', 'created_at')
+            ->select('id', 'revenue_number', 'notes', 'amount', 'revenue_date as raw_date', 'created_at')
             ->orderByDesc('raw_date')
             ->get()
             ->map(function ($r) {
@@ -1202,7 +1222,7 @@ class ErpExtendedController extends Controller
                 return [
                     'type' => 'credit',
                     'label' => 'Revenue',
-                    'description' => $r->description ?? 'Revenue received',
+                    'description' => $r->revenue_number ?? ($r->notes ?? 'Revenue received'),
                     'amount' => (float) $r->amount,
                     'date' => $date->format('d M Y'),
                     'sort_key' => $date->timestamp,
@@ -1212,7 +1232,7 @@ class ErpExtendedController extends Controller
 
         // Expenses (outgoing)
         $expenses = \App\Models\Expense::where('bank_account_id', $bankAccount->id)
-            ->select('id', 'description', 'amount', 'expense_date as raw_date', 'created_at')
+            ->select('id', 'expense_number', 'notes', 'amount', 'expense_date as raw_date', 'created_at')
             ->orderByDesc('raw_date')
             ->get()
             ->map(function ($e) {
@@ -1220,7 +1240,7 @@ class ErpExtendedController extends Controller
                 return [
                     'type' => 'debit',
                     'label' => 'Expense',
-                    'description' => $e->description ?? 'Expense paid',
+                    'description' => $e->expense_number ?? ($e->notes ?? 'Expense paid'),
                     'amount' => (float) $e->amount,
                     'date' => $date->format('d M Y'),
                     'sort_key' => $date->timestamp,
