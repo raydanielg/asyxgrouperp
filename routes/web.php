@@ -728,6 +728,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     // Attendance
     $attCtrl = App\Http\Controllers\Admin\AttendanceController::class;
     Route::get('/attendance', [$attCtrl, 'index'])->name('attendance.index');
+    Route::get('/attendance/data', [$attCtrl, 'data'])->name('attendance.data');
     Route::post('/attendance/clock-in', [$attCtrl, 'clockIn'])->name('attendance.clock-in');
     Route::post('/attendance/clock-out', [$attCtrl, 'clockOut'])->name('attendance.clock-out');
     Route::post('/attendance/clock-out-all', [$attCtrl, 'clockOutAll'])->name('attendance.clock-out-all');

@@ -46,6 +46,49 @@ class AttendanceController extends Controller
         ));
     }
 
+    public function data(Request $request)
+    {
+        $query = Attendance::with('employee');
+
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->date);
+        } else {
+            $query->whereDate('date', today());
+        }
+
+        if ($status = $request->get('status')) {
+            $query->where('status', $status);
+        }
+
+        if ($empId = $request->get('employee_id')) {
+            $query->where('employee_id', $empId);
+        }
+
+        if ($search = $request->get('search')) {
+            $query->whereHas('employee', function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('employee_id', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = $request->get('per_page', 15);
+        if ($perPage === 'all') $perPage = 100000;
+
+        $attendances = $query->latest('clock_in_at')->paginate((int) $perPage);
+
+        return response()->json([
+            'data' => $attendances->items(),
+            'total' => $attendances->total(),
+            'current_page' => $attendances->currentPage(),
+            'last_page' => $attendances->lastPage(),
+            'per_page' => $attendances->perPage(),
+            'from' => $attendances->firstItem(),
+            'to' => $attendances->lastItem(),
+            'links' => $attendances->links()->toHtml(),
+        ]);
+    }
+
     public function clockIn(Request $request)
     {
         $validated = $request->validate([
