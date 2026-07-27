@@ -709,6 +709,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     // ─── HRM ───
     Route::get('/employees', [$ext, 'employeeIndex'])->name('employees.index');
+    Route::get('/employees/data', [$ext, 'employeeData'])->name('employees.data');
     Route::get('/employees/create', [$ext, 'employeeCreate'])->name('employees.create');
     Route::post('/employees', [$ext, 'employeeStore'])->name('employees.store');
     Route::get('/employees/{employee}', [$ext, 'employeeShow'])->name('employees.show');

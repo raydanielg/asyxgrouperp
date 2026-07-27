@@ -93,6 +93,43 @@ class ErpExtendedController extends Controller
         return view('admin.hrm.employees.index', compact('employees', 'departments'));
     }
 
+    public function employeeData(Request $request)
+    {
+        $query = Employee::with(['manager']);
+
+        if ($search = $request->get('search')) {
+            $query->where(function ($sub) use ($search) {
+                $sub->where('first_name', 'like', "%{$search}%")
+                     ->orWhere('last_name', 'like', "%{$search}%")
+                     ->orWhere('email', 'like', "%{$search}%")
+                     ->orWhere('employee_id', 'like', "%{$search}%")
+                     ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+        if ($dept = $request->get('department')) {
+            $query->where('department', $dept);
+        }
+        if ($status = $request->get('status')) {
+            $query->where('status', $status);
+        }
+
+        $perPage = $request->get('per_page', 15);
+        if ($perPage === 'all') $perPage = 100000;
+
+        $employees = $query->latest()->paginate((int) $perPage);
+
+        return response()->json([
+            'data' => $employees->items(),
+            'total' => $employees->total(),
+            'current_page' => $employees->currentPage(),
+            'last_page' => $employees->lastPage(),
+            'per_page' => $employees->perPage(),
+            'from' => $employees->firstItem(),
+            'to' => $employees->lastItem(),
+            'links' => $employees->links()->toHtml(),
+        ]);
+    }
+
     public function employeeCreate()
     {
         $departments = ['Administration', 'Finance', 'Human Resources', 'Sales', 'Marketing', 'IT', 'Operations', 'Customer Support', 'Logistics', 'Production'];
