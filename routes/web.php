@@ -787,6 +787,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/crm-leads/{lead}', [$ext, 'crmLeadDestroy'])->name('crm-leads.destroy');
 
     Route::get('/crm-deals', [$ext, 'crmDealIndex'])->name('crm-deals.index');
+    Route::get('/crm-deals/data', [$ext, 'crmDealData'])->name('crm-deals.data');
     Route::post('/crm-deals', [$ext, 'crmDealStore'])->name('crm-deals.store');
     Route::get('/crm-deals/{deal}/pdf', [$ext, 'crmDealPdf'])->name('crm-deals.pdf');
     Route::get('/crm-deals/{deal}', [$ext, 'crmDealShow'])->name('crm-deals.show');

@@ -812,6 +812,46 @@ class ErpExtendedController extends Controller
         return view('admin.crm.deals.index', compact('deals', 'leads', 'users'));
     }
 
+    public function crmDealData(Request $request)
+    {
+        $query = CrmDeal::with('lead');
+
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('deal_number', 'like', "%{$search}%")
+                  ->orWhereHas('lead', function ($lq) use ($search) {
+                      $lq->where('full_name', 'like', "%{$search}%")
+                        ->orWhere('company', 'like', "%{$search}%");
+                  });
+            });
+        }
+        if ($status = $request->get('status')) {
+            $query->where('status', $status);
+        }
+        if ($stage = $request->get('stage')) {
+            $query->where('stage', $stage);
+        }
+
+        $perPage = $request->get('per_page', 15);
+        if ($perPage === 'all') {
+            $perPage = 100000;
+        }
+
+        $deals = $query->latest()->paginate((int) $perPage);
+
+        return response()->json([
+            'data' => $deals->items(),
+            'total' => $deals->total(),
+            'current_page' => $deals->currentPage(),
+            'last_page' => $deals->lastPage(),
+            'per_page' => $deals->perPage(),
+            'from' => $deals->firstItem(),
+            'to' => $deals->lastItem(),
+            'links' => $deals->links()->toHtml(),
+        ]);
+    }
+
     public function crmDealStore(Request $request)
     {
         $data = $request->validate([
