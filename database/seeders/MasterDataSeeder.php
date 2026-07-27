@@ -53,6 +53,14 @@ class MasterDataSeeder extends Seeder
     {
         $company = \App\Models\Company::where('short_code', 'ASYX')->first();
         $companyId = $company?->id;
+
+        // Prevent duplicate seeding on reruns (e.g. redeploys) which would violate
+        // unique constraints on date-based sequential numbers (expense_number, etc.)
+        if ($companyId && Expense::where('company_id', $companyId)->exists()) {
+            $this->command?->info('MasterDataSeeder: master data already exists for this company, skipping.');
+            return;
+        }
+
         $admin = User::where('email', 'admin@djanproject.com')->first();
         $now = now();
         $employees = []; $users = []; $products = []; $suppliers = []; $projects = [];
