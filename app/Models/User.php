@@ -40,25 +40,25 @@ class User extends Authenticatable
         return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten()->unique('id');
     }
 
+    /**
+     * HARDCODED permission names for this user, based on the
+     * users.role column. See App\Support\RolePermissions.
+     * This NO LONGER reads from the database (role_permission table).
+     */
     public function permissionNames(): array
     {
-        if (cache()->has("user_perms_{$this->id}")) {
-            return cache()->get("user_perms_{$this->id}");
-        }
-        $names = $this->permissions()->pluck('name')->unique()->values()->toArray();
-        cache()->put("user_perms_{$this->id}", $names, now()->addMinutes(30));
-        return $names;
+        return \App\Support\RolePermissions::forRole($this->role);
     }
 
     public function hasPermission(string $name): bool
     {
-        if ($this->role === 'admin') return true;
+        if ($this->role === 'admin' || $this->role === 'superadmin') return true;
         return in_array($name, $this->permissionNames());
     }
 
     public function hasAnyPermission(array $names): bool
     {
-        if ($this->role === 'admin') return true;
+        if ($this->role === 'admin' || $this->role === 'superadmin') return true;
         $perms = $this->permissionNames();
         foreach ($names as $n) {
             if (in_array($n, $perms)) return true;
