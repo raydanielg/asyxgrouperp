@@ -1306,7 +1306,7 @@ class ErpExtendedController extends Controller
 
     public function projectShow(Project $project)
     {
-        $project->load(['tasks', 'bugs', 'timesheets', 'meetings', 'documents', 'employees', 'bonuses.employee', 'invoices']);
+        $project->load(['tasks', 'bugs', 'timesheets', 'meetings', 'documents', 'employees', 'bonuses.employee', 'invoices', 'jobCards.assignedTo']);
         $assignedIds = $project->employees->pluck('id')->toArray();
         $availableEmployees = Employee::where('status', 'active')
             ->when(!empty($assignedIds), fn($q) => $q->whereNotIn('id', $assignedIds))

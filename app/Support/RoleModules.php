@@ -28,7 +28,7 @@ class RoleModules
 
         'sales_manager' => ['dashboard', 'leads', 'deals', 'contacts', 'sales-invoices', 'quotations', 'campaigns', 'reports', 'my-account', 'payslips', 'salary'],
 
-        'project_manager' => ['dashboard', 'projects', 'timesheets', 'bugs', 'employees', 'deals', 'budgets', 'site-reports', 'meetings', 'documents', 'reports', 'my-account', 'payslips', 'salary'],
+        'project_manager' => ['dashboard', 'projects', 'timesheets', 'job-cards', 'bugs', 'employees', 'deals', 'budgets', 'site-reports', 'meetings', 'documents', 'reports', 'my-account', 'payslips', 'salary'],
 
         'technical_manager' => ['dashboard', 'projects', 'timesheets', 'job-cards', 'bugs', 'tickets', 'settings', 'employees', 'my-account', 'payslips', 'salary'],
 

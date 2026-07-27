@@ -135,6 +135,46 @@
         </div>
     </div>
 </div>
+{{-- Job Cards --}}
+<div class="bg-white rounded-xl border p-6 mb-4">
+    <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold text-gray-900">Job Cards / Service Call Reports</h3>
+        <a href="{{ route('admin.job-cards.index') }}?project_id={{ $project->id }}" class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">View All &rarr;</a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b">
+                <tr>
+                    <th class="px-4 py-2 text-left text-[10px] font-bold text-gray-600 uppercase">Job #</th>
+                    <th class="px-4 py-2 text-left text-[10px] font-bold text-gray-600 uppercase">Title</th>
+                    <th class="px-4 py-2 text-left text-[10px] font-bold text-gray-600 uppercase">Assigned To</th>
+                    <th class="px-4 py-2 text-left text-[10px] font-bold text-gray-600 uppercase">Priority</th>
+                    <th class="px-4 py-2 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                    <th class="px-4 py-2 text-left text-[10px] font-bold text-gray-600 uppercase">Due Date</th>
+                    <th class="px-4 py-2 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+            @forelse($project->jobCards ?? [] as $jc)
+                <tr class="hover:bg-gray-50/50">
+                    <td class="px-4 py-2 text-xs font-mono text-gray-700">{{ $jc->job_number }}</td>
+                    <td class="px-4 py-2 text-xs font-medium text-gray-900">{{ \Illuminate\Support\Str::limit($jc->title, 40) }}</td>
+                    <td class="px-4 py-2 text-xs text-gray-600">{{ $jc->assignedTo?->name ?? '—' }}</td>
+                    <td class="px-4 py-2">@php $pc = ['low'=>'gray','medium'=>'amber','high'=>'rose','critical'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $pc[$jc->priority] ?? 'gray' }}-50 text-{{ $pc[$jc->priority] ?? 'gray' }}-700">{{ ucfirst($jc->priority) }}</span></td>
+                    <td class="px-4 py-2">@php $sc = ['open'=>'amber','in_progress'=>'sky','resolved'=>'emerald','closed'=>'gray']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $sc[$jc->status] ?? 'gray' }}-50 text-{{ $sc[$jc->status] ?? 'gray' }}-700">{{ str_replace('_', ' ', ucfirst($jc->status)) }}</span></td>
+                    <td class="px-4 py-2 text-xs text-gray-400">{{ $jc->due_date?->format('d M Y') ?? '—' }}</td>
+                    <td class="px-4 py-2 text-right">
+                        <a href="{{ route('admin.job-cards.show', $jc) }}" class="text-indigo-600 hover:text-indigo-700" title="View / Edit"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></a>
+                        <a href="{{ route('admin.job-cards.print', $jc) }}" target="_blank" class="text-gray-500 hover:text-gray-700 ml-1" title="Print"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></a>
+                    </td>
+                </tr>
+            @empty
+                <tr><td colspan="7" class="px-4 py-6 text-center text-xs text-gray-400">No job cards for this project yet</td></tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 {{-- Project Meetings --}}
 <div class="bg-white rounded-xl border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">

@@ -34,6 +34,11 @@ class Project extends Model
         return $this->hasMany(Timesheet::class);
     }
 
+    public function jobCards()
+    {
+        return $this->hasMany(JobCard::class);
+    }
+
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');

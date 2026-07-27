@@ -679,6 +679,8 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         </script>
         @endif
         @break
+
+    @case('employees')
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 border-b">
