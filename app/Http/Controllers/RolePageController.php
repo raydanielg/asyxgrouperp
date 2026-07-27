@@ -260,6 +260,21 @@ class RolePageController extends Controller
                 $data['filterMonth'] = request('month');
                 $data['filterYear'] = request('year');
                 $data['filterStatus'] = request('status');
+
+                $docUser = auth()->user();
+                $data['myDocuments'] = Document::where(function ($q) use ($docUser) {
+                    $q->where('uploaded_by', $docUser->id)
+                      ->orWhere('is_confidential', false);
+                })
+                ->where(function ($q) use ($docUser) {
+                    $q->whereNull('reference_type')
+                      ->orWhere('reference_type', 'employee')
+                      ->orWhere('reference_id', $docUser->employee?->id);
+                })
+                ->latest()
+                ->take(10)
+                ->get();
+                $data['totalDocuments'] = Document::where('uploaded_by', $docUser->id)->count();
                 break;
 
             case 'projects':

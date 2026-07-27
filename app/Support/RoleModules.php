@@ -19,24 +19,24 @@ class RoleModules
      * Curated modules per known role, in display order.
      */
     private const CURATED = [
-        'director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'projects', 'leads', 'deals', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'tickets', 'products', 'warehouses', 'pos', 'my-account', 'payslips', 'salary'],
+        'director' => ['dashboard', 'companies', 'reports', 'approvals', 'tenders', 'contracts', 'employees', 'projects', 'leads', 'deals', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'tickets', 'products', 'warehouses', 'pos', 'my-account', 'payslips'],
 
-        'accountant' => ['dashboard', 'journal-entries', 'petty-cash', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'cost-centres', 'financial-reports', 'reports', 'bank-accounts', 'acc-transfers', 'my-account', 'payslips', 'salary'],
-        'finance_manager' => ['dashboard', 'journal-entries', 'petty-cash', 'financial-reports', 'purchase-invoices', 'sales-invoices', 'bank-accounts', 'acc-transfers', 'budgets', 'reports', 'approvals', 'payroll', 'my-account', 'payslips', 'salary'],
+        'accountant' => ['dashboard', 'journal-entries', 'petty-cash', 'sales-invoices', 'purchase-invoices', 'expenses', 'revenues', 'bills', 'cost-centres', 'financial-reports', 'reports', 'bank-accounts', 'acc-transfers', 'my-account', 'payslips'],
+        'finance_manager' => ['dashboard', 'journal-entries', 'petty-cash', 'financial-reports', 'purchase-invoices', 'sales-invoices', 'bank-accounts', 'acc-transfers', 'budgets', 'reports', 'approvals', 'payroll', 'my-account', 'payslips'],
 
-        'procurement_manager' => ['dashboard', 'suppliers', 'rfqs', 'lpos', 'grns', 'purchase-requisitions', 'products', 'warehouses', 'stock-movements', 'transfers', 'assets', 'approvals', 'reports', 'my-account', 'payslips', 'salary'],
+        'procurement_manager' => ['dashboard', 'suppliers', 'rfqs', 'lpos', 'grns', 'purchase-requisitions', 'products', 'warehouses', 'stock-movements', 'transfers', 'assets', 'approvals', 'reports', 'my-account', 'payslips'],
 
-        'sales_manager' => ['dashboard', 'leads', 'deals', 'contacts', 'sales-invoices', 'quotations', 'campaigns', 'reports', 'my-account', 'payslips', 'salary'],
+        'sales_manager' => ['dashboard', 'leads', 'deals', 'contacts', 'sales-invoices', 'quotations', 'campaigns', 'reports', 'my-account', 'payslips'],
 
-        'project_manager' => ['dashboard', 'projects', 'timesheets', 'job-cards', 'bugs', 'employees', 'deals', 'budgets', 'site-reports', 'meetings', 'documents', 'reports', 'my-account', 'payslips', 'salary'],
+        'project_manager' => ['dashboard', 'projects', 'timesheets', 'job-cards', 'bugs', 'employees', 'deals', 'budgets', 'site-reports', 'meetings', 'documents', 'reports', 'my-account', 'payslips'],
 
-        'technical_manager' => ['dashboard', 'projects', 'timesheets', 'job-cards', 'bugs', 'tickets', 'settings', 'employees', 'my-account', 'payslips', 'salary'],
+        'technical_manager' => ['dashboard', 'projects', 'timesheets', 'job-cards', 'bugs', 'tickets', 'settings', 'employees', 'my-account', 'payslips'],
 
-        'technician' => ['dashboard', 'projects', 'job-cards', 'tickets', 'bugs', 'my-account', 'payslips', 'salary'],
+        'technician' => ['dashboard', 'projects', 'job-cards', 'tickets', 'bugs', 'my-account', 'payslips'],
 
-        'operations_manager' => ['dashboard', 'vehicles', 'fuel-logs', 'maintenance', 'tickets', 'deliveries', 'shipments', 'products', 'warehouses', 'stock-movements', 'reports', 'my-account', 'payslips', 'salary'],
+        'operations_manager' => ['dashboard', 'vehicles', 'fuel-logs', 'maintenance', 'tickets', 'deliveries', 'shipments', 'products', 'warehouses', 'stock-movements', 'reports', 'my-account', 'payslips'],
 
-        'hr_manager' => ['dashboard', 'employees', 'attendance', 'leaves', 'payroll', 'performance', 'training', 'recruitment', 'approvals', 'assets', 'policies', 'my-account', 'payslips', 'salary'],
+        'hr_manager' => ['dashboard', 'employees', 'attendance', 'leaves', 'payroll', 'performance', 'training', 'recruitment', 'approvals', 'assets', 'policies', 'my-account', 'payslips'],
     ];
 
     /**
@@ -209,7 +209,7 @@ class RoleModules
     /**
      * Modules every logged-in role user gets, appended if not already present.
      */
-    private const BASE_MODULES = ['dashboard', 'my-account', 'payslips', 'salary'];
+    private const BASE_MODULES = ['dashboard', 'my-account', 'payslips'];
 
     public static function allowedModules(string $role, $user = null): array
     {

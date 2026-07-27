@@ -1681,7 +1681,6 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         <div class="px-5 py-3 border-t">{{ ($employees ?? null)?->links() ?? '' }}</div>
         @break
 
-    @case('salary')
     @case('payslips')
         <div class="p-5 space-y-5">
             @if(!$employee)
@@ -1714,27 +1713,6 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     <p class="text-[10px] text-purple-500 mt-0.5">All paid payslips</p>
                 </div>
             </div>
-
-            {{-- Latest Net Pay Banner --}}
-            @if($latestPayroll)
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-5 text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-16 -mt-16"></div>
-                <div class="relative z-10 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-emerald-200 uppercase tracking-wider font-semibold">Latest Payslip</p>
-                        <p class="text-lg font-bold mt-0.5">{{ $latestPayroll->month }} {{ $latestPayroll->year }}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-2xl font-bold">{{ $money($latestPayroll->net_salary) }}</p>
-                        <p class="text-xs text-emerald-200">Net Pay</p>
-                    </div>
-                    <a href="{{ route('payslip.download', $latestPayroll->id) }}" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-lg transition-colors inline-flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                        Download PDF
-                    </a>
-                </div>
-            </div>
-            @endif
 
             {{-- Filters --}}
             <form method="GET" action="{{ route('role.page', ['module' => $module]) }}" class="flex flex-wrap items-end gap-3">
@@ -1813,10 +1791,6 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 text-right whitespace-nowrap">
-                                    <a href="{{ route('payslip.preview', $payroll->id) }}" target="_blank" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 border border-sky-200 rounded-lg hover:bg-sky-50 transition-colors mr-1">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        Ona
-                                    </a>
                                     <a href="{{ route('payslip.download', $payroll->id) }}" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-50 transition-colors">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                         PDF
@@ -1836,6 +1810,85 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                 </div>
                 <div class="px-5 py-3 border-t bg-gray-50/30">{{ ($payrolls ?? null)?->links() ?? '' }}</div>
             </div>
+
+            {{-- My Files / Faili Zangu --}}
+            <div class="bg-white border rounded-xl overflow-hidden shadow-sm">
+                <div class="px-4 py-3 border-b bg-gray-50/50 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                        <h3 class="text-sm font-bold text-gray-900">Faili Zangu</h3>
+                    </div>
+                    <span class="text-[10px] text-gray-500 font-medium">{{ ($myDocuments ?? collect())->count() }} files</span>
+                </div>
+                @if(($myDocuments ?? collect())->isNotEmpty())
+                <div class="divide-y divide-gray-100">
+                    @foreach($myDocuments as $doc)
+                    <div class="px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center
+                                @if(($doc->file_type ?? '') === 'pdf') bg-rose-50 @elseif(in_array($doc->file_type ?? '', ['jpg','jpeg','png','gif'])) bg-sky-50 @else bg-gray-100 @endif">
+                                <svg class="w-4 h-4
+                                    @if(($doc->file_type ?? '') === 'pdf') text-rose-600 @elseif(in_array($doc->file_type ?? '', ['jpg','jpeg','png','gif'])) text-sky-600 @else text-gray-500 @endif"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-semibold text-gray-900 truncate">{{ $doc->title }}</p>
+                                <p class="text-[10px] text-gray-400">{{ $doc->category ?? 'General' }} &middot; {{ $doc->created_at?->format('d M Y') }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 flex-shrink-0">
+                            @if(\Illuminate\Support\Facades\Route::has('admin.documents.show'))
+                            <a href="{{ route('admin.documents.show', $doc) }}" target="_blank" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 border border-sky-200 rounded-lg hover:bg-sky-50 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Ona
+                            </a>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Route::has('admin.documents.download'))
+                            <a href="{{ route('admin.documents.download', $doc) }}" class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-50 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                Pakua
+                            </a>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <div class="px-4 py-10 text-center">
+                    <svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                    <p class="text-sm text-gray-400">No files found.</p>
+                </div>
+                @endif
+            </div>
+
+            {{-- Latest Payslip Preview (at bottom) --}}
+            @if($latestPayroll)
+            <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-5 text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+                <div class="relative z-10 flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                        <p class="text-xs text-emerald-200 uppercase tracking-wider font-semibold">Latest Payslip Preview</p>
+                        <p class="text-lg font-bold mt-0.5">{{ $latestPayroll->month }} {{ $latestPayroll->year }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold">{{ $money($latestPayroll->net_salary) }}</p>
+                        <p class="text-xs text-emerald-200">Net Pay</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        @if(\Illuminate\Support\Facades\Route::has('payslip.preview'))
+                        <a href="{{ route('payslip.preview', $latestPayroll->id) }}" target="_blank" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-lg transition-colors inline-flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            Ona Payslip
+                        </a>
+                        @endif
+                        <a href="{{ route('payslip.download', $latestPayroll->id) }}" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-lg transition-colors inline-flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            Download PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endif
             @endif
         </div>
         @break
@@ -2031,7 +2084,6 @@ $hasActions = $canEdit || $canDelete || $canApprove;
     @case('credit-limits')
     @case('salary-records')
     @case('deductions')
-    @case('payslips')
     @case('budget-vs-actual')
     @case('budgets')
     @case('rfqs')

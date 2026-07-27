@@ -5,12 +5,26 @@
 
 @section('content')
 <div class="max-w-3xl">
+    <div class="mb-4">
+        <a href="{{ url()->previous() }}" class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Tickets
+        </a>
+    </div>
     <div class="bg-white rounded-xl border p-5 mb-4">
         <div class="flex items-start justify-between mb-3">
             <div>
                 <p class="text-xs font-mono text-emerald-700 mb-1">{{ $ticket->ticket_id }}</p>
                 <h2 class="text-lg font-bold text-gray-900">{{ $ticket->title }}</h2>
+                <div class="flex items-center gap-2 mt-1.5">
+                    @if($ticket->category)
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">{{ $ticket->category->name }}</span>
+                    @endif
+                    @php $prioColors = ['low' => 'bg-sky-50 text-sky-700', 'medium' => 'bg-amber-50 text-amber-700', 'high' => 'bg-orange-50 text-orange-700', 'urgent' => 'bg-rose-50 text-rose-700']; @endphp
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $prioColors[$ticket->priority] ?? 'bg-gray-50 text-gray-700' }}">Priority: {{ ucfirst($ticket->priority ?? '-') }}</span>
+                </div>
             </div>
+            @if(auth()->user()->hasPermission('edit-helpdesk-tickets'))
             <form method="POST" action="{{ route('admin.helpdesk-tickets.status', $ticket) }}" class="flex items-center gap-2">
                 @csrf @method('PATCH')
                 <select name="status" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none">
@@ -20,6 +34,10 @@
                     <option value="closed" {{ $ticket->status === 'closed' ? 'selected' : '' }}>Closed</option>
                 </select>
             </form>
+            @else
+            @php $statusColors = ['open' => 'bg-rose-50 text-rose-700', 'in_progress' => 'bg-sky-50 text-sky-700', 'resolved' => 'bg-emerald-50 text-emerald-700', 'closed' => 'bg-gray-100 text-gray-600']; @endphp
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $statusColors[$ticket->status] ?? 'bg-gray-50 text-gray-700' }}">{{ ucfirst(str_replace('_', ' ', $ticket->status ?? '')) }}</span>
+            @endif
         </div>
         <p class="text-sm text-gray-600">{{ $ticket->description }}</p>
         <div class="flex items-center gap-3 mt-3 text-xs text-gray-400">
@@ -27,6 +45,7 @@
             <span>{{ $ticket->created_at->format('d M Y H:i') }}</span>
             <span>Assigned to: <span class="font-medium text-gray-600">{{ $ticket->assignee?->name ?? 'Unassigned' }}</span></span>
         </div>
+        @if(auth()->user()->hasPermission('edit-helpdesk-tickets'))
         <form method="POST" action="{{ route('admin.helpdesk-tickets.assign', $ticket) }}" class="flex items-center gap-2 mt-3">
             @csrf @method('PATCH')
             <select name="assigned_to" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none">
@@ -36,6 +55,7 @@
                 @endforeach
             </select>
         </form>
+        @endif
     </div>
 
     <div class="space-y-3 mb-4">

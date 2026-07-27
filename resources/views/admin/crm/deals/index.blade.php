@@ -104,7 +104,7 @@ $lostCount = $deals->where('status', 'lost')->count();
     <div class="px-5 py-4 border-t bg-gray-50/30">{{ $deals->links() }}</div>
 </div>
 
-{{── Create Modal ──}}
+{{-- Create Modal --}}
 <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Deal</h3>
