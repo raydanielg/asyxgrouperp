@@ -15,14 +15,15 @@ class JobCardController extends Controller
     {
         $query = JobCard::with(['project', 'assignedTo', 'creator']);
         $user = auth()->user();
-        if (!$user->isAdmin()) {
+        $managerRoles = ['admin', 'superadmin', 'technical_manager', 'project_manager'];
+        if (!$user->isAdmin() && !in_array($user->role, $managerRoles)) {
             $query->where(function ($q) use ($user) {
                 $q->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
             });
         }
         $jobCards = $query->latest()->paginate(15);
         $projects = Project::where('status', 'in_progress')->get();
-        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['technician', 'field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->get();
+        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['technician', 'field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->orWhere('role', 'technician')->get();
         $stats = [
             'total' => JobCard::count(),
             'open' => JobCard::where('status', 'open')->count(),
@@ -64,7 +65,7 @@ class JobCardController extends Controller
     {
         $jobCard->load(['project', 'assignedTo', 'creator', 'approver', 'parts']);
         $projects = Project::where('status', 'in_progress')->orWhere('id', $jobCard->project_id)->get();
-        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['technician', 'field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->get();
+        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['technician', 'field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->orWhere('role', 'technician')->get();
         return view('admin.job-cards.show', compact('jobCard', 'technicians', 'projects'));
     }
 
