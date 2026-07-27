@@ -344,7 +344,7 @@ class RolePageController extends Controller
             case 'tickets':
                 $tkUser = auth()->user();
                 $tkManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'operations_manager'];
-                $tkQuery = HelpdeskTicket::query();
+                $tkQuery = HelpdeskTicket::with(['category', 'creator', 'assignee']);
                 $tkStatsQuery = HelpdeskTicket::query();
                 if (!in_array($tkUser->role, $tkManagerRoles, true)) {
                     $tkQuery->where(function ($q) use ($tkUser) {
@@ -355,8 +355,12 @@ class RolePageController extends Controller
                     });
                 }
                 $data['tickets'] = $tkQuery->latest()->paginate(10);
+                $data['totalTickets'] = (clone $tkStatsQuery)->count();
                 $data['openTickets'] = (clone $tkStatsQuery)->where('status', 'open')->count();
+                $data['inProgressTickets'] = (clone $tkStatsQuery)->where('status', 'in_progress')->count();
                 $data['resolvedTickets'] = (clone $tkStatsQuery)->where('status', 'resolved')->count();
+                $data['ticketCategories'] = \App\Models\HelpdeskCategory::where('is_active', true)->get();
+                $data['ticketAssignees'] = User::whereIn('role', ['technician', 'technical_manager', 'admin', 'superadmin'])->orderBy('name')->get();
                 break;
 
             case 'leads':

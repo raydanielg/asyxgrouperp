@@ -1003,39 +1003,101 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         @break
 
     @case('tickets')
+        {{-- Stats Row --}}
+        <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-3 border-b">
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-rose-600 uppercase tracking-wider">Open</span>
+                <p class="text-xl font-bold text-rose-900 mt-1">{{ $openTickets ?? 0 }}</p>
+            </div>
+            <div class="bg-sky-50 border border-sky-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">In Progress</span>
+                <p class="text-xl font-bold text-sky-900 mt-1">{{ $inProgressTickets ?? 0 }}</p>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Resolved</span>
+                <p class="text-xl font-bold text-emerald-900 mt-1">{{ $resolvedTickets ?? 0 }}</p>
+            </div>
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-violet-600 uppercase tracking-wider">Total</span>
+                <p class="text-xl font-bold text-violet-900 mt-1">{{ $totalTickets ?? (($tickets ?? collect())->total() ?? 0) }}</p>
+            </div>
+        </div>
+        @if($canCreate)
+        <div class="px-5 py-3 border-b">
+            <button onclick="document.getElementById('roleCreateTicketModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                New Ticket
+            </button>
+        </div>
+        @endif
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 border-b">
                     <tr>
-                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Subject</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Ticket</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Category</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Priority</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Assigned To</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
-                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
+                        <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($tickets ?? collect())->items() ?? [] as $ticket)
+        @forelse(($tickets ?? collect())->items() ?? [] as $ticket)
                     <tr class="hover:bg-gray-50/50">
-                        <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $ticket->title ?? 'Ticket #' . $ticket->id }}</td>
-                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($ticket->status === 'open') ? 'bg-rose-50 text-rose-700' : (($ticket->status === 'resolved') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst(str_replace('_', ' ', $ticket->status ?? '')) }}</span></td>
-                        <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($ticket->priority ?? '-') }}</td>
-                        <td class="px-4 py-3 text-xs text-gray-500">{{ $ticket->created_at->format('d M Y') }}</td>
-                        @if($hasActions)
+                        <td class="px-4 py-3">
+                            <div class="text-xs font-medium text-gray-900">{{ $ticket->title ?? 'Ticket #' . $ticket->id }}</div>
+                            <div class="text-[10px] text-gray-400 font-mono">{{ $ticket->ticket_id }}</div>
+                        </td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $ticket->category?->name ?? '—' }}</td>
+                        <td class="px-4 py-3">
+                            @php $tStatusColors = ['open' => 'bg-rose-50 text-rose-700', 'in_progress' => 'bg-sky-50 text-sky-700', 'resolved' => 'bg-emerald-50 text-emerald-700', 'closed' => 'bg-gray-100 text-gray-600']; @endphp
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $tStatusColors[$ticket->status] ?? 'bg-gray-50 text-gray-700' }}">{{ ucfirst(str_replace('_', ' ', $ticket->status ?? '')) }}</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            @php $tPrioColors = ['low' => 'bg-sky-50 text-sky-700', 'medium' => 'bg-amber-50 text-amber-700', 'high' => 'bg-orange-50 text-orange-700', 'urgent' => 'bg-rose-50 text-rose-700']; @endphp
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $tPrioColors[$ticket->priority] ?? 'bg-gray-50 text-gray-700' }}">{{ ucfirst($ticket->priority ?? '-') }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $ticket->assignee?->name ?? 'Unassigned' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500">{{ $ticket->created_at?->format('d M Y') }}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center justify-end gap-1">
+                                <a href="{{ route('admin.helpdesk-tickets.show', $ticket) }}" class="text-sky-600 hover:text-sky-700 p-1 rounded hover:bg-sky-50 transition-colors" title="View / Reply">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </a>
+                                @if($canEdit && $ticket->status !== 'resolved' && $ticket->status !== 'closed')
+                                <form action="{{ route('admin.helpdesk-tickets.status', $ticket) }}" method="POST" style="display:inline">@csrf @method('PATCH')<input type="hidden" name="status" value="resolved"><button type="submit" class="text-emerald-600 hover:text-emerald-700 p-1 rounded hover:bg-emerald-50 transition-colors" title="Mark Resolved"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></button></form>
+                                @endif
                                 @if($canDelete && isset($routeMap[$module]['delete']))
                                 <form action="{{ route($routeMap[$module]['delete'], $ticket) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this ticket?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
                                 @endif
                             </div>
                         </td>
-                        @endif
                     </tr>
-        @endforeach
+        @empty
+                    <tr><td colspan="7" class="px-4 py-8 text-center text-xs text-gray-400">No tickets found.</td></tr>
+        @endforelse
         </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($tickets ?? null)?->links() ?? '' }}</div>
+        @if($canCreate)
+        <div id="roleCreateTicketModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+            <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Raise New Ticket</h3>
+                <form method="POST" action="{{ route('admin.helpdesk-tickets.store') }}" class="space-y-3">@csrf
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Description *</label><textarea name="description" required rows="3" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Category</label><select name="category_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">General</option>@foreach(($ticketCategories ?? collect()) as $cat)<option value="{{ $cat->id }}">{{ $cat->name }}</option>@endforeach</select></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Priority</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="urgent">Urgent</option></select></div>
+                    </div>
+                    <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('roleCreateTicketModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">Submit Ticket</button></div>
+                </form>
+            </div>
+        </div>
+        @endif
         @break
 
     @case('leads')

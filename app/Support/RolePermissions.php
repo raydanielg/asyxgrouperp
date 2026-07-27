@@ -192,7 +192,8 @@ class RolePermissions
         // Technical field staff
         'technician' => [
             'view-dashboard', 'view-projects', 'view-job-cards', 'create-job-cards', 'edit-job-cards',
-            'view-helpdesk-tickets', 'create-helpdesk-tickets', 'view-bugs', 'create-bugs',
+            'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets',
+            'view-bugs', 'create-bugs',
             'view-self-service', 'view-my-payslips',
         ],
 
