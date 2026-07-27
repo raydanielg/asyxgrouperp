@@ -262,7 +262,7 @@ class ErpExtendedController extends Controller
     public function employeeDestroy(Employee $employee)
     {
         $employee->delete();
-        return back()->with('success', 'Employee deleted.');
+        return redirect()->route('admin.employees.index')->with('success', 'Employee deleted.');
     }
 
     // ═══════════════════════════════════════════════════════
