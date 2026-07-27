@@ -1194,65 +1194,79 @@ class ErpExtendedController extends Controller
 
         // Revenues (incoming)
         $revenues = \App\Models\Revenue::where('bank_account_id', $bankAccount->id)
-            ->select('id', 'description', 'amount', 'revenue_date as date', 'created_at')
+            ->select('id', 'description', 'amount', 'revenue_date as raw_date', 'created_at')
+            ->orderByDesc('raw_date')
             ->get()
             ->map(function ($r) {
+                $date = $r->raw_date ? \Carbon\Carbon::parse($r->raw_date) : $r->created_at;
                 return [
                     'type' => 'credit',
                     'label' => 'Revenue',
                     'description' => $r->description ?? 'Revenue received',
-                    'amount' => $r->amount,
-                    'date' => $r->date ? $r->date->format('d M Y') : $r->created_at->format('d M Y'),
+                    'amount' => (float) $r->amount,
+                    'date' => $date->format('d M Y'),
+                    'sort_key' => $date->timestamp,
                 ];
             });
         $transactions = $transactions->merge($revenues);
 
         // Expenses (outgoing)
         $expenses = \App\Models\Expense::where('bank_account_id', $bankAccount->id)
-            ->select('id', 'description', 'amount', 'expense_date as date', 'created_at')
+            ->select('id', 'description', 'amount', 'expense_date as raw_date', 'created_at')
+            ->orderByDesc('raw_date')
             ->get()
             ->map(function ($e) {
+                $date = $e->raw_date ? \Carbon\Carbon::parse($e->raw_date) : $e->created_at;
                 return [
                     'type' => 'debit',
                     'label' => 'Expense',
                     'description' => $e->description ?? 'Expense paid',
-                    'amount' => $e->amount,
-                    'date' => $e->date ? $e->date->format('d M Y') : $e->created_at->format('d M Y'),
+                    'amount' => (float) $e->amount,
+                    'date' => $date->format('d M Y'),
+                    'sort_key' => $date->timestamp,
                 ];
             });
         $transactions = $transactions->merge($expenses);
 
-        // Transfers in
-        $transfersIn = \App\Models\BankTransferAcc::where('to_account_id', $bankAccount->id)
-            ->select('id', 'amount', 'transfer_date as date', 'reference', 'created_at')
+        // Transfers in — use withoutGlobalScope since company_id was recently added
+        $transfersIn = \App\Models\BankTransferAcc::withoutGlobalScope('company')
+            ->where('to_account_id', $bankAccount->id)
+            ->select('id', 'amount', 'transfer_date as raw_date', 'transfer_number', 'notes', 'created_at')
+            ->orderByDesc('raw_date')
             ->get()
             ->map(function ($t) {
+                $date = $t->raw_date ? \Carbon\Carbon::parse($t->raw_date) : $t->created_at;
                 return [
                     'type' => 'credit',
                     'label' => 'Transfer In',
-                    'description' => $t->reference ?? 'Transfer received',
-                    'amount' => $t->amount,
-                    'date' => $t->date ? $t->date->format('d M Y') : $t->created_at->format('d M Y'),
+                    'description' => $t->transfer_number ?? ($t->notes ?? 'Transfer received'),
+                    'amount' => (float) $t->amount,
+                    'date' => $date->format('d M Y'),
+                    'sort_key' => $date->timestamp,
                 ];
             });
         $transactions = $transactions->merge($transfersIn);
 
         // Transfers out
-        $transfersOut = \App\Models\BankTransferAcc::where('from_account_id', $bankAccount->id)
-            ->select('id', 'amount', 'transfer_date as date', 'reference', 'created_at')
+        $transfersOut = \App\Models\BankTransferAcc::withoutGlobalScope('company')
+            ->where('from_account_id', $bankAccount->id)
+            ->select('id', 'amount', 'transfer_date as raw_date', 'transfer_number', 'notes', 'created_at')
+            ->orderByDesc('raw_date')
             ->get()
             ->map(function ($t) {
+                $date = $t->raw_date ? \Carbon\Carbon::parse($t->raw_date) : $t->created_at;
                 return [
                     'type' => 'debit',
                     'label' => 'Transfer Out',
-                    'description' => $t->reference ?? 'Transfer sent',
-                    'amount' => $t->amount,
-                    'date' => $t->date ? $t->date->format('d M Y') : $t->created_at->format('d M Y'),
+                    'description' => $t->transfer_number ?? ($t->notes ?? 'Transfer sent'),
+                    'amount' => (float) $t->amount,
+                    'date' => $date->format('d M Y'),
+                    'sort_key' => $date->timestamp,
                 ];
             });
         $transactions = $transactions->merge($transfersOut);
 
-        $transactions = $transactions->sortByDesc('date')->values();
+        $transactions = $transactions->sortByDesc('sort_key')->values();
 
         return response()->json([
             'transactions' => $transactions,
