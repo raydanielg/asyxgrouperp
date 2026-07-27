@@ -127,6 +127,48 @@ $description = 'Manage your profile, password and preferences.';
                 </div>
             </form>
         </div>
+
+        {{-- My Permissions --}}
+        <div class="bg-white rounded-xl border p-6">
+            <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.062-.18-2.087-.51-3.033z"/></svg>
+                My Permissions
+            </h3>
+            @php
+                $userPerms = $user->permissionNames();
+                $permGroups = [];
+                foreach ($userPerms as $perm) {
+                    $parts = explode('-', $perm);
+                    $action = array_shift($parts);
+                    $module = implode(' ', $parts);
+                    $module = ucwords($module);
+                    if (!isset($permGroups[$module])) $permGroups[$module] = [];
+                    $permGroups[$module][] = $action;
+                }
+                ksort($permGroups);
+            @endphp
+            <div class="flex flex-wrap gap-2">
+                @foreach ($permGroups as $module => $actions)
+                    <div class="border border-gray-200 rounded-lg px-3 py-2 bg-gray-50/50">
+                        <p class="text-[10px] font-bold text-gray-700 uppercase tracking-wider">{{ $module }}</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            @foreach ($actions as $action)
+                                <span class="inline-flex px-1.5 py-0.5 rounded text-[9px] font-medium
+                                    {{ $action === 'view' ? 'bg-sky-50 text-sky-700' :
+                                       ($action === 'create' ? 'bg-emerald-50 text-emerald-700' :
+                                       ($action === 'edit' ? 'bg-amber-50 text-amber-700' :
+                                       ($action === 'delete' ? 'bg-rose-50 text-rose-700' :
+                                       ($action === 'approve' ? 'bg-purple-50 text-purple-700' :
+                                       'bg-gray-50 text-gray-600')))) }}">{{ ucfirst($action) }}</span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            @if (empty($userPerms))
+                <p class="text-xs text-gray-400 text-center py-4">No specific permissions assigned. You may have full admin access.</p>
+            @endif
+        </div>
     </div>
 </div>
 
