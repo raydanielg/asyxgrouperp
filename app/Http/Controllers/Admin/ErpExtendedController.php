@@ -1231,8 +1231,8 @@ class ErpExtendedController extends Controller
         $invoicingType = $data['invoicing_type'] ?? 'none';
         $data['recurring_invoicing'] = ($invoicingType === 'recurring');
         if ($invoicingType !== 'recurring') {
-            $data['billing_amount'] = null;
-            $data['billing_day'] = null;
+            $data['billing_amount'] = 0;
+            $data['billing_day'] = 1;
         }
         $oneTimeAmount = $data['one_time_amount'] ?? 0;
         $oneTimeWhen = $data['one_time_when'] ?? 'manual';
