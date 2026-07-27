@@ -267,6 +267,8 @@ class RolePageController extends Controller
                 $data['activeProjects'] = Project::where('status', 'in_progress')->count();
                 $data['completedProjects'] = Project::where('status', 'completed')->count();
                 $data['assignedEmployeesCount'] = \DB::table('employee_project')->where('is_active', true)->distinct('employee_id')->count('employee_id');
+                $data['managers'] = User::whereIn('role', ['admin', 'superadmin', 'project_manager', 'technical_manager'])->get();
+                $data['employees'] = Employee::where('status', 'active')->orderBy('first_name')->get();
                 break;
 
             case 'employees':

@@ -318,6 +318,14 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                 <p class="text-xl font-bold text-violet-900 mt-1">{{ $assignedEmployeesCount ?? 0 }}</p>
             </div>
         </div>
+        @if($canCreate)
+        <div class="px-5 py-3 border-b">
+            <button onclick="document.getElementById('roleCreateProjectModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                New Project
+            </button>
+        </div>
+        @endif
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 border-b">
@@ -328,7 +336,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Assigned Team</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
                         <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Due Date</th>
-                        @if($hasActions)<th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>@endif
+                        <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -356,21 +364,118 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         </td>
                         <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($project->status === 'in_progress') ? 'bg-sky-50 text-sky-700' : (($project->status === 'completed') ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span></td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $project->due_date?->format('d M Y') ?? '-' }}</td>
-                        @if($hasActions)
                         <td class="px-4 py-3">
                             <div class="flex items-center justify-end gap-1">
+                                <a href="{{ route('admin.projects.show', $project) }}" class="text-sky-600 hover:text-sky-700 p-1 rounded hover:bg-sky-50 transition-colors" title="View">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </a>
                                 @if($canDelete && isset($routeMap[$module]['delete']))
                                 <form action="{{ route($routeMap[$module]['delete'], $project) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this project?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
                                 @endif
                             </div>
                         </td>
-                        @endif
                     </tr>
         @endforeach
         </tbody>
             </table>
         </div>
         <div class="px-5 py-3 border-t">{{ ($projects ?? null)?->links() ?? '' }}</div>
+        {{-- Create Project Modal --}}
+        @if($canCreate)
+        <div id="roleCreateProjectModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
+            <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Create New Project</h3>
+                <form method="POST" action="{{ route('admin.projects.store') }}" class="space-y-4">@csrf
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
+                    <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Start Date</label><input name="start_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date</label><input name="due_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Manager</label><select name="manager_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Unassigned</option>
+                    @foreach(($managers ?? collect()) as $m)
+                    <option value="{{ $m->id }}">{{ $m->name }}</option>
+                    @endforeach
+                    </select></div>
+                    <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="planning">Planning</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="on_hold">On Hold</option><option value="cancelled">Cancelled</option></select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Priority</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option></select></div></div>
+                    <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Progress (%)</label><input name="progress" type="number" min="0" max="100" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Budget</label><input name="budget" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div></div>
+                    {{-- Invoicing Type --}}
+                    <div class="pt-3 border-t">
+                        <h4 class="text-sm font-bold text-gray-900 mb-2">Invoicing</h4>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <label class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-gray-100 hover:border-emerald-200 cursor-pointer transition-all invoicing-option-Role" data-type="recurring">
+                                <input type="radio" name="invoicing_type" value="recurring" class="sr-only" onchange="selectInvoicingTypeRole('recurring')">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                <span class="text-xs font-medium text-gray-600">Recurring</span>
+                                <span class="text-[10px] text-gray-400">Monthly auto</span>
+                            </label>
+                            <label class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-gray-100 hover:border-emerald-200 cursor-pointer transition-all invoicing-option-Role" data-type="one_time">
+                                <input type="radio" name="invoicing_type" value="one_time" class="sr-only" onchange="selectInvoicingTypeRole('one_time')">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <span class="text-xs font-medium text-gray-600">One-Time</span>
+                                <span class="text-[10px] text-gray-400">Single invoice</span>
+                            </label>
+                            <label class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-gray-100 hover:border-emerald-200 cursor-pointer transition-all invoicing-option-Role" data-type="none">
+                                <input type="radio" name="invoicing_type" value="none" class="sr-only" onchange="selectInvoicingTypeRole('none')" checked>
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                <span class="text-xs font-medium text-gray-600">None</span>
+                                <span class="text-[10px] text-gray-400">Manual only</span>
+                            </label>
+                        </div>
+                        <div id="recurringFieldsRole" class="hidden grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs font-medium text-gray-600 mb-1">Monthly Amount (TZS)</label><input name="billing_amount" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                            <div><label class="block text-xs font-medium text-gray-600 mb-1">Billing Day (1-28)</label><input name="billing_day" type="number" min="1" max="28" value="1" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                            <div class="col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Invoicing End Date (optional)</label><input name="invoicing_end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                        </div>
+                        <div id="oneTimeFieldsRole" class="hidden grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs font-medium text-gray-600 mb-1">Invoice Amount (TZS)</label><input name="one_time_amount" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                            <div><label class="block text-xs font-medium text-gray-600 mb-1">Generate After</label><select name="one_time_when" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="immediately">Immediately (on create)</option><option value="manual">Manual (from project page)</option><option value="completion">When project completes</option></select></div>
+                        </div>
+                    </div>
+                    {{-- Staff Assignment --}}
+                    <div class="pt-3 border-t">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-sm font-bold text-gray-900">Assign Staff to Project</h4>
+                            <span class="text-[10px] text-gray-400">Select employees & their roles</span>
+                        </div>
+                        <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    @foreach(($employees ?? collect()) as $emp)
+                            <div class="flex items-center gap-3 p-2.5 rounded-lg border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all">
+                                <input type="checkbox" name="project_employee_ids[]" value="{{ $emp->id }}" id="role-emp-{{ $emp->id }}" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 flex-shrink-0">
+                                <label for="role-emp-{{ $emp->id }}" class="flex items-center gap-3 flex-1 cursor-pointer">
+                                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">{{ strtoupper(substr($emp->first_name, 0, 1) . substr($emp->last_name ?? '', 0, 1)) }}</div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs font-semibold text-gray-800 truncate">{{ $emp->full_name ?? ($emp->first_name . ' ' . $emp->last_name) }}</p>
+                                        <p class="text-[10px] text-gray-400">{{ $emp->department ?? 'N/A' }} · {{ $emp->designation ?? 'N/A' }}</p>
+                                    </div>
+                                </label>
+                                <input type="text" name="project_employee_roles[{{ $emp->id }}]" placeholder="Role" class="w-32 px-2.5 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none flex-shrink-0" value="">
+                            </div>
+                    @endforeach
+                    @if(($employees ?? collect())->isEmpty())
+                            <p class="text-xs text-gray-400 text-center py-4">No active employees.</p>
+                    @endif
+                        </div>
+                    </div>
+                    <div class="flex gap-2 pt-3"><button type="button" onclick="document.getElementById('roleCreateProjectModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create Project</button></div>
+                </form>
+            </div>
+        </div>
+        <script>
+        function selectInvoicingTypeRole(type) {
+            document.querySelectorAll('.invoicing-option-Role').forEach(el => {
+                if (el.dataset.type === type) {
+                    el.classList.add('border-emerald-500', 'bg-emerald-50');
+                    el.querySelector('svg').classList.add('text-emerald-600');
+                    el.querySelector('svg').classList.remove('text-gray-400');
+                } else {
+                    el.classList.remove('border-emerald-500', 'bg-emerald-50');
+                    el.querySelector('svg').classList.remove('text-emerald-600');
+                    el.querySelector('svg').classList.add('text-gray-400');
+                }
+            });
+            document.getElementById('recurringFieldsRole').classList.toggle('hidden', type !== 'recurring');
+            document.getElementById('oneTimeFieldsRole').classList.toggle('hidden', type !== 'one_time');
+        }
+        </script>
+        @endif
         @break
 
     @case('bugs')
