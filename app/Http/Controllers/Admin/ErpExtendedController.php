@@ -1156,6 +1156,110 @@ class ErpExtendedController extends Controller
         return back()->with('success', 'Bank account deleted.');
     }
 
+    public function bankAccountAddBalance(Request $request, BankAccount $bankAccount)
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'description' => 'nullable|string|max:255',
+        ]);
+        $bankAccount->increment('current_balance', $data['amount']);
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Balance added successfully.', 'new_balance' => $bankAccount->fresh()->current_balance]);
+        }
+        return back()->with('success', 'Balance added successfully.');
+    }
+
+    public function bankAccountDeductBalance(Request $request, BankAccount $bankAccount)
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'description' => 'nullable|string|max:255',
+        ]);
+        if ($data['amount'] > $bankAccount->current_balance) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Insufficient balance.'], 422);
+            }
+            return back()->with('error', 'Insufficient balance.');
+        }
+        $bankAccount->decrement('current_balance', $data['amount']);
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Balance deducted successfully.', 'new_balance' => $bankAccount->fresh()->current_balance]);
+        }
+        return back()->with('success', 'Balance deducted successfully.');
+    }
+
+    public function bankAccountTransactions(BankAccount $bankAccount)
+    {
+        $transactions = collect();
+
+        // Revenues (incoming)
+        $revenues = \App\Models\Revenue::where('bank_account_id', $bankAccount->id)
+            ->select('id', 'description', 'amount', 'revenue_date as date', 'created_at')
+            ->get()
+            ->map(function ($r) {
+                return [
+                    'type' => 'credit',
+                    'label' => 'Revenue',
+                    'description' => $r->description ?? 'Revenue received',
+                    'amount' => $r->amount,
+                    'date' => $r->date ? $r->date->format('d M Y') : $r->created_at->format('d M Y'),
+                ];
+            });
+        $transactions = $transactions->merge($revenues);
+
+        // Expenses (outgoing)
+        $expenses = \App\Models\Expense::where('bank_account_id', $bankAccount->id)
+            ->select('id', 'description', 'amount', 'expense_date as date', 'created_at')
+            ->get()
+            ->map(function ($e) {
+                return [
+                    'type' => 'debit',
+                    'label' => 'Expense',
+                    'description' => $e->description ?? 'Expense paid',
+                    'amount' => $e->amount,
+                    'date' => $e->date ? $e->date->format('d M Y') : $e->created_at->format('d M Y'),
+                ];
+            });
+        $transactions = $transactions->merge($expenses);
+
+        // Transfers in
+        $transfersIn = \App\Models\BankTransferAcc::where('to_account_id', $bankAccount->id)
+            ->select('id', 'amount', 'transfer_date as date', 'reference', 'created_at')
+            ->get()
+            ->map(function ($t) {
+                return [
+                    'type' => 'credit',
+                    'label' => 'Transfer In',
+                    'description' => $t->reference ?? 'Transfer received',
+                    'amount' => $t->amount,
+                    'date' => $t->date ? $t->date->format('d M Y') : $t->created_at->format('d M Y'),
+                ];
+            });
+        $transactions = $transactions->merge($transfersIn);
+
+        // Transfers out
+        $transfersOut = \App\Models\BankTransferAcc::where('from_account_id', $bankAccount->id)
+            ->select('id', 'amount', 'transfer_date as date', 'reference', 'created_at')
+            ->get()
+            ->map(function ($t) {
+                return [
+                    'type' => 'debit',
+                    'label' => 'Transfer Out',
+                    'description' => $t->reference ?? 'Transfer sent',
+                    'amount' => $t->amount,
+                    'date' => $t->date ? $t->date->format('d M Y') : $t->created_at->format('d M Y'),
+                ];
+            });
+        $transactions = $transactions->merge($transfersOut);
+
+        $transactions = $transactions->sortByDesc('date')->values();
+
+        return response()->json([
+            'transactions' => $transactions,
+            'account' => $bankAccount->only(['id', 'account_name', 'bank_name', 'current_balance', 'currency']),
+        ]);
+    }
+
     // ═══════════════════════════════════════════════════════
     //  ACCOUNTING — TRANSFERS
     // ═══════════════════════════════════════════════════════

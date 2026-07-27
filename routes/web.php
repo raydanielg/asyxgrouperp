@@ -813,6 +813,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/bank-accounts', [$ext, 'bankAccountStore'])->name('bank-accounts.store');
     Route::put('/bank-accounts/{bankAccount}', [$ext, 'bankAccountUpdate'])->name('bank-accounts.update');
     Route::delete('/bank-accounts/{bankAccount}', [$ext, 'bankAccountDestroy'])->name('bank-accounts.destroy');
+    Route::post('/bank-accounts/{bankAccount}/add-balance', [$ext, 'bankAccountAddBalance'])->name('bank-accounts.add-balance');
+    Route::post('/bank-accounts/{bankAccount}/deduct-balance', [$ext, 'bankAccountDeductBalance'])->name('bank-accounts.deduct-balance');
+    Route::get('/bank-accounts/{bankAccount}/transactions', [$ext, 'bankAccountTransactions'])->name('bank-accounts.transactions');
 
     Route::get('/acc-transfers', [$ext, 'accTransferIndex'])->name('acc-transfers.index');
     Route::post('/acc-transfers', [$ext, 'accTransferStore'])->name('acc-transfers.store');
