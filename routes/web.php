@@ -782,6 +782,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     // ─── CRM ───
     Route::get('/crm-leads', [$ext, 'crmLeadIndex'])->name('crm-leads.index');
+    Route::get('/crm-leads/data', [$ext, 'crmLeadData'])->name('crm-leads.data');
     Route::post('/crm-leads', [$ext, 'crmLeadStore'])->name('crm-leads.store');
     Route::get('/crm-leads/{lead}/pdf', [$ext, 'crmLeadPdf'])->name('crm-leads.pdf');
     Route::delete('/crm-leads/{lead}', [$ext, 'crmLeadDestroy'])->name('crm-leads.destroy');
@@ -795,6 +796,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/crm-deals/{deal}', [$ext, 'crmDealDestroy'])->name('crm-deals.destroy');
 
     Route::get('/crm-contracts', [$ext, 'crmContractIndex'])->name('crm-contracts.index');
+    Route::get('/crm-contracts/data', [$ext, 'crmContractData'])->name('crm-contracts.data');
     Route::post('/crm-contracts', [$ext, 'crmContractStore'])->name('crm-contracts.store');
     Route::delete('/crm-contracts/{contract}', [$ext, 'crmContractDestroy'])->name('crm-contracts.destroy');
 

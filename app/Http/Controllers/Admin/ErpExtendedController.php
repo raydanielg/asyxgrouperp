@@ -776,6 +776,44 @@ class ErpExtendedController extends Controller
         return view('admin.crm.leads.index', compact('leads', 'users'));
     }
 
+    public function crmLeadData(Request $request)
+    {
+        $query = CrmLead::with(['deals', 'assignedTo']);
+
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('lead_number', 'like', "%{$search}%")
+                  ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+        if ($status = $request->get('status')) {
+            $query->where('status', $status);
+        }
+        if ($source = $request->get('source')) {
+            $query->where('source', $source);
+        }
+
+        $perPage = $request->get('per_page', 15);
+        if ($perPage === 'all') $perPage = 100000;
+
+        $leads = $query->latest()->paginate((int) $perPage);
+
+        return response()->json([
+            'data' => $leads->items(),
+            'total' => $leads->total(),
+            'current_page' => $leads->currentPage(),
+            'last_page' => $leads->lastPage(),
+            'per_page' => $leads->perPage(),
+            'from' => $leads->firstItem(),
+            'to' => $leads->lastItem(),
+            'links' => $leads->links()->toHtml(),
+        ]);
+    }
+
     public function crmLeadStore(Request $request)
     {
         $data = $request->validate([
@@ -905,6 +943,38 @@ class ErpExtendedController extends Controller
         $contracts = CrmContract::latest()->paginate(15);
         $deals = CrmDeal::all();
         return view('admin.crm.contracts.index', compact('contracts', 'deals'));
+    }
+
+    public function crmContractData(Request $request)
+    {
+        $query = CrmContract::query();
+
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('contract_number', 'like', "%{$search}%")
+                  ->orWhere('title', 'like', "%{$search}%")
+                  ->orWhere('client_name', 'like', "%{$search}%");
+            });
+        }
+        if ($status = $request->get('status')) {
+            $query->where('status', $status);
+        }
+
+        $perPage = $request->get('per_page', 15);
+        if ($perPage === 'all') $perPage = 100000;
+
+        $contracts = $query->latest()->paginate((int) $perPage);
+
+        return response()->json([
+            'data' => $contracts->items(),
+            'total' => $contracts->total(),
+            'current_page' => $contracts->currentPage(),
+            'last_page' => $contracts->lastPage(),
+            'per_page' => $contracts->perPage(),
+            'from' => $contracts->firstItem(),
+            'to' => $contracts->lastItem(),
+            'links' => $contracts->links()->toHtml(),
+        ]);
     }
 
     public function crmContractStore(Request $request)
