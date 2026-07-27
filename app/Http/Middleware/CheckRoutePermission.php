@@ -66,6 +66,7 @@ class CheckRoutePermission
         'admin.projects*' => 'view-projects',
         'admin.timesheets*' => 'view-timesheets',
         'admin.bugs*' => 'view-bugs',
+        'admin.job-cards*' => 'view-job-cards',
         'admin.products*' => 'view-products',
         'admin.product-categories*' => 'view-product-categories',
         'admin.suppliers*' => 'view-suppliers',

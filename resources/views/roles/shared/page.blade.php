@@ -32,6 +32,7 @@ $permMap = [
     'assets' => ['create' => 'create-assets', 'delete' => 'delete-assets'],
     'bugs' => ['create' => 'create-bugs', 'delete' => 'delete-bugs'],
     'projects' => ['create' => 'create-projects', 'edit' => 'edit-projects', 'delete' => 'delete-projects'],
+    'job-cards' => ['create' => 'create-job-cards', 'edit' => 'edit-job-cards', 'delete' => 'delete-job-cards'],
     'timesheets' => ['create' => 'create-timesheets', 'delete' => 'delete-timesheets'],
     'policies' => ['create' => 'create-policies', 'delete' => 'delete-policies'],
     'performance' => ['create' => 'create-performance', 'delete' => 'delete-performance'],
@@ -136,6 +137,7 @@ $routeMap = [
     'assets' => ['create' => 'admin.assets.index', 'delete' => 'admin.assets.destroy'],
     'bugs' => ['create' => 'admin.bugs.index', 'delete' => 'admin.bugs.destroy'],
     'projects' => ['create' => 'admin.projects.index', 'delete' => 'admin.projects.destroy'],
+    'job-cards' => ['create' => 'admin.job-cards.index', 'edit' => 'admin.job-cards.show', 'delete' => 'admin.job-cards.destroy'],
     'timesheets' => ['create' => 'admin.timesheets.index', 'delete' => 'admin.timesheets.destroy'],
     'policies' => ['create' => 'admin.policies.index', 'delete' => 'admin.policies.destroy'],
     'performance' => ['create' => 'admin.performance.index', 'delete' => 'admin.performance.destroy'],
@@ -543,7 +545,140 @@ $hasActions = $canEdit || $canDelete || $canApprove;
         <div class="px-5 py-3 border-t">{{ ($bugs ?? null)?->links() ?? '' }}</div>
         @break
 
-    @case('employees')
+    @case('job-cards')
+        {{-- Stats Row --}}
+        <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-3 border-b">
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Total</span>
+                <p class="text-xl font-bold text-amber-900 mt-1">{{ $totalCards ?? 0 }}</p>
+            </div>
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-rose-600 uppercase tracking-wider">Open</span>
+                <p class="text-xl font-bold text-rose-900 mt-1">{{ $openCards ?? 0 }}</p>
+            </div>
+            <div class="bg-sky-50 border border-sky-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">In Progress</span>
+                <p class="text-xl font-bold text-sky-900 mt-1">{{ $inProgressCards ?? 0 }}</p>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Resolved</span>
+                <p class="text-xl font-bold text-emerald-900 mt-1">{{ $resolvedCards ?? 0 }}</p>
+            </div>
+        </div>
+        @if($canCreate)
+        <div class="px-5 py-3 border-b">
+            <button onclick="document.getElementById('roleCreateJobCardModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                New Job Card
+            </button>
+        </div>
+        @endif
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Job #</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Title</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Project</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Assigned To</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Priority</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-600 uppercase">Due Date</th>
+                        <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-600 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+        @foreach(($jobCards ?? collect())->items() ?? [] as $jc)
+                    <tr class="hover:bg-gray-50/50">
+                        <td class="px-4 py-3 text-xs font-mono text-gray-700">{{ $jc->job_number }}</td>
+                        <td class="px-4 py-3 text-xs font-medium text-gray-900 max-w-[200px]">{{ \Illuminate\Support\Str::limit($jc->title, 40) }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $jc->project?->title ?? '—' }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-600">{{ $jc->assignedTo?->name ?? '—' }}</td>
+                        <td class="px-4 py-3">@php $pc = ['low'=>'gray','medium'=>'amber','high'=>'rose','critical'=>'red']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $pc[$jc->priority] ?? 'gray' }}-50 text-{{ $pc[$jc->priority] ?? 'gray' }}-700">{{ ucfirst($jc->priority) }}</span></td>
+                        <td class="px-4 py-3">@php $sc = ['open'=>'amber','in_progress'=>'sky','resolved'=>'emerald','closed'=>'gray']; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $sc[$jc->status] ?? 'gray' }}-50 text-{{ $sc[$jc->status] ?? 'gray' }}-700">{{ str_replace('_', ' ', ucfirst($jc->status)) }}</span></td>
+                        <td class="px-4 py-3 text-xs {{ $jc->due_date && $jc->due_date->isPast() && $jc->status !== 'resolved' ? 'text-red-500 font-medium' : 'text-gray-400' }}">{{ $jc->due_date?->format('d M Y') ?? '—' }}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                <a href="{{ route('admin.job-cards.show', $jc) }}" class="text-indigo-600 hover:text-indigo-700 p-1 rounded hover:bg-indigo-50 transition-colors" title="View / Edit">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </a>
+                                <a href="{{ route('admin.job-cards.print', $jc) }}" target="_blank" class="text-gray-500 hover:text-gray-700 p-1 rounded hover:bg-gray-50 transition-colors" title="Print">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                                </a>
+                                @if($canDelete && isset($routeMap[$module]['delete']))
+                                <form action="{{ route($routeMap[$module]['delete'], $jc) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this job card?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+        @endforeach
+        </tbody>
+            </table>
+        </div>
+        <div class="px-5 py-3 border-t">{{ ($jobCards ?? null)?->links() ?? '' }}</div>
+        {{-- Create Job Card Modal --}}
+        @if($canCreate)
+        <div id="roleCreateJobCardModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-start justify-center p-4 overflow-y-auto" onclick="if(event.target===this)this.classList.add('hidden')">
+            <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full my-8 p-6 max-h-[90vh] overflow-y-auto">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">New Job Card / Service Call Report</h3>
+                <form method="POST" action="{{ route('admin.job-cards.store') }}" class="space-y-4">@csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">CSR No</label><input name="csr_no" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Report Date</label><input name="report_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Customer Name</label><input name="customer_name" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Customer Address</label><input name="customer_address" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Branch Name</label><input name="branch_name" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Department</label><input name="department" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Equipment Type</label><input name="equipment_type" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Make / Brand</label><input name="make_brand" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Model</label><input name="model" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Serial Number</label><input name="serial_number" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Call Type</label><select name="call_type" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"><option value="">Select</option><option value="corrective">Corrective Maintenance</option><option value="corrective_preventive">Corrective &amp; Preventive Maintenance</option><option value="preventive">Preventive Maintenance</option><option value="installation">Installation</option></select></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Project</label><select name="project_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"><option value="">None</option>@foreach(($projects ?? collect()) as $p)<option value="{{ $p->id }}">{{ $p->title }}</option>@endforeach</select></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Assign To</label><select name="assigned_to" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"><option value="">None</option>@foreach(($technicians ?? collect()) as $t)<option value="{{ $t->id }}">{{ $t->name }}</option>@endforeach</select></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Priority *</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option></select></div>
+                        <div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date</label><input name="due_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+                        <div class="md:col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></textarea></div>
+                        <div class="md:col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Problem Reported</label><textarea name="problem_reported" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></textarea></div>
+                        <div class="md:col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Defects Found</label><textarea name="defects_found" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></textarea></div>
+                        <div class="md:col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Action Taken</label><textarea name="action_taken" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></textarea></div>
+                        <div class="md:col-span-2"><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"></textarea></div>
+                    </div>
+                    <div class="border rounded-lg p-4 bg-gray-50/50">
+                        <label class="block text-xs font-bold text-gray-700 mb-2">Parts Required / Replaced</label>
+                        <div id="jcPartsContainer" class="space-y-2">
+                            <div class="grid grid-cols-12 gap-2 jc-part-row">
+                                <div class="col-span-4"><input name="parts[0][part_name]" placeholder="Part name" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"></div>
+                                <div class="col-span-2"><input name="parts[0][quantity]" type="number" step="0.01" value="1" placeholder="Qty" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"></div>
+                                <div class="col-span-3"><input name="parts[0][model]" placeholder="Model" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"></div>
+                                <div class="col-span-3 flex gap-1"><input name="parts[0][part_number]" placeholder="Part number" class="flex-1 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"><button type="button" onclick="this.closest('.jc-part-row').remove()" class="text-rose-500 hover:text-rose-700 px-1">×</button></div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addJcPartRow()" class="mt-2 text-xs font-medium text-indigo-600 hover:text-indigo-800">+ Add part</button>
+                    </div>
+                    <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('roleCreateJobCardModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">Create Job Card</button></div>
+                </form>
+            </div>
+        </div>
+        <script>
+        let jcPartIndex = 1;
+        function addJcPartRow() {
+            const container = document.getElementById('jcPartsContainer');
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-12 gap-2 jc-part-row';
+            row.innerHTML = `
+                <div class="col-span-4"><input name="parts[${jcPartIndex}][part_name]" placeholder="Part name" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"></div>
+                <div class="col-span-2"><input name="parts[${jcPartIndex}][quantity]" type="number" step="0.01" value="1" placeholder="Qty" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"></div>
+                <div class="col-span-3"><input name="parts[${jcPartIndex}][model]" placeholder="Model" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"></div>
+                <div class="col-span-3 flex gap-1"><input name="parts[${jcPartIndex}][part_number]" placeholder="Part number" class="flex-1 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none"><button type="button" onclick="this.closest('.jc-part-row').remove()" class="text-rose-500 hover:text-rose-700 px-1">×</button></div>
+            `;
+            container.appendChild(row);
+            jcPartIndex++;
+        }
+        </script>
+        @endif
+        @break
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 border-b">

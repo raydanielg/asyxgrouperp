@@ -70,6 +70,7 @@ class RolePermissionSeeder extends Seeder
             'Meetings' => ['view-meetings', 'create-meetings', 'edit-meetings'],
             'Audit' => ['view-audit-logs', 'view-login-history'],
             'POS' => ['view-pos', 'create-pos'],
+            'Job Cards' => ['view-job-cards', 'create-job-cards', 'edit-job-cards', 'delete-job-cards'],
         ];
 
         $allPermissions = [];
@@ -122,7 +123,10 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'project_manager', 'label' => 'Project Manager', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets', 'create-timesheets', 'view-bugs', 'create-bugs', 'view-employees', 'view-crm-deals', 'view-budgets', 'view-site-reports', 'create-site-reports', 'view-meetings', 'create-meetings', 'view-documents', 'view-reports', 'view-self-service', 'view-my-payslips']],
 
             // Technical / IT (single manager role)
-            ['name' => 'technical_manager', 'label' => 'Technical Manager', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets', 'view-bugs', 'create-bugs', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-lpos', 'approve-technical', 'view-assets', 'create-assets', 'edit-assets', 'view-settings', 'view-employees', 'view-login-history', 'view-audit-logs', 'view-self-service', 'view-my-payslips']],
+            ['name' => 'technical_manager', 'label' => 'Technical Manager', 'perms' => ['view-dashboard', 'view-projects', 'create-projects', 'edit-projects', 'view-timesheets', 'view-bugs', 'create-bugs', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets', 'view-lpos', 'approve-technical', 'view-assets', 'create-assets', 'edit-assets', 'view-settings', 'view-employees', 'view-login-history', 'view-audit-logs', 'view-self-service', 'view-my-payslips', 'view-job-cards', 'create-job-cards', 'edit-job-cards', 'delete-job-cards']],
+
+            // Technical field staff
+            ['name' => 'technician', 'label' => 'Technician', 'perms' => ['view-dashboard', 'view-projects', 'view-job-cards', 'create-job-cards', 'edit-job-cards', 'view-helpdesk-tickets', 'create-helpdesk-tickets', 'view-bugs', 'create-bugs', 'view-self-service', 'view-my-payslips']],
 
             // Services & Operations (single manager role)
             ['name' => 'operations_manager', 'label' => 'Operations Manager', 'perms' => ['view-dashboard', 'view-fleet', 'view-vehicles', 'create-vehicles', 'edit-vehicles', 'view-fuel-logs', 'create-fuel-logs', 'view-maintenance', 'create-maintenance', 'view-helpdesk-tickets', 'view-deliveries', 'create-deliveries', 'view-shipments', 'create-shipments', 'view-products', 'view-warehouses', 'view-stock-movements', 'view-reports', 'view-self-service', 'view-my-payslips']],

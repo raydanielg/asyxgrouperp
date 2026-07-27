@@ -426,14 +426,26 @@ class RolePageController extends Controller
 
             case 'job-cards':
                 $userId = auth()->id();
-                $data['jobCards'] = JobCard::where('assigned_to', $userId)
-                    ->with('project', 'createdBy')
-                    ->latest()
-                    ->paginate(15);
-                $data['totalCards'] = JobCard::where('assigned_to', $userId)->count();
-                $data['openCards'] = JobCard::where('assigned_to', $userId)->where('status', 'open')->count();
-                $data['inProgressCards'] = JobCard::where('assigned_to', $userId)->where('status', 'in_progress')->count();
-                $data['resolvedCards'] = JobCard::where('assigned_to', $userId)->where('status', 'resolved')->count();
+                $userRole = auth()->user()->role;
+                $jcQuery = JobCard::with('project', 'assignedTo', 'createdBy');
+                if ($userRole === 'technician') {
+                    $jcQuery->where(function ($q) use ($userId) {
+                        $q->where('assigned_to', $userId)->orWhere('created_by', $userId);
+                    });
+                }
+                $data['jobCards'] = $jcQuery->latest()->paginate(15);
+                $statsQuery = JobCard::query();
+                if ($userRole === 'technician') {
+                    $statsQuery->where(function ($q) use ($userId) {
+                        $q->where('assigned_to', $userId)->orWhere('created_by', $userId);
+                    });
+                }
+                $data['totalCards'] = (clone $statsQuery)->count();
+                $data['openCards'] = (clone $statsQuery)->where('status', 'open')->count();
+                $data['inProgressCards'] = (clone $statsQuery)->where('status', 'in_progress')->count();
+                $data['resolvedCards'] = (clone $statsQuery)->where('status', 'resolved')->count();
+                $data['projects'] = Project::where('status', 'in_progress')->orWhere('status', 'planning')->get();
+                $data['technicians'] = User::where('role', 'technician')->orWhereHas('roles', fn($q) => $q->where('name', 'technician'))->get();
                 break;
 
             case 'sales-dashboard':
