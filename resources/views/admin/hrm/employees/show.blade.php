@@ -55,7 +55,7 @@
                         </div>
                         <div>
                             <a href="{{ route('admin.projects.show', $proj->id) }}" class="text-xs font-semibold text-gray-800 hover:text-bronze">{{ $proj->title }}</a>
-                            <p class="text-[10px] text-gray-400">{{ $proj->project_number }} | {{ $proj->pivot->role ?? 'No role' }} | Since {{ $proj->pivot->assigned_from?->format('d M Y') ?? '—' }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $proj->project_number }} | {{ $proj->pivot->role ?? 'No role' }} | Since {{ $proj->pivot->assigned_from ? \Carbon\Carbon::parse($proj->pivot->assigned_from)->format('d M Y') : '—' }}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
