@@ -133,7 +133,7 @@ $lostCount = $deals->where('status', 'lost')->count();
     </div>
 </div>
 
-{{── Edit Modal ──}}
+{{-- Edit Modal --}}
 <div id="editModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Edit Deal</h3>
@@ -164,7 +164,7 @@ $lostCount = $deals->where('status', 'lost')->count();
     </div>
 </div>
 
-{{── View Modal ──}}
+{{-- View Modal --}}
 <div id="viewModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
     <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
         <div class="flex items-center justify-between mb-4">
