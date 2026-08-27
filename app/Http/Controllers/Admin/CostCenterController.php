@@ -144,4 +144,13 @@ class CostCenterController extends Controller
     {
         return response()->json(CostCenter::where('is_active', true)->get());
     }
+
+    public function allocationIndex()
+    {
+        $allocations = CostAllocation::with(['costCenter', 'costAllocatable'])
+            ->latest()
+            ->paginate(25);
+        $costCenters = CostCenter::where('is_active', true)->get();
+        return view('admin.cost-centers.allocations', compact('allocations', 'costCenters'));
+    }
 }

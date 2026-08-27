@@ -11,6 +11,8 @@ class CrmLead extends Model
 
     protected $guarded = ['id'];
 
+    protected $appends = ['full_name'];
+
     public function deals()
     {
         return $this->hasMany(CrmDeal::class, 'lead_id');

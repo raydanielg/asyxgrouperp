@@ -896,7 +896,8 @@ class ErpExtendedController extends Controller
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('deal_number', 'like', "%{$search}%")
                   ->orWhereHas('lead', function ($lq) use ($search) {
-                      $lq->where('full_name', 'like', "%{$search}%")
+                      $lq->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
                         ->orWhere('company', 'like', "%{$search}%");
                   });
             });

@@ -615,6 +615,33 @@ class BusinessFlowController extends Controller
     // ═══════════════════════════════════════════════════════
     //  10. VENDOR PAYMENTS
     //═══════════════════════════════════════════════════════
+    public function vendorPaymentIndex(Request $request)
+    {
+        $query = VendorPayment::with(['vendorInvoice', 'supplier', 'createdBy']);
+
+        if ($request->filled('search')) {
+            $s = $request->get('search');
+            $query->where(function ($q) use ($s) {
+                $q->where('payment_number', 'like', "%{$s}%")
+                  ->orWhere('reference_number', 'like', "%{$s}%")
+                  ->orWhereHas('supplier', function ($sq) use ($s) {
+                      $sq->where('name', 'like', "%{$s}%");
+                  });
+            });
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->get('status'));
+        }
+        if ($request->filled('method')) {
+            $query->where('payment_method', $request->get('method'));
+        }
+
+        $payments = $query->latest()->paginate(20)->withQueryString();
+        $totalPaid = VendorPayment::sum('amount');
+
+        return view('admin.business-flow.vendor-payments.index', compact('payments', 'totalPaid'));
+    }
+
     public function vendorPaymentStore(Request $request)
     {
         $data = $request->validate([

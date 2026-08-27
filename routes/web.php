@@ -986,6 +986,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/vendor-invoices/{invoice}', [$bf, 'vendorInvoiceDestroy'])->name('vendor-invoices.destroy');
 
     // Vendor Payments
+    Route::get('/vendor-payments', [$bf, 'vendorPaymentIndex'])->name('vendor-payments.index');
     Route::post('/vendor-payments', [$bf, 'vendorPaymentStore'])->name('vendor-payments.store');
 
     // Office Expenses
@@ -1041,6 +1042,36 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/contracts/{contract}', [$contractCtrl, 'show'])->name('contracts.show');
     Route::put('/contracts/{contract}', [$contractCtrl, 'update'])->name('contracts.update');
     Route::delete('/contracts/{contract}', [$contractCtrl, 'destroy'])->name('contracts.destroy');
+
+    // ═══ Cost Allocations ═══
+    Route::get('/cost-allocations', [$ccCtrl, 'allocationIndex'])->name('cost-allocations.index');
+
+    // ═══ Canonical Redirect Routes (HI-01: non-canonical path compatibility) ═══
+    Route::redirect('/follow-ups', '/admin/dashboard', 301);
+    Route::redirect('/customers', '/admin/crm-contacts', 301);
+    Route::redirect('/cash-accounts', '/admin/petty-cash', 301);
+    Route::redirect('/project-tasks', '/admin/projects', 301);
+    Route::redirect('/project-budgets', '/admin/budgets', 301);
+    Route::redirect('/project-financing', '/admin/projects', 301);
+    Route::redirect('/project-bugs', '/admin/bugs', 301);
+    Route::redirect('/job-applications', '/admin/applications', 301);
+    Route::redirect('/performance-reviews', '/admin/performance', 301);
+    Route::redirect('/trainings', '/admin/training', 301);
+    Route::redirect('/salary-advances', '/admin/payroll', 301);
+    Route::redirect('/employee-bonuses', '/admin/bonuses', 301);
+    Route::redirect('/vehicles', '/admin/fleet', 301);
+    Route::redirect('/vehicle-maintenance', '/admin/fleet', 301);
+    Route::redirect('/fuel-logs', '/admin/fleet', 301);
+    Route::redirect('/helpdesk', '/admin/helpdesk-tickets', 301);
+    Route::redirect('/visitors', '/reception/visitors', 301);
+    Route::redirect('/calls', '/reception/calls', 301);
+    Route::redirect('/parcels', '/reception/parcels', 301);
+    Route::redirect('/messages', '/reception/messages', 301);
+    Route::redirect('/appointments', '/reception/appointments', 301);
+    Route::redirect('/approval-workflows', '/admin/approvals', 301);
+    Route::redirect('/notifications', '/admin/notification-templates', 301);
+    Route::redirect('/permissions', '/admin/roles', 301);
+    Route::redirect('/system', '/admin/settings', 301);
 });
 
 // Role-based module pages — fallback for modules without dedicated admin routes

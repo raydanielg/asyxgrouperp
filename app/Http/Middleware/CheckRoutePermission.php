@@ -57,6 +57,8 @@ class CheckRoutePermission
         'admin.expenses*' => 'view-expenses',
         'admin.revenues*' => 'view-revenues',
         'admin.bills*' => 'view-bills',
+        'admin.cost-centers*' => 'view-dashboard',
+        'admin.cost-allocations*' => 'view-dashboard',
         'admin.estimates*' => 'view-dashboard',
         'admin.chart-of-accounts*' => 'view-journal-entries',
         'admin.journal-entries*' => 'view-journal-entries',

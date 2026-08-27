@@ -91,7 +91,7 @@
 function showCreateModal() { document.getElementById('createModal').classList.remove('hidden'); }
 
 function showEditModal(id, name, code, description, active) {
-    document.getElementById('editForm').action = '{{ route('admin.cost-centers.update', '') }}/' + id;
+    document.getElementById('editForm').action = '{{ route('admin.cost-centers.update', '__ID__') }}'.replace('__ID__', id);
     document.getElementById('edit_name').value = name;
     document.getElementById('edit_code').value = code;
     document.getElementById('edit_description').value = description;

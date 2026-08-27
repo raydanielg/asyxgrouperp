@@ -61,7 +61,11 @@ $money = fn($n) => 'TZS ' . number_format($n);
         </div>
 
 {{-- ═══ Departmental Insights ═══ --}}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+<button id="btn-dash-insights" onclick="toggleDashboardSection('dash-insights')" class="w-full flex items-center justify-between px-1 py-2 mb-2 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors">
+    <span>Departmental Insights</span>
+    <svg class="dash-chevron w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div id="dash-insights" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
     {{-- HRM Insight --}}
     <div class="bg-white rounded-xl border p-5">
         <div class="flex items-center justify-between mb-3">
@@ -164,7 +168,11 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </div>
 
 {{-- ═══ Sales vs Purchase Chart + Invoice Status ═══ --}}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+<button id="btn-dash-charts" onclick="toggleDashboardSection('dash-charts')" class="w-full flex items-center justify-between px-1 py-2 mb-2 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors">
+    <span>Sales vs Purchases & Invoice Status</span>
+    <svg class="dash-chevron w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div id="dash-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     {{-- Monthly Sales vs Purchases Chart --}}
     <div class="lg:col-span-2 bg-white rounded-xl border p-5">
         <div class="flex items-center justify-between mb-4">
@@ -231,7 +239,11 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </div>
 
 {{-- ═══ Daily Activity Chart ═══ --}}
-<div class="bg-white rounded-xl border p-5 mb-6">
+<button id="btn-dash-daily" onclick="toggleDashboardSection('dash-daily')" class="w-full flex items-center justify-between px-1 py-2 mb-2 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors">
+    <span>Daily Transaction Activity</span>
+    <svg class="dash-chevron w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div id="dash-daily" class="bg-white rounded-xl border p-5 mb-6">
     <div class="flex items-center justify-between mb-4">
         <div>
             <h3 class="text-sm font-semibold text-gray-900">Daily Transaction Activity</h3>
@@ -258,7 +270,11 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </div>
 
 {{-- ═══ Recent Activity Tables ═══ --}}
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+<button id="btn-dash-recent" onclick="toggleDashboardSection('dash-recent')" class="w-full flex items-center justify-between px-1 py-2 mb-2 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors">
+    <span>Recent Activity</span>
+    <svg class="dash-chevron w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div id="dash-recent" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     {{-- Recent Sales Invoices --}}
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
@@ -321,7 +337,11 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </div>
 
 {{-- ═══ Recent Tickets + Proposals ═══ --}}
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<button id="btn-dash-tickets" onclick="toggleDashboardSection('dash-tickets')" class="w-full flex items-center justify-between px-1 py-2 mb-2 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors">
+    <span>Support Tickets & Proposals</span>
+    <svg class="dash-chevron w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div id="dash-tickets" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     {{-- Recent Tickets --}}
     <div class="bg-white rounded-xl border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
@@ -372,7 +392,11 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </div>
 
 {{-- ═══ Attendance Widget ═══ --}}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+<button id="btn-dash-attendance" onclick="toggleDashboardSection('dash-attendance')" class="w-full flex items-center justify-between px-1 py-2 mb-2 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors">
+    <span>Attendance Overview</span>
+    <svg class="dash-chevron w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div id="dash-attendance" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
     {{-- Attendance Stats --}}
     <div class="bg-white rounded-xl border p-5">
         <div class="flex items-center justify-between mb-4">
