@@ -24,11 +24,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\LedgerService;
+use Illuminate\Support\Facades\DB;
 
 class BusinessFlowController extends Controller
 {
+    protected LedgerService $ledger;
+
     public function __construct()
     {
+        $this->ledger = app(LedgerService::class);
         $this->middleware(function ($request, $next) {
             if (!auth()->check() || !auth()->user()->isAdmin()) {
                 abort(403, 'Unauthorized access. Admin only.');
@@ -659,22 +664,34 @@ class BusinessFlowController extends Controller
         $data['status'] = 'completed';
         $data['created_by'] = auth()->id();
 
-        VendorPayment::create($data);
+        DB::transaction(function () use ($data, $invoice) {
+            VendorPayment::create($data);
 
-        // Update invoice
-        $invoice->increment('amount_paid', $data['amount']);
-        $invoice->decrement('balance', $data['amount']);
-        if ($invoice->balance <= 0) {
-            $invoice->update(['status' => 'paid']);
-        } else {
-            $invoice->update(['status' => 'partially_paid']);
-        }
+            // Update invoice
+            $invoice->increment('amount_paid', $data['amount']);
+            $invoice->decrement('balance', $data['amount']);
+            if ($invoice->balance <= 0) {
+                $invoice->update(['status' => 'paid']);
+            } else {
+                $invoice->update(['status' => 'partially_paid']);
+            }
 
-        // Update project actual cost
-        if ($invoice->project_id) {
-            $project = $invoice->project;
-            $project->increment('actual_cost', $data['amount']);
-        }
+            // Post to ledger
+            try {
+                $payment = VendorPayment::where('payment_number', $data['payment_number'])->first();
+                if ($payment) {
+                    $this->ledger->postVendorPayment($payment);
+                }
+            } catch (\Throwable $e) {
+                \Log::error('Ledger posting failed for vendor payment: ' . $e->getMessage());
+            }
+
+            // Update project actual cost
+            if ($invoice->project_id) {
+                $project = $invoice->project;
+                $project->increment('actual_cost', $data['amount']);
+            }
+        });
 
         return redirect()->back()->with('success', 'Payment recorded successfully.');
     }

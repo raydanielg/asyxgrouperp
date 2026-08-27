@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'company' => \App\Http\Middleware\SetCompanyContext::class,
             'maintenance' => \App\Http\Middleware\MaintenanceMode::class,
             'route-permission' => \App\Http\Middleware\CheckRoutePermission::class,
+            'api-permission' => \App\Http\Middleware\CheckApiPermission::class,
         ]);
         $middleware->redirectTo(
             guests: fn () => route('login'),

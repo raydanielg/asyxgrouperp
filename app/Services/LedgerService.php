@@ -7,12 +7,162 @@ use App\Models\CashAccountTransaction;
 use App\Models\ChartOfAccount;
 use App\Models\JournalEntry;
 use App\Models\JournalEntryLine;
+use App\Models\SalesInvoice;
+use App\Models\PurchaseInvoice;
+use App\Models\VendorInvoice;
+use App\Models\VendorPayment;
+use App\Models\Payroll;
+use App\Models\AccountingPeriod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use RuntimeException;
 
 class LedgerService
 {
+    protected function findAccount(string $code): ?ChartOfAccount
+    {
+        return ChartOfAccount::where('code', $code)->first();
+    }
+
+    protected function findAccountBySubtype(string $subtype): ?ChartOfAccount
+    {
+        return ChartOfAccount::where('subtype', $subtype)->first();
+    }
+
+    /**
+     * Post a sales invoice to the ledger when it's posted.
+     * Debit Accounts Receivable, credit Sales Revenue + Tax Payable.
+     */
+    public function postSalesInvoice(SalesInvoice $invoice): ?JournalEntry
+    {
+        $ar = $this->findAccount('1100');
+        $revenue = $this->findAccount('4010');
+        $tax = $this->findAccountBySubtype('tax_payable') ?? $this->findAccount('2020');
+
+        if (!$ar || !$revenue) {
+            return null;
+        }
+
+        $lines = [];
+        $lines[] = ['chart_of_account_id' => $ar->id, 'debit' => (float) $invoice->total_amount, 'credit' => 0, 'description' => "Sales Invoice {$invoice->invoice_number}"];
+
+        $lines[] = ['chart_of_account_id' => $revenue->id, 'debit' => 0, 'credit' => (float) $invoice->subtotal, 'description' => "Revenue - {$invoice->invoice_number}"];
+
+        if ($invoice->tax_amount > 0 && $tax) {
+            $lines[] = ['chart_of_account_id' => $tax->id, 'debit' => 0, 'credit' => (float) $invoice->tax_amount, 'description' => "Tax - {$invoice->invoice_number}"];
+        }
+
+        if ($invoice->discount_amount > 0) {
+            $discount = $this->findAccountBySubtype('sales_discount') ?? $revenue;
+            $lines[] = ['chart_of_account_id' => $discount->id, 'debit' => (float) $invoice->discount_amount, 'credit' => 0, 'description' => "Discount - {$invoice->invoice_number}"];
+        }
+
+        return $this->postEntry([
+            'entry_date' => $invoice->invoice_date?->toDateString() ?? now()->toDateString(),
+            'reference' => $invoice->invoice_number,
+            'description' => "Sales Invoice {$invoice->invoice_number}",
+            'source_type' => 'sales_invoice',
+            'source_id' => $invoice->id,
+            'created_by' => $invoice->creator_id ?? auth()->id(),
+        ], $lines);
+    }
+
+    /**
+     * Post a purchase invoice to the ledger when it's posted.
+     * Debit Purchases/Expense + Tax, credit Accounts Payable.
+     */
+    public function postPurchaseInvoice(PurchaseInvoice $invoice): ?JournalEntry
+    {
+        $ap = $this->findAccount('2010');
+        $expense = $this->findAccount('5010');
+        $tax = $this->findAccountBySubtype('tax_payable') ?? $this->findAccount('2020');
+
+        if (!$ap || !$expense) {
+            return null;
+        }
+
+        $lines = [];
+        $lines[] = ['chart_of_account_id' => $expense->id, 'debit' => (float) $invoice->subtotal, 'credit' => 0, 'description' => "Purchase Invoice {$invoice->invoice_number}"];
+
+        if ($invoice->tax_amount > 0 && $tax) {
+            $lines[] = ['chart_of_account_id' => $tax->id, 'debit' => (float) $invoice->tax_amount, 'credit' => 0, 'description' => "Input Tax - {$invoice->invoice_number}"];
+        }
+
+        $lines[] = ['chart_of_account_id' => $ap->id, 'debit' => 0, 'credit' => (float) $invoice->total_amount, 'description' => "Payable - {$invoice->invoice_number}"];
+
+        return $this->postEntry([
+            'entry_date' => $invoice->invoice_date?->toDateString() ?? now()->toDateString(),
+            'reference' => $invoice->invoice_number,
+            'description' => "Purchase Invoice {$invoice->invoice_number}",
+            'source_type' => 'purchase_invoice',
+            'source_id' => $invoice->id,
+            'created_by' => $invoice->creator_id ?? auth()->id(),
+        ], $lines);
+    }
+
+    /**
+     * Post a vendor payment to the ledger.
+     * Debit Accounts Payable, credit Cash/Bank.
+     */
+    public function postVendorPayment(VendorPayment $payment): ?JournalEntry
+    {
+        $ap = $this->findAccount('2010');
+        $cash = $this->findAccount('1010');
+
+        if (!$ap || !$cash) {
+            return null;
+        }
+
+        return $this->postEntry([
+            'entry_date' => $payment->payment_date ?? now()->toDateString(),
+            'reference' => $payment->payment_number,
+            'description' => "Vendor Payment {$payment->payment_number}",
+            'source_type' => 'vendor_payment',
+            'source_id' => $payment->id,
+            'created_by' => $payment->created_by ?? auth()->id(),
+        ], [
+            ['chart_of_account_id' => $ap->id, 'debit' => (float) $payment->amount, 'credit' => 0, 'description' => "Payment to vendor"],
+            ['chart_of_account_id' => $cash->id, 'debit' => 0, 'credit' => (float) $payment->amount, 'description' => "Cash/Bank out"],
+        ]);
+    }
+
+    /**
+     * Post payroll to the ledger.
+     * Debit Salary Expense, credit Cash/Bank + Tax Payable + Other deductions.
+     */
+    public function postPayroll(Payroll $payroll): ?JournalEntry
+    {
+        $salaryExp = $this->findAccountBySubtype('salary_expense') ?? $this->findAccount('5040');
+        $cash = $this->findAccount('1010');
+        $tax = $this->findAccountBySubtype('tax_payable') ?? $this->findAccount('2020');
+
+        if (!$salaryExp || !$cash) {
+            return null;
+        }
+
+        $netPay = (float) ($payroll->net_pay ?? $payroll->net_salary ?? 0);
+        $grossPay = (float) ($payroll->gross_pay ?? $payroll->gross_salary ?? 0);
+        $deductions = $grossPay - $netPay;
+        $payrollRef = $payroll->payroll_number ?? "PR-{$payroll->id}";
+
+        $lines = [];
+        $lines[] = ['chart_of_account_id' => $salaryExp->id, 'debit' => $grossPay, 'credit' => 0, 'description' => "Payroll {$payrollRef}"];
+
+        $lines[] = ['chart_of_account_id' => $cash->id, 'debit' => 0, 'credit' => $netPay, 'description' => "Net pay - {$payrollRef}"];
+
+        if ($deductions > 0 && $tax) {
+            $lines[] = ['chart_of_account_id' => $tax->id, 'debit' => 0, 'credit' => $deductions, 'description' => "Deductions - {$payrollRef}"];
+        }
+
+        return $this->postEntry([
+            'entry_date' => $payroll->payroll_date ?? $payroll->created_at?->toDateString() ?? now()->toDateString(),
+            'reference' => $payrollRef,
+            'description' => "Payroll {$payrollRef}",
+            'source_type' => 'payroll',
+            'source_id' => $payroll->id,
+            'created_by' => $payroll->created_by ?? auth()->id(),
+        ], $lines);
+    }
     /**
      * Post a balanced double-entry journal entry.
      *
@@ -31,6 +181,17 @@ class LedgerService
 
         if (abs($totalDebit - $totalCredit) > 0.01) {
             throw new RuntimeException("Journal entry is not balanced: debit {$totalDebit} != credit {$totalCredit}.");
+        }
+
+        $entryDate = $header['entry_date'] ?? now()->toDateString();
+
+        $lockedPeriod = AccountingPeriod::where('status', 'closed')
+            ->whereDate('start_date', '<=', $entryDate)
+            ->whereDate('end_date', '>=', $entryDate)
+            ->first();
+
+        if ($lockedPeriod) {
+            throw new RuntimeException("Accounting period '{$lockedPeriod->name}' is closed. No entries can be posted to this period.");
         }
 
         return DB::transaction(function () use ($header, $lines) {

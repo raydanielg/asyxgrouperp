@@ -27,4 +27,15 @@ class Product extends Model
     {
         return $this->hasMany(StockMovement::class);
     }
+
+    public function warehouseStocks()
+    {
+        return $this->hasMany(ProductWarehouseStock::class);
+    }
+
+    public function stockInWarehouse(int $warehouseId): float
+    {
+        $stock = $this->warehouseStocks()->where('warehouse_id', $warehouseId)->first();
+        return $stock ? (float) $stock->quantity : 0;
+    }
 }

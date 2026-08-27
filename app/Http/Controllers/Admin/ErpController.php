@@ -30,11 +30,16 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Services\LedgerService;
+use Illuminate\Support\Facades\DB;
 
 class ErpController extends Controller
 {
+    protected LedgerService $ledger;
+
     public function __construct()
     {
+        $this->ledger = app(LedgerService::class);
         $this->middleware(function ($request, $next) {
             if (!auth()->check()) {
                 return redirect()->route('login');
@@ -364,11 +369,19 @@ class ErpController extends Controller
     public function purchaseInvoicePost(PurchaseInvoice $purchaseInvoice)
     {
         $purchaseInvoice->update(['status' => 'posted']);
-        return redirect()->back()->with('success', 'Invoice posted.');
+        try {
+            $this->ledger->postPurchaseInvoice($purchaseInvoice);
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Invoice posted but ledger entry failed: ' . $e->getMessage());
+        }
+        return redirect()->back()->with('success', 'Invoice posted to ledger.');
     }
 
     public function purchaseInvoiceDestroy(PurchaseInvoice $purchaseInvoice)
     {
+        if (in_array($purchaseInvoice->status, ['posted', 'paid', 'partial'])) {
+            return back()->with('error', 'Posted or paid invoices cannot be deleted. Void them instead.');
+        }
         $purchaseInvoice->delete();
         return back()->with('success', 'Invoice deleted.');
     }
@@ -429,25 +442,28 @@ class ErpController extends Controller
         $data['creator_id'] = auth()->id();
         $data['created_by'] = auth()->id();
         $data['balance_amount'] = $data['total_amount'];
-        $invoice = SalesInvoice::create($data);
-        if (!empty($data['items'])) {
-            foreach ($data['items'] as $item) {
-                $lineTotal = ($item['quantity'] * $item['unit_price']) - ($item['discount_amount'] ?? 0);
-                $lineTax = $lineTotal * (($item['tax_percentage'] ?? 0) / 100);
-                $invoice->items()->create([
-                    'product_name' => $item['product_name'],
-                    'quantity' => $item['quantity'],
-                    'unit_price' => $item['unit_price'],
-                    'discount_amount' => $item['discount_amount'] ?? 0,
-                    'tax_percentage' => $item['tax_percentage'] ?? 0,
-                    'tax_amount' => $lineTax,
-                    'total_amount' => $lineTotal + $lineTax,
-                ]);
+        $invoice = DB::transaction(function () use ($data, $request) {
+            $invoice = SalesInvoice::create($data);
+            if (!empty($data['items'])) {
+                foreach ($data['items'] as $item) {
+                    $lineTotal = ($item['quantity'] * $item['unit_price']) - ($item['discount_amount'] ?? 0);
+                    $lineTax = $lineTotal * (($item['tax_percentage'] ?? 0) / 100);
+                    $invoice->items()->create([
+                        'product_name' => $item['product_name'],
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                        'discount_amount' => $item['discount_amount'] ?? 0,
+                        'tax_percentage' => $item['tax_percentage'] ?? 0,
+                        'tax_amount' => $lineTax,
+                        'total_amount' => $lineTotal + $lineTax,
+                    ]);
+                }
             }
-        }
-        if (!empty($request->bank_account_ids)) {
-            $invoice->bankAccounts()->sync($request->bank_account_ids);
-        }
+            if (!empty($request->bank_account_ids)) {
+                $invoice->bankAccounts()->sync($request->bank_account_ids);
+            }
+            return $invoice;
+        });
         return back()->with('success', 'Sales invoice created.');
     }
 
@@ -460,11 +476,19 @@ class ErpController extends Controller
     public function salesInvoicePost(SalesInvoice $salesInvoice)
     {
         $salesInvoice->update(['status' => 'posted']);
-        return redirect()->back()->with('success', 'Invoice posted.');
+        try {
+            $this->ledger->postSalesInvoice($salesInvoice);
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Invoice posted but ledger entry failed: ' . $e->getMessage());
+        }
+        return redirect()->back()->with('success', 'Invoice posted to ledger.');
     }
 
     public function salesInvoiceDestroy(SalesInvoice $salesInvoice)
     {
+        if (in_array($salesInvoice->status, ['posted', 'paid', 'partial'])) {
+            return back()->with('error', 'Posted or paid invoices cannot be deleted. Void them instead.');
+        }
         $salesInvoice->delete();
         return back()->with('success', 'Invoice deleted.');
     }

@@ -101,7 +101,7 @@ class DocumentController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = $file->store('documents', 'public');
+        $path = $file->store('documents', 'local');
 
         $docNumber = 'DOC-' . date('Ym') . '-' . str_pad(Document::count() + 1, 4, '0', STR_PAD_LEFT);
 
@@ -175,7 +175,11 @@ class DocumentController extends Controller
             'ip_address' => request()->ip(),
         ]);
 
-        return Storage::disk('public')->download(
+        if ($document->is_confidential && $document->uploaded_by !== auth()->id() && auth()->user()?->role !== 'admin' && auth()->user()?->role !== 'superadmin') {
+            abort(403, 'You do not have permission to download this confidential document.');
+        }
+
+        return Storage::disk('local')->download(
             $document->file_path,
             $document->title . '.' . $document->file_type
         );
@@ -257,7 +261,7 @@ class DocumentController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = $file->store('documents', 'public');
+        $path = $file->store('documents', 'local');
 
         $versionParts = explode('.', $document->version);
         $major = (int)($versionParts[0] ?? 1);
@@ -294,7 +298,11 @@ class DocumentController extends Controller
 
     public function destroy(Document $document)
     {
-        Storage::disk('public')->delete($document->file_path);
+        if (in_array($document->status, ['signed', 'archived']) && auth()->user()?->role !== 'admin' && auth()->user()?->role !== 'superadmin') {
+            return back()->with('error', 'Signed or archived documents cannot be deleted. Use archive instead.');
+        }
+
+        Storage::disk('local')->delete($document->file_path);
         $document->delete();
         return back()
             ->with('success', 'Document deleted.');
