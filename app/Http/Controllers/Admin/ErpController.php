@@ -15,6 +15,7 @@ use App\Models\EmailTemplate;
 use App\Models\Setting;
 use App\Models\LoginHistory;
 use App\Models\BankTransferPayment;
+use App\Models\BankAccount;
 use App\Models\AddOn;
 use App\Models\UserActiveModule;
 use App\Models\PurchaseInvoice;
