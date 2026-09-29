@@ -236,13 +236,28 @@
       <div class="chart-box" style="margin-top:12px;">
         <div class="chart-title">Financial Overview (TZS)</div>
         @php
+          // Convert financial values to scalars before chart math. Some legacy
+          // records may contain JSON-style values, which cannot be divided.
+          $toFinancialNumber = static function ($value): float {
+              if (is_array($value)) {
+                  $value = $value['amount'] ?? $value['value'] ?? 0;
+              } elseif (is_object($value)) {
+                  $value = $value->amount ?? $value->value ?? 0;
+              }
+
+              if (is_string($value)) {
+                  $value = preg_replace('/[^0-9.\\-]/', '', $value);
+              }
+
+              return is_numeric($value) ? (float) $value : 0.0;
+          };
           $finData = [
-            ['label'=>'Budget','value'=>$project->budget ?? 0,'color'=>'#0F3D3E'],
-            ['label'=>'Invoiced','value'=>$invoiceTotal,'color'=>'#C9A227'],
-            ['label'=>'Collected','value'=>$invoicePaid,'color'=>'#10B981'],
-            ['label'=>'Bonuses','value'=>$totalBonus,'color'=>'#8C5E2A'],
+            ['label'=>'Budget','value'=>$toFinancialNumber($project->budget ?? 0),'color'=>'#0F3D3E'],
+            ['label'=>'Invoiced','value'=>$toFinancialNumber($invoiceTotal),'color'=>'#C9A227'],
+            ['label'=>'Collected','value'=>$toFinancialNumber($invoicePaid),'color'=>'#10B981'],
+            ['label'=>'Bonuses','value'=>$toFinancialNumber($totalBonus),'color'=>'#8C5E2A'],
           ];
-          $maxFin = max(array_column($finData, 'value'), 1);
+          $maxFin = max(array_column($finData, 'value')) ?: 1;
         @endphp
         <div class="bar-chart" style="height:100px;">
           @foreach($finData as $fd)

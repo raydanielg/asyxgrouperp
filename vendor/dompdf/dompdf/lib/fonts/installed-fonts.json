@@ -1,0 +1,15 @@
+{
+    "fraunces": {
+        "600": "\/home\/adam\/Downloads\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/fraunces_600_9a04d55e7b5849c45ad850803d910b11",
+        "bold": "fraunces_bold_8144d8537090263f411fc11794ebce2a"
+    },
+    "inter": {
+        "normal": "\/home\/adam\/Downloads\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_normal_5a66f8ceb794f00a7f54c797a21283b3",
+        "500": "\/home\/adam\/Downloads\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_500_efef4d9d61ac26570557ad601dea222a",
+        "600": "\/home\/adam\/Downloads\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_600_3604d9d49b61fc3b7c29c4259c86ff89",
+        "bold": "inter_bold_02384cdf43e3d24b76c57c66dfd114bf"
+    },
+    "jetbrains mono": {
+        "500": "jetbrains_mono_500_2d9fa203cc3acf12a1c3a15380e6436e"
+    }
+}
