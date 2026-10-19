@@ -149,13 +149,6 @@ class RolePermissions
             'view-projects', 'view-helpdesk-tickets', 'view-crm-leads', 'view-crm-deals',
             'view-products', 'view-warehouses', 'view-pos', 'view-audit-logs',
         ],
-        'director' => [
-            'view-reports', 'view-financial-reports', 'view-approvals',
-            'approve-final', 'view-companies', 'switch-companies', 'view-tenders',
-            'view-crm-contracts', 'view-employees', 'view-sales-invoices', 'view-purchase-invoices',
-            'view-expenses', 'view-revenues', 'view-projects', 'view-helpdesk-tickets',
-            'view-crm-leads', 'view-crm-deals', 'view-products', 'view-warehouses', 'view-pos',
-        ],
         'general_manager' => [
             'view-reports', 'view-approvals', 'approve-hr', 'approve-technical',
             'approve-procurement', 'view-projects', 'create-projects', 'edit-projects',
@@ -421,11 +414,6 @@ class RolePermissions
             'view-site-reports', 'create-site-reports', 'view-timesheets',
             'create-timesheets',
         ],
-        'technician' => [
-            'view-projects', 'view-job-cards', 'create-job-cards', 'edit-job-cards',
-            'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets',
-            'view-bugs', 'create-bugs',
-        ],
         'noc_engineer' => [
             'view-helpdesk-tickets', 'create-helpdesk-tickets', 'edit-helpdesk-tickets',
         ],
@@ -514,25 +502,9 @@ class RolePermissions
             'view-deliveries', 'create-deliveries', 'view-shipments', 'create-shipments',
             'view-transfers', 'view-stock-movements', 'view-warehouses', 'view-products',
         ],
-        'receptionist' => [
-            'view-visitors', 'create-visitors', 'edit-visitors', 'delete-visitors',
-            'view-appointments', 'create-appointments', 'edit-appointments',
-            'delete-appointments', 'view-calls', 'create-calls', 'edit-calls',
-            'delete-calls', 'view-correspondence', 'create-correspondence',
-            'edit-correspondence', 'delete-correspondence', 'view-parcels',
-            'create-parcels', 'edit-parcels', 'delete-parcels', 'view-front-desk',
-            'create-front-desk', 'edit-front-desk', 'delete-front-desk',
-            'view-departments', 'create-departments', 'edit-departments',
-            'delete-departments', 'create-announcements', 'edit-announcements',
-            'delete-announcements', 'view-crm-leads', 'create-crm-leads',
-            'view-crm-contacts', 'create-crm-contacts', 'view-helpdesk-tickets',
-            'create-helpdesk-tickets',
-        ],
-
         // ══════════════════════════════════════════════════
         // SECTION K — Self-Service Roles
         // ══════════════════════════════════════════════════
-        'employee' => [],
         'employee_self_service' => [],
         'manager_self_service' => [
             'view-team-overview', 'approve-team-leaves', 'view-team-attendance',

@@ -474,7 +474,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/companies/{company}/edit', [$companyCtrl, 'edit'])->name('companies.edit');
     Route::patch('/companies/{company}', [$companyCtrl, 'update'])->name('companies.update');
     Route::delete('/companies/{company}', [$companyCtrl, 'destroy'])->name('companies.destroy');
+    Route::post('/companies/{company}/suspend', [$companyCtrl, 'suspend'])->name('companies.suspend');
+    Route::post('/companies/{company}/activate', [$companyCtrl, 'activate'])->name('companies.activate');
+    Route::post('/companies/{company}/subscription', [$companyCtrl, 'updateSubscription'])->name('companies.subscription');
     Route::get('/companies-consolidated', [$companyCtrl, 'consolidated'])->name('companies.consolidated');
+    Route::get('/companies-export', [$companyCtrl, 'export'])->name('companies.export');
 
     // Intercompany Transactions
     $ictCtrl = App\Http\Controllers\Admin\IntercompanyTransactionController::class;

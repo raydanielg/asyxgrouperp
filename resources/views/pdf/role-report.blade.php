@@ -47,7 +47,7 @@ tr:nth-child(even) td { background: #f8fafc; }
 </div>
 
 {{-- Role-Specific Sections --}}
-@if(in_array($role, ['admin','superadmin','director']))
+@if(in_array($role, ['admin','superadmin','managing_director','general_manager']))
   <div class="section-title">Recent Sales Invoices</div>
   <table>
     <tr><th>#</th><th>Customer</th><th>Date</th><th class="text-right">Amount</th><th class="text-right">Balance</th><th>Status</th></tr>
@@ -65,7 +65,7 @@ tr:nth-child(even) td { background: #f8fafc; }
   </table>
 @endif
 
-@if(in_array($role, ['admin','superadmin','director','technical_manager']))
+@if(in_array($role, ['admin','superadmin','managing_director','general_manager','technical_manager']))
   <div class="section-title">Open Support Tickets</div>
   <table>
     <tr><th>#</th><th>Subject</th><th>Priority</th><th>Status</th><th>Created</th></tr>

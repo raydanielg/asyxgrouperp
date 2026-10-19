@@ -13,25 +13,23 @@ $money = fn($n) => 'TZS ' . number_format($n);
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
     @php
     $kpis = [
-        ['label' => 'Total Sales', 'value' => $money($stats['totalSalesAmount']), 'sub' => $stats['totalSalesInvoices'] . ' invoices', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'from' => 'emerald-600', 'to' => 'emerald-700', 'border' => 'emerald-500', 'text' => 'emerald-100', 'sub_color' => 'emerald-200'],
-        ['label' => 'Total Purchases', 'value' => $money($stats['totalPurchaseAmount']), 'sub' => $stats['totalPurchaseInvoices'] . ' invoices', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'from' => 'sky-500', 'to' => 'sky-600', 'border' => 'sky-400', 'text' => 'sky-100', 'sub_color' => 'sky-200'],
-        ['label' => 'Outstanding Balance', 'value' => $money($stats['totalSalesBalance']), 'sub' => 'Receivables', 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', 'from' => 'amber-400', 'to' => 'amber-500', 'border' => 'amber-300', 'text' => 'amber-50', 'sub_color' => 'amber-100'],
-        ['label' => 'Open Tickets', 'value' => number_format($stats['openTickets'] + $stats['inProgressTickets']), 'sub' => $stats['totalTickets'] . ' total tickets', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'from' => 'rose-500', 'to' => 'rose-600', 'border' => 'rose-400', 'text' => 'rose-100', 'sub_color' => 'rose-200'],
+        ['label' => 'Total Sales', 'value' => $money($stats['totalSalesAmount']), 'sub' => $stats['totalSalesInvoices'] . ' invoices', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'chip' => 'bg-emerald-50 text-emerald-600'],
+        ['label' => 'Total Purchases', 'value' => $money($stats['totalPurchaseAmount']), 'sub' => $stats['totalPurchaseInvoices'] . ' invoices', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'chip' => 'bg-sky-50 text-sky-600'],
+        ['label' => 'Outstanding Balance', 'value' => $money($stats['totalSalesBalance']), 'sub' => 'Receivables', 'icon' => 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', 'chip' => 'bg-amber-50 text-amber-600'],
+        ['label' => 'Open Tickets', 'value' => number_format($stats['openTickets'] + $stats['inProgressTickets']), 'sub' => $stats['totalTickets'] . ' total tickets', 'icon' => 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'chip' => 'bg-rose-50 text-rose-600'],
     ];
     @endphp
     @foreach($kpis as $card)
-        <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-xl border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden hover:shadow-lg transition-shadow">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        <div class="absolute bottom-0 right-0 w-12 h-12 bg-white/5 rounded-full -mr-4 -mb-4"></div>
-        <div class="relative z-10">
-            <div class="flex items-start justify-between mb-2">
-                <span class="text-[10px] font-medium {{ $card['text'] }}">{{ $card['label'] }}</span>
-                <svg class="w-4 h-4 {{ $card['sub_color'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $card['icon'] }}"/></svg>
+        <div class="bg-white rounded-md border border-gray-100 p-4 hover:border-gray-200 transition-colors">
+            <div class="flex items-start justify-between mb-3">
+                <span class="text-[11px] font-medium text-gray-400">{{ $card['label'] }}</span>
+                <div class="w-7 h-7 rounded flex items-center justify-center {{ $card['chip'] }}">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $card['icon'] }}"/></svg>
+                </div>
             </div>
-            <p class="text-xl font-bold tracking-tight text-white">{{ $card['value'] }}</p>
-            <p class="text-[10px] {{ $card['sub_color'] }} font-medium mt-1">{{ $card['sub'] }}</p>
+            <p class="text-xl font-bold tracking-tight text-gray-900">{{ $card['value'] }}</p>
+            <p class="text-[10px] text-gray-400 font-medium mt-1">{{ $card['sub'] }}</p>
         </div>
-    </div>
         @endforeach
         </div>
 
@@ -48,9 +46,9 @@ $money = fn($n) => 'TZS ' . number_format($n);
     ];
     @endphp
     @foreach($subKpis as $kpi)
-        <a href="{{ $kpi['route'] }}" class="bg-white rounded-xl border p-3 hover:shadow-md transition-all hover:border-{{ $kpi['color'] }}-300 group">
+        <a href="{{ $kpi['route'] }}" class="bg-white rounded-md border p-3 hover:shadow-md transition-all hover:border-{{ $kpi['color'] }}-300 group">
         <div class="flex items-center gap-2 mb-1">
-            <div class="w-7 h-7 rounded-lg bg-{{ $kpi['color'] }}-50 flex items-center justify-center group-hover:bg-{{ $kpi['color'] }}-100 transition-colors">
+            <div class="w-7 h-7 rounded bg-{{ $kpi['color'] }}-50 flex items-center justify-center group-hover:bg-{{ $kpi['color'] }}-100 transition-colors">
                 <svg class="w-3.5 h-3.5 text-{{ $kpi['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $kpi['icon'] }}"/></svg>
             </div>
             <span class="text-[10px] font-medium text-gray-400">{{ $kpi['label'] }}</span>
@@ -67,102 +65,102 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </button>
 <div id="dash-insights" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
     {{-- HRM Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">HRM Overview</h3>
             <a href="{{ route('admin.employees.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-emerald-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Employees</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalEmployees'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeEmployees'] }} active</p></div>
-            <div class="bg-amber-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Pending Leaves</p><p class="text-lg font-bold text-amber-600">{{ $stats['pendingLeaves'] }}</p><p class="text-[10px] text-gray-400">Awaiting approval</p></div>
+            <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Employees</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalEmployees'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeEmployees'] }} active</p></div>
+            <div class="bg-amber-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Pending Leaves</p><p class="text-lg font-bold text-amber-600">{{ $stats['pendingLeaves'] }}</p><p class="text-[10px] text-gray-400">Awaiting approval</p></div>
         </div>
     </div>
     {{-- CRM Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">CRM Summary</h3>
             <a href="{{ route('admin.crm-leads.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-sky-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Leads</p><p class="text-lg font-bold text-sky-700">{{ $stats['totalCrmLeads'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['newLeads'] }} new, {{ $stats['qualifiedLeads'] }} qualified</p></div>
-            <div class="bg-violet-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Open Deals</p><p class="text-lg font-bold text-violet-700">{{ $stats['openDeals'] }}</p><p class="text-[10px] text-gray-400">{{ $money($stats['totalDealValue']) }} value</p></div>
+            <div class="bg-sky-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Leads</p><p class="text-lg font-bold text-sky-700">{{ $stats['totalCrmLeads'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['newLeads'] }} new, {{ $stats['qualifiedLeads'] }} qualified</p></div>
+            <div class="bg-violet-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Open Deals</p><p class="text-lg font-bold text-violet-700">{{ $stats['openDeals'] }}</p><p class="text-[10px] text-gray-400">{{ $money($stats['totalDealValue']) }} value</p></div>
         </div>
     </div>
     {{-- Accounting Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Accounting</h3>
             <a href="{{ route('admin.revenues.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-emerald-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Revenue (Month)</p><p class="text-lg font-bold text-emerald-700">{{ $money($stats['monthRevenues']) }}</p><p class="text-[10px] text-gray-400">{{ $money($stats['totalRevenues']) }} total</p></div>
-            <div class="bg-red-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Expenses (Month)</p><p class="text-lg font-bold text-red-600">{{ $money($stats['monthExpenses']) }}</p><p class="text-[10px] text-gray-400">{{ $money($stats['totalExpenses']) }} total</p></div>
+            <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Revenue (Month)</p><p class="text-lg font-bold text-emerald-700">{{ $money($stats['monthRevenues']) }}</p><p class="text-[10px] text-gray-400">{{ $money($stats['totalRevenues']) }} total</p></div>
+            <div class="bg-red-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Expenses (Month)</p><p class="text-lg font-bold text-red-600">{{ $money($stats['monthExpenses']) }}</p><p class="text-[10px] text-gray-400">{{ $money($stats['totalExpenses']) }} total</p></div>
         </div>
     </div>
     {{-- Projects Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Projects</h3>
             <a href="{{ route('admin.projects.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-amber-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Active</p><p class="text-lg font-bold text-amber-600">{{ $stats['activeProjects'] }}</p><p class="text-[10px] text-gray-400">in progress</p></div>
-            <div class="bg-emerald-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Completed</p><p class="text-lg font-bold text-emerald-700">{{ $stats['completedProjects'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['totalProjects'] }} total</p></div>
+            <div class="bg-amber-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Active</p><p class="text-lg font-bold text-amber-600">{{ $stats['activeProjects'] }}</p><p class="text-[10px] text-gray-400">in progress</p></div>
+            <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Completed</p><p class="text-lg font-bold text-emerald-700">{{ $stats['completedProjects'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['totalProjects'] }} total</p></div>
         </div>
     </div>
     {{-- POS Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">POS Sales</h3>
             <a href="{{ route('admin.pos.reports') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-emerald-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Today</p><p class="text-lg font-bold text-emerald-700">{{ $money($stats['posTodaySales']) }}</p><p class="text-[10px] text-gray-400">{{ $stats['posTodayCount'] }} transactions</p></div>
-            <div class="bg-sky-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">This Month</p><p class="text-lg font-bold text-sky-700">{{ $money($stats['posMonthSales']) }}</p><p class="text-[10px] text-gray-400">monthly total</p></div>
+            <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Today</p><p class="text-lg font-bold text-emerald-700">{{ $money($stats['posTodaySales']) }}</p><p class="text-[10px] text-gray-400">{{ $stats['posTodayCount'] }} transactions</p></div>
+            <div class="bg-sky-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">This Month</p><p class="text-lg font-bold text-sky-700">{{ $money($stats['posMonthSales']) }}</p><p class="text-[10px] text-gray-400">monthly total</p></div>
         </div>
     </div>
     {{-- Products Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Products</h3>
             <a href="{{ route('admin.products.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-emerald-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Total Products</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalProducts'] }}</p><p class="text-[10px] text-gray-400">in catalog</p></div>
-            <div class="bg-red-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Low Stock</p><p class="text-lg font-bold text-red-600">{{ $stats['lowStockProducts'] }}</p><p class="text-[10px] text-gray-400">need reorder</p></div>
+            <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Total Products</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalProducts'] }}</p><p class="text-[10px] text-gray-400">in catalog</p></div>
+            <div class="bg-red-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Low Stock</p><p class="text-lg font-bold text-red-600">{{ $stats['lowStockProducts'] }}</p><p class="text-[10px] text-gray-400">need reorder</p></div>
         </div>
     </div>
     {{-- Recruitment Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Recruitment</h3>
             <a href="{{ route('admin.applications.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-sky-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Open Positions</p><p class="text-lg font-bold text-sky-700">{{ $stats['openJobPostings'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['totalApplications'] }} applications</p></div>
-            <div class="bg-amber-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Pending Review</p><p class="text-lg font-bold text-amber-600">{{ $stats['pendingApplications'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['shortlistedApplications'] }} shortlisted</p></div>
+            <div class="bg-sky-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Open Positions</p><p class="text-lg font-bold text-sky-700">{{ $stats['openJobPostings'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['totalApplications'] }} applications</p></div>
+            <div class="bg-amber-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Pending Review</p><p class="text-lg font-bold text-amber-600">{{ $stats['pendingApplications'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['shortlistedApplications'] }} shortlisted</p></div>
         </div>
     </div>
     {{-- Multi-Company Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Multi-Company</h3>
             <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-violet-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Companies</p><p class="text-lg font-bold text-violet-700">{{ $stats['totalCompanies'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeCompanies'] }} active</p></div>
-            <div class="bg-emerald-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Fleet</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalVehicles'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeVehicles'] }} active</p></div>
+            <div class="bg-violet-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Companies</p><p class="text-lg font-bold text-violet-700">{{ $stats['totalCompanies'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeCompanies'] }} active</p></div>
+            <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Fleet</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalVehicles'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeVehicles'] }} active</p></div>
         </div>
     </div>
     {{-- Financial Summary Insight --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Financial Summary</h3>
             <a href="{{ route('admin.reports') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">Reports</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
-            <div class="bg-{{ $stats['netProfit'] >= 0 ? 'emerald' : 'red' }}-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Net Profit (All)</p><p class="text-lg font-bold text-{{ $stats['netProfit'] >= 0 ? 'emerald-700' : 'red-600' }}">{{ $money($stats['netProfit']) }}</p><p class="text-[10px] text-gray-400">revenue - costs</p></div>
-            <div class="bg-{{ $stats['monthNetProfit'] >= 0 ? 'emerald' : 'red' }}-50/50 rounded-lg p-3"><p class="text-[10px] text-gray-400 uppercase">Month Net</p><p class="text-lg font-bold text-{{ $stats['monthNetProfit'] >= 0 ? 'emerald-700' : 'red-600' }}">{{ $money($stats['monthNetProfit']) }}</p><p class="text-[10px] text-gray-400">this month</p></div>
+            <div class="bg-{{ $stats['netProfit'] >= 0 ? 'emerald' : 'red' }}-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Net Profit (All)</p><p class="text-lg font-bold text-{{ $stats['netProfit'] >= 0 ? 'emerald-700' : 'red-600' }}">{{ $money($stats['netProfit']) }}</p><p class="text-[10px] text-gray-400">revenue - costs</p></div>
+            <div class="bg-{{ $stats['monthNetProfit'] >= 0 ? 'emerald' : 'red' }}-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Month Net</p><p class="text-lg font-bold text-{{ $stats['monthNetProfit'] >= 0 ? 'emerald-700' : 'red-600' }}">{{ $money($stats['monthNetProfit']) }}</p><p class="text-[10px] text-gray-400">this month</p></div>
         </div>
     </div>
 </div>
@@ -174,7 +172,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </button>
 <div id="dash-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     {{-- Monthly Sales vs Purchases Chart --}}
-    <div class="lg:col-span-2 bg-white rounded-xl border p-5">
+    <div class="lg:col-span-2 bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-4">
             <div>
                 <h3 class="text-sm font-semibold text-gray-900">Sales vs Purchases</h3>
@@ -211,7 +209,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     </div>
 
     {{-- Sales Invoice Status Breakdown --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <h3 class="text-sm font-semibold text-gray-900 mb-4">Invoice Status</h3>
         <div class="space-y-3">
             @php
@@ -220,7 +218,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
             @endphp
             @foreach($salesStatusBreakdown as $status => $count)
         <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-{{ $statusColors[$status] }}-100 flex items-center justify-center shrink-0">
+                <div class="w-8 h-8 rounded bg-{{ $statusColors[$status] }}-100 flex items-center justify-center shrink-0">
                     <div class="w-2.5 h-2.5 rounded-full bg-{{ $statusColors[$status] }}-500"></div>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -243,7 +241,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <span>Daily Transaction Activity</span>
     <svg class="dash-chevron w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
 </button>
-<div id="dash-daily" class="bg-white rounded-xl border p-5 mb-6">
+<div id="dash-daily" class="bg-white rounded-md border p-5 mb-6">
     <div class="flex items-center justify-between mb-4">
         <div>
             <h3 class="text-sm font-semibold text-gray-900">Daily Transaction Activity</h3>
@@ -276,7 +274,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </button>
 <div id="dash-recent" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     {{-- Recent Sales Invoices --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Sales Invoices</h3>
             <a href="{{ route('admin.sales-invoices.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
@@ -306,7 +304,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     </div>
 
     {{-- Recent Purchase Invoices --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Purchase Invoices</h3>
             <a href="{{ route('admin.purchase-invoices.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
@@ -343,7 +341,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </button>
 <div id="dash-tickets" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     {{-- Recent Tickets --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Support Tickets</h3>
             <a href="{{ route('admin.helpdesk-tickets.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
@@ -351,7 +349,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
         <div class="p-5 space-y-3">
         @forelse($recentTickets as $ticket)
         <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg {{ ($ticket->priority === 'urgent') ? 'bg-red-50' : (($ticket->priority === 'high') ? 'bg-orange-50' : (($ticket->priority === 'medium') ? 'bg-amber-50' : 'bg-blue-50')) }} flex items-center justify-center shrink-0">
+                <div class="w-8 h-8 rounded {{ ($ticket->priority === 'urgent') ? 'bg-red-50' : (($ticket->priority === 'high') ? 'bg-orange-50' : (($ticket->priority === 'medium') ? 'bg-amber-50' : 'bg-blue-50')) }} flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4 {{ ($ticket->priority === 'urgent') ? 'text-red-600' : (($ticket->priority === 'high') ? 'text-orange-600' : (($ticket->priority === 'medium') ? 'text-amber-600' : 'text-blue-600')) }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -367,7 +365,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     </div>
 
     {{-- Recent Proposals --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Proposals</h3>
             <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
@@ -375,7 +373,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
         <div class="p-5 space-y-3">
         @forelse($recentProposals as $proposal)
         <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+                <div class="w-8 h-8 rounded bg-violet-50 flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -398,36 +396,36 @@ $money = fn($n) => 'TZS ' . number_format($n);
 </button>
 <div id="dash-attendance" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
     {{-- Attendance Stats --}}
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-bold text-gray-800">Today's Attendance</h3>
             <a href="{{ route('admin.attendance.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">View All →</a>
         </div>
         <div class="space-y-3">
-            <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-emerald-50 rounded">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center"><svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <div class="w-8 h-8 rounded bg-emerald-100 flex items-center justify-center"><svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                     <span class="text-xs font-medium text-gray-700">Present</span>
                 </div>
                 <span class="text-lg font-bold text-emerald-600">{{ $stats['todayPresent'] }}</span>
             </div>
-            <div class="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-amber-50 rounded">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center"><svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <div class="w-8 h-8 rounded bg-amber-100 flex items-center justify-center"><svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                     <span class="text-xs font-medium text-gray-700">Late</span>
                 </div>
                 <span class="text-lg font-bold text-amber-600">{{ $stats['todayLate'] }}</span>
             </div>
-            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-red-50 rounded">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center"><svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                    <div class="w-8 h-8 rounded bg-red-100 flex items-center justify-center"><svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
                     <span class="text-xs font-medium text-gray-700">Absent</span>
                 </div>
                 <span class="text-lg font-bold text-red-600">{{ $stats['todayAbsent'] }}</span>
             </div>
-            <div class="flex items-center justify-between p-3 bg-sky-50 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-sky-50 rounded">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center"><svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg></div>
+                    <div class="w-8 h-8 rounded bg-sky-100 flex items-center justify-center"><svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg></div>
                     <span class="text-xs font-medium text-gray-700">Clocked In Now</span>
                 </div>
                 <span class="text-lg font-bold text-sky-600">{{ $stats['currentlyClockedIn'] }}</span>
@@ -436,7 +434,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     </div>
 
     {{-- Recent Clock-Ins --}}
-    <div class="bg-white rounded-xl border p-5 lg:col-span-2">
+    <div class="bg-white rounded-md border p-5 lg:col-span-2">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-bold text-gray-800">Recent Clock-Ins Today</h3>
             <a href="{{ route('admin.attendance.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">Manage →</a>
@@ -444,7 +442,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
         @if($recentAttendance->isNotEmpty())
         <div class="space-y-2">
             @foreach($recentAttendance as $att)
-            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 border border-gray-100">
+            <div class="flex items-center justify-between p-3 rounded hover:bg-gray-50 border border-gray-100">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">{{ strtoupper(substr($att->employee?->first_name ?? '?', 0, 1)) }}</div>
                     <div>
@@ -486,19 +484,19 @@ $money = fn($n) => 'TZS ' . number_format($n);
 
 {{-- ═══ Quick Stats Footer ═══ --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
-    <div class="bg-white rounded-xl border p-4 text-center">
+    <div class="bg-white rounded-md border p-4 text-center">
         <p class="text-2xl font-bold text-emerald-600">{{ $stats['paidSalesInvoices'] }}</p>
         <p class="text-xs text-gray-400 mt-1">Paid Invoices</p>
     </div>
-    <div class="bg-white rounded-xl border p-4 text-center">
+    <div class="bg-white rounded-md border p-4 text-center">
         <p class="text-2xl font-bold text-red-500">{{ $stats['overdueSalesInvoices'] }}</p>
         <p class="text-xs text-gray-400 mt-1">Overdue Invoices</p>
     </div>
-    <div class="bg-white rounded-xl border p-4 text-center">
+    <div class="bg-white rounded-md border p-4 text-center">
         <p class="text-2xl font-bold text-amber-500">{{ $stats['pendingProposals'] }}</p>
         <p class="text-xs text-gray-400 mt-1">Pending Proposals</p>
     </div>
-    <div class="bg-white rounded-xl border p-4 text-center">
+    <div class="bg-white rounded-md border p-4 text-center">
         <p class="text-2xl font-bold text-sky-500">{{ $stats['activeWarehouses'] }}</p>
         <p class="text-xs text-gray-400 mt-1">Active Warehouses</p>
     </div>

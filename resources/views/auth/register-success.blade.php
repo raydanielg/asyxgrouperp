@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="w-full max-w-md" style="animation: simpleFadeIn 0.5s ease-out both;">
-    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden text-center">
+    <div class="bg-white rounded-md shadow-xl border border-gray-100 overflow-hidden text-center">
         {{-- Success Animation Header --}}
         <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 px-8 py-10 relative overflow-hidden">
             <div class="absolute top-2 left-4 w-2 h-2 rounded-full bg-white/20"></div>
@@ -28,7 +28,7 @@
                     Your account has been successfully created. You can now log in and get started.
                 </p>
         @if(session('registered_email'))
-                <div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg border border-gray-100">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded border border-gray-100">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                     <span class="text-xs text-gray-600 font-medium">{{ session('registered_email') }}</span>
                 </div>
@@ -61,12 +61,12 @@
 
             {{-- Login Button --}}
             <div class="mt-8 space-y-3">
-                <a href="{{ route('login') }}" class="w-full py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                <a href="{{ route('login') }}" class="w-full py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 rounded-md shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
                     Go to Login
                 </a>
 
-                <a href="{{ url('/') }}" class="w-full py-2.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl transition-all flex items-center justify-center gap-2">
+                <a href="{{ url('/') }}" class="w-full py-2.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-all flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     Back to Home
                 </a>

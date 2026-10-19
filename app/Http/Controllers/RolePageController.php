@@ -67,10 +67,11 @@ class RolePageController extends Controller
         return [
             'superadmin' => 'ERP Super Administrator',
             'admin' => 'ERP Administrator',
+            'admin' => 'ERP Administrator',
+            'superadmin' => 'ERP Super Administrator',
             'ict_administrator' => 'ICT Administrator',
             'auditor' => 'Auditor',
             'managing_director' => 'Managing Director',
-            'director' => 'Managing Director',
             'general_manager' => 'General Manager',
             'technical_manager' => 'Technical Manager',
             'operations_manager' => 'Operations Manager',
@@ -110,7 +111,6 @@ class RolePageController extends Controller
             'cybersecurity_engineer' => 'Cybersecurity Engineer',
             'support_engineer' => 'Support Engineer',
             'field_technician' => 'Field Technician',
-            'technician' => 'Technician',
             'noc_engineer' => 'NOC Engineer',
             'service_desk_manager' => 'Service Desk Manager',
             'helpdesk_supervisor' => 'Helpdesk Supervisor',
@@ -125,9 +125,7 @@ class RolePageController extends Controller
             'operations_officer' => 'Operations Officer',
             'fleet_manager' => 'Fleet Manager',
             'logistics_officer' => 'Logistics Officer',
-            'receptionist' => 'Receptionist',
-            'employee' => 'Employee',
-            'employee_self_service' => 'Employee',
+            'employee_self_service' => 'Employee Self-Service',
             'manager_self_service' => 'Manager Self-Service',
         ];
     }
@@ -423,7 +421,7 @@ class RolePageController extends Controller
 
             case 'tickets':
                 $tkUser = auth()->user();
-                $tkManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'managing_director', 'general_manager', 'operations_manager', 'service_desk_manager', 'helpdesk_supervisor', 'call_center_supervisor', 'ict_administrator', 'technical_projects_manager', 'project_director', 'team_leader', 'senior_systems_engineer'];
+                $tkManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'managing_director', 'general_manager', 'operations_manager', 'service_desk_manager', 'helpdesk_supervisor', 'call_center_supervisor', 'ict_administrator', 'technical_projects_manager', 'project_director', 'team_leader', 'senior_systems_engineer'];
                 $tkQuery = HelpdeskTicket::with(['category', 'creator', 'assignee']);
                 $tkStatsQuery = HelpdeskTicket::query();
                 if (!in_array($tkUser->role, $tkManagerRoles, true)) {
@@ -440,7 +438,7 @@ class RolePageController extends Controller
                 $data['inProgressTickets'] = (clone $tkStatsQuery)->where('status', 'in_progress')->count();
                 $data['resolvedTickets'] = (clone $tkStatsQuery)->where('status', 'resolved')->count();
                 $data['ticketCategories'] = \App\Models\HelpdeskCategory::where('is_active', true)->get();
-                $data['ticketAssignees'] = User::whereIn('role', ['technician', 'technical_manager', 'admin', 'superadmin'])->orderBy('name')->get();
+                $data['ticketAssignees'] = User::whereIn('role', ['field_technician', 'support_engineer', 'systems_engineer', 'technical_manager', 'admin', 'superadmin'])->orderBy('name')->get();
                 break;
 
             case 'leads':
@@ -500,7 +498,7 @@ class RolePageController extends Controller
             case 'timesheets':
                 $tsUser = auth()->user();
                 $tsQuery = \App\Models\Timesheet::with(['project', 'task', 'employee']);
-                $managerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'managing_director', 'general_manager', 'project_director', 'technical_projects_manager', 'team_leader', 'ict_administrator'];
+                $managerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'managing_director', 'general_manager', 'project_director', 'technical_projects_manager', 'team_leader', 'ict_administrator'];
                 if (!in_array($tsUser->role, $managerRoles, true)) {
                     $tsEmployeeId = $tsUser->employee?->id;
                     $tsQuery->where('employee_id', $tsEmployeeId);
@@ -514,7 +512,7 @@ class RolePageController extends Controller
 
             case 'bugs':
                 $bugUser = auth()->user();
-                $bugManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'managing_director', 'general_manager', 'project_director', 'technical_projects_manager', 'team_leader', 'ict_administrator'];
+                $bugManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'managing_director', 'general_manager', 'project_director', 'technical_projects_manager', 'team_leader', 'ict_administrator'];
                 $bugQuery = ProjectBug::with(['project', 'assignedTo']);
                 $bugStatsQuery = ProjectBug::query();
                 if (!in_array($bugUser->role, $bugManagerRoles, true)) {
@@ -544,7 +542,8 @@ class RolePageController extends Controller
                 $userRole = auth()->user()->role;
                 $filterProjectId = request('project_id');
                 $jcQuery = JobCard::with('project', 'assignedTo', 'createdBy');
-                if ($userRole === 'technician') {
+                $jcFieldRoles = ['field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'noc_engineer', 'software_engineer', 'cybersecurity_engineer'];
+                if (in_array($userRole, $jcFieldRoles)) {
                     $jcQuery->where(function ($q) use ($userId) {
                         $q->where('assigned_to', $userId)->orWhere('created_by', $userId);
                     });
@@ -554,7 +553,7 @@ class RolePageController extends Controller
                 }
                 $data['jobCards'] = $jcQuery->latest()->paginate(15);
                 $statsQuery = JobCard::query();
-                if ($userRole === 'technician') {
+                if (in_array($userRole, $jcFieldRoles)) {
                     $statsQuery->where(function ($q) use ($userId) {
                         $q->where('assigned_to', $userId)->orWhere('created_by', $userId);
                     });
@@ -564,7 +563,8 @@ class RolePageController extends Controller
                 $data['inProgressCards'] = (clone $statsQuery)->where('status', 'in_progress')->count();
                 $data['resolvedCards'] = (clone $statsQuery)->where('status', 'resolved')->count();
                 $data['projects'] = Project::where('status', 'in_progress')->orWhere('status', 'planning')->get();
-                $data['technicians'] = User::where('role', 'technician')->orWhereHas('roles', fn($q) => $q->where('name', 'technician'))->get();
+                $data['technicians'] = User::whereIn('role', ['field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer'])
+                    ->orWhereHas('roles', fn($q) => $q->whereIn('name', ['field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->get();
                 $data['filterProjectId'] = $filterProjectId;
 
                 // Technician workload overview — useful for technical_manager / project_manager oversight

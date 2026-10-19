@@ -838,6 +838,7 @@ class BusinessFlowController extends Controller
             'isRemoteEnabled' => true,
         ]);
 
-        return $pdf->download('quotation-' . $quotation->quotation_number . '.pdf');
+        $filename = 'quotation-' . $quotation->quotation_number . '.pdf';
+        return request()->boolean('inline') ? $pdf->stream($filename) : $pdf->download($filename);
     }
 }

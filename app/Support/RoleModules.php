@@ -76,7 +76,6 @@ class RoleModules
         'cybersecurity_engineer' => ['dashboard', 'tickets', 'assets', 'audit-logs', 'login-history', 'documents', 'timesheets', 'my-account', 'payslips'],
         'support_engineer' => ['dashboard', 'site-visits', 'service-reports', 'job-cards', 'customer-assets', 'tickets', 'timesheets', 'my-account', 'payslips'],
         'field_technician' => ['dashboard', 'site-visits', 'service-reports', 'job-cards', 'customer-assets', 'tickets', 'timesheets', 'my-account', 'payslips'],
-        'technician' => ['dashboard', 'projects', 'job-cards', 'tickets', 'bugs', 'my-account', 'payslips'],
         'noc_engineer' => ['dashboard', 'monitoring-dashboard', 'incidents', 'escalations', 'tickets', 'my-account', 'payslips'],
         'ict_administrator' => ['dashboard', 'users', 'roles', 'settings', 'audit-logs', 'login-history', 'tickets', 'assets', 'employees', 'my-account', 'payslips'],
 
@@ -98,10 +97,7 @@ class RoleModules
         'operations_officer' => ['dashboard', 'operations-log', 'operations-tasks', 'tickets', 'deliveries', 'vehicles', 'meetings', 'my-account', 'payslips'],
         'fleet_manager' => ['dashboard', 'vehicles', 'driver-assignment', 'fuel-logs', 'maintenance', 'trip-schedule', 'employees', 'my-account', 'payslips'],
         'logistics_officer' => ['dashboard', 'deliveries', 'shipments', 'route-planning', 'transfers', 'stock-movements', 'warehouses', 'products', 'my-account', 'payslips'],
-        'receptionist' => ['dashboard', 'visitors', 'appointments', 'calls', 'correspondence', 'parcels', 'front-desk', 'departments', 'announcements', 'messages', 'salary-advance', 'leads', 'contacts', 'my-account', 'payslips'],
-
         // ═══ Self-Service ═══
-        'employee' => ['dashboard', 'my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'announcements', 'messages', 'salary-advance'],
         'employee_self_service' => ['dashboard', 'my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'announcements', 'messages', 'salary-advance'],
         'manager_self_service' => ['dashboard', 'team-overview', 'team-leaves', 'team-attendance', 'team-timesheets', 'my-account', 'payslips', 'leaves', 'attendance', 'timesheets', 'announcements', 'messages'],
     ];

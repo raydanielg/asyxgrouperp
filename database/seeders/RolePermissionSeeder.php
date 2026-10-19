@@ -79,6 +79,35 @@ class RolePermissionSeeder extends Seeder
         }
 
         // ═══════════════════════════════════════════════════════
+        // Migrate users off legacy role names to spec role names
+        // BEFORE removing obsolete roles (keeps data continuity).
+        // ═══════════════════════════════════════════════════════
+        $legacyRoleMap = [
+            'director'            => 'managing_director',
+            'admin_manager'       => 'admin',
+            'administrator'       => 'admin',
+            'system_admin'        => 'ict_administrator',
+            'finance'             => 'accountant',
+            'finance_officer'     => 'accountant',
+            'hr'                  => 'hr_officer',
+            'legal'               => 'employee_self_service',
+            'legal_officer'       => 'employee_self_service',
+            'ict_officer'         => 'ict_administrator',
+            'ict_engineer'        => 'ict_administrator',
+            'logistics'           => 'logistics_officer',
+            'callcenter'          => 'call_center_agent',
+            'supervisor'          => 'team_leader',
+            'director_admin'      => 'managing_director',
+            'technician'          => 'field_technician',
+            'receptionist'        => 'employee_self_service',
+            'employee'            => 'employee_self_service',
+            'front_office'        => 'employee_self_service',
+        ];
+        foreach ($legacyRoleMap as $old => $new) {
+            DB::table('users')->where('role', $old)->update(['role' => $new]);
+        }
+
+        // ═══════════════════════════════════════════════════════
         // Remove roles that are NOT part of the spec role catalog.
         // Users on obsolete roles keep their accounts but are moved
         // to the least-privilege employee baseline — never deleted.
@@ -90,7 +119,7 @@ class RolePermissionSeeder extends Seeder
             DB::table('role_permission')->where('role_id', $obsolete->id)->delete();
             DB::table('roles')->where('id', $obsolete->id)->delete();
 
-            DB::table('users')->where('role', $obsolete->name)->update(['role' => 'employee']);
+            DB::table('users')->where('role', $obsolete->name)->update(['role' => 'employee_self_service']);
         }
 
         // Ensure every user with a supported role column also has the

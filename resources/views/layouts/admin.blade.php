@@ -74,15 +74,21 @@
     <div id="mobileOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
     {{-- Sidebar --}}
-    <aside id="adminSidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-emerald-900 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
-        {{-- Brand --}}
-        <div class="h-16 flex items-center justify-center px-4 border-b border-emerald-800/50 flex-shrink-0 bg-gradient-to-r from-emerald-900 to-emerald-800">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}" class="w-10 h-10 object-contain rounded-lg bg-white/10 p-0.5">
-                <div class="font-brand text-white leading-none">
-                    <span class="text-lg font-bold tracking-wide">ASYX</span>
-                    <span class="text-lg font-bold text-gold-400">GROUP</span>
-                </div>
+    <aside id="adminSidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-slate-900 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
+        <div class="h-3 flex-shrink-0"></div>
+        {{-- Current company context --}}
+        @php
+            $__switchedId = session('switched_company_id');
+            $__sideCompany = $__switchedId ? \App\Models\Company::find($__switchedId) : (auth()->user()->company ?? null);
+        @endphp
+        <div class="px-3 pt-3 pb-2 flex-shrink-0 border-b border-white/10">
+            <div class="flex items-center justify-between px-1">
+                <p class="text-[13px] font-semibold text-white truncate">{{ $__switchedId ? ($__sideCompany?->name ?? 'ASYX Group') : 'All Companies' }}</p>
+                @if(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin())
+                <a href="{{ route('admin.companies.index') }}" class="text-slate-400 hover:text-gold-400 transition-colors flex-shrink-0" title="Manage companies">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </a>
+                @endif
             </div>
         </div>
 
@@ -327,7 +333,7 @@
             {{-- Top-level items --}}
             @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
             @foreach($navItems as $item)
-        <a href="{{ route($item['route']) }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+        <a href="{{ route($item['route']) }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-200 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
                 <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
@@ -586,7 +592,7 @@
                 $itemUrl = isset($item['route']) ? route($item['route']) : route('role.page', ['module' => $item['module']]);
                 $itemActive = isset($item['match']) ? request()->routeIs($item['match']) : (request()->routeIs('role.page') && request()->segment(1) === $item['module']);
             @endphp
-            <a href="{{ $itemUrl }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ $itemActive ? 'active' : '' }}">
+            <a href="{{ $itemUrl }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-200 text-sm font-medium {{ $itemActive ? 'active' : '' }}">
                 <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                 <span>{{ $item['label'] }}</span>
             </a>
@@ -608,17 +614,17 @@
                     $groupId = 'grp-' . $gi;
                 @endphp
             <div class="pt-2">
-                <button onclick="toggleSidebarGroup('{{ $groupId }}')" id="btn-{{ $groupId }}" class="sidebar-group-btn font-menu w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-emerald-200 text-sm font-semibold {{ $groupHasActive ? 'open' : '' }}">
+                <button onclick="toggleSidebarGroup('{{ $groupId }}')" id="btn-{{ $groupId }}" class="sidebar-group-btn font-menu w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 text-sm font-semibold {{ $groupHasActive ? 'open' : '' }}">
                     <span class="flex items-center gap-2">
-                        <span class="font-menu text-[13px] tracking-wide text-emerald-300/80 font-semibold">{{ $group['title'] }}</span>
+                        <span class="font-menu text-[13px] tracking-wide text-slate-400 font-semibold">{{ $group['title'] }}</span>
                     </span>
-                    <svg class="chevron w-3.5 h-3.5 text-emerald-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="chevron w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                 </button>
                 <div id="{{ $groupId }}" class="sidebar-submenu {{ $groupHasActive ? 'open' : '' }}">
                     <div class="pt-1 space-y-0.5 pl-1">
                         @foreach($group['items'] as $item)
                         <div class="sidebar-submenu-item">
-                            <a href="{{ route($item['route']) }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2 rounded-lg text-emerald-100/80 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
+                            <a href="{{ route($item['route']) }}" class="sidebar-link font-menu w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 text-sm font-medium {{ request()->routeIs($item['match']) ? 'active' : '' }}">
                                 <svg class="w-4 h-4 text-gold-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/></svg>
                                 <span>{{ $item['label'] }}</span>
                             </a>
@@ -631,7 +637,7 @@
         </div>
 
         {{-- Bottom User --}}
-        <div class="p-4 border-t border-emerald-800/50">
+        <div class="p-4 border-t border-white/10">
             <div class="flex items-center gap-3">
                 @if(Auth::user()->avatar)
                 <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm">
@@ -642,15 +648,15 @@
                 @endif
                 <div class="flex-1 min-w-0 font-menu">
                     <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->first_name ? Auth::user()->first_name . ' ' . Auth::user()->last_name : (Auth::user()->name ?? 'Admin') }}</p>
-                    <p class="text-xs text-emerald-300/60">{{ auth()->user()->isSuperAdmin() ? 'Super Admin' : (auth()->user()->isAdmin() ? 'Administrator' : (auth()->user()->roles()->first()?->label ?? 'User')) }}</p>
+                    <p class="text-xs text-slate-400">{{ auth()->user()->isSuperAdmin() ? 'Super Admin' : (auth()->user()->isAdmin() ? 'Administrator' : (auth()->user()->roles()->first()?->label ?? 'User')) }}</p>
                 </div>
-                <a href="{{ route('docs') }}" target="_blank" class="text-emerald-300/60 hover:text-white transition-colors" title="Documentation">
+                <a href="{{ route('docs') }}" target="_blank" class="text-slate-400 hover:text-white transition-colors" title="Documentation">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 </a>
-                <a href="{{ route('admin.profile') }}" class="text-emerald-300/60 hover:text-white transition-colors" title="My Profile">
+                <a href="{{ route('admin.profile') }}" class="text-slate-400 hover:text-white transition-colors" title="My Profile">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 </a>
-                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('admin-logout').submit();" class="text-emerald-300/60 hover:text-white transition-colors">
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('admin-logout').submit();" class="text-slate-400 hover:text-white transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                 </a>
                 <form id="admin-logout" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
@@ -672,19 +678,9 @@
                     <span>ASYX</span><span class="text-gold-500">GROUP</span>
                 </div>
                 <h1 class="text-lg font-bold text-gray-800 font-menu">@yield('page_title', 'Dashboard')</h1>
-                <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-200" title="System currently in use">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    {{ config('app.name', 'ERP') }}
-                </span>
             </div>
             <div class="flex items-center gap-4 font-menu">
                 @yield('page_actions')
-                @if(auth()->user()?->isAdmin())
-                <a href="{{ route('admin.documentation') }}" class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm" title="Manage Documentation">
-                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                    <span class="hidden sm:inline">Docs</span>
-                </a>
-                @endif
                 {{-- Company Context Switcher --}}
                 @php
                     $user = auth()->user();
@@ -963,26 +959,16 @@
     (function() {
         const container = document.getElementById('toastContainer');
         function showToast(type, title, message) {
+            const dot = { success: '#10b981', error: '#ef4444', warning: '#f59e0b', info: '#3b82f6' }[type] || '#6b7280';
+            const text = message || title || '';
             const toast = document.createElement('div');
-            toast.className = 'toast-in pointer-events-auto flex items-start gap-3 p-4 rounded-xl shadow-lg border backdrop-blur-sm';
-            let iconSvg, bgClass, borderClass;
-            if (type === 'success') {
-                iconSvg = '<svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                bgClass = 'bg-emerald-50/95'; borderClass = 'border-emerald-200';
-            } else if (type === 'error') {
-                iconSvg = '<svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                bgClass = 'bg-red-50/95'; borderClass = 'border-red-200';
-            } else {
-                iconSvg = '<svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                bgClass = 'bg-blue-50/95'; borderClass = 'border-blue-200';
-            }
-            toast.classList.add(...bgClass.split(' '), ...borderClass.split(' '));
-            toast.innerHTML = iconSvg +
-                '<div class="flex-1 min-w-0"><p class="text-sm font-semibold text-gray-800">' + title + '</p>' +
-                (message ? '<p class="text-sm text-gray-500 mt-0.5">' + message + '</p>' : '') + '</div>' +
-                '<button onclick="this.parentElement.classList.add(\'toast-out\'); setTimeout(()=>this.parentElement.remove(), 300)" class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+            toast.className = 'toast-in pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-md bg-white border border-gray-100 shadow-md';
+            toast.innerHTML =
+                '<span class="flex-shrink-0" style="width:7px;height:7px;border-radius:99px;background:' + dot + '"></span>' +
+                '<p class="flex-1 min-w-0 text-[13px] text-gray-700 leading-snug">' + text + '</p>' +
+                '<button onclick="this.parentElement.classList.add(\'toast-out\'); setTimeout(()=>this.parentElement.remove(), 300)" class="flex-shrink-0 -mr-1 text-gray-300 hover:text-gray-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
             container.appendChild(toast);
-            setTimeout(() => { toast.classList.add('toast-out'); setTimeout(() => toast.remove(), 300); }, 5000);
+            setTimeout(() => { toast.classList.add('toast-out'); setTimeout(() => toast.remove(), 300); }, 4000);
         }
         window.showToast = showToast;
         @if(session('status'))
@@ -998,6 +984,30 @@
             showToast('warning', 'Warning', '{{ session('warning') }}');
         @endif
     })();
+
+    // SweetAlert styled form confirmation — onsubmit="return confirmAction(this, {...})"
+    function confirmAction(form, opts) {
+        opts = opts || {};
+        Swal.fire({
+            title: opts.title || 'Are you sure?',
+            text: opts.text || '',
+            icon: opts.icon || 'warning',
+            showCancelButton: true,
+            confirmButtonText: opts.confirmText || 'Confirm',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                popup: 'rounded-lg shadow-xl',
+                title: 'text-base font-bold text-gray-900',
+                htmlContainer: 'text-sm text-gray-500',
+                confirmButton: 'px-4 py-2 rounded text-sm font-medium text-white',
+                cancelButton: 'px-4 py-2 rounded text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 mr-2'
+            },
+            didOpen: () => { Swal.getConfirmButton().style.background = opts.color || '#dc2626'; }
+        }).then((result) => { if (result.isConfirmed) form.submit(); });
+        return false;
+    }
 
     // SweetAlert delete confirmation
     function confirmDelete(formId, title, text) {

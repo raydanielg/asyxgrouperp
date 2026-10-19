@@ -3,101 +3,163 @@
 @section('page_title', 'Quotations / Proposals')
 @section('content')
 <div class="mb-4 flex items-center justify-between">
-    <p class="text-sm text-gray-500">Create quotations before converting leads to deals</p>
-    <button onclick="document.getElementById('quoModal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 flex items-center gap-2">
+    <p class="text-xs text-gray-400">Create quotations before converting leads to deals</p>
+    <button type="button" onclick="openQuoDrawer()" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded hover:bg-gray-700 transition-colors flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Create Quotation
     </button>
 </div>
-<div class="bg-white rounded-xl border overflow-hidden">
+
+@if(session('success'))
+<div class="mb-4 px-4 py-3 rounded bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
+@endif
+@if(session('error'))
+<div class="mb-4 px-4 py-3 rounded bg-red-50 text-red-700 text-sm border border-red-100">{{ session('error') }}</div>
+@endif
+
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
-            <th class="px-5 py-3 font-medium">Quotation No.</th><th class="px-5 py-3 font-medium">Client</th><th class="px-5 py-3 font-medium">Lead</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Total</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th>
+        <thead><tr class="text-left border-b border-gray-200 bg-gray-50/50">
+            <th class="px-5 py-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Quotation No.</th>
+            <th class="px-5 py-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Client</th>
+            <th class="px-5 py-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Lead</th>
+            <th class="px-5 py-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Date</th>
+            <th class="px-5 py-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide text-right">Total</th>
+            <th class="px-5 py-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+            <th class="px-5 py-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wide text-right">Actions</th>
         </tr></thead>
-        <tbody>
+        <tbody class="divide-y divide-gray-100">
         @forelse($quotations as $q)
-        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
-            <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $q->quotation_number }}</td>
-            <td class="px-5 py-3 text-xs text-gray-700">{{ $q->client_name }}</td>
-            <td class="px-5 py-3 text-xs text-gray-500">{{ $q->lead?->full_name ?? 'N/A' }}</td>
-            <td class="px-5 py-3 text-xs text-gray-500">{{ $q->quotation_date->format('d M Y') }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($q->total) }}</td>
-            <td class="px-5 py-3">@php $sc=['draft'=>'gray','sent'=>'sky','accepted'=>'emerald','rejected'=>'red','expired'=>'red']; $c=$sc[$q->status]??'gray'; @endphp<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] bg-{{ $c }}-50 text-{{ $c }}-700">{{ ucfirst($q->status) }}</span></td>
-            <td class="px-5 py-3">
-                <div class="flex items-center gap-2">
-                    <a href="{{ route('admin.quotations.show', $q) }}" class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 flex items-center justify-center transition-all" title="View">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    </a>
-                    <button onclick="downloadPdf('{{ route('admin.quotations.pdf', $q) }}', '{{ $q->quotation_number }}')" class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-all" title="Download PDF">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    </button>
-                    <form id="del-quo-{{ $q->id }}" method="POST" action="{{ route('admin.quotations.destroy', $q) }}" class="hidden">@csrf @method('DELETE')</form>
-                    <button onclick="confirmDelete('del-quo-{{ $q->id }}', 'Delete Quotation?', 'Quotation {{ $q->quotation_number }} will be permanently removed.')" class="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center transition-all" title="Delete">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
+        <tr class="hover:bg-gray-50/60">
+            <td class="px-5 py-3.5"><a href="{{ route('admin.quotations.show', $q) }}" class="text-xs font-medium font-mono text-gray-900 hover:underline">{{ $q->quotation_number }}</a></td>
+            <td class="px-5 py-3.5 text-xs text-gray-700">{{ $q->client_name }}</td>
+            <td class="px-5 py-3.5 text-xs text-gray-400">{{ $q->lead?->full_name ?? '—' }}</td>
+            <td class="px-5 py-3.5 text-xs text-gray-400">{{ $q->quotation_date->format('d M Y') }}</td>
+            <td class="px-5 py-3.5 text-xs text-right font-medium text-gray-900">{{ number_format($q->total) }} <span class="text-gray-400">TZS</span></td>
+            <td class="px-5 py-3.5">
+                @php $qd=['draft'=>'#9ca3af','sent'=>'#3b82f6','accepted'=>'#10b981','rejected'=>'#ef4444','expired'=>'#ef4444'][$q->status] ?? '#9ca3af'; @endphp
+                <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $qd }}"></span>{{ ucfirst($q->status) }}</span>
+            </td>
+            <td class="px-5 py-3.5">
+                <div class="flex items-center justify-end gap-4">
+                    <a href="{{ route('admin.quotations.show', $q) }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</a>
+                    <a href="{{ route('admin.quotations.pdf', $q) }}" target="_blank" class="text-xs font-medium text-gray-600 hover:text-gray-900">PDF</a>
+                    <form method="POST" action="{{ route('admin.quotations.destroy', $q) }}" class="inline" onsubmit="return confirmAction(this, {title:'Delete Quotation?', text:'{{ $q->quotation_number }} will be permanently removed. This cannot be undone.', confirmText:'Yes, delete'})">@csrf @method('DELETE')<button class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button></form>
                 </div>
             </td>
-        
         </tr>
         @empty
-        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No quotations found</td></tr>
+        <tr><td colspan="7" class="px-5 py-10 text-center text-gray-400 text-xs">No quotations found</td></tr>
         @endforelse
         </tbody>
     </table></div>
-    <div class="px-5 py-4 border-t">{{ $quotations->links() }}</div>
+    @if($quotations->hasPages())
+    <div class="px-5 py-3 border-t border-gray-100">{{ $quotations->links() }}</div>
+    @endif
 </div>
 
-<div id="quoModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="flex items-center justify-between px-6 py-4 border-b"><h3 class="text-sm font-bold text-gray-900">Create Quotation</h3><button onclick="document.getElementById('quoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">&times;</button></div>
-        <form method="POST" action="{{ route('admin.quotations.store') }}" class="p-6 space-y-4">@csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Lead</label><select name="lead_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">No Lead</option>
-        @foreach($leads as $l)
-        <option value="{{ $l->id }}">{{ $l->full_name }} ({{ $l->company ?? 'N/A' }})</option>
-        @endforeach
-        </select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Client Name *</label><input name="client_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Client Email</label><input name="client_email" type="email" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Quotation Date *</label><input name="quotation_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Valid Until</label><input name="valid_until" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+{{-- ═══ Create Quotation Drawer (slides from left) ═══ --}}
+<div id="quoDrawer" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeQuoDrawer()"></div>
+    <div id="quoDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
+            <div>
+                <h3 class="text-sm font-bold text-white">New Quotation</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Create a quotation / proposal</p>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Terms</label><textarea name="terms" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></textarea></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Items *</label><div id="quoItems" class="space-y-2"></div><button type="button" onclick="addQuoItem()" class="text-xs text-emerald-600 hover:text-emerald-700 mt-2">+ Add Item</button></div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('quoModal').classList.add('hidden')" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create Quotation</button></div>
+            <button type="button" onclick="closeQuoDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ route('admin.quotations.store') }}" class="flex-1 overflow-y-auto p-5">
+            @csrf
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Client</p>
+            <div class="space-y-3 mb-5">
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Lead</label>
+                    <select name="lead_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
+                        <option value="">— No Lead —</option>
+                        @foreach($leads as $l)
+                        <option value="{{ $l->id }}">{{ $l->full_name }} ({{ $l->company ?? 'N/A' }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Client Name <span class="text-red-500">*</span></label>
+                    <input name="client_name" required placeholder="e.g. Acme Corp" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Client Email</label>
+                    <input name="client_email" type="email" placeholder="client@company.co.tz" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Quotation Date <span class="text-red-500">*</span></label>
+                        <input name="quotation_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Valid Until</label>
+                        <input name="valid_until" type="date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-4 mb-5">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Items <span class="text-red-500">*</span></p>
+                    <button type="button" onclick="addQuoItem()" class="text-xs font-medium text-gray-500 hover:text-gray-900">+ Add Item</button>
+                </div>
+                <div id="quoItems" class="space-y-2"></div>
+            </div>
+
+            <div class="mb-5">
+                <label class="block text-xs font-medium text-gray-600 mb-1">Terms</label>
+                <textarea name="terms" rows="2" placeholder="Payment terms, delivery, validity..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></textarea>
+            </div>
+
+            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <button type="submit" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-700 transition-colors">Create Quotation</button>
+                <button type="button" onclick="closeQuoDrawer()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
+            </div>
         </form>
     </div>
 </div>
+
 <script>
+function openQuoDrawer() {
+    const d = document.getElementById('quoDrawer');
+    d.classList.remove('hidden');
+    requestAnimationFrame(() => document.getElementById('quoDrawerPanel').classList.remove('-translate-x-full'));
+}
+function closeQuoDrawer() {
+    const p = document.getElementById('quoDrawerPanel');
+    p.classList.add('-translate-x-full');
+    setTimeout(() => document.getElementById('quoDrawer').classList.add('hidden'), 300);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeQuoDrawer(); });
+
 let quoItemIdx = 0;
 function addQuoItem() {
-    const container = document.getElementById('quoItems');
-    const div = document.createElement('div');
-    div.className = 'flex flex-wrap items-center gap-2 border rounded-lg p-2';
-    div.innerHTML = '<input name="items['+quoItemIdx+'][description]" placeholder="Description" required class="flex-1 min-w-[150px] px-2 py-1.5 rounded border border-gray-200 text-xs outline-none">'+
-        '<input name="items['+quoItemIdx+'][quantity]" type="number" step="0.01" placeholder="Qty" required class="w-20 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none">'+
-        '<input name="items['+quoItemIdx+'][unit]" placeholder="Unit" class="w-20 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none">'+
-        '<input name="items['+quoItemIdx+'][unit_price]" type="number" step="0.01" placeholder="Unit Price" required class="w-28 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none">'+
-        '<input name="items['+quoItemIdx+'][discount_amount]" type="number" step="0.01" placeholder="Discount" value="0" class="w-24 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none">'+
-        '<input name="items['+quoItemIdx+'][tax_percentage]" type="number" step="0.01" placeholder="Tax %" value="0" class="w-20 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none">'+
-        '<button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 text-xs">&times;</button>';
-    container.appendChild(div);
+    const html = `
+    <div class="border border-gray-100 rounded p-2.5 space-y-2" id="quoitem-${quoItemIdx}">
+        <div class="flex items-center gap-2">
+            <input name="items[${quoItemIdx}][description]" placeholder="Item description" required class="flex-1 px-2 py-1.5 rounded border border-gray-200 text-xs outline-none focus:border-gray-400">
+            <button type="button" onclick="document.getElementById('quoitem-${quoItemIdx}').remove()" class="text-gray-300 hover:text-red-500 flex-shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="grid grid-cols-5 gap-2">
+            <input name="items[${quoItemIdx}][quantity]" type="number" step="0.01" placeholder="Qty" required class="px-2 py-1.5 rounded border border-gray-200 text-xs outline-none focus:border-gray-400">
+            <input name="items[${quoItemIdx}][unit]" placeholder="Unit" class="px-2 py-1.5 rounded border border-gray-200 text-xs outline-none focus:border-gray-400">
+            <input name="items[${quoItemIdx}][unit_price]" type="number" step="0.01" placeholder="Price" required class="px-2 py-1.5 rounded border border-gray-200 text-xs outline-none focus:border-gray-400">
+            <input name="items[${quoItemIdx}][discount_amount]" type="number" step="0.01" placeholder="Disc." value="0" class="px-2 py-1.5 rounded border border-gray-200 text-xs outline-none focus:border-gray-400">
+            <input name="items[${quoItemIdx}][tax_percentage]" type="number" step="0.01" placeholder="Tax %" value="0" class="px-2 py-1.5 rounded border border-gray-200 text-xs outline-none focus:border-gray-400">
+        </div>
+    </div>`;
+    document.getElementById('quoItems').insertAdjacentHTML('beforeend', html);
     quoItemIdx++;
 }
 addQuoItem();
 </script>
-@push('scripts')
-<script>
-function downloadPdf(url, title) {
-  Swal.fire({
-    title: 'Downloading...',
-    text: 'Preparing ' + title,
-    allowOutsideClick: false,
-    didOpen: () => { Swal.showLoading(); },
-    timer: 800,
-    willClose: () => { window.open(url, '_blank'); }
-  });
-}
-</script>
-@endpush
 @endsection

@@ -64,18 +64,8 @@ class DashboardController extends Controller
 
     private function getRoleLabel(string $role): string
     {
-        $labels = [
-            'admin' => 'Administrator', 'director' => 'Director',
-            'admin_manager' => 'Admin Manager', 'administrator' => 'Administrator',
-            'finance_officer' => 'Finance Officer', 'auditor' => 'Auditor',
-            'hr_officer' => 'HR Officer', 'legal_officer' => 'Legal Officer',
-            'receptionist' => 'Receptionist', 'logistics_officer' => 'Logistics Officer',
-            'technical_manager' => 'Technical Manager', 'technician' => 'Technician',
-            'ict_officer' => 'ICT Officer', 'project_manager' => 'Project Manager',
-            'operations_manager' => 'Operations Manager', 'call_center_agent' => 'Call Center Agent',
-            'cashier' => 'Cashier', 'supervisor' => 'Supervisor', 'ict_engineer' => 'ICT Engineer',
-        ];
-        return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
+        return \App\Http\Controllers\RolePageController::roleLabels()[$role]
+            ?? ucfirst(str_replace('_', ' ', $role));
     }
 
     private function getStatsForRole(string $role, $user): array
@@ -84,8 +74,8 @@ class DashboardController extends Controller
         try {
             switch ($role) {
                 case 'admin':
-                case 'administrator':
-                case 'admin_manager':
+                case 'superadmin':
+                case 'ict_administrator':
                     $stats = [
                         'totalUsers' => User::count(),
                         'totalEmployees' => Employee::count(),
@@ -105,7 +95,8 @@ class DashboardController extends Controller
                     ];
                     break;
 
-                case 'director':
+                case 'managing_director':
+                case 'general_manager':
                     $stats = [
                         'totalSales' => SalesInvoice::sum('total_amount') ?? 0,
                         'totalPurchases' => PurchaseInvoice::sum('total_amount') ?? 0,
@@ -126,7 +117,13 @@ class DashboardController extends Controller
                     ];
                     break;
 
-                case 'finance_officer':
+                case 'finance_manager':
+                case 'chief_accountant':
+                case 'accountant':
+                case 'accounts_receivable_officer':
+                case 'accounts_payable_officer':
+                case 'budget_officer':
+                case 'credit_controller':
                     $stats = [
                         'totalSales' => SalesInvoice::sum('total_amount') ?? 0,
                         'salesPaid' => SalesInvoice::sum('paid_amount') ?? 0,
@@ -171,17 +168,6 @@ class DashboardController extends Controller
                     ];
                     break;
 
-                case 'legal_officer':
-                    $stats = [
-                        'totalContracts' => CrmContract::count(),
-                        'activeContracts' => CrmContract::where('status', 'active')->count(),
-                        'totalProjects' => Project::count(),
-                        'activeProjects' => Project::where('status', 'in_progress')->count(),
-                        'totalDeals' => CrmDeal::count(),
-                    ];
-                    break;
-
-                case 'receptionist':
                 case 'call_center_agent':
                     $stats = [
                         'totalLeads' => CrmLead::count(),
@@ -205,7 +191,7 @@ class DashboardController extends Controller
                     break;
 
                 case 'technical_manager':
-                case 'ict_engineer':
+                case 'ict_administrator':
                     $stats = [
                         'openTickets' => HelpdeskTicket::where('status', 'open')->count(),
                         'inProgressTickets' => HelpdeskTicket::where('status', 'in_progress')->count(),
@@ -216,7 +202,14 @@ class DashboardController extends Controller
                     ];
                     break;
 
-                case 'technician':
+                case 'field_technician':
+                case 'support_engineer':
+                case 'systems_engineer':
+                case 'network_engineer':
+                case 'software_engineer':
+                case 'cybersecurity_engineer':
+                case 'noc_engineer':
+                case 'senior_systems_engineer':
                     $stats = [
                         'myTickets' => HelpdeskTicket::where('assigned_to', $user->id)->count(),
                         'openTickets' => HelpdeskTicket::where('assigned_to', $user->id)->where('status', 'open')->count(),
@@ -225,15 +218,12 @@ class DashboardController extends Controller
                     ];
                     break;
 
-                case 'ict_officer':
-                    $stats = [
-                        'openTickets' => HelpdeskTicket::where('status', 'open')->count(),
-                        'totalProjects' => Project::count(),
-                        'totalEmployees' => Employee::count(),
-                    ];
-                    break;
-
                 case 'project_manager':
+                case 'project_director':
+                case 'technical_projects_manager':
+                case 'project_coordinator':
+                case 'project_engineer':
+                case 'site_supervisor':
                     $stats = [
                         'totalProjects' => Project::count(),
                         'activeProjects' => Project::where('status', 'in_progress')->count(),
@@ -267,7 +257,8 @@ class DashboardController extends Controller
                     ];
                     break;
 
-                case 'supervisor':
+                case 'team_leader':
+                case 'time_attendance_officer':
                     $stats = [
                         'totalEmployees' => Employee::count(),
                         'presentToday' => Attendance::whereDate('date', today())->where('status', 'present')->count(),
@@ -300,8 +291,8 @@ class DashboardController extends Controller
 
         switch ($role) {
             case 'admin':
-            case 'administrator':
-            case 'admin_manager':
+            case 'superadmin':
+            case 'ict_administrator':
                 $cards = [
                     ['label' => 'Total Users', 'value' => $stats['totalUsers'] ?? 0, 'icon' => 'people', 'color' => '#10B981'],
                     ['label' => 'Total Sales', 'value' => $stats['totalSales'] ?? 0, 'icon' => 'receipt_long', 'color' => '#0EA5E9', 'isMoney' => true],
@@ -312,7 +303,8 @@ class DashboardController extends Controller
                 ];
                 break;
 
-            case 'director':
+            case 'managing_director':
+            case 'general_manager':
                 $cards = [
                     ['label' => 'Total Revenue', 'value' => $stats['totalRevenues'] ?? 0, 'icon' => 'account_balance', 'color' => '#10B981', 'isMoney' => true],
                     ['label' => 'Net Profit', 'value' => $stats['netProfit'] ?? 0, 'icon' => 'trending_up', 'color' => '#8B5CF6', 'isMoney' => true],
@@ -323,7 +315,9 @@ class DashboardController extends Controller
                 ];
                 break;
 
-            case 'finance_officer':
+            case 'finance_manager':
+            case 'chief_accountant':
+            case 'accountant':
                 $cards = [
                     ['label' => 'Total Sales', 'value' => $stats['totalSales'] ?? 0, 'icon' => 'receipt_long', 'color' => '#10B981', 'isMoney' => true],
                     ['label' => 'Outstanding', 'value' => $stats['salesBalance'] ?? 0, 'icon' => 'pending_actions', 'color' => '#EF4444', 'isMoney' => true],
@@ -367,7 +361,7 @@ class DashboardController extends Controller
     private function getQuickActionsForRole(string $role): array
     {
         return match ($role) {
-            'admin', 'administrator', 'admin_manager' => [
+            'admin', 'superadmin', 'ict_administrator' => [
                 ['label' => 'Manage Users', 'route' => '/users', 'icon' => 'people'],
                 ['label' => 'Reports', 'route' => '/reports', 'icon' => 'bar_chart'],
                 ['label' => 'Projects', 'route' => '/projects', 'icon' => 'folder'],
@@ -375,7 +369,7 @@ class DashboardController extends Controller
                 ['label' => 'Sales', 'route' => '/sales-invoices', 'icon' => 'receipt'],
                 ['label' => 'Settings', 'route' => '/settings', 'icon' => 'settings'],
             ],
-            'director' => [
+            'managing_director', 'general_manager' => [
                 ['label' => 'Reports', 'route' => '/reports', 'icon' => 'bar_chart'],
                 ['label' => 'Projects', 'route' => '/projects', 'icon' => 'folder'],
                 ['label' => 'Sales Dashboard', 'route' => '/sales-dashboard', 'icon' => 'dashboard'],
@@ -383,7 +377,7 @@ class DashboardController extends Controller
                 ['label' => 'Proposals', 'route' => '/proposals', 'icon' => 'description'],
                 ['label' => 'Approvals', 'route' => '/approvals', 'icon' => 'check_circle'],
             ],
-            'finance_officer' => [
+            'finance_manager', 'chief_accountant', 'accountant' => [
                 ['label' => 'Sales Invoices', 'route' => '/sales-invoices', 'icon' => 'receipt'],
                 ['label' => 'Expenses', 'route' => '/expenses', 'icon' => 'payments'],
                 ['label' => 'Revenues', 'route' => '/revenues', 'icon' => 'trending_up'],
@@ -405,7 +399,7 @@ class DashboardController extends Controller
                 ['label' => 'Products', 'route' => '/products', 'icon' => 'inventory'],
                 ['label' => 'Sales Invoices', 'route' => '/sales-invoices', 'icon' => 'receipt'],
             ],
-            'supervisor' => [
+            'team_leader', 'time_attendance_officer' => [
                 ['label' => 'Attendance', 'route' => '/attendance', 'icon' => 'event_available'],
                 ['label' => 'Leaves', 'route' => '/leaves', 'icon' => 'event_busy'],
                 ['label' => 'Employees', 'route' => '/employees', 'icon' => 'people'],
@@ -431,19 +425,24 @@ class DashboardController extends Controller
 
             switch ($role) {
                 case 'admin':
-                case 'administrator':
-                case 'admin_manager':
-                case 'director':
+                case 'superadmin':
+                case 'ict_administrator':
+                case 'managing_director':
+                case 'general_manager':
                     $values[] = (int)(SalesInvoice::whereDate('created_at', $date)->sum('total_amount') ?? 0);
                     $secondaryValues[] = (int)(PurchaseInvoice::whereDate('created_at', $date)->sum('total_amount') ?? 0);
                     break;
-                case 'finance_officer':
+                case 'finance_manager':
+                case 'chief_accountant':
+                case 'accountant':
                 case 'auditor':
                     $values[] = (int)(Revenue::whereDate('revenue_date', $date)->sum('amount') ?? 0);
                     $secondaryValues[] = (int)(Expense::whereDate('expense_date', $date)->sum('amount') ?? 0);
                     break;
                 case 'hr_officer':
-                case 'supervisor':
+                case 'hr_manager':
+                case 'team_leader':
+                case 'time_attendance_officer':
                     $values[] = Attendance::whereDate('date', $date)->where('status', 'present')->count();
                     $secondaryValues[] = Attendance::whereDate('date', $date)->where('status', 'absent')->count();
                     break;
@@ -469,16 +468,19 @@ class DashboardController extends Controller
         try {
             switch ($role) {
                 case 'admin':
-                case 'administrator':
-                case 'admin_manager':
-                case 'director':
+                case 'superadmin':
+                case 'ict_administrator':
+                case 'managing_director':
+                case 'general_manager':
                     $items = [
                         'recentSales' => SalesInvoice::latest()->take(5)->get()->toArray(),
                         'recentTickets' => HelpdeskTicket::latest()->take(5)->get()->toArray(),
                         'recentProjects' => Project::where('status', 'in_progress')->latest()->take(5)->get()->toArray(),
                     ];
                     break;
-                case 'finance_officer':
+                case 'finance_manager':
+                case 'chief_accountant':
+                case 'accountant':
                     $items = [
                         'recentSales' => SalesInvoice::latest()->take(5)->get()->toArray(),
                         'recentExpenses' => Expense::latest()->take(5)->get()->toArray(),

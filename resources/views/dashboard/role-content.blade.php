@@ -1,8 +1,9 @@
 @php
     $roleLabels = [
-        'superadmin' => 'Super Admin',
-        'admin' => 'System Admin',
-        'director' => 'Director',
+        'superadmin' => 'ERP Super Administrator',
+        'admin' => 'ERP Administrator',
+        'managing_director' => 'Managing Director',
+        'general_manager' => 'General Manager',
         'accountant' => 'Accountant',
         'finance_manager' => 'Finance Manager',
         'procurement_manager' => 'Procurement Manager',
@@ -516,7 +517,7 @@ setInterval(function() {
     </div>
     @endif
 
-    @if(!empty($recentItems['recentSales']) && in_array($role, ['admin', 'superadmin', 'director']))
+    @if(!empty($recentItems['recentSales']) && in_array($role, ['admin', 'superadmin', 'managing_director', 'general_manager']))
     <div class="bg-white rounded-xl border overflow-hidden flex flex-col">
         <div class="px-5 py-4 border-b flex items-center justify-between bg-gray-50/50">
             <div class="flex items-center gap-2">

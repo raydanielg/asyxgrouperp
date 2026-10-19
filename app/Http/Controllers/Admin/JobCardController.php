@@ -23,7 +23,7 @@ class JobCardController extends Controller
         }
         $jobCards = $query->latest()->paginate(15);
         $projects = Project::where('status', 'in_progress')->get();
-        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['technician', 'field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->orWhere('role', 'technician')->get();
+        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->get();
         $stats = [
             'total' => JobCard::count(),
             'open' => JobCard::where('status', 'open')->count(),
@@ -65,7 +65,7 @@ class JobCardController extends Controller
     {
         $jobCard->load(['project', 'assignedTo', 'creator', 'approver', 'parts']);
         $projects = Project::where('status', 'in_progress')->orWhere('id', $jobCard->project_id)->get();
-        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['technician', 'field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->orWhere('role', 'technician')->get();
+        $technicians = User::whereHas('roles', fn($q) => $q->whereIn('name', ['field_technician', 'support_engineer', 'systems_engineer', 'network_engineer', 'senior_systems_engineer']))->get();
         return view('admin.job-cards.show', compact('jobCard', 'technicians', 'projects'));
     }
 

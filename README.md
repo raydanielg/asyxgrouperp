@@ -101,7 +101,6 @@ pattern `<role.name.with.dots>@djanproject.com`, e.g.:
 | Cybersecurity Engineer | `cybersecurity.engineer@djanproject.com` |
 | Support Engineer | `support.engineer@djanproject.com` |
 | Field Technician | `field.technician@djanproject.com` |
-| Technician | `technician@djanproject.com` |
 | NOC Engineer | `noc.engineer@djanproject.com` |
 | Service Desk Manager | `service.desk.manager@djanproject.com` |
 | Helpdesk Supervisor | `helpdesk.supervisor@djanproject.com` |
@@ -116,8 +115,7 @@ pattern `<role.name.with.dots>@djanproject.com`, e.g.:
 | Operations Officer | `operations.officer@djanproject.com` |
 | Fleet Manager | `fleet.manager@djanproject.com` |
 | Logistics Officer | `logistics.officer@djanproject.com` |
-| Receptionist | `receptionist@djanproject.com` |
-| Employee Self-Service | `employee@djanproject.com` / `employee.self.service@djanproject.com` |
+| Employee Self-Service | `employee.self.service@djanproject.com` |
 | Manager Self-Service | `manager.self.service@djanproject.com` |
 
 Seeded ASYX staff accounts (MasterDataSeeder) use `@asyxgroup.co.tz` /

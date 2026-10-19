@@ -205,12 +205,17 @@ class DashboardController extends Controller
         $stats['netProfit'] = ($stats['totalRevenues'] + $stats['totalSalesAmount']) - ($stats['totalExpenses'] + $stats['totalPurchaseAmount']);
         $stats['monthNetProfit'] = $stats['monthRevenues'] - $stats['monthExpenses'];
 
+        // Super admin gets a group company-control strip on the dashboard
+        $groupCompanies = auth()->user()->isSuperAdmin()
+            ? \App\Models\Company::orderBy('is_group', 'desc')->orderBy('name')->withCount('users')->get()
+            : collect();
+
         return view('admin.dashboard', compact(
             'stats', 'recentSales', 'recentPurchases', 'recentTickets',
             'recentProposals', 'recentUsers',
             'dailyLabels', 'dailySales', 'dailyPurchases',
             'monthlyLabels', 'monthlySales', 'monthlyPurchases',
-            'salesStatusBreakdown', 'recentAttendance'
+            'salesStatusBreakdown', 'recentAttendance', 'groupCompanies'
         ));
     }
 

@@ -57,123 +57,68 @@
 
     <div id="ajaxLoader" class="ajax-loader"></div>
 
-    <main id="authMain" class="relative min-h-screen w-full flex flex-col lg:flex-row overflow-hidden">
-        {{-- Left side: animated image slideshow --}}
-        <div class="hidden lg:flex lg:w-1/2 relative h-screen overflow-hidden">
-            {{-- Background image with slow zoom animation --}}
-            <img src="{{ asset('serious-expert-expressing-support-colleague (1).jpg') }}" alt="ASYX ERP" class="absolute inset-0 w-full h-full object-cover slide-image">
+    {{-- Full-screen background photo --}}
+    <div class="fixed inset-0 overflow-hidden">
+        <img src="{{ asset('view-city-square.jpg') }}" alt="" class="w-full h-full object-cover slide-image">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-950/80 via-emerald-900/55 to-black/75"></div>
+        <div class="absolute inset-0 brand-bg opacity-15"></div>
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.5) 100%);"></div>
+        <div class="absolute top-1/3 left-[-8%] w-[420px] h-[420px] bg-gold-400/10 rounded-full blur-3xl float-anim"></div>
+        <div class="absolute bottom-[-10%] right-[-8%] w-[480px] h-[480px] bg-emerald-400/10 rounded-full blur-3xl float-anim" style="animation-delay: 3s;"></div>
+    </div>
 
-            {{-- Gradient overlays --}}
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/90 via-emerald-800/70 to-emerald-950/90"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-transparent to-emerald-900/50"></div>
-            <div class="absolute inset-0 brand-bg opacity-40"></div>
-
-            {{-- Floating orbs --}}
-            <div class="absolute top-1/4 left-10 w-64 h-64 bg-gold-400/10 rounded-full blur-3xl float-anim"></div>
-            <div class="absolute bottom-1/4 right-10 w-80 h-80 bg-emerald-400/8 rounded-full blur-3xl float-anim" style="animation-delay: 3s;"></div>
-
-            {{-- Top brand bar --}}
-            <div class="absolute top-0 left-0 right-0 p-8 flex items-center justify-between z-10">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-                        <img src="{{ asset('asyxgrouplogo.png') }}" alt="ASYX" class="w-8 h-8 object-contain">
-                    </div>
-                    <div>
-                        <span class="text-white font-extrabold text-lg tracking-tight">ASYX</span><span class="text-gold-400 font-extrabold text-lg tracking-tight"> GROUP</span>
-                        <p class="text-emerald-200/60 text-[10px] font-medium tracking-wide uppercase">Enterprise Resource Planning</p>
-                    </div>
-                </div>
-                <div class="glass rounded-full px-4 py-2 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-emerald-100 text-[10px] font-semibold uppercase tracking-wider">System Online</span>
-                </div>
-            </div>
-
-            {{-- Slide text content --}}
-            <div class="absolute inset-0 p-12 flex flex-col justify-end pb-20 z-10">
-                <div id="slideText" class="max-w-lg transition-all duration-700 ease-in-out" style="opacity: 1; transform: translateY(0);">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold-400/20 border border-gold-400/30 text-gold-300 text-xs font-bold uppercase tracking-wider mb-5">
-                        <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
-                        ASYX ERP Platform
-                    </div>
-                    <h2 id="slideTitle" class="text-5xl font-extrabold text-white leading-tight tracking-tight">Powerful Business Operations</h2>
-                    <p id="slideDesc" class="mt-4 text-white/80 text-lg leading-relaxed font-light">Streamline your entire organization with one integrated ERP system built for growth.</p>
-
-                    {{-- Dynamic feature card --}}
-                    <div id="slideFeature" class="mt-8 glass rounded-2xl p-5 max-w-sm">
-                        <div class="flex items-start gap-4">
-                            <div id="slideIcon" class="w-12 h-12 rounded-xl bg-gold-400/20 flex items-center justify-center flex-shrink-0 border border-gold-400/20">
-                                <svg class="w-6 h-6 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                            </div>
-                            <div>
-                                <p id="slideFeatureTitle" class="text-white font-bold text-base">Business Intelligence</p>
-                                <p id="slideFeatureDesc" class="text-emerald-100/70 text-sm mt-1 font-light">Real-time dashboards & reports across all companies.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Slide indicators --}}
-            <div class="absolute bottom-10 right-12 flex gap-2">
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="0"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="1"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="2"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="3"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="4"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="5"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="6"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="7"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="8"></button>
-                <button type="button" class="slide-dot w-2.5 h-2.5 rounded-full bg-white/40 transition-all duration-300" data-index="9"></button>
-            </div>
-
-            <div class="absolute bottom-8 left-12 text-emerald-200/50 text-xs z-10">
-                &copy; {{ date('Y') }} ASYX Group. All rights reserved.
-            </div>
+    <main id="authMain" class="relative min-h-screen w-full flex flex-col">
+        {{-- Auth card docked to the right over the photo --}}
+        <div class="flex-1 flex items-center justify-center lg:justify-end px-5 py-8 lg:pr-16 xl:pr-24">
+            @yield('content')
         </div>
 
-        {{-- Right side: auth card --}}
-        <div class="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 relative overflow-y-auto bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
-            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(90,9,23,0.04) 2px, transparent 2.5px); background-size: 20px 20px;"></div>
-            <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-emerald-500/4 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-gold-500/4 rounded-full blur-3xl"></div>
-
-            @yield('content')
+        {{-- Footer --}}
+        <div class="w-full px-6 sm:px-8 pb-6 flex items-end justify-between text-white/40 text-xs">
+            <p>&copy; {{ date('Y') }} ASYX Group Company Limited. All rights reserved.</p>
         </div>
     </main>
 
+    {{-- Minimal toast container --}}
+    <div id="toastContainer" class="fixed top-5 right-5 z-[70] flex flex-col gap-2 w-full max-w-sm pointer-events-none"></div>
+    <style>
+        @keyframes authToastIn { from { opacity:0; transform:translateX(24px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes authToastOut { from { opacity:1; } to { opacity:0; transform:translateX(24px); } }
+        .auth-toast-in { animation: authToastIn 0.35s cubic-bezier(0.16,1,0.3,1) both; }
+        .auth-toast-out { animation: authToastOut 0.25s ease-in both; }
+    </style>
     <script>
-    // SweetAlert2 side toasts
+    // Minimal side toasts
     (function() {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
+        const container = document.getElementById('toastContainer');
+        function fire(icon, title) {
+            const dot = { success: '#10b981', error: '#ef4444', warning: '#f59e0b', info: '#3b82f6' }[icon] || '#6b7280';
+            const toast = document.createElement('div');
+            toast.className = 'auth-toast-in pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-md bg-white border border-gray-100 shadow-md';
+            toast.innerHTML =
+                '<span class="flex-shrink-0" style="width:7px;height:7px;border-radius:99px;background:' + dot + '"></span>' +
+                '<p class="flex-1 min-w-0 text-[13px] text-gray-700 leading-snug">' + title + '</p>' +
+                '<button onclick="this.parentElement.classList.add(\'auth-toast-out\'); setTimeout(()=>this.parentElement.remove(), 250)" class="flex-shrink-0 -mr-1 text-gray-300 hover:text-gray-500 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('auth-toast-out'); setTimeout(() => toast.remove(), 250); }, 4000);
+        }
 
         @if(session('status'))
-            Toast.fire({ icon: 'success', title: '{{ session('status') }}' });
+            fire('success', '{{ session('status') }}');
         @endif
         @if(session('error'))
-            Toast.fire({ icon: 'error', title: '{{ session('error') }}' });
+            fire('error', '{{ session('error') }}');
         @endif
         @if(session('warning'))
-            Toast.fire({ icon: 'warning', title: '{{ session('warning') }}' });
+            fire('warning', '{{ session('warning') }}');
         @endif
         @if(session('info'))
-            Toast.fire({ icon: 'info', title: '{{ session('info') }}' });
+            fire('info', '{{ session('info') }}');
         @endif
 
         @if($errors->any())
             @foreach($errors->all() as $error)
-                Toast.fire({ icon: 'error', title: '{{ $error }}' });
+                fire('error', '{{ $error }}');
             @endforeach
         @endif
     })();
@@ -218,142 +163,6 @@
         if (submitBtn) submitBtn.classList.add('auth-btn');
     })();
 
-    // Auth slideshow - rotating text over background image
-    (function() {
-        const slides = [
-            {
-                title: 'Welcome to ASYX ERP',
-                desc: 'Your all-in-one enterprise platform — managing operations, finance, HR, projects, and more across the entire ASYX Group.',
-                featureTitle: 'Integrated Platform',
-                featureDesc: 'One system. Every department. Total visibility.',
-                icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
-            },
-            {
-                title: 'Excellence in Service Delivery',
-                desc: 'From CCTV installations to IT infrastructure, we deliver quality solutions that keep Tanzania connected and secure.',
-                featureTitle: 'Our Mission',
-                featureDesc: 'Reliable infrastructure. Trusted partnerships. Lasting impact.',
-                icon: 'M13 10V3L4 14h7v7l9-11h-7z'
-            },
-            {
-                title: 'Your Role, Your Dashboard',
-                desc: 'Every employee gets a tailored experience — with modules, tools, and insights designed specifically for their role.',
-                featureTitle: 'Role-Based Access',
-                featureDesc: 'Personalized dashboards for finance, HR, technical, operations, and more.',
-                icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'
-            },
-            {
-                title: 'Real-Time Business Intelligence',
-                desc: 'Live dashboards and comprehensive reports give you the data you need to make informed decisions — anytime, anywhere.',
-                featureTitle: 'Smart Analytics',
-                featureDesc: 'Track performance, monitor KPIs, and spot trends across all companies.',
-                icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
-            },
-            {
-                title: 'Seamless Project Management',
-                desc: 'Plan, track, and deliver projects on time and within budget — from tenders and quotations to final delivery and invoicing.',
-                featureTitle: 'Complete Project Lifecycle',
-                featureDesc: 'Tenders, budgets, timesheets, tasks, milestones, and reporting — all in one place.',
-                icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4'
-            },
-            {
-                title: 'Human Resources, Simplified',
-                desc: 'Manage employees, attendance, leave, payroll, performance, recruitment, and training — all from a single, intuitive interface.',
-                featureTitle: 'Complete HR Suite',
-                featureDesc: 'From hiring to retirement — every employee lifecycle stage covered.',
-                icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'
-            },
-            {
-                title: 'Financial Control & Visibility',
-                desc: 'Full accounting suite — invoices, expenses, budgets, bank reconciliation, tax management, and financial reporting at your fingertips.',
-                featureTitle: 'Enterprise Accounting',
-                featureDesc: 'Journal entries, petty cash, cost centres, payroll, and real-time financial reports.',
-                icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-            },
-            {
-                title: 'Inventory & Warehouse Management',
-                desc: 'Track stock across multiple warehouses, manage suppliers, and optimize your supply chain with real-time inventory visibility.',
-                featureTitle: 'Supply Chain Control',
-                featureDesc: 'Multi-warehouse tracking, stock movements, supplier management, and more.',
-                icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'
-            },
-            {
-                title: 'Secure & Audited',
-                desc: 'Enterprise-grade security with full audit trails, login history, and granular permission controls keep your data safe and compliant.',
-                featureTitle: 'Bank-Grade Security',
-                featureDesc: 'Authentication, role-based permissions, audit logs, and activity tracking.',
-                icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'
-            },
-            {
-                title: 'Built for Tanzania, Ready for the World',
-                desc: 'ASYX Group delivers technology solutions across telecommunications, security, IT, and infrastructure — proudly serving Tanzania and beyond.',
-                featureTitle: 'Our Heritage',
-                featureDesc: 'Local expertise. Global standards. Trusted by leading organizations.',
-                icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-            }
-        ];
-
-        const slideTitle = document.getElementById('slideTitle');
-        const slideDesc = document.getElementById('slideDesc');
-        const slideFeatureTitle = document.getElementById('slideFeatureTitle');
-        const slideFeatureDesc = document.getElementById('slideFeatureDesc');
-        const slideIcon = document.querySelector('#slideIcon svg path');
-        const slideText = document.getElementById('slideText');
-        const dots = document.querySelectorAll('.slide-dot');
-
-        let current = 0;
-        const interval = 4500;
-        let timer;
-
-        function updateDots(index) {
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('bg-white', i === index);
-                dot.classList.toggle('w-6', i === index);
-                dot.classList.toggle('bg-white/40', i !== index);
-                dot.classList.toggle('w-2.5', i !== index);
-            });
-        }
-
-        function showSlide(index) {
-            if (!slideText) return;
-            current = index;
-
-            slideText.style.opacity = '0';
-            slideText.style.transform = 'translateY(16px)';
-
-            setTimeout(() => {
-                const s = slides[index];
-                if (slideTitle) slideTitle.textContent = s.title;
-                if (slideDesc) slideDesc.textContent = s.desc;
-                if (slideFeatureTitle) slideFeatureTitle.textContent = s.featureTitle;
-                if (slideFeatureDesc) slideFeatureDesc.textContent = s.featureDesc;
-                if (slideIcon) slideIcon.setAttribute('d', s.icon);
-
-                slideText.style.opacity = '1';
-                slideText.style.transform = 'translateY(0)';
-                updateDots(index);
-            }, 400);
-        }
-
-        function nextSlide() {
-            showSlide((current + 1) % slides.length);
-        }
-
-        dots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                showSlide(i);
-                resetTimer();
-            });
-        });
-
-        function resetTimer() {
-            clearInterval(timer);
-            timer = setInterval(nextSlide, interval);
-        }
-
-        updateDots(0);
-        timer = setInterval(nextSlide, interval);
-    })();
     </script>
 </body>
 </html>

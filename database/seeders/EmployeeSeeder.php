@@ -15,7 +15,7 @@ class EmployeeSeeder extends Seeder
     private array $roleMeta = [
         'superadmin' => ['Executive', 'Super Admin'],
         'admin' => ['Administration', 'System Admin'],
-        'director' => ['Executive', 'Director'],
+        'managing_director' => ['Executive', 'Managing Director'],
         'accountant' => ['Finance', 'Accountant'],
         'finance_manager' => ['Finance', 'Finance Manager'],
         'procurement_manager' => ['Procurement', 'Procurement Manager'],

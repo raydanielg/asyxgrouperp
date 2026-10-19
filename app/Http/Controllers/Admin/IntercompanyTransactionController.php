@@ -15,8 +15,9 @@ class IntercompanyTransactionController extends Controller
         $transactions = IntercompanyTransaction::with(['fromCompany', 'toCompany'])
             ->orderBy('transaction_date', 'desc')
             ->paginate(20);
+        $companies = Company::operating()->pluck('legal_name', 'id');
 
-        return view('admin.companies.intercompany-index', compact('transactions'));
+        return view('admin.companies.intercompany-index', compact('transactions', 'companies'));
     }
 
     public function create()

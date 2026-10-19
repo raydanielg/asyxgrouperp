@@ -23,6 +23,14 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        $company = $user->company;
+        if ($company && $company->isLockedOut() && !$user->isSuperAdmin()) {
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/')->with('error', $company->suspensionMessage());
+        }
+
         session(['current_company_id' => $user->company_id, 'switched_company_id' => $user->company_id]);
     }
 

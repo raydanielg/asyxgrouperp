@@ -15,11 +15,54 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $companies = Company::with('parent')->orderBy('is_group', 'desc')->orderBy('name')->get();
+        $companies = Company::with('parent')
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $term = '%' . $request->search . '%';
+                $q->where(function ($w) use ($term) {
+                    $w->where('name', 'like', $term)
+                      ->orWhere('legal_name', 'like', $term)
+                      ->orWhere('short_code', 'like', $term)
+                      ->orWhere('email', 'like', $term);
+                });
+            })
+            ->orderBy('is_group', 'desc')->orderBy('name')->get();
         $groupCompany = Company::where('is_group', true)->first();
         return view('admin.companies.index', compact('companies', 'groupCompany'));
+    }
+
+    public function export()
+    {
+        $companies = Company::with('parent')->orderBy('is_group', 'desc')->orderBy('name')->get();
+
+        $rows = [['Company', 'Legal Name', 'Code', 'Type', 'Parent', 'Currency', 'Plan', 'Subscription', 'Billing Cycle', 'MRR', 'Users', 'Status']];
+        foreach ($companies as $c) {
+            $rows[] = [
+                $c->name,
+                $c->legal_name,
+                $c->short_code,
+                $c->is_group ? 'Group' : 'Operating',
+                $c->parent?->short_code ?? '',
+                $c->currency,
+                Company::PLANS[$c->subscription_plan] ?? $c->subscription_plan,
+                Company::SUBSCRIPTION_STATUSES[$c->subscription_status] ?? $c->subscription_status,
+                $c->billing_cycle ?? '',
+                $c->mrr ?? '',
+                $c->users()->count(),
+                $c->is_active ? 'Active' : 'Inactive',
+            ];
+        }
+
+        $csv = '';
+        foreach ($rows as $row) {
+            $csv .= implode(',', array_map(fn($v) => '"' . str_replace('"', '""', (string) $v) . '"', $row)) . "\n";
+        }
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="companies-' . now()->format('Y-m-d') . '.csv"',
+        ]);
     }
 
     public function create()
@@ -127,6 +170,84 @@ class CompanyController extends Controller
         $company->delete();
         return back()
             ->with('success', 'Company deleted successfully.');
+    }
+
+    /**
+     * SUPER ADMIN ONLY — suspend a company: instantly locks out every user
+     * whose current company is this one (login + active sessions).
+     */
+    public function suspend(Request $request, Company $company)
+    {
+        abort_unless(auth()->user()?->isSuperAdmin(), 403, 'Only the ERP Super Administrator can suspend a company.');
+
+        if ($company->is_group) {
+            return back()->with('error', 'The group holding company cannot be suspended.');
+        }
+
+        $data = $request->validate([
+            'suspension_reason' => 'nullable|string|max:255',
+        ]);
+
+        $company->update([
+            'subscription_status' => 'suspended',
+            'suspended_at' => now(),
+            'suspension_reason' => $data['suspension_reason'] ?? null,
+        ]);
+
+        return back()->with('success', $company->name . ' has been suspended. All ' . $company->users()->count() . ' user account(s) are now locked out.');
+    }
+
+    /**
+     * SUPER ADMIN ONLY — reactivate a suspended company.
+     */
+    public function activate(Company $company)
+    {
+        abort_unless(auth()->user()?->isSuperAdmin(), 403, 'Only the ERP Super Administrator can activate a company.');
+
+        $company->update([
+            'is_active' => true,
+            'subscription_status' => 'active',
+            'suspended_at' => null,
+            'suspension_reason' => null,
+        ]);
+
+        return back()->with('success', $company->name . ' reactivated. Users can sign in again.');
+    }
+
+    /**
+     * SUPER ADMIN ONLY — manage a company's SaaS subscription.
+     */
+    public function updateSubscription(Request $request, Company $company)
+    {
+        abort_unless(auth()->user()?->isSuperAdmin(), 403, 'Only the ERP Super Administrator can manage subscriptions.');
+
+        $validated = $request->validate([
+            'subscription_plan' => 'required|in:' . implode(',', array_keys(Company::PLANS)),
+            'subscription_status' => 'required|in:' . implode(',', array_keys(Company::SUBSCRIPTION_STATUSES)),
+            'billing_cycle' => 'nullable|in:monthly,quarterly,yearly',
+            'mrr' => 'nullable|numeric|min:0',
+            'max_users' => 'nullable|integer|min:1',
+            'subscription_starts_at' => 'nullable|date',
+            'subscription_ends_at' => 'nullable|date|after_or_equal:subscription_starts_at',
+        ]);
+
+        if ($company->is_group && $validated['subscription_status'] === 'suspended') {
+            return back()->with('error', 'The group holding company cannot be suspended.');
+        }
+
+        if ($validated['subscription_status'] === 'suspended' && $company->subscription_status !== 'suspended') {
+            $validated['suspended_at'] = now();
+        } elseif ($validated['subscription_status'] !== 'suspended') {
+            $validated['suspended_at'] = null;
+            $validated['suspension_reason'] = null;
+            if ($validated['subscription_status'] === 'active') {
+                $validated['is_active'] = true;
+            }
+        }
+
+        $company->update($validated);
+
+        return back()->with('success', 'Subscription updated for ' . $company->name . '.');
     }
 
     /**
