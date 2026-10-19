@@ -17,7 +17,7 @@ class InventoryServiceTest extends TestCase
     {
         return Warehouse::create([
             'name' => $name,
-            'address' => '123 Test St',
+            'address' => '123 Test St', 
             'city' => 'Test City',
             'zip_code' => '12345',
         ]);
