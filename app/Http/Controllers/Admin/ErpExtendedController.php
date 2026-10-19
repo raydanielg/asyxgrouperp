@@ -2167,7 +2167,7 @@ class ErpExtendedController extends Controller
             'isRemoteEnabled' => true,
         ]);
 
-        return $pdf->download('lead-' . $lead->lead_number . '.pdf');
+        return $pdf->stream('lead-' . $lead->lead_number . '.pdf');
     }
 
     public function crmDealPdf(CrmDeal $deal)
