@@ -2,59 +2,64 @@
 @section('title', 'Applications - ' . config('app.name'))
 @section('page_title', 'Job Applications')
 @section('content')
-<div class="mb-4 flex items-center justify-between">
-  <form method="GET" class="flex items-center gap-2 text-xs">
-    <input name="search" value="{{ request('search') }}" placeholder="Search name, email, phone" class="px-3 py-2 rounded-lg border border-gray-200">
-    <select name="job" class="px-3 py-2 rounded-lg border border-gray-200">
+
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+  <form method="GET" class="px-5 py-3.5 border-b border-gray-200 flex flex-wrap items-center gap-2">
+    <input name="search" value="{{ request('search') }}" placeholder="Search name, email, phone" class="px-3 py-2 border border-gray-200 rounded text-xs outline-none focus:border-gray-400 bg-white w-56">
+    <select name="job" class="px-3 py-2 border border-gray-200 rounded text-xs outline-none focus:border-gray-400 bg-white">
       <option value="">All Jobs</option>
       @foreach($jobs as $j)
       <option value="{{ $j->id }}" @selected(request('job')==$j->id)>{{ $j->title }}</option>
       @endforeach
     </select>
-    <select name="status" class="px-3 py-2 rounded-lg border border-gray-200">
+    <select name="status" class="px-3 py-2 border border-gray-200 rounded text-xs outline-none focus:border-gray-400 bg-white">
       <option value="">All Status</option>
       @foreach(['submitted','under_review','shortlisted','rejected','hired'] as $s)
       <option value="{{ $s }}" @selected(request('status')==$s)>{{ ucfirst(str_replace('_',' ', $s)) }}</option>
       @endforeach
     </select>
-    <button class="px-3 py-2 bg-emerald-600 text-white rounded-lg">Filter</button>
+    <button type="submit" class="px-3 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700">Filter</button>
+    @if(request()->hasAny(['search','job','status']))
+    <a href="{{ route('admin.applications.index') }}" class="text-xs text-gray-400 hover:text-gray-700">Clear</a>
+    @endif
   </form>
-</div>
-<div class="bg-white rounded-xl border overflow-hidden">
+
   <div class="overflow-x-auto">
     <table class="w-full text-sm">
       <thead>
-        <tr class="text-left text-xs text-gray-500 bg-gray-50/50">
-          <th class="px-5 py-3 font-medium">Applicant</th>
-          <th class="px-5 py-3 font-medium">Job</th>
-          <th class="px-5 py-3 font-medium">Submitted</th>
-          <th class="px-5 py-3 font-medium">Status</th>
-          <th class="px-5 py-3 font-medium">Actions</th>
+        <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+          <th class="px-5 py-3 font-semibold">Applicant</th>
+          <th class="px-5 py-3 font-semibold">Job</th>
+          <th class="px-5 py-3 font-semibold">Submitted</th>
+          <th class="px-5 py-3 font-semibold">Status</th>
+          <th class="px-5 py-3 font-semibold text-right">Actions</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="divide-y divide-gray-100">
         @forelse($applications as $a)
-        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
-          <td class="px-5 py-3 text-xs text-gray-900">{{ $a->full_name }}<div class="text-[11px] text-gray-500">{{ $a->email }} @if($a->phone) • {{ $a->phone }} @endif</div></td>
-          <td class="px-5 py-3 text-xs text-gray-600">{{ $a->jobPosting?->title ?? '—' }}</td>
-          <td class="px-5 py-3 text-xs text-gray-400">{{ $a->created_at?->format('d M Y H:i') }}</td>
-          <td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium @class([
-            'bg-gray-50 text-gray-700' => $a->status==='submitted',
-            'bg-blue-50 text-blue-700' => $a->status==='under_review',
-            'bg-emerald-50 text-emerald-700' => $a->status==='shortlisted',
-            'bg-red-50 text-red-700' => $a->status==='rejected',
-            'bg-purple-50 text-purple-700' => $a->status==='hired',
-          ])">{{ ucfirst(str_replace('_',' ', $a->status)) }}</span></td>
-          <td class="px-5 py-3 text-xs">
-            <a href="{{ route('admin.applications.show', $a) }}" class="text-emerald-600 hover:text-emerald-700">View</a>
+        @php $ac = ['submitted' => '#9ca3af', 'under_review' => '#3b82f6', 'shortlisted' => '#10b981', 'rejected' => '#ef4444', 'hired' => '#8b5cf6'][$a->status] ?? '#9ca3af'; @endphp
+        <tr class="hover:bg-gray-50/60">
+          <td class="px-5 py-3.5">
+            <p class="text-xs font-medium text-gray-900">{{ $a->full_name }}</p>
+            <p class="text-[10px] text-gray-400">{{ $a->email }}@if($a->phone) · {{ $a->phone }}@endif</p>
+          </td>
+          <td class="px-5 py-3.5 text-xs text-gray-600">{{ $a->jobPosting?->title ?? '—' }}</td>
+          <td class="px-5 py-3.5 text-xs text-gray-400">{{ $a->created_at?->format('d M Y H:i') }}</td>
+          <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $ac }}"></span>{{ ucfirst(str_replace('_',' ', $a->status)) }}</span></td>
+          <td class="px-5 py-3.5">
+            <div class="flex items-center justify-end">
+              <a href="{{ route('admin.applications.show', $a) }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</a>
+            </div>
           </td>
         </tr>
         @empty
-        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No applications found</td></tr>
+        <tr><td colspan="5" class="px-5 py-10 text-center text-xs text-gray-400">No applications found</td></tr>
         @endforelse
       </tbody>
     </table>
   </div>
-  <div class="px-5 py-4 border-t">{{ $applications->links() }}</div>
+  @if($applications->hasPages())
+  <div class="px-5 py-3 border-t border-gray-100">{{ $applications->links() }}</div>
+  @endif
 </div>
 @endsection
