@@ -18,7 +18,7 @@
   body{font-family:'Inter',sans-serif;color:#1A1D26;font-size:10pt;line-height:1.4;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .sheet{min-height:297mm;margin:10mm auto;background:#FFFFFF;box-shadow:0 4px 30px rgba(70,25,90,.20);display:flex;flex-direction:column;overflow:hidden;padding:10mm 12mm 0;position:relative;}
 
-  .masthead{position:relative;height:32mm;margin-bottom:12mm;}
+  .masthead{position:relative;height:32mm;margin-bottom:9mm;}
   .head-plum{position:absolute;inset:0;background:#5B2170;clip-path:polygon(0 0,100% 0,100% 82%,26% 82%,16% 100%,0 100%);}
   .head-cream{position:absolute;top:0;left:0;width:58%;height:9mm;background:#F3EEDC;clip-path:polygon(0 0,100% 0,92% 100%,7% 100%,0 55%);}
   .co-name{position:absolute;top:6.2mm;left:30%;background:#F3EEDC;color:#5B2170;font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;font-size:11pt;letter-spacing:1.6px;padding:1.4mm 5mm;}
@@ -34,7 +34,7 @@
   .logo .grp{font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;font-size:6pt;letter-spacing:5px;color:#fff;}
   .rule{height:1.1mm;background:#B06F2C;margin:0 0 0;}
 
-  .info{width:100%;border-collapse:collapse;margin-bottom:9mm;} .info>tbody>tr>td{vertical-align:top;padding:0;} .info td.bill{width:56%;padding-right:12mm;} .info td.meta{width:44%;}
+  .info{width:100%;border-collapse:collapse;margin-bottom:6mm;} .info>tbody>tr>td{vertical-align:top;padding:0;} .info td.bill{width:56%;padding-right:12mm;} .info td.meta{width:44%;}
   .bill h3, .meta .k{font-weight:800;font-size:10.5pt;letter-spacing:.2px;}
   .bill h3{margin-bottom:1.5mm;}
   .bill .line{border-bottom:1px solid #1A1D26;padding:1mm 2mm;font-weight:500;min-height:6.5mm;}
@@ -56,12 +56,12 @@
   .totals .grand .v{background:#14235A;color:#fff;font-size:12pt;}
   .no-border{border:none !important;}
 
-  .lower{width:100%;border-collapse:collapse;margin-top:12mm;} .lower>tbody>tr>td{vertical-align:top;} .lower td.tstamp{width:58mm;padding-left:8mm;text-align:center;}
+  .lower{width:100%;border-collapse:collapse;margin-top:8mm;} .lower>tbody>tr>td{vertical-align:top;} .lower td.tstamp{width:58mm;padding-left:8mm;text-align:center;}
   .terms h3{color:#D91F26;font-weight:800;font-size:13pt;text-decoration:underline;text-underline-offset:2.5px;margin-bottom:2.5mm;letter-spacing:.3px;}
   .terms ol{padding-left:5.5mm;font-weight:500;}
   .terms li{margin-bottom:1.2mm;}
   .notes{font-weight:500;margin-top:3mm;}
-  .thanks{font-weight:800;margin-top:12mm;font-size:10.5pt;}
+  .thanks{font-weight:800;margin-top:9mm;font-size:10.5pt;}
   .sign{margin-top:14mm;font-size:9.5pt;font-weight:600;}
   .sign .line{display:inline-block;border-top:1px solid #1A1D26;padding:1mm 10mm 0 0;margin-right:12mm;}
   .stamp{width:50mm;height:50mm;justify-self:center;transform:rotate(-6deg);opacity:.92;}
@@ -112,7 +112,7 @@
   </header>
   <div class="rule"></div>
 
-  <table class="info" style="margin-top:10mm;"><tr>
+  <table class="info" style="margin-top:7mm;"><tr>
     <td class="bill">
       <h3>QUOTATION TO:</h3>
       <div class="line"><b>{{ $quotation->client_name }}</b></div>
@@ -202,38 +202,21 @@
       @if($quotation->notes)
       <div class="notes"><b>Notes:</b> {{ $quotation->notes }}</div>
       @endif
-      <div class="sign">
-        <span class="line">Prepared by</span>
-        <span class="line">Client signature</span>
-        <span class="line">Date</span>
-      </div>
+      <table class="sign"><tr>
+        <td><div class="line">Prepared by</div></td>
+        <td><div class="line">Client signature</div></td>
+        <td><div class="line">Date</div></td>
+      </tr></table>
       <div class="thanks">Thank You For Your Business</div>
     </td>
 
     <td class="tstamp">
-    <svg class="stamp" viewBox="0 0 200 200" aria-label="Company stamp">
-      <defs>
-        <path id="arcTop" d="M 100,100 m -72,0 a 72,72 0 1,1 144,0"/>
-        <path id="arcBot" d="M 100,100 m -72,0 a 72,72 0 1,0 144,0"/>
-      </defs>
-      <circle cx="100" cy="100" r="94" fill="none" stroke="#1B3FB4" stroke-width="4"/>
-      <circle cx="100" cy="100" r="86" fill="none" stroke="#1B3FB4" stroke-width="2"/>
-      <circle cx="100" cy="100" r="52" fill="none" stroke="#1B3FB4" stroke-width="2.5"/>
-      <text fill="#1B3FB4" font-family="Barlow Semi Condensed, sans-serif" font-weight="700" font-size="17" letter-spacing="2.5">
-        <textPath href="#arcTop" startOffset="50%" text-anchor="middle">{{ strtoupper($company->legal_name ?? 'ASYX GROUP COMPANY LIMITED') }}</textPath>
-      </text>
-      <text fill="#1B3FB4" font-family="Barlow Semi Condensed, sans-serif" font-weight="700" font-size="15" letter-spacing="2">
-        <textPath href="#arcBot" startOffset="50%" text-anchor="middle">{{ strtoupper($company->city ?? 'DAR ES SALAAM') }}</textPath>
-      </text>
-      <text x="35" y="106" fill="#1B3FB4" font-size="16">★</text>
-      <text x="151" y="106" fill="#1B3FB4" font-size="16">★</text>
-      <g stroke="#1B3FB4" fill="#1B3FB4">
-        <path d="M100 62 A38 38 0 0 1 138 100 L118 100 A18 18 0 0 0 100 82 Z" opacity=".95"/>
-        <path d="M138 100 A38 38 0 0 1 100 138 L100 118 A18 18 0 0 0 100 82 Z" opacity=".8"/>
-        <path d="M100 138 A38 38 0 0 1 62 100 L82 100 A18 18 0 0 0 100 118 Z" opacity=".95"/>
-        <path d="M62 100 A38 38 0 0 1 100 62 L100 82 A18 18 0 0 0 82 100 Z" opacity=".8"/>
-      </g>
-    </svg>
+      <div style="width:44mm;height:44mm;border:2.5px solid #1B3FB4;border-radius:50%;margin:0 auto;transform:rotate(-8deg);opacity:.85;text-align:center;">
+        <div style="margin-top:9mm;display:inline-block;border-top:1.5px solid #1B3FB4;border-bottom:1.5px solid #1B3FB4;padding:2.5mm 3mm;">
+          <div style="color:#1B3FB4;font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;font-size:10pt;letter-spacing:1px;line-height:1.25;">{{ strtoupper(substr($company->short_code ?? 'ASYX', 0, 10)) }}<br>GROUP</div>
+          <div style="color:#1B3FB4;font-size:6pt;letter-spacing:1px;margin-top:1.5mm;">★ {{ strtoupper($company->city ?? 'DAR ES SALAAM') }} ★</div>
+        </div>
+      </div>
     </td></tr></table>
 
   <div class="foot-wrap">
