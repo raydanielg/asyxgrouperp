@@ -3,7 +3,7 @@
 @section('page_title', 'Roles & Permissions')
 @section('content')
 @php
-  $totalRoles = $roles->total();
+  $totalRoles = $roles instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator ? $roles->total() : $roles->count();
   $totalPerms = \Spatie\Permission\Models\Permission::count();
   $editableRoles = $roles->where('editable', true)->count();
 @endphp
@@ -76,8 +76,23 @@
       </tbody>
     </table>
   </div>
-  @if($roles->hasPages())
-  <div class="px-5 py-3 border-t border-gray-100">{{ $roles->links() }}</div>
-  @endif
+  <div class="flex items-center justify-between px-5 py-3 border-t border-gray-100 bg-gray-50/40">
+    <form method="GET" action="{{ route('admin.roles.index') }}" class="flex items-center gap-2 text-xs text-gray-500">
+      @if(request('name'))<input type="hidden" name="name" value="{{ request('name') }}">@endif
+      <span>Show</span>
+      <select name="per_page" onchange="this.form.submit()" class="px-2 py-1.5 text-xs border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+        <option value="10" @selected(($perPage ?? 10) == 10 && $perPage !== 'all')>10</option>
+        <option value="25" @selected($perPage == 25)>25</option>
+        <option value="50" @selected($perPage == 50)>50</option>
+        <option value="all" @selected($perPage === 'all')>All</option>
+      </select>
+      <span>entries</span>
+      @if($roles instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
+      <span class="text-gray-300">|</span>
+      <span>Showing {{ $roles->firstItem() ?? 0 }}–{{ $roles->lastItem() ?? 0 }} of {{ $roles->total() }}</span>
+      @endif
+    </form>
+    <div>@if($roles instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator && $roles->hasPages()){{ $roles->links() }}@endif</div>
+  </div>
 </div>
 @endsection

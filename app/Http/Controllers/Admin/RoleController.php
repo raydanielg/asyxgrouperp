@@ -29,8 +29,11 @@ class RoleController extends Controller
                   ->orWhere('label', 'like', '%' . $request->name . '%');
         }
 
-        $roles = $query->orderBy('name')->paginate(10)->appends($request->except('page'));
-        return view('admin.roles.index', compact('roles'));
+        $perPage = $request->input('per_page', 10);
+        $roles = $perPage === 'all'
+            ? $query->orderBy('name')->get()
+            : $query->orderBy('name')->paginate((int) $perPage)->appends($request->except('page'));
+        return view('admin.roles.index', compact('roles', 'perPage'));
     }
 
     public function create()
