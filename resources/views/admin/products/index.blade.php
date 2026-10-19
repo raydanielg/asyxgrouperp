@@ -10,67 +10,54 @@
             $currentCompany = $isGroupUser ? collect($companies)->firstWhere('id', $currentCompanyId) : $userCompany;
         @endphp
         @if($currentCompany)
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-100">
-            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>
-            <span class="text-xs font-medium text-emerald-700">{{ $currentCompany->name }}</span>
-            @if($currentCompany->is_group)<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-gold-100 text-gold-700">Group</span>@endif
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded bg-gray-100 border border-gray-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
+            <span class="text-xs font-medium text-gray-700">{{ $currentCompany->name }}</span>
+            @if($currentCompany->is_group)<span class="text-[9px] text-gray-400">· Group</span>@endif
         </div>
         @endif
         <p class="text-sm text-gray-500">Manage products and services</p>
     </div>
-    <button onclick="openCreateModal()" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        Add Product
-    </button>
+    <button onclick="openCreateDrawer()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">Add Product</button>
 </div>
 
 {{-- ═══ Products Table ═══ --}}
 <div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm" id="productsTable">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
-            <th class="px-5 py-3 font-medium">Code</th>
-            <th class="px-5 py-3 font-medium">Name</th>
-            <th class="px-5 py-3 font-medium">Category</th>
-            <th class="px-5 py-3 font-medium">Purchase Price</th>
-            <th class="px-5 py-3 font-medium">Sale Price</th>
-            <th class="px-5 py-3 font-medium">Stock</th>
-            @if($isGroupUser)<th class="px-5 py-3 font-medium">Company</th>@endif
-            <th class="px-5 py-3 font-medium">Status</th>
-            <th class="px-5 py-3 font-medium">Actions</th>
+        <thead><tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+            <th class="px-5 py-3 font-semibold">Code</th>
+            <th class="px-5 py-3 font-semibold">Name</th>
+            <th class="px-5 py-3 font-semibold">Category</th>
+            <th class="px-5 py-3 font-semibold text-right">Purchase Price</th>
+            <th class="px-5 py-3 font-semibold text-right">Sale Price</th>
+            <th class="px-5 py-3 font-semibold">Stock</th>
+            @if($isGroupUser)<th class="px-5 py-3 font-semibold">Company</th>@endif
+            <th class="px-5 py-3 font-semibold">Status</th>
+            <th class="px-5 py-3 font-semibold text-right">Actions</th>
         </tr></thead>
         <tbody id="productsBody">
         @forelse($products as $p)
-        <tr class="border-t border-gray-100 hover:bg-gray-50/50" id="row-{{ $p->id }}">
-            <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $p->product_code }}</td>
-            <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $p->name }}</td>
-            <td class="px-5 py-3 text-xs text-gray-500">{{ $p->category?->name ?? 'N/A' }}</td>
-            <td class="px-5 py-3 text-xs text-gray-700">TZS {{ number_format($p->purchase_price) }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-emerald-700">TZS {{ number_format($p->sale_price) }}</td>
-            <td class="px-5 py-3">
+        <tr class="hover:bg-gray-50/60" id="row-{{ $p->id }}">
+            <td class="px-5 py-3.5 text-xs font-mono text-gray-700">{{ $p->product_code }}</td>
+            <td class="px-5 py-3.5 text-xs font-medium text-gray-900">{{ $p->name }}</td>
+            <td class="px-5 py-3.5 text-xs text-gray-500">{{ $p->category?->name ?? 'N/A' }}</td>
+            <td class="px-5 py-3.5 text-xs font-mono text-gray-700 text-right">{{ number_format($p->purchase_price) }}</td>
+            <td class="px-5 py-3.5 text-xs font-medium font-mono text-gray-900 text-right">{{ number_format($p->sale_price) }}</td>
+            <td class="px-5 py-3.5">
                 @if($p->stock_quantity <= $p->reorder_level && $p->reorder_level > 0)
-                <span class="text-xs font-bold text-red-600">{{ $p->stock_quantity }} {{ $p->unit }}</span><span class="ml-1 text-[9px] text-red-500">LOW</span>
+                <span class="text-xs font-medium text-red-600">{{ $p->stock_quantity }} {{ $p->unit }}</span><span class="ml-1 text-[9px] text-red-500">LOW</span>
                 @else
                 <span class="text-xs text-gray-700">{{ $p->stock_quantity }} {{ $p->unit }}</span>
                 @endif
             </td>
             @if($isGroupUser)
-            <td class="px-5 py-3">
-                @if($p->company)
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">{{ $p->company->short_code }}</span>
-                @else
-                <span class="text-[10px] text-gray-400">N/A</span>
-                @endif
-            </td>
+            <td class="px-5 py-3.5 text-xs text-gray-500">{{ $p->company?->short_code ?? '—' }}</td>
             @endif
-            <td class="px-5 py-3">
-                @if($p->is_active)
-                <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
-                @else
-                <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>
-                @endif
+            <td class="px-5 py-3.5">
+                <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $p->is_active ? '#10b981' : '#9ca3af' }}"></span>{{ $p->is_active ? 'Active' : 'Inactive' }}</span>
             </td>
-            <td class="px-5 py-3">
-                <button onclick="deleteProduct({{ $p->id }}, '{{ addslashes($p->name) }}')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
+            <td class="px-5 py-3.5 text-right">
+                <button onclick="deleteProduct({{ $p->id }}, '{{ addslashes($p->name) }}')" class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>
             </td>
         </tr>
         @empty
@@ -85,19 +72,20 @@
     <div class="px-5 py-4 border-t">{{ $products->links() }}</div>
 </div>
 
-{{-- ═══ Create Product Modal ═══ --}}
-<div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)closeCreateModal()">
-    <div class="bg-white rounded-md shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
-        <div class="flex items-center justify-between mb-5">
+{{-- ═══ Create Product Drawer ═══ --}}
+<div id="createModal" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeCreateModal()"></div>
+    <div id="createDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
             <div>
-                <h3 class="text-lg font-bold text-gray-900">Add Product</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Create a new product or service</p>
+                <h3 class="text-sm font-bold text-white">Add Product</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Create a new product or service</p>
             </div>
-            <button onclick="closeCreateModal()" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400">
+            <button type="button" onclick="closeCreateModal()" class="text-slate-400 hover:text-white transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <form id="productForm" class="space-y-4">
+        <form id="productForm" class="flex-1 overflow-y-auto p-5 space-y-4">
             @csrf
             {{-- Company/Branch selector --}}
             @if($isGroupUser)
