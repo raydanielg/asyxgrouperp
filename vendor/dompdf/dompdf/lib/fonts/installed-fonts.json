@@ -7,6 +7,9 @@
     },
     "inter": {
         "normal": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_normal_5a66f8ceb794f00a7f54c797a21283b3",
-        "500": "inter_500_efef4d9d61ac26570557ad601dea222a"
+        "500": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_500_efef4d9d61ac26570557ad601dea222a",
+        "600": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_600_3604d9d49b61fc3b7c29c4259c86ff89",
+        "bold": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_bold_02384cdf43e3d24b76c57c66dfd114bf",
+        "800": "inter_800_43e268268a3801a5ec2cf116ab01b114"
     }
 }
