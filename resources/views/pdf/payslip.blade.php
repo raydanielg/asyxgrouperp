@@ -22,14 +22,16 @@
     .info .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #666; font-weight: bold; padding-bottom: 4px; }
     .info .val { font-size: 12px; color: #111; }
 
-    table.lines { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+    .cols { width: 100%; margin-top: 28px; }
+    .cols td { vertical-align: top; }
+    table.lines { width: 100%; border-collapse: collapse; }
     table.lines th { text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #444; border-bottom: 1.5px solid #111; padding: 0 0 8px; font-weight: bold; }
     table.lines th.r { text-align: right; }
     table.lines td { padding: 9px 0; font-size: 11.5px; color: #111; }
     table.lines td.r { text-align: right; }
     table.lines tr.total td { font-weight: bold; border-top: 1.5px solid #111; }
 
-    .netbar { border: 1.5px solid #111; padding: 14px 16px; overflow: hidden; }
+    .netbar { margin-top: 30px; border: 1.5px solid #111; padding: 14px 16px; overflow: hidden; }
     .netbar .l { float: left; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: .1em; padding-top: 3px; }
     .netbar .r { float: right; font-size: 16px; font-weight: bold; }
 
@@ -71,25 +73,35 @@
         </tr>
     </table>
 
-    <table class="lines">
-        <tr><th>Earnings</th><th class="r">TZS</th></tr>
-        <tr><td>Basic salary</td><td class="r">{{ number_format($payroll->basic_salary) }}</td></tr>
-        @if(($payroll->allowances ?? 0) > 0)
-        <tr><td>Allowances</td><td class="r">{{ number_format($payroll->allowances) }}</td></tr>
-        @endif
-        @if(($payroll->overtime ?? 0) > 0)
-        <tr><td>Overtime</td><td class="r">{{ number_format($payroll->overtime) }}</td></tr>
-        @endif
-        <tr class="total"><td>Total earnings</td><td class="r">{{ number_format($payroll->basic_salary + ($payroll->allowances ?? 0) + ($payroll->overtime ?? 0)) }}</td></tr>
+    <table class="cols">
+        <tr>
+            <td style="width:47%;">
+                <table class="lines">
+                    <tr><th>Earnings</th><th class="r">TZS</th></tr>
+                    <tr><td>Basic salary</td><td class="r">{{ number_format($payroll->basic_salary) }}</td></tr>
+                    @if(($payroll->allowances ?? 0) > 0)
+                    <tr><td>Allowances</td><td class="r">{{ number_format($payroll->allowances) }}</td></tr>
+                    @endif
+                    @if(($payroll->overtime ?? 0) > 0)
+                    <tr><td>Overtime</td><td class="r">{{ number_format($payroll->overtime) }}</td></tr>
+                    @endif
+                    <tr class="total"><td>Total earnings</td><td class="r">{{ number_format($payroll->basic_salary + ($payroll->allowances ?? 0) + ($payroll->overtime ?? 0)) }}</td></tr>
+                </table>
+            </td>
+            <td style="width:6%;"></td>
+            <td style="width:47%;">
+                <table class="lines">
+                    <tr><th>Deductions</th><th class="r">TZS</th></tr>
+                    @if(($payroll->deductions ?? 0) > 0)
+                    <tr><td>Deductions</td><td class="r">{{ number_format($payroll->deductions) }}</td></tr>
+                    @else
+                    <tr><td colspan="2" style="color:#999;padding:9px 0;">No deductions</td></tr>
+                    @endif
+                    <tr class="total"><td>Total deductions</td><td class="r">{{ number_format($payroll->deductions ?? 0) }}</td></tr>
+                </table>
+            </td>
+        </tr>
     </table>
-
-    @if(($payroll->deductions ?? 0) > 0)
-    <table class="lines">
-        <tr><th>Deductions</th><th class="r">TZS</th></tr>
-        <tr><td>Deductions</td><td class="r">{{ number_format($payroll->deductions) }}</td></tr>
-        <tr class="total"><td>Total deductions</td><td class="r">{{ number_format($payroll->deductions) }}</td></tr>
-    </table>
-    @endif
 
     <div class="netbar">
         <span class="l">Net Pay</span>
