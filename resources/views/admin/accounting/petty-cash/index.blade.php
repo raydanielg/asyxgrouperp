@@ -2,51 +2,76 @@
 @section('title', 'Petty Cash - ' . config('app.name'))
 @section('page_title', 'Petty Cash')
 @section('content')
-<div class="mb-4 flex items-center justify-between">
-    <p class="text-sm text-gray-500">Petty cash floats and their custodians</p>
-    <button onclick="document.getElementById('createModal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        New Petty Cash Account
-    </button>
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+    <div class="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
+        <span class="text-xs text-gray-400">Petty cash floats and their custodians</span>
+        <button type="button" onclick="openDrawer()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">New Petty Cash Account</button>
+    </div>
+    <div class="overflow-x-auto"><table class="w-full text-sm">
+        <thead>
+            <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+                <th class="px-5 py-3 font-semibold">Code</th><th class="px-5 py-3 font-semibold">Name</th><th class="px-5 py-3 font-semibold">Custodian</th><th class="px-5 py-3 font-semibold text-right">Balance</th><th class="px-5 py-3 font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+        @forelse($accounts as $a)
+        <tr class="hover:bg-gray-50/60">
+            <td class="px-5 py-3.5 text-xs font-mono text-gray-500">{{ $a->code }}</td>
+            <td class="px-5 py-3.5"><a href="{{ route('admin.petty-cash.show', $a) }}" class="text-xs font-medium text-gray-900 hover:text-gray-600">{{ $a->name }}</a></td>
+            <td class="px-5 py-3.5 text-xs text-gray-500">{{ $a->custodian?->name ?? 'Unassigned' }}</td>
+            <td class="px-5 py-3.5 text-xs font-medium font-mono text-gray-900 text-right">{{ number_format($a->current_balance, 2) }}</td>
+            <td class="px-5 py-3.5 text-right"><a href="{{ route('admin.petty-cash.show', $a) }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</a></td>
+        </tr>
+        @empty
+        <tr><td colspan="5" class="px-5 py-10 text-center text-xs text-gray-400">No petty cash accounts yet</td></tr>
+        @endforelse
+        </tbody>
+    </table></div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    @forelse($accounts as $a)
-    <a href="{{ route('admin.petty-cash.show', $a) }}" class="bg-white rounded-xl border p-5 hover:border-emerald-400 transition-colors">
-        <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3v-3m-3 3v-3m9-7H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
-            </div>
-            <span class="text-[10px] font-mono text-gray-400">{{ $a->code }}</span>
+{{-- New Petty Cash Drawer --}}
+<div id="createDrawer" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeDrawer()"></div>
+    <div id="createDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
+            <div><h3 class="text-sm font-bold text-white">New Petty Cash Account</h3><p class="text-[11px] text-slate-400 mt-0.5">Cash float for small expenses</p></div>
+            <button type="button" onclick="closeDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
-        <h3 class="text-sm font-bold text-gray-900">{{ $a->name }}</h3>
-        <p class="text-xs text-gray-500 mb-3">Custodian: {{ $a->custodian?->name ?? 'Unassigned' }}</p>
-        <div class="border-t pt-3">
-            <p class="text-[10px] text-gray-400 uppercase tracking-wide">Current Balance</p>
-            <p class="text-xl font-bold text-emerald-700">TZS {{ number_format($a->current_balance, 2) }}</p>
-        </div>
-    </a>
-    @empty
-    <div class="col-span-full text-center py-8 text-gray-400 text-sm">No petty cash accounts yet</div>
-    @endforelse
-</div>
-
-<div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">New Petty Cash Account</h3>
-        <form method="POST" action="{{ route('admin.petty-cash.store') }}" class="space-y-3">@csrf
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Name *</label><input name="name" required placeholder="e.g. Front Office Petty Cash" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Custodian</label>
-                <select name="custodian_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none">
-                    <option value="">Unassigned</option>
-                    @foreach($users as $u)
-                    <option value="{{ $u->id }}">{{ $u->name }}</option>
-                    @endforeach
-                </select>
+        <form method="POST" action="{{ route('admin.petty-cash.store') }}" class="flex-1 overflow-y-auto p-5">
+            @csrf
+            <div class="space-y-4">
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Name <span class="text-red-500">*</span></label><input name="name" required placeholder="e.g. Front Office Petty Cash" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Custodian</label>
+                    <select name="custodian_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— Unassigned —</option>
+                        @foreach($users as $u)
+                        <option value="{{ $u->id }}">{{ $u->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Opening Balance</label><input name="opening_balance" type="number" step="0.01" value="0" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Opening Balance</label><input name="opening_balance" type="number" step="0.01" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create</button></div>
+            <div class="flex items-center gap-3 pt-5 mt-2 border-t border-gray-100">
+                <button type="submit" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-700 transition-colors">Create</button>
+                <button type="button" onclick="closeDrawer()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
+            </div>
         </form>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function openDrawer() {
+    document.getElementById('createDrawer').classList.remove('hidden');
+    requestAnimationFrame(() => document.getElementById('createDrawerPanel').classList.remove('-translate-x-full'));
+}
+function closeDrawer() {
+    document.getElementById('createDrawerPanel').classList.add('-translate-x-full');
+    setTimeout(() => document.getElementById('createDrawer').classList.add('hidden'), 300);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+@endpush
