@@ -1,174 +1,135 @@
 <!DOCTYPE html>
-<html lang="sw">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Payslip &mdash; {{ $payroll->payroll_number }}</title>
+<title>Payslip — {{ $payroll->payroll_number }}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; color: #111; font-size: 12px; background: #f3f4f6; padding: 24px; }
+    .sheet { background: #fff; max-width: 760px; margin: 0 auto; padding: 36px 40px; }
+    @media print { body { background: #fff; padding: 0; } .no-print { display: none !important; } }
 
-  *{box-sizing:border-box;}
-  body{
-    margin:36px auto;
-    background:#EDE9DD;
-    color:#1C2321;
-    font-family:'Inter',sans-serif;
-    max-width:760px;
-  }
+    .hdr { overflow: hidden; padding-bottom: 16px; border-bottom: 2px solid #111; }
+    .hdr .left { float: left; }
+    .hdr .right { float: right; text-align: right; }
+    .co-name { font-size: 16px; font-weight: bold; letter-spacing: .02em; }
+    .co-meta { font-size: 10px; color: #555; margin-top: 3px; line-height: 1.6; }
+    .doc { font-size: 20px; font-weight: bold; letter-spacing: .14em; }
+    .doc-meta { font-size: 10px; color: #555; margin-top: 3px; }
+    .stamp { display: inline-block; margin-top: 6px; padding: 2px 10px; border: 1.5px solid; font-size: 9px; font-weight: bold; letter-spacing: .15em; text-transform: uppercase; }
+    .stamp-paid { color: #16a34a; border-color: #16a34a; }
+    .stamp-pending { color: #d97706; border-color: #d97706; }
+    .stamp-cancelled { color: #dc2626; border-color: #dc2626; }
 
-  .sheet{
-    background:#fff;
-    border-radius:6px;
-    box-shadow:0 18px 40px -10px rgba(15,61,62,.25),0 0 0 1px #E3DDCB;
-    position:relative;
-    overflow:hidden;
-  }
-  .stamp{
-    position:absolute;top:26px;right:-46px;
-    font-size:12px;font-weight:700;letter-spacing:.12em;
-    padding:6px 62px;
-    transform:rotate(35deg);
-    box-shadow:0 4px 10px rgba(0,0,0,.15);
-    z-index:10;
-  }
-  .stamp-paid{background:#2F7A3D;color:#fff;}
-  .stamp-pending{background:#C9A227;color:#23270F;}
-  .stamp-cancelled{background:#B23A2E;color:#fff;}
+    .info { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    .info td { vertical-align: top; font-size: 11px; padding: 0; }
+    .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #777; font-weight: bold; margin-bottom: 4px; }
+    .val { font-size: 12.5px; font-weight: bold; color: #111; }
+    .sub { font-size: 10.5px; color: #555; line-height: 1.6; margin-top: 2px; }
 
-  .head{
-    display:flex;justify-content:space-between;align-items:flex-start;
-    padding:38px 44px 26px;
-    border-bottom:1px solid #E3DDCB;
-  }
-  .co-mark{display:flex;align-items:center;gap:12px;}
-  .co-icon{
-    width:38px;height:38px;border-radius:10px;
-    background:conic-gradient(from 90deg,#C9A227,#8C5E2A,#0F3D3E,#C9A227);
-    flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;
-  }
-  .co-icon img{width:30px;height:30px;object-fit:contain;border-radius:4px;}
-  .co-name{font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;}
-  .co-addr{font-size:11.5px;color:#6E7570;margin-top:3px;line-height:1.5;}
+    table.lines { width: 48%; border-collapse: collapse; margin-top: 22px; }
+    table.lines th { text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #555; border-bottom: 1.5px solid #111; padding: 0 4px 7px; }
+    table.lines th.r, table.lines td.r { text-align: right; }
+    table.lines td { padding: 8px 4px; border-bottom: 1px solid #ddd; font-size: 11px; }
+    table.lines td.neg { color: #b91c1c; }
+    table.lines tr.total td { font-weight: bold; border-bottom: none; border-top: 1.5px solid #111; padding-top: 9px; }
 
-  .doc-title{text-align:right;}
-  .doc-title h1{font-family:'Fraunces',serif;font-size:24px;margin:0 0 8px;color:#1C2321;}
-  .doc-title .meta{font-size:12px;color:#6E7570;line-height:1.6;}
-  .doc-title .meta b{color:#1C2321;}
+    .netbar { margin-top: 26px; border-top: 2px solid #111; border-bottom: 2px solid #111; padding: 12px 4px; overflow: hidden; }
+    .netbar .l { float: left; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: .12em; color: #111; padding-top: 4px; }
+    .netbar .r { float: right; font-size: 18px; font-weight: bold; }
+    .netbar .r small { font-size: 10px; font-weight: normal; color: #777; }
 
-  .body{padding:30px 44px;}
+    .sigs { margin-top: 56px; overflow: hidden; }
+    .sig { width: 40%; float: left; }
+    .sig:last-child { float: right; }
+    .sig .line { border-bottom: 1px solid #888; height: 26px; }
+    .sig .cap { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #777; margin-top: 4px; }
 
-  .bill-row{display:flex;justify-content:space-between;margin-bottom:28px;gap:24px;}
-  .bill-to .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6E7570;margin-bottom:6px;}
-  .bill-to b{display:block;font-size:14.5px;color:#1C2321;}
-  .bill-to .addr{font-size:12.5px;color:#6E7570;line-height:1.6;margin-top:2px;}
-  .bill-to.right{text-align:right;}
-
-  .cols{display:flex;gap:36px;margin-top:6px;}
-  .col{flex:1;}
-
-  table.lines{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px;}
-  table.lines th{
-    text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;
-    color:#6E7570;border-bottom:1.5px solid #1C2321;padding:0 4px 10px;
-  }
-  table.lines th.r, table.lines td.r{text-align:right;}
-  table.lines td{padding:12px 4px;border-bottom:1px solid #E3DDCB;color:#1C2321;}
-  table.lines td.neg{color:#B23A2E;}
-  table.lines tr.subtotal td{font-weight:700;border-bottom:none;padding-top:14px;color:#0F3D3E;}
-
-  .net-bar{
-    margin-top:24px;padding:18px 22px;border-radius:10px;
-    background:#E2F0E5;display:flex;justify-content:space-between;align-items:center;
-  }
-  .net-bar span{font-size:12px;color:#2F7A3D;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
-  .net-bar b{font-family:'JetBrains Mono',monospace;font-size:18px;color:#2F7A3D;}
-
-  .foot{
-    padding:18px 44px;border-top:1px solid #E3DDCB;
-    background:#FBF9F2;
-    font-size:11px;color:#6E7570;text-align:center;
-  }
+    .foot { margin-top: 26px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 9px; color: #999; text-align: center; }
 </style>
 </head>
 <body>
-  <div class="sheet">
-    @php $s = $payroll->status @endphp
-    <div class="stamp stamp-{{ $s }}">{{ strtoupper($s) }}</div>
 
-    <div class="head">
-      <div class="co-mark">
-        <div class="co-icon">
-          <img src="{{ public_path('asyxgrouplogo.png') }}" alt="ASYX">
+<div class="no-print" style="max-width:760px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;">
+    <a href="{{ route('admin.payroll.index') }}" style="font-size:11px;color:#666;text-decoration:none;">&larr; Back to Payroll</a>
+    <button onclick="window.print()" style="padding:8px 16px;background:#111827;color:#fff;border:none;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;">Print / Save as PDF</button>
+</div>
+
+<div class="sheet">
+    <div class="hdr">
+        <div class="left">
+            <div class="co-name">{{ $company?->legal_name ?? $company?->name ?? config('app.name') }}</div>
+            <div class="co-meta">
+                {{ $company?->address ?? 'Dar es Salaam' }}@if($company?->city), {{ $company->city }}@endif<br>
+                @if($company?->phone) Tel: {{ $company->phone }}@endif @if($company?->email) &middot; {{ $company->email }}@endif<br>
+                @if($company?->tin) TIN: {{ $company->tin }}@endif @if($company?->vrn) &middot; VRN: {{ $company->vrn }}@endif
+            </div>
         </div>
-        <div>
-          <div class="co-name">{{ config('app.name') }}</div>
-          <div class="co-addr">{{ $company?->name ?? 'ASYX Group' }}<br>Dar es Salaam, Tanzania</div>
+        <div class="right">
+            <div class="doc">PAYSLIP</div>
+            <div class="doc-meta">{{ $payroll->payroll_number }}</div>
+            <div><span class="stamp stamp-{{ $payroll->status }}">{{ $payroll->status }}</span></div>
         </div>
-      </div>
-      <div class="doc-title">
-        <h1>Payslip</h1>
-        <div class="meta">
-          Kipindi: <b>{{ $payroll->month }} {{ $payroll->year }}</b><br>
-          Tarehe ya Malipo: <b>{{ $payroll->created_at?->format('M d, Y') ?? now()->format('M d, Y') }}</b>
-        </div>
-      </div>
     </div>
 
-    <div class="body">
-      <div class="bill-row">
-        <div class="bill-to">
-          <div class="lbl">Mfanyakazi</div>
-          <b>{{ $payroll->employee?->full_name ?? 'N/A' }}</b>
-          <div class="addr">
-            {{ $payroll->employee?->designation ?? '' }} &mdash; {{ $payroll->employee?->department ?? '' }}<br>
-            Employee ID: {{ $payroll->employee?->employee_id ?? 'N/A' }}
-          </div>
-        </div>
-        <div class="bill-to right">
-          <div class="lbl">Mwajiri</div>
-          <b>{{ config('app.name') }}</b>
-          <div class="addr">
-            TIN: 109-XXX-XXX<br>
-            NSSF No: NS-{{ str_pad($payroll->employee_id ?? 0, 5, '0', STR_PAD_LEFT) }}<br>
-            PAYE No: PY-{{ str_pad($payroll->id, 5, '0', STR_PAD_LEFT) }}
-          </div>
-        </div>
-      </div>
+    <table class="info">
+        <tr>
+            <td style="width:40%;">
+                <div class="lbl">Employee</div>
+                <div class="val">{{ $payroll->employee?->full_name ?? 'N/A' }}</div>
+                <div class="sub">{{ $payroll->employee?->designation ?? '' }}{{ $payroll->employee?->designation && $payroll->employee?->department ? ' — ' : '' }}{{ $payroll->employee?->department ?? '' }}<br>ID: {{ $payroll->employee?->employee_id ?? '—' }}</div>
+            </td>
+            <td style="width:30%;">
+                <div class="lbl">Period</div>
+                <div class="val">{{ $payroll->month }} {{ $payroll->year }}</div>
+            </td>
+            <td style="width:30%;">
+                <div class="lbl">Pay Date</div>
+                <div class="val">{{ $payroll->created_at?->format('d M Y') ?? now()->format('d M Y') }}</div>
+            </td>
+        </tr>
+    </table>
 
-      <div class="cols">
-        <div class="col">
-          <table class="lines">
-            <tr><th>Mapato</th><th class="r">Kiasi</th></tr>
-            <tr><td>Mshahara wa Msingi</td><td class="r">{{ number_format($payroll->basic_salary, 2) }} Tsh</td></tr>
-            @if($payroll->overtime > 0)
-            <tr><td>Overtime</td><td class="r">{{ number_format($payroll->overtime, 2) }} Tsh</td></tr>
-            @endif
-            <tr><td>Posho ya Usafiri</td><td class="r">{{ number_format($payroll->allowances * 0.5, 2) }} Tsh</td></tr>
-            <tr><td>Posho ya Mawasiliano</td><td class="r">{{ number_format($payroll->allowances * 0.3, 2) }} Tsh</td></tr>
-            <tr><td>Posho ya Matibabu</td><td class="r">{{ number_format($payroll->allowances * 0.2, 2) }} Tsh</td></tr>
-            <tr class="subtotal"><td>Jumla ya Mapato</td><td class="r">{{ number_format($payroll->basic_salary + $payroll->allowances + $payroll->overtime, 2) }} Tsh</td></tr>
-          </table>
-        </div>
-        <div class="col">
-          <table class="lines">
-            <tr><th>Makato</th><th class="r">Kiasi</th></tr>
-            <tr><td>PAYE</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.6, 2) }} Tsh</td></tr>
-            <tr><td>NSSF (10%)</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.2, 2) }} Tsh</td></tr>
-            <tr><td>NHIF</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }} Tsh</td></tr>
-            <tr><td>WCF / Other</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }} Tsh</td></tr>
-            <tr class="subtotal" style="color:#B23A2E;"><td>Jumla ya Makato</td><td class="r neg">&minus;{{ number_format($payroll->deductions, 2) }} Tsh</td></tr>
-          </table>
-        </div>
-      </div>
+    <table class="lines" style="float:left;">
+        <tr><th>Earnings</th><th class="r">Amount (TZS)</th></tr>
+        <tr><td>Basic Salary</td><td class="r">{{ number_format($payroll->basic_salary, 2) }}</td></tr>
+        @if(($payroll->overtime ?? 0) > 0)
+        <tr><td>Overtime</td><td class="r">{{ number_format($payroll->overtime, 2) }}</td></tr>
+        @endif
+        @if(($payroll->allowances ?? 0) > 0)
+        <tr><td>Allowances</td><td class="r">{{ number_format($payroll->allowances, 2) }}</td></tr>
+        @endif
+        <tr class="total"><td>Gross Earnings</td><td class="r">{{ number_format($payroll->basic_salary + ($payroll->allowances ?? 0) + ($payroll->overtime ?? 0), 2) }}</td></tr>
+    </table>
 
-      <div class="net-bar">
-        <span>Net Pay</span>
-        <b>{{ number_format($payroll->net_salary, 2) }} Tsh</b>
-      </div>
+    <table class="lines" style="float:right;">
+        <tr><th>Deductions</th><th class="r">Amount (TZS)</th></tr>
+        @if(($payroll->deductions ?? 0) > 0)
+        <tr><td>PAYE</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.6, 2) }}</td></tr>
+        <tr><td>NSSF (10%)</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.2, 2) }}</td></tr>
+        <tr><td>NHIF</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
+        <tr><td>WCF / Other</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
+        @else
+        <tr><td colspan="2" style="color:#999;">No deductions</td></tr>
+        @endif
+        <tr class="total"><td>Total Deductions</td><td class="r neg">&minus;{{ number_format($payroll->deductions ?? 0, 2) }}</td></tr>
+    </table>
+
+    <div style="clear:both;"></div>
+
+    <div class="netbar">
+        <span class="l">Net Pay</span>
+        <span class="r">{{ number_format($payroll->net_salary, 2) }} <small>TZS</small></span>
+    </div>
+
+    <div class="sigs">
+        <div class="sig"><div class="line"></div><div class="cap">Employee signature</div></div>
+        <div class="sig"><div class="line"></div><div class="cap">Employer signature / stamp</div></div>
     </div>
 
     <div class="foot">
-      Payslip Generated on {{ now()->format('l, F jS, Y') }} &middot; {{ config('app.name') }}
+        {{ $company?->legal_name ?? config('app.name') }} &middot; Payslip generated {{ now()->format('d M Y') }} &middot; ASYX ERP
     </div>
-  </div>
+</div>
 </body>
 </html>
