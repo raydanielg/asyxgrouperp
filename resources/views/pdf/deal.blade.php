@@ -6,7 +6,7 @@
 <style>
     @page { margin: 40px 42px; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Helvetica', 'Arial', sans-serif; color: #111; font-size: 12px; }
+    body { font-family: 'Helvetica', 'Arial', sans-serif; color: #111; font-size: 12px; margin: 40px 42px; }
 
     table.layout { width: 100%; border-collapse: collapse; }
     table.layout td { vertical-align: top; }
