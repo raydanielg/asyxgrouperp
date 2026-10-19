@@ -59,7 +59,7 @@
     </div>
 
     <div class="period">
-        <span class="l">{{ $payroll->payroll_number }}</span>
+        <span class="l">Pay Period</span>
         <span class="r">{{ $payroll->month }} {{ $payroll->year }}</span>
     </div>
 
