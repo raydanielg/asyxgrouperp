@@ -606,8 +606,25 @@ class BusinessFlowController extends Controller
 
     public function vendorInvoiceShow(VendorInvoice $invoice)
     {
-        $invoice->load(['lpo', 'supplier', 'project', 'payments']);
+        $invoice->load(['lpo', 'supplier', 'project', 'payments.createdBy']);
         return view('admin.business-flow.vendor-invoices.show', compact('invoice'));
+    }
+
+    public function vendorInvoicePdf(VendorInvoice $invoice)
+    {
+        $invoice->load(['lpo', 'supplier', 'project', 'payments']);
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+
+        $pdf = Pdf::loadView('pdf.vendor-invoice', ['invoice' => $invoice, 'company' => $company]);
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
+        $filename = 'invoice-' . $invoice->vendor_invoice_number . '.pdf';
+        return request()->boolean('inline') ? $pdf->stream($filename) : $pdf->download($filename);
     }
 
     public function vendorInvoiceDestroy(VendorInvoice $invoice)
