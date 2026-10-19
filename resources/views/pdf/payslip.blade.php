@@ -48,11 +48,6 @@
 </head>
 <body>
 
-<div class="no-print" style="max-width:760px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;">
-    <a href="{{ route('admin.payroll.index') }}" style="font-size:11px;color:#666;text-decoration:none;">&larr; Back to Payroll</a>
-    <button onclick="window.print()" style="padding:8px 16px;background:#111827;color:#fff;border:none;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;">Print / Save as PDF</button>
-</div>
-
 <div class="sheet">
     <div class="hdr">
         <div class="left">
