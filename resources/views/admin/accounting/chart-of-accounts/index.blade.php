@@ -3,33 +3,30 @@
 @section('page_title', 'Chart of Accounts')
 @section('content')
 <div class="mb-4 flex items-center justify-between">
-    <p class="text-sm text-gray-500">General ledger account structure used for Trial Balance and Profit &amp; Loss</p>
-    <button onclick="document.getElementById('createModal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        New Account
-    </button>
+    <p class="text-xs text-gray-400">General ledger account structure used for Trial Balance and Profit &amp; Loss</p>
+    <button type="button" onclick="openDrawer()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">New Account</button>
 </div>
 
 @foreach(['asset' => 'Assets', 'liability' => 'Liabilities', 'equity' => 'Equity', 'revenue' => 'Revenue', 'expense' => 'Expenses'] as $type => $label)
-<div class="bg-white rounded-xl border overflow-hidden mb-4">
-    <div class="px-5 py-3 border-b bg-gray-50/50"><h3 class="text-sm font-bold text-gray-800">{{ $label }}</h3></div>
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">{{ $label }}</h3></div>
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500"><th class="px-5 py-2 font-medium">Code</th><th class="px-5 py-2 font-medium">Name</th><th class="px-5 py-2 font-medium">Subtype</th><th class="px-5 py-2 font-medium">Normal Balance</th><th class="px-5 py-2 font-medium">Status</th><th class="px-5 py-2 font-medium">Actions</th></tr></thead>
-        <tbody>
+        <thead><tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-100"><th class="px-5 py-2.5 font-semibold">Code</th><th class="px-5 py-2.5 font-semibold">Name</th><th class="px-5 py-2.5 font-semibold">Subtype</th><th class="px-5 py-2.5 font-semibold">Normal Balance</th><th class="px-5 py-2.5 font-semibold">Status</th><th class="px-5 py-2.5 font-semibold text-right">Actions</th></tr></thead>
+        <tbody class="divide-y divide-gray-100">
         @forelse(($accounts[$type] ?? collect()) as $a)
-        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
-            <td class="px-5 py-2 text-xs font-mono text-gray-700">{{ $a->code }}</td>
-            <td class="px-5 py-2 text-xs text-gray-800">{{ $a->parent_id ? '— ' : '' }}{{ $a->name }}</td>
-            <td class="px-5 py-2 text-xs text-gray-500">{{ $a->subtype ?? '—' }}</td>
-            <td class="px-5 py-2 text-xs text-gray-500 capitalize">{{ $a->normal_balance }}</td>
-            <td class="px-5 py-2">
-                @if($a->is_system)<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700">System</span>
-                @else<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Custom</span>@endif
+        <tr class="hover:bg-gray-50/60">
+            <td class="px-5 py-2.5 text-xs font-mono text-gray-700">{{ $a->code }}</td>
+            <td class="px-5 py-2.5 text-xs text-gray-800">{{ $a->parent_id ? '— ' : '' }}{{ $a->name }}</td>
+            <td class="px-5 py-2.5 text-xs text-gray-500">{{ $a->subtype ?? '—' }}</td>
+            <td class="px-5 py-2.5 text-xs text-gray-500 capitalize">{{ $a->normal_balance }}</td>
+            <td class="px-5 py-2.5">
+                @if($a->is_system)<span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:#3b82f6"></span>System</span>
+                @else<span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:#10b981"></span>Custom</span>@endif
             </td>
-            <td class="px-5 py-2">
+            <td class="px-5 py-2.5 text-right">
                 @unless($a->is_system)
-                <form id="del-coa-{{ $a->id }}" method="POST" action="{{ route('admin.chart-of-accounts.destroy', $a) }}">@csrf @method('DELETE')</form>
-                <button onclick="confirmDelete('del-coa-{{ $a->id }}', 'Delete this account?')" class="text-red-500 hover:text-red-700 text-xs">Delete</button>
+                <form id="del-coa-{{ $a->id }}" method="POST" action="{{ route('admin.chart-of-accounts.destroy', $a) }}" class="inline">@csrf @method('DELETE')</form>
+                <button onclick="confirmDelete('del-coa-{{ $a->id }}', 'Delete this account?')" class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>
                 @endunless
             </td>
         </tr>
@@ -41,38 +38,65 @@
 </div>
 @endforeach
 
-<div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">New Account</h3>
-        <form method="POST" action="{{ route('admin.chart-of-accounts.store') }}" class="space-y-3">@csrf
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Code *</label><input name="code" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Name *</label><input name="name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Type *</label>
-                    <select name="type" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
-                        <option value="asset">Asset</option><option value="liability">Liability</option><option value="equity">Equity</option><option value="revenue">Revenue</option><option value="expense">Expense</option>
+{{-- New Account Drawer --}}
+<div id="createDrawer" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeDrawer()"></div>
+    <div id="createDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
+            <div><h3 class="text-sm font-bold text-white">New Account</h3><p class="text-[11px] text-slate-400 mt-0.5">Ledger account</p></div>
+            <button type="button" onclick="closeDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form method="POST" action="{{ route('admin.chart-of-accounts.store') }}" class="flex-1 overflow-y-auto p-5">
+            @csrf
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Code <span class="text-red-500">*</span></label><input name="code" required placeholder="e.g. 1010" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 font-mono"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Name <span class="text-red-500">*</span></label><input name="name" required placeholder="e.g. Cash" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Type <span class="text-red-500">*</span></label>
+                        <select name="type" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                            <option value="asset">Asset</option><option value="liability">Liability</option><option value="equity">Equity</option><option value="revenue">Revenue</option><option value="expense">Expense</option>
+                        </select>
+                    </div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Normal Balance <span class="text-red-500">*</span></label>
+                        <select name="normal_balance" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                            <option value="debit">Debit</option><option value="credit">Credit</option>
+                        </select>
+                    </div>
+                </div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Subtype</label><input name="subtype" placeholder="e.g. bank, petty_cash, office_expense" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Parent Account</label>
+                    <select name="parent_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— None —</option>
+                        @foreach($accounts->flatten() as $p)
+                        <option value="{{ $p->id }}">{{ $p->code }} - {{ $p->name }}</option>
+                        @endforeach
                     </select>
                 </div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Normal Balance *</label>
-                    <select name="normal_balance" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
-                        <option value="debit">Debit</option><option value="credit">Credit</option>
-                    </select>
-                </div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" rows="3" placeholder="Optional..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></textarea></div>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Subtype</label><input name="subtype" placeholder="e.g. bank, petty_cash, office_expense" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Parent Account</label>
-                <select name="parent_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
-                    <option value="">None</option>
-                    @foreach($accounts->flatten() as $p)
-                    <option value="{{ $p->id }}">{{ $p->code }} - {{ $p->name }}</option>
-                    @endforeach
-                </select>
+            <div class="flex items-center gap-3 pt-5 mt-2 border-t border-gray-100">
+                <button type="submit" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-700 transition-colors">Create</button>
+                <button type="button" onclick="closeDrawer()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create</button></div>
         </form>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function openDrawer() {
+    document.getElementById('createDrawer').classList.remove('hidden');
+    requestAnimationFrame(() => document.getElementById('createDrawerPanel').classList.remove('-translate-x-full'));
+}
+function closeDrawer() {
+    document.getElementById('createDrawerPanel').classList.add('-translate-x-full');
+    setTimeout(() => document.getElementById('createDrawer').classList.add('hidden'), 300);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+@endpush
