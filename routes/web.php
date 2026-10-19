@@ -987,6 +987,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/vendor-invoices', [$bf, 'vendorInvoiceIndex'])->name('vendor-invoices.index');
     Route::post('/vendor-invoices', [$bf, 'vendorInvoiceStore'])->name('vendor-invoices.store');
     Route::get('/vendor-invoices/{invoice}', [$bf, 'vendorInvoiceShow'])->name('vendor-invoices.show');
+    Route::get('/vendor-invoices/{invoice}/pdf', [$bf, 'vendorInvoicePdf'])->name('vendor-invoices.pdf');
     Route::delete('/vendor-invoices/{invoice}', [$bf, 'vendorInvoiceDestroy'])->name('vendor-invoices.destroy');
 
     // Vendor Payments
