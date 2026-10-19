@@ -117,9 +117,9 @@ function renderEmployees(res) {
                 '<td class="px-5 py-3"><span class="text-xs text-gray-600">' + escapeHtml(e.department || '—') + '</span></td>' +
                 '<td class="px-5 py-3 text-xs text-gray-500">' + escapeHtml(e.designation || 'N/A') + '</td>' +
                 '<td class="px-5 py-3 text-xs text-gray-500">' + escapeHtml(e.employment_type || '—') + '</td>' +
-                <td class="px-5 py-3 text-xs font-medium text-gray-900 text-right">' + numberFormat(e.salary || 0) + ' <span class="text-gray-400 font-normal">TZS</span></td>' +
+                '<td class="px-5 py-3 text-xs font-medium text-gray-900 text-right">' + numberFormat(e.salary || 0) + ' <span class="text-gray-400 font-normal">TZS</span></td>' +
                 '<td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:' + sc + '"></span>' + capitalize((e.status || '').replace(/_/g, ' ')) + '</span></td>' +
-                '<td class="px-5 py-3 text-right"><div class="flex items-center justify-end gap-1">' + actions + '</div></td>' +
+                '<td class="px-5 py-3 text-right"><div class="flex items-center justify-end gap-4">' + actions + '</div></td>' +
                 '</tr>';
         }).join('');
     }
