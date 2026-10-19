@@ -2,55 +2,43 @@
 @section('title', 'Deal ' . $deal->deal_number . ' - ' . config('app.name'))
 @section('page_title', 'Deal Details')
 @section('content')
-<div class="mb-6">
-    <a href="{{ route('admin.crm-deals.index') }}" class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        Back to Deals
-    </a>
+@php $dc = ['open' => '#3b82f6', 'won' => '#10b981', 'lost' => '#ef4444', 'cancelled' => '#9ca3af'][$deal->status] ?? '#9ca3af'; @endphp
+
+<div class="mb-4 flex items-center justify-between">
+    <a href="{{ route('admin.crm-deals.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Deals</a>
+    <a href="{{ route('admin.crm-deals.pdf', $deal) }}" target="_blank" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700">View PDF</a>
 </div>
 
-<div class="bg-white rounded-xl border shadow-sm overflow-hidden">
-    <div class="p-6 border-b bg-gradient-to-r from-sky-50 to-emerald-50 flex items-start justify-between">
-        <div>
-            <h2 class="text-2xl font-bold text-gray-900">{{ $deal->deal_number }}</h2>
-            <p class="text-sm text-gray-600 mt-1">{{ $deal->title }}</p>
+{{-- Header card --}}
+<div class="bg-white rounded-md border border-gray-200 px-5 py-4 mb-4 flex items-center justify-between flex-wrap gap-4">
+    <div>
+        <div class="flex items-center gap-2">
+            <span class="font-mono text-sm font-bold text-gray-900">{{ $deal->deal_number }}</span>
+            <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $dc }}"></span>{{ ucfirst($deal->status) }}</span>
         </div>
-        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold
-            @switch($deal->status) @case('won') bg-emerald-100 text-emerald-800 @break @case('lost') bg-red-100 text-red-800 @break @case('cancelled') bg-gray-100 text-gray-600 @break @default bg-sky-100 text-sky-800 @endswitch">
-            @if($deal->status==='won')<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>@endif
-            {{ ucfirst($deal->status) }}
-        </span>
+        <p class="text-xs text-gray-400 mt-0.5">{{ $deal->title }}</p>
     </div>
-    <div class="p-6 grid grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
-        <div>
-            <span class="text-[10px] text-gray-400 uppercase tracking-wider">Lead</span>
-            <p class="font-medium text-gray-900 mt-1">{{ $deal->lead?->full_name ?? 'N/A' }}</p>
-        </div>
-        <div>
-            <span class="text-[10px] text-gray-400 uppercase tracking-wider">Value</span>
-            <p class="font-bold text-emerald-700 mt-1 text-base">TZS {{ number_format($deal->value) }}</p>
-        </div>
-        <div>
-            <span class="text-[10px] text-gray-400 uppercase tracking-wider">Stage</span>
-            <p class="font-medium text-gray-900 mt-1">{{ ucfirst(str_replace('_', ' ', $deal->stage)) }}</p>
-        </div>
-        <div>
-            <span class="text-[10px] text-gray-400 uppercase tracking-wider">Expected Close</span>
-            <p class="font-medium text-gray-900 mt-1">{{ $deal->expected_close_date?->format('d M Y') ?? '—' }}</p>
-        </div>
-        <div>
-            <span class="text-[10px] text-gray-400 uppercase tracking-wider">Assigned To</span>
-            <p class="font-medium text-gray-900 mt-1">{{ $deal->assignedTo?->name ?? 'Unassigned' }}</p>
-        </div>
-        <div>
-            <span class="text-[10px] text-gray-400 uppercase tracking-wider">Created</span>
-            <p class="font-medium text-gray-900 mt-1">{{ $deal->created_at?->format('d M Y') }}</p>
-        </div>
+    <div class="text-right">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Deal Value</p>
+        <p class="text-xl font-bold text-gray-900">TZS {{ number_format($deal->value) }}</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Details</h4></div>
+        <dl class="p-5 space-y-2.5">
+            <div class="flex justify-between gap-4"><dt class="text-[11px] text-gray-400">Lead</dt><dd class="text-xs text-gray-700">{{ $deal->lead?->full_name ?? '—' }}</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-[11px] text-gray-400">Stage</dt><dd class="text-xs text-gray-700">{{ ucfirst(str_replace('_', ' ', $deal->stage)) }}</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-[11px] text-gray-400">Expected Close</dt><dd class="text-xs text-gray-700">{{ $deal->expected_close_date?->format('d M Y') ?? '—' }}</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-[11px] text-gray-400">Assigned To</dt><dd class="text-xs text-gray-700">{{ $deal->assignedTo?->name ?? 'Unassigned' }}</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-[11px] text-gray-400">Created</dt><dd class="text-xs text-gray-700">{{ $deal->created_at?->format('d M Y') }}</dd></div>
+        </dl>
     </div>
     @if($deal->notes)
-    <div class="px-6 pb-6">
-        <span class="text-[10px] text-gray-400 uppercase tracking-wider">Notes</span>
-        <p class="text-sm text-gray-700 mt-1 bg-gray-50 border rounded-lg p-3">{{ $deal->notes }}</p>
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Notes</h4></div>
+        <div class="p-5 text-xs text-gray-600 leading-relaxed whitespace-pre-wrap">{{ $deal->notes }}</div>
     </div>
     @endif
 </div>
