@@ -64,7 +64,7 @@
         <tr id="emptyRow"><td colspan="{{ $isGroupUser ? 9 : 8 }}" class="px-5 py-12 text-center">
             <svg class="w-12 h-12 mx-auto text-gray-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
             <p class="text-gray-400 text-xs">No products found</p>
-            <button onclick="openCreateModal()" class="mt-3 text-xs text-gray-600 hover:text-gray-900 font-medium">+ Add your first product</button>
+            <button onclick="openCreateDrawer()" class="mt-3 text-xs text-gray-600 hover:text-gray-900 font-medium">+ Add your first product</button>
         </td></tr>
         @endforelse
         </tbody>
@@ -159,15 +159,14 @@
                 </select>
             </div>
             <div class="flex items-center gap-2 pt-1">
-                <input type="checkbox" name="is_active" id="pActive" checked class="rounded border-gray-300 text-emerald-600 focus:ring-gray-300">
+                <input type="checkbox" name="is_active" id="pActive" checked class="w-4 h-4 rounded border-gray-300 text-gray-700 focus:ring-gray-400">
                 <label class="text-xs text-gray-600">Active</label>
             </div>
-            <div class="flex gap-2 pt-3 border-t">
-                <button type="button" onclick="closeCreateModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
-                <button type="submit" id="submitBtn" class="flex-1 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <div class="flex items-center gap-3 pt-5 mt-2 border-t border-gray-100">
+                <button type="submit" id="submitBtn" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
                     <span id="submitText">Create Product</span>
                 </button>
+                <button type="button" onclick="closeCreateModal()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
             </div>
         </form>
     </div>
@@ -179,14 +178,18 @@ const storeUrl = '{{ route("admin.products.store") }}';
 const isGroupUser = {{ $isGroupUser ? 'true' : 'false' }};
 const showCompanyCol = {{ $isGroupUser ? 'true' : 'false' }};
 
-function openCreateModal() {
+function openCreateDrawer() {
     document.getElementById('createModal').classList.remove('hidden');
-    setTimeout(() => document.getElementById('pName').focus(), 100);
+    requestAnimationFrame(() => document.getElementById('createDrawerPanel').classList.remove('-translate-x-full'));
+    setTimeout(() => document.getElementById('pName').focus(), 300);
 }
 
 function closeCreateModal() {
-    document.getElementById('createModal').classList.add('hidden');
-    document.getElementById('productForm').reset();
+    document.getElementById('createDrawerPanel').classList.add('-translate-x-full');
+    setTimeout(() => {
+        document.getElementById('createModal').classList.add('hidden');
+        document.getElementById('productForm').reset();
+    }, 300);
 }
 
 // Submit via AJAX
@@ -290,29 +293,24 @@ function addProductRow(p) {
 
     let companyHtml = '';
     if (showCompanyCol) {
-        if (p.company) {
-            companyHtml = '<td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">' + (p.company.short_code || '') + '</span></td>';
-        } else {
-            companyHtml = '<td class="px-5 py-3"><span class="text-[10px] text-gray-400">N/A</span></td>';
-        }
+        companyHtml = '<td class="px-5 py-3.5 text-xs text-gray-500">' + (p.company ? (p.company.short_code || '—') : '—') + '</td>';
     }
 
-    const statusHtml = p.is_active
-        ? '<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>'
-        : '<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600">Inactive</span>';
+    const dot = p.is_active ? '#10b981' : '#9ca3af';
+    const statusHtml = '<span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:' + dot + '"></span>' + (p.is_active ? 'Active' : 'Inactive') + '</span>';
 
     const catName = p.category ? p.category.name : 'N/A';
 
     tr.innerHTML =
-        '<td class="px-5 py-3 text-xs font-mono text-gray-700">' + p.product_code + '</td>' +
-        '<td class="px-5 py-3 text-xs font-medium text-gray-900">' + p.name + '</td>' +
-        '<td class="px-5 py-3 text-xs text-gray-500">' + catName + '</td>' +
-        '<td class="px-5 py-3 text-xs text-gray-700">TZS ' + Number(p.purchase_price || 0).toLocaleString() + '</td>' +
-        '<td class="px-5 py-3 text-xs font-semibold text-emerald-700">TZS ' + Number(p.sale_price || 0).toLocaleString() + '</td>' +
-        '<td class="px-5 py-3">' + stockHtml + '</td>' +
+        '<td class="px-5 py-3.5 text-xs font-mono text-gray-700">' + p.product_code + '</td>' +
+        '<td class="px-5 py-3.5 text-xs font-medium text-gray-900">' + p.name + '</td>' +
+        '<td class="px-5 py-3.5 text-xs text-gray-500">' + catName + '</td>' +
+        '<td class="px-5 py-3.5 text-xs font-mono text-gray-700 text-right">' + Number(p.purchase_price || 0).toLocaleString() + '</td>' +
+        '<td class="px-5 py-3.5 text-xs font-medium font-mono text-gray-900 text-right">' + Number(p.sale_price || 0).toLocaleString() + '</td>' +
+        '<td class="px-5 py-3.5">' + stockHtml + '</td>' +
         companyHtml +
-        '<td class="px-5 py-3">' + statusHtml + '</td>' +
-        '<td class="px-5 py-3"><button onclick="deleteProduct(' + p.id + ', \'' + (p.name || '').replace(/'/g, "\\'") + '\')" class="text-red-500 hover:text-red-700 text-xs">Delete</button></td>';
+        '<td class="px-5 py-3.5">' + statusHtml + '</td>' +
+        '<td class="px-5 py-3.5 text-right"><button onclick="deleteProduct(' + p.id + ', \'' + (p.name || '').replace(/'/g, "\\'") + '\')" class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button></td>';
 
     tbody.insertBefore(tr, tbody.firstChild);
 }
