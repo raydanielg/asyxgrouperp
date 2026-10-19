@@ -114,11 +114,11 @@ function renderEmployees(res) {
             return '<tr class="hover:bg-gray-50/60">' +
                 '<td class="px-5 py-3 text-xs font-mono text-gray-700 font-medium">' + escapeHtml(e.employee_id || '') + '</td>' +
                 '<td class="px-5 py-3"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold text-[10px]">' + escapeHtml(initials) + '</div><div><p class="text-xs font-medium text-gray-900">' + escapeHtml(fullName) + '</p><p class="text-[10px] text-gray-400">' + escapeHtml(e.email || '') + '</p></div></div></td>' +
-                '<td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700">' + escapeHtml(e.department || 'N/A') + '</span></td>' +
+                '<td class="px-5 py-3"><span class="text-xs text-gray-600">' + escapeHtml(e.department || '—') + '</span></td>' +
                 '<td class="px-5 py-3 text-xs text-gray-500">' + escapeHtml(e.designation || 'N/A') + '</td>' +
                 '<td class="px-5 py-3 text-xs text-gray-500">' + escapeHtml(e.employment_type || '—') + '</td>' +
                 <td class="px-5 py-3 text-xs font-medium text-gray-900 text-right">' + numberFormat(e.salary || 0) + ' <span class="text-gray-400 font-normal">TZS</span></td>' +
-                '<td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-' + sc + '-50 text-' + sc + '-700 border border-' + sc + '-100">' + capitalize((e.status || '').replace(/_/g, ' ')) + '</span></td>' +
+                '<td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:' + sc + '"></span>' + capitalize((e.status || '').replace(/_/g, ' ')) + '</span></td>' +
                 '<td class="px-5 py-3 text-right"><div class="flex items-center justify-end gap-1">' + actions + '</div></td>' +
                 '</tr>';
         }).join('');
