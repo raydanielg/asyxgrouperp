@@ -13,9 +13,12 @@
     .co .name { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: .04em; }
     .co .meta { font-size: 9.5px; color: #555; margin-top: 3px; }
 
-    .topline { overflow: hidden; margin-bottom: 14px; font-size: 12px; }
+    .topline { overflow: hidden; margin-bottom: 6px; font-size: 12px; }
     .topline .l { float: left; font-weight: bold; }
     .topline .r { float: right; }
+
+    .empname { font-size: 15px; font-weight: bold; text-transform: uppercase; clear: both; }
+    .empsub { font-size: 10px; color: #555; margin-top: 2px; margin-bottom: 18px; }
 
     .period { overflow: hidden; margin-bottom: 20px; font-size: 11px; }
     .period .l { float: left; }
@@ -44,8 +47,15 @@
     </div>
 
     <div class="topline">
-        <span class="l">{{ $payroll->employee?->employee_id ?? '—' }}&nbsp;&nbsp;&nbsp;{{ strtoupper($payroll->employee?->full_name ?? 'N/A') }}</span>
-        <span class="r">PAYSLIP</span>
+        <span class="l">PAYSLIP</span>
+        <span class="r">{{ $payroll->payroll_number }}</span>
+    </div>
+
+    <div class="empname">{{ $payroll->employee?->full_name ?? 'N/A' }}</div>
+    <div class="empsub">
+        {{ $payroll->employee?->employee_id ?? '—' }}
+        @if($payroll->employee?->designation) &middot; {{ $payroll->employee->designation }}@endif
+        @if($payroll->employee?->department) &middot; {{ $payroll->employee->department }}@endif
     </div>
 
     <div class="period">
