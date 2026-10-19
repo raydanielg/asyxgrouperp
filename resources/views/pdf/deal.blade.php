@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Deal {{ $deal->deal_number }}</title>
 <style>
+    @page { margin: 40px 42px; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Helvetica', 'Arial', sans-serif; color: #111; font-size: 12px; }
 
