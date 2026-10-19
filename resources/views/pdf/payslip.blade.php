@@ -6,110 +6,94 @@
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Helvetica', 'Arial', sans-serif; color: #111; font-size: 12px; background: #f3f4f6; padding: 24px; }
-    .sheet { background: #fff; max-width: 720px; margin: 0 auto; padding: 44px 48px; }
+    .sheet { background: #fff; max-width: 720px; margin: 0 auto; padding: 40px 44px; }
     @media print { body { background: #fff; padding: 0; } }
 
-    .hdr { overflow: hidden; margin-bottom: 36px; }
-    .hdr .left { float: left; }
-    .hdr .right { float: right; text-align: right; }
-    .co-name { font-size: 14px; font-weight: bold; }
-    .co-meta { font-size: 10px; color: #444; margin-top: 4px; line-height: 1.7; }
-    .doc { font-size: 20px; font-weight: bold; letter-spacing: .16em; padding-top: 2px; }
-    .doc-no { font-size: 10px; color: #555; margin-top: 4px; }
+    .co { text-align: center; margin-bottom: 24px; }
+    .co .name { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: .04em; }
+    .co .meta { font-size: 9.5px; color: #555; margin-top: 3px; }
 
-    .info { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
-    .info td { vertical-align: top; font-size: 11px; padding: 2px 0; }
-    .info .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #666; font-weight: bold; padding-bottom: 4px; }
-    .info .val { font-size: 12px; color: #111; }
+    .topline { overflow: hidden; margin-bottom: 14px; font-size: 12px; }
+    .topline .l { float: left; font-weight: bold; }
+    .topline .r { float: right; }
 
-    .cols { width: 100%; margin-top: 28px; }
-    .cols td { vertical-align: top; }
+    .period { overflow: hidden; margin-bottom: 20px; font-size: 11px; }
+    .period .l { float: left; }
+    .period .r { float: right; font-weight: bold; }
+
     table.lines { width: 100%; border-collapse: collapse; }
-    table.lines th { text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #444; border-bottom: 1.5px solid #111; padding: 0 0 8px; font-weight: bold; }
+    table.lines th { text-align: left; font-size: 10px; font-weight: bold; border-bottom: 1.5px solid #111; padding: 0 0 6px; }
     table.lines th.r { text-align: right; }
-    table.lines td { padding: 9px 0; font-size: 11.5px; color: #111; }
+    table.lines td { padding: 8px 0; font-size: 12px; color: #111; }
     table.lines td.r { text-align: right; }
-    table.lines tr.total td { font-weight: bold; border-top: 1.5px solid #111; }
+    table.lines tr.total td { font-weight: bold; border-top: 1.5px solid #111; border-bottom: 1.5px solid #111; }
 
-    .netbar { margin-top: 30px; border: 1.5px solid #111; padding: 14px 16px; overflow: hidden; }
-    .netbar .l { float: left; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: .1em; padding-top: 3px; }
-    .netbar .r { float: right; font-size: 16px; font-weight: bold; }
-
-    .foot { margin-top: 40px; font-size: 9px; color: #999; text-align: center; }
+    .foot { margin-top: 36px; font-size: 9px; color: #999; text-align: center; }
 </style>
 </head>
 <body>
 
 <div class="sheet">
-    <div class="hdr">
-        <div class="left">
-            <div class="co-name">{{ $company?->legal_name ?? $company?->name ?? config('app.name') }}</div>
-            <div class="co-meta">
-                {{ trim(($company?->address ?? 'Dar es Salaam') . ($company?->city ? ', ' . $company->city : '')) }}
-                @if($company?->tin)<br>TIN: {{ $company->tin }}@endif
-            </div>
-        </div>
-        <div class="right">
-            <div class="doc">PAYSLIP</div>
-            <div class="doc-no">{{ $payroll->payroll_number }}</div>
+
+    <div class="co">
+        <div class="name">{{ $company?->legal_name ?? $company?->name ?? 'ASYX Group Company Limited' }}</div>
+        <div class="meta">
+            {{ trim(($company?->address ?? 'Dar es Salaam') . ($company?->city ? ', ' . $company->city : '')) }}
+            @if($company?->tin) &middot; TIN: {{ $company->tin }}@endif
         </div>
     </div>
 
-    <table class="info">
-        <tr>
-            <td style="width:40%;">
-                <div class="lbl">Employee</div>
-                <div class="val">{{ $payroll->employee?->full_name ?? '—' }}</div>
-                <div class="val" style="font-size:10.5px;color:#555;">{{ $payroll->employee?->designation ?? '' }}</div>
-            </td>
-            <td style="width:30%;">
-                <div class="lbl">Employee No.</div>
-                <div class="val">{{ $payroll->employee?->employee_id ?? '—' }}</div>
-            </td>
-            <td style="width:30%;">
-                <div class="lbl">Pay Period</div>
-                <div class="val">{{ $payroll->month }} {{ $payroll->year }}</div>
-            </td>
-        </tr>
-    </table>
-
-    <table class="cols">
-        <tr>
-            <td style="width:47%;">
-                <table class="lines">
-                    <tr><th>Earnings</th><th class="r">TZS</th></tr>
-                    <tr><td>Basic salary</td><td class="r">{{ number_format($payroll->basic_salary) }}</td></tr>
-                    @if(($payroll->allowances ?? 0) > 0)
-                    <tr><td>Allowances</td><td class="r">{{ number_format($payroll->allowances) }}</td></tr>
-                    @endif
-                    @if(($payroll->overtime ?? 0) > 0)
-                    <tr><td>Overtime</td><td class="r">{{ number_format($payroll->overtime) }}</td></tr>
-                    @endif
-                    <tr class="total"><td>Total earnings</td><td class="r">{{ number_format($payroll->basic_salary + ($payroll->allowances ?? 0) + ($payroll->overtime ?? 0)) }}</td></tr>
-                </table>
-            </td>
-            <td style="width:6%;"></td>
-            <td style="width:47%;">
-                <table class="lines">
-                    <tr><th>Deductions</th><th class="r">TZS</th></tr>
-                    @if(($payroll->deductions ?? 0) > 0)
-                    <tr><td>Deductions</td><td class="r">{{ number_format($payroll->deductions) }}</td></tr>
-                    @else
-                    <tr><td colspan="2" style="color:#999;padding:9px 0;">No deductions</td></tr>
-                    @endif
-                    <tr class="total"><td>Total deductions</td><td class="r">{{ number_format($payroll->deductions ?? 0) }}</td></tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-
-    <div class="netbar">
-        <span class="l">Net Pay</span>
-        <span class="r">TZS {{ number_format($payroll->net_salary) }}</span>
+    <div class="topline">
+        <span class="l">{{ $payroll->employee?->employee_id ?? '—' }}&nbsp;&nbsp;&nbsp;{{ strtoupper($payroll->employee?->full_name ?? 'N/A') }}</span>
+        <span class="r">PAYSLIP</span>
     </div>
+
+    <div class="period">
+        <span class="l">{{ $payroll->payroll_number }}</span>
+        <span class="r">{{ $payroll->month }} {{ $payroll->year }}</span>
+    </div>
+
+    <table class="lines">
+        <tr>
+            <th>DESCRIPTION</th>
+            <th class="r" style="width:130px;">BALANCE</th>
+            <th class="r" style="width:130px;">AMOUNT</th>
+        </tr>
+        <tr>
+            <td>Basic Salary</td>
+            <td class="r"></td>
+            <td class="r">{{ number_format($payroll->basic_salary, 2) }}</td>
+        </tr>
+        @if(($payroll->allowances ?? 0) > 0)
+        <tr>
+            <td>Allowances</td>
+            <td class="r"></td>
+            <td class="r">{{ number_format($payroll->allowances, 2) }}</td>
+        </tr>
+        @endif
+        @if(($payroll->overtime ?? 0) > 0)
+        <tr>
+            <td>Overtime</td>
+            <td class="r"></td>
+            <td class="r">{{ number_format($payroll->overtime, 2) }}</td>
+        </tr>
+        @endif
+        @if(($payroll->deductions ?? 0) > 0)
+        <tr>
+            <td>Deductions (Taxes &amp; Contributions)</td>
+            <td class="r"></td>
+            <td class="r">-{{ number_format($payroll->deductions, 2) }}</td>
+        </tr>
+        @endif
+        <tr class="total">
+            <td>NET AMOUNT DUE</td>
+            <td class="r">{{ ($payroll->paid_at ?? $payroll->created_at)?->format('d/m/Y') }}</td>
+            <td class="r">{{ number_format($payroll->net_salary, 2) }}</td>
+        </tr>
+    </table>
 
     <div class="foot">
-        {{ $company?->legal_name ?? config('app.name') }} &middot; Payslip generated {{ now()->format('d M Y') }}@if($payroll->paid_at) &middot; Paid {{ $payroll->paid_at->format('d M Y') }}@endif
+        {{ $company?->legal_name ?? config('app.name') }} &middot; Payslip generated {{ now()->format('d M Y') }}
     </div>
 </div>
 </body>
