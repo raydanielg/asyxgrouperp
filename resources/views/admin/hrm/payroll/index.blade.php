@@ -86,8 +86,8 @@
                     </td>
                     <td class="px-5 py-3.5"><span class="text-xs text-gray-600">{{ $p->month }} / {{ $p->year }}</span></td>
                     <td class="px-5 py-3.5 text-xs text-right font-mono text-gray-700">{{ number_format($p->basic_salary) }}</td>
-                    <td class="px-5 py-3.5 text-xs text-right font-mono text-gray-600">{{ number_format($p->allowances) }}</td>
-                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $p->deductions > 0 ? 'text-red-500' : 'text-gray-300' }}">{{ number_format($p->deductions) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $p->allowances > 0 ? 'text-gray-600' : 'text-gray-300' }}">{{ $p->allowances > 0 ? number_format($p->allowances) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $p->deductions > 0 ? 'text-red-500' : 'text-gray-300' }}">{{ $p->deductions > 0 ? number_format($p->deductions) : '—' }}</td>
                     <td class="px-5 py-3.5 text-xs text-right font-bold font-mono text-gray-900">{{ number_format($p->net_salary) }}</td>
                     <td class="px-5 py-3.5">
                         @php $pc = ['paid' => '#10b981', 'pending' => '#f59e0b', 'cancelled' => '#ef4444'][$p->status] ?? '#9ca3af'; @endphp

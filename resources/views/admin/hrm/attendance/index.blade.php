@@ -216,17 +216,17 @@ function renderAttendance(res) {
             const sc = statusColors[a.status] || '#9ca3af';
             const statusLabel = capitalize((a.status || '').replace(/_/g, ' '));
 
-            let workHrs = '00:00';
+            let workHrs = '<span class="text-gray-300">—</span>';
             if (a.work_hours > 0) {
                 const h = Math.floor(a.work_hours);
                 const m = Math.round((a.work_hours - h) * 60);
-                workHrs = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+                workHrs = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + 'h';
             }
-            let otHrs = '00:00';
+            let otHrs = '<span class="text-gray-300">—</span>';
             if (a.overtime_hours > 0) {
                 const oh = Math.floor(a.overtime_hours);
                 const om = Math.round((a.overtime_hours - oh) * 60);
-                otHrs = String(oh).padStart(2,'0') + ':' + String(om).padStart(2,'0');
+                otHrs = String(oh).padStart(2,'0') + ':' + String(om).padStart(2,'0') + 'h';
             }
 
             let actions = '';
@@ -241,7 +241,7 @@ function renderAttendance(res) {
                 '<td class="px-5 py-3.5 text-xs">' + clockIn + '</td>' +
                 '<td class="px-5 py-3.5 text-xs">' + clockOut + '</td>' +
                 '<td class="px-5 py-3.5 text-xs text-right font-medium text-gray-700">' + workHrs + '</td>' +
-                '<td class="px-5 py-3.5 text-xs text-right ' + (a.overtime_hours > 0 ? 'text-amber-600 font-medium' : 'text-gray-300') + '">' + otHrs + '</td>' +
+                '<td class="px-5 py-3.5 text-xs text-right ' + (a.overtime_hours > 0 ? 'text-amber-600 font-medium' : '') + '">' + otHrs + '</td>' +
                 '<td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:' + sc + '"></span>' + statusLabel + '</span></td>' +
                 '<td class="px-5 py-3.5 text-right"><div class="flex items-center justify-end gap-4">' + actions + '</div></td>' +
                 '</tr>';

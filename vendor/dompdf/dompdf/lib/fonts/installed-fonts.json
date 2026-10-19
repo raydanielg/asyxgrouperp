@@ -1,15 +1,6 @@
 {
-    "barlow semi condensed": {
-        "500": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/barlow_semi_condensed_500_4a88eed36d8b883672a90db88431ba0c",
-        "600": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/barlow_semi_condensed_600_54b85ac9efa928e5be61464e7567c7e9",
-        "bold": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/barlow_semi_condensed_bold_c9aa004e61e2db8dd09c8b7352e34377",
-        "800": "barlow_semi_condensed_800_685d6e0f3e1c0433b655eb3045e8a5e0"
-    },
-    "inter": {
-        "normal": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_normal_5a66f8ceb794f00a7f54c797a21283b3",
-        "500": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_500_efef4d9d61ac26570557ad601dea222a",
-        "600": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_600_3604d9d49b61fc3b7c29c4259c86ff89",
-        "bold": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/inter_bold_02384cdf43e3d24b76c57c66dfd114bf",
-        "800": "inter_800_43e268268a3801a5ec2cf116ab01b114"
+    "fraunces": {
+        "600": "\/Users\/group\/Desktop\/ezra\/asyxold\/asyxgrouperp\/vendor\/dompdf\/dompdf\/lib\/fonts\/fraunces_600_9a04d55e7b5849c45ad850803d910b11",
+        "bold": "fraunces_bold_8144d8537090263f411fc11794ebce2a"
     }
 }
