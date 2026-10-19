@@ -28,6 +28,12 @@
 
     .sec { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #444; font-weight: bold; border-bottom: 1.5px solid #111; padding-bottom: 6px; margin-top: 30px; margin-bottom: 4px; }
 
+    .pipeline { margin-top: 26px; border-top: 1px solid #ddd; padding-top: 14px; }
+    .pipeline .cap { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #777; font-weight: bold; margin-bottom: 8px; }
+    .pipe-row { font-size: 10.5px; color: #888; line-height: 1.9; }
+    .pipe-row b { color: #111; font-weight: bold; }
+    .pipe-row .arrow { color: #bbb; padding: 0 4px; }
+
     table.rows { width: 100%; border-collapse: collapse; margin-top: 10px; }
     table.rows td { padding: 9px 0; font-size: 11px; border-bottom: 1px solid #ddd; }
     table.rows td.r { text-align: right; }
@@ -51,7 +57,10 @@
 </div>
 
 <div class="title">{{ $deal->title }}<span style="font-size:10px;color:#555;margin-left:8px;text-transform:uppercase;letter-spacing:.08em;">— {{ ucfirst($deal->status) }}</span></div>
-<div class="sub">{{ ucfirst(str_replace('_', ' ', $deal->stage)) }}@if($deal->expected_close_date) &middot; Expected close {{ $deal->expected_close_date->format('d M Y') }}@endif</div>
+<div class="sub">
+    @if($deal->lead?->company){{ $deal->lead->company }} &middot; @endif
+    Expected close {{ $deal->expected_close_date?->format('d M Y') ?? '—' }}
+</div>
 
 <table class="info">
     <tr>
@@ -69,6 +78,24 @@
         </td>
     </tr>
 </table>
+
+@php
+    $stages = ['prospecting' => 'Prospecting', 'qualification' => 'Qualification', 'negotiation' => 'Negotiation', 'proposal' => 'Proposal', 'closed_won' => 'Closed Won', 'closed_lost' => 'Closed Lost'];
+    $currentKey = $deal->stage;
+    $line = [];
+    $reached = true;
+    foreach ($stages as $k => $v) {
+        if ($k === 'closed_lost') { if ($currentKey === 'closed_lost') { $line[] = ['k' => $k, 'v' => $v, 'on' => true]; } continue; }
+        $line[] = ['k' => $k, 'v' => $v, 'on' => $reached];
+        if ($k === $currentKey) { $reached = false; }
+    }
+@endphp
+<div class="pipeline">
+    <div class="cap">Pipeline Progress</div>
+    <div class="pipe-row">
+        @foreach($line as $i => $s)@if($i > 0)<span class="arrow">&rarr;</span>@endif@if($s['on'])<b>{{ $s['v'] }}</b>@else{{ $s['v'] }}@endif@endforeach
+    </div>
+</div>
 
 <div class="valbar">
     <span class="l">Deal Value</span>
