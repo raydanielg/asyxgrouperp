@@ -6,9 +6,16 @@
 
 <div class="mb-4 flex items-center justify-between flex-wrap gap-3">
     <a href="{{ route('admin.vendor-invoices.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Vendor Invoices</a>
-    @if($invoice->balance > 0)
-    <button type="button" onclick="openPayDrawer()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">Record Payment</button>
-    @endif
+    <div class="flex items-center gap-2">
+        <a href="{{ route('admin.vendor-invoices.pdf', $invoice) }}" target="_blank" class="px-3 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded hover:bg-gray-50">View PDF</a>
+        <a href="{{ route('admin.vendor-invoices.pdf', $invoice) }}?download=1" class="px-3 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded hover:bg-gray-50 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download PDF
+        </a>
+        @if($invoice->balance > 0)
+        <button type="button" onclick="openPayDrawer()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">Record Payment</button>
+        @endif
+    </div>
 </div>
 
 {{-- Header card --}}
@@ -81,7 +88,8 @@
                     <th class="px-4 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Date</th>
                     <th class="px-4 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wide text-right">Amount</th>
                     <th class="px-4 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Method</th>
-                    <th class="px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Reference</th>
+                    <th class="px-4 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Reference</th>
+                    <th class="px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wide text-right">Receipt</th>
                 </tr></thead>
                 <tbody class="divide-y divide-gray-50">
                 @forelse($invoice->payments as $p)
@@ -90,17 +98,18 @@
                     <td class="px-4 py-3 text-xs text-gray-500">{{ $p->payment_date->format('d M Y') }}</td>
                     <td class="px-4 py-3 text-xs text-right font-medium text-emerald-600">+{{ number_format($p->amount) }}</td>
                     <td class="px-4 py-3 text-xs text-gray-600">{{ ucfirst(str_replace('_',' ',$p->payment_method)) }}</td>
-                    <td class="px-5 py-3 text-xs font-mono text-gray-400">{{ $p->reference_number ?? '—' }}</td>
+                    <td class="px-4 py-3 text-xs font-mono text-gray-400">{{ $p->reference_number ?? '—' }}</td>
+                    <td class="px-5 py-3 text-right"><button type="button" onclick="openRcptDrawer({{ $p->id }})" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</button></td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="px-5 py-10 text-center text-gray-400 text-xs">No payments recorded yet</td></tr>
+                <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400 text-xs">No payments recorded yet</td></tr>
                 @endforelse
                 </tbody>
                 @if($invoice->payments->count())
                 <tfoot><tr class="border-t border-gray-200 bg-gray-50/50">
                     <td colspan="2" class="px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-gray-500">Total paid</td>
                     <td class="px-4 py-2.5 text-xs text-right font-bold text-emerald-600">{{ number_format($invoice->amount_paid) }}</td>
-                    <td colspan="2"></td>
+                    <td colspan="3"></td>
                 </tr></tfoot>
                 @endif
             </table></div>
