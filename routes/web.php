@@ -720,6 +720,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/employees/{employee}/edit', [$ext, 'employeeEdit'])->name('employees.edit');
     Route::patch('/employees/{employee}', [$ext, 'employeeUpdate'])->name('employees.update');
     Route::delete('/employees/{employee}', [$ext, 'employeeDestroy'])->name('employees.destroy');
+    Route::post('/employees-bulk-destroy', [$ext, 'employeeBulkDestroy'])->name('employees.bulk-destroy');
 
     // Employee Bonuses
     Route::get('/bonuses', [$ext, 'bonusIndex'])->name('bonuses.index');

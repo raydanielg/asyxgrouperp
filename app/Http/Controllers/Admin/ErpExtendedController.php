@@ -265,6 +265,13 @@ class ErpExtendedController extends Controller
         return redirect()->route('admin.employees.index')->with('success', 'Employee deleted.');
     }
 
+    public function employeeBulkDestroy(Request $request)
+    {
+        $ids = $request->validate(['ids' => 'required|array', 'ids.*' => 'integer|exists:employees,id'])['ids'];
+        $deleted = Employee::whereIn('id', $ids)->delete();
+        return response()->json(['success' => true, 'deleted' => $deleted]);
+    }
+
     // ═══════════════════════════════════════════════════════
     //  HRM — EMPLOYEE BONUSES
     // ═══════════════════════════════════════════════════════

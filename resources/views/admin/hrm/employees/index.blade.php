@@ -34,11 +34,21 @@
         </div>
     </div>
 
+    {{-- Bulk bar --}}
+    <div id="empBulkBar" class="hidden px-5 py-2.5 border-b border-gray-100 bg-gray-50/60 flex items-center justify-between">
+        <span class="text-xs font-medium text-gray-700"><span id="empSelCount">0</span> selected</span>
+        <div class="flex items-center gap-4">
+            <button type="button" onclick="bulkDeleteEmployees()" class="text-xs font-medium text-red-600 hover:text-red-800">Delete selected</button>
+            <button type="button" onclick="clearEmpSelection()" class="text-xs text-gray-400 hover:text-gray-700">Clear</button>
+        </div>
+    </div>
+
     {{-- Table --}}
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+                    <th class="px-4 py-3 w-10"><input type="checkbox" id="empSelectAll" class="w-4 h-4 rounded border-gray-300 text-gray-700 focus:ring-gray-400 cursor-pointer"></th>
                     <th class="px-5 py-3 font-semibold">Employee ID</th>
                     <th class="px-5 py-3 font-semibold">Name</th>
                     <th class="px-5 py-3 font-semibold">Department</th>
@@ -50,7 +60,7 @@
                 </tr>
             </thead>
             <tbody id="employeesTableBody">
-                <tr><td colspan="8" class="px-5 py-12 text-center text-sm text-gray-400">Loading employees...</td></tr>
+                <tr><td colspan="9" class="px-5 py-12 text-center text-sm text-gray-400">Loading employees...</td></tr>
             </tbody>
         </table>
     </div>
@@ -112,6 +122,7 @@ function renderEmployees(res) {
             actions += '<button onclick="deleteEmployee(' + e.id + ',\'' + escapeQuotes(e.employee_id || '') + '\',\'' + escapeQuotes(fullName) + '\')" class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>';
 
             return '<tr class="hover:bg-gray-50/60">' +
+                '<td class="px-4 py-3"><input type="checkbox" class="emp-checkbox w-4 h-4 rounded border-gray-300 text-gray-700 focus:ring-gray-400 cursor-pointer" value="' + e.id + '" onchange="updateEmpBulkBar()"></td>' +
                 '<td class="px-5 py-3 text-xs font-mono text-gray-700 font-medium">' + escapeHtml(e.employee_id || '') + '</td>' +
                 '<td class="px-5 py-3"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold text-[10px]">' + escapeHtml(initials) + '</div><div><p class="text-xs font-medium text-gray-900">' + escapeHtml(fullName) + '</p><p class="text-[10px] text-gray-400">' + escapeHtml(e.email || '') + '</p></div></div></td>' +
                 '<td class="px-5 py-3"><span class="text-xs text-gray-600">' + escapeHtml(e.department || '—') + '</span></td>' +
