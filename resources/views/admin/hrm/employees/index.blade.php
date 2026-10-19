@@ -100,7 +100,7 @@ function loadEmployees(page = 1) {
     .then(r => r.json())
     .then(res => renderEmployees(res))
     .catch(() => {
-        document.getElementById('employeesTableBody').innerHTML = '<tr><td colspan="8" class="px-5 py-12 text-center text-sm text-red-400">Failed to load employees.</td></tr>';
+        document.getElementById('employeesTableBody').innerHTML = '<tr><td colspan="9" class="px-5 py-12 text-center text-sm text-red-400">Failed to load employees.</td></tr>';
     });
 }
 
@@ -109,7 +109,7 @@ function renderEmployees(res) {
     const employees = res.data || [];
 
     if (employees.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="px-5 py-12 text-center"><svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><p class="text-sm text-gray-400">No employees found</p></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="px-5 py-12 text-center"><svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><p class="text-sm text-gray-400">No employees found</p></td></tr>';
     } else {
         tbody.innerHTML = employees.map(e => {
             const statusColors = {active: '#10b981', inactive: '#9ca3af', on_leave: '#f59e0b', terminated: '#ef4444'};
@@ -135,6 +135,7 @@ function renderEmployees(res) {
         }).join('');
     }
 
+    updateEmpBulkBar();
     document.getElementById('employeesInfo').textContent = res.total ? ('Showing ' + (res.from || 0) + '–' + (res.to || 0) + ' of ' + res.total) : '';
     document.getElementById('employeesPagination').innerHTML = res.links || '';
 }
@@ -209,6 +210,58 @@ document.getElementById('employeesPagination').addEventListener('click', functio
     const page = url.searchParams.get('page') || 1;
     loadEmployees(page);
 });
+
+const empBulkUrl = '{{ route("admin.employees.bulk-destroy") }}';
+
+function updateEmpBulkBar() {
+    const n = document.querySelectorAll('.emp-checkbox:checked').length;
+    document.getElementById('empBulkBar').classList.toggle('hidden', n === 0);
+    document.getElementById('empSelCount').textContent = n;
+    const all = document.getElementById('empSelectAll');
+    const total = document.querySelectorAll('.emp-checkbox').length;
+    all.checked = n > 0 && n === total;
+    all.indeterminate = n > 0 && n < total;
+}
+
+function clearEmpSelection() {
+    document.querySelectorAll('.emp-checkbox').forEach(cb => cb.checked = false);
+    updateEmpBulkBar();
+}
+
+document.getElementById('empSelectAll').addEventListener('change', function() {
+    document.querySelectorAll('.emp-checkbox').forEach(cb => cb.checked = this.checked);
+    updateEmpBulkBar();
+});
+
+function bulkDeleteEmployees() {
+    const ids = Array.from(document.querySelectorAll('.emp-checkbox:checked')).map(cb => cb.value);
+    if (!ids.length) return;
+    Swal.fire({
+        title: 'Delete ' + ids.length + ' employee' + (ids.length > 1 ? 's' : '') + '?',
+        text: 'This will permanently remove all selected employees. This cannot be undone.',
+        icon: 'warning', showCancelButton: true,
+        confirmButtonColor: '#dc2626', cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete', cancelButtonText: 'Cancel', reverseButtons: true
+    }).then(r => {
+        if (!r.isConfirmed) return;
+        Swal.fire({ title: 'Deleting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        fetch(empBulkUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ ids: ids })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                Swal.fire({ icon: 'success', title: 'Deleted', text: res.deleted + ' employee(s) removed.', timer: 1800, showConfirmButton: false });
+                clearEmpSelection();
+                loadEmployees(1);
+            } else {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Could not delete employees.' });
+            }
+        });
+    });
+}
 
 // Initial load
 loadEmployees(1);
