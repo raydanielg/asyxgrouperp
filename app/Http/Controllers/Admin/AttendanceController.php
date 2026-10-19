@@ -213,4 +213,26 @@ class AttendanceController extends Controller
         $attendance->delete();
         return back()->with('success', 'Attendance record deleted.');
     }
+
+    public function export(Request $request)
+    {
+        $query = Attendance::with('employee');
+
+        $date = $request->get('date') ?: today()->toDateString();
+        $query->whereDate('date', $date);
+        if ($status = $request->get('status')) $query->where('status', $status);
+        if ($empId = $request->get('employee_id')) $query->where('employee_id', $empId);
+        if ($search = $request->get('search')) {
+            $query->whereHas('employee', function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('employee_id', 'like', "%{$search}%");
+            });
+        }
+
+        $records = $query->latest('clock_in_at')->get();
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+        $filters = ['date' => $date, 'search' => $search ?? null, 'status' => $status ?? null];
+        return view('admin.hrm.attendance.export', compact('records', 'company', 'filters'));
+    }
 }
