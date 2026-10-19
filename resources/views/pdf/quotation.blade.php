@@ -16,7 +16,7 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   html{background:#E9EAEE;}
   body{font-family:'Inter',sans-serif;color:var(--ink);font-size:10pt;line-height:1.4;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .sheet{width:210mm;min-height:297mm;margin:10mm auto;background:var(--paper);box-shadow:0 4px 30px rgba(70,25,90,.20);display:flex;flex-direction:column;overflow:hidden;padding:10mm 12mm 0;position:relative;}
+  .sheet{min-height:297mm;margin:10mm auto;background:var(--paper);box-shadow:0 4px 30px rgba(70,25,90,.20);display:flex;flex-direction:column;overflow:hidden;padding:10mm 12mm 0;position:relative;}
 
   .masthead{position:relative;height:32mm;margin-bottom:12mm;}
   .head-plum{position:absolute;inset:0;background:var(--plum);clip-path:polygon(0 0,100% 0,100% 82%,26% 82%,16% 100%,0 100%);}
@@ -34,12 +34,11 @@
   .logo .grp{font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;font-size:6pt;letter-spacing:5px;color:#fff;}
   .rule{height:1.1mm;background:var(--gold);margin:0 0 0;}
 
-  .info{display:grid;grid-template-columns:1.15fr .85fr;gap:14mm;margin-bottom:9mm;}
+  .info{width:100%;border-collapse:collapse;margin-bottom:9mm;} .info>tbody>tr>td{vertical-align:top;padding:0;} .info td.bill{width:56%;padding-right:12mm;} .info td.meta{width:44%;}
   .bill h3, .meta .k{font-weight:800;font-size:10.5pt;letter-spacing:.2px;}
   .bill h3{margin-bottom:1.5mm;}
   .bill .line{border-bottom:1px solid var(--ink);padding:1mm 2mm;font-weight:500;min-height:6.5mm;}
-  .meta{display:flex;flex-direction:column;gap:1.6mm;}
-  .meta .row{display:grid;grid-template-columns:auto 1fr;gap:3mm;align-items:end;}
+  .meta td.pb{padding-bottom:4mm;}
   .meta .v{border-bottom:1px solid var(--ink);text-align:center;padding:0 2mm .6mm;font-weight:600;min-height:5.5mm;}
 
   table{width:100%;border-collapse:collapse;}
@@ -57,7 +56,7 @@
   .totals .grand .v{background:var(--navy);color:#fff;font-size:12pt;}
   .no-border{border:none !important;}
 
-  .lower{display:grid;grid-template-columns:1fr 58mm;gap:8mm;margin-top:12mm;align-items:start;}
+  .lower{width:100%;border-collapse:collapse;margin-top:12mm;} .lower>tbody>tr>td{vertical-align:top;} .lower td.tstamp{width:58mm;padding-left:8mm;text-align:center;}
   .terms h3{color:var(--red);font-weight:800;font-size:13pt;text-decoration:underline;text-underline-offset:2.5px;margin-bottom:2.5mm;letter-spacing:.3px;}
   .terms ol{padding-left:5.5mm;font-weight:500;}
   .terms li{margin-bottom:1.2mm;}
@@ -100,7 +99,7 @@
       {{ $company->address ?? 'New Bagamoyo Road' }}@if($company->city ?? null) · {{ $company->city }}@endif
       @if($company->country ?? null)<br>{{ $company->country }}@endif
     </div>
-    <div class="tin-bar">@if($company->tax_id ?? true)TIN: {{ $company->tax_id ?? '108-800-186' }}@endif @if($company->vrn ?? true)&nbsp; | &nbsp;VRN: {{ $company->vrn ?? '40-009570-M' }}@endif</div>
+    <div class="tin-bar">TIN: {{ $company->tax_id ?? '108-800-186' }}&nbsp; | &nbsp;VRN: {{ $company->vrn ?? '40-009570-M' }}</div>
     <div class="logo">
       <svg viewBox="0 0 100 100" aria-hidden="true">
         <path d="M50 8 A42 42 0 1 0 92 50" fill="none" stroke="#D91F26" stroke-width="12" stroke-linecap="round"/>
@@ -113,8 +112,8 @@
   </header>
   <div class="rule"></div>
 
-  <section class="info" style="margin-top:10mm;">
-    <div class="bill">
+  <table class="info" style="margin-top:10mm;"><tr>
+    <td class="bill">
       <h3>QUOTATION TO:</h3>
       <div class="line"><b>{{ $quotation->client_name }}</b></div>
       <div class="line">{{ $quotation->lead?->company ?? '' }}</div>
@@ -122,14 +121,16 @@
       @if($quotation->lead?->full_name)
       <div class="line">Attn: {{ $quotation->lead->full_name }}</div>
       @endif
-    </div>
-    <div class="meta">
-      <div class="row"><span class="k">QUOTATION NO:</span><span class="v">{{ $quotation->quotation_number }}</span></div>
-      <div class="row"><span class="k">DATE:</span><span class="v">{{ $quotation->quotation_date->format('d/m/Y') }}</span></div>
-      <div class="row"><span class="k">VALID UNTIL:</span><span class="v">{{ $quotation->valid_until?->format('d/m/Y') ?? 'N/A' }}</span></div>
-      <div class="row"><span class="k">CURRENCY:</span><span class="v">TZS</span></div>
-    </div>
-  </section>
+    </td>
+    <td class="meta">
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td class="k pb">QUOTATION NO:</td><td class="v pb">{{ $quotation->quotation_number }}</td></tr>
+        <tr><td class="k pb">DATE:</td><td class="v pb">{{ $quotation->quotation_date->format('d/m/Y') }}</td></tr>
+        <tr><td class="k pb">VALID UNTIL:</td><td class="v pb">{{ $quotation->valid_until?->format('d/m/Y') ?? 'N/A' }}</td></tr>
+        <tr><td class="k pb">CURRENCY:</td><td class="v pb">TZS</td></tr>
+      </table>
+    </td>
+  </tr></table>
 
   <table class="items">
     <thead>
@@ -185,8 +186,8 @@
     </tr>
   </table>
 
-  <section class="lower">
-    <div class="terms">
+  <table class="lower"><tr>
+    <td class="terms">
       <h3>TERMS &amp; CONDITIONS:</h3>
       @if($quotation->terms)
       <p style="font-weight:500;white-space:pre-line;">{{ $quotation->terms }}</p>
@@ -207,8 +208,9 @@
         <span class="line">Date</span>
       </div>
       <div class="thanks">Thank You For Your Business</div>
-    </div>
+    </td>
 
+    <td class="tstamp">
     <svg class="stamp" viewBox="0 0 200 200" aria-label="Company stamp">
       <defs>
         <path id="arcTop" d="M 100,100 m -72,0 a 72,72 0 1,1 144,0"/>
@@ -232,7 +234,7 @@
         <path d="M62 100 A38 38 0 0 1 100 62 L100 82 A18 18 0 0 0 82 100 Z" opacity=".8"/>
       </g>
     </svg>
-  </section>
+    </td></tr></table>
 
   <div class="foot-wrap">
     <div class="foot">
