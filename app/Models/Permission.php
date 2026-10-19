@@ -16,13 +16,19 @@ class Permission extends Model
     public static function groupedByModule(): array
     {
         $perms = self::orderBy('module')->orderBy('name')->get();
+        $order = ['view' => 0, 'create' => 1, 'edit' => 2, 'approve' => 3, 'delete' => 4];
         $grouped = [];
         foreach ($perms as $p) {
-            if (!isset($grouped[$p->module])) {
-                $grouped[$p->module] = [];
-            }
             $grouped[$p->module][] = $p;
         }
+        foreach ($grouped as &$modulePerms) {
+            usort($modulePerms, function ($a, $b) use ($order) {
+                $aAction = explode('-', $a->name)[0];
+                $bAction = explode('-', $b->name)[0];
+                return ($order[$aAction] ?? 9) <=> ($order[$bAction] ?? 9) ?: strcmp($a->name, $b->name);
+            });
+        }
+        ksort($grouped);
         return $grouped;
     }
 }
