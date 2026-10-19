@@ -14,19 +14,19 @@
     .doc { font-size: 18px; font-weight: bold; letter-spacing: .14em; }
     .doc-no { font-size: 10px; color: #555; margin-top: 3px; }
 
-    .name { font-size: 15px; font-weight: bold; }
-    .status { font-size: 10px; color: #555; margin-left: 8px; }
-    .sub { font-size: 10px; color: #555; margin-top: 3px; }
+    .name { font-size: 17px; font-weight: bold; }
+    .status { font-size: 10px; color: #555; margin-left: 8px; text-transform: uppercase; letter-spacing: .08em; }
+    .sub { font-size: 10.5px; color: #555; margin-top: 4px; }
 
-    table.info { width: 100%; border-collapse: collapse; margin-top: 16px; }
-    table.info td { vertical-align: top; padding: 7px 0; font-size: 11px; }
+    table.info { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    table.info td { vertical-align: top; padding: 9px 0; font-size: 11px; border-bottom: 1px solid #eee; }
     table.info .k { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #666; font-weight: bold; padding-bottom: 3px; }
 
-    .sec { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #444; font-weight: bold; border-bottom: 1.5px solid #111; padding-bottom: 6px; margin-top: 26px; margin-bottom: 4px; }
+    .sec { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: #444; font-weight: bold; border-bottom: 1.5px solid #111; padding-bottom: 6px; margin-top: 28px; margin-bottom: 4px; }
 
     table.deals { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    table.deals td { padding: 9px 0; font-size: 11px; border-bottom: 1px solid #ddd; }
-    table.deals td.r { text-align: right; font-weight: bold; }
+    table.deals td { padding: 10px 0; font-size: 11px; border-bottom: 1px solid #ddd; }
+    table.deals td.r { text-align: right; font-weight: bold; width: 130px; }
 
     .foot { margin-top: 40px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 9px; color: #999; text-align: center; }
 </style>
@@ -89,7 +89,7 @@
     <tr>
         <td>
             <b>{{ $deal->title }}</b><br>
-            <span style="color:#555;font-size:10px;">{{ $deal->deal_number }} &middot; {{ $deal->stage }} &middot; {{ $deal->expected_close_date?->format('d M Y') ?? 'No close date' }}</span>
+            <span style="color:#555;font-size:10px;">{{ $deal->deal_number }} &middot; {{ ucfirst(str_replace('_', ' ', $deal->stage)) }} &middot; {{ $deal->expected_close_date?->format('d M Y') ?? 'No close date' }}</span>
         </td>
         <td class="r">TZS {{ number_format($deal->value, 0) }}</td>
     </tr>
