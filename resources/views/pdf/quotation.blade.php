@@ -16,7 +16,7 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   html{background:#E9EAEE;}
   body{font-family:'Inter',sans-serif;color:#1A1D26;font-size:10pt;line-height:1.4;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .sheet{min-height:297mm;margin:10mm auto;background:#FFFFFF;box-shadow:0 4px 30px rgba(70,25,90,.20);display:flex;flex-direction:column;overflow:hidden;padding:10mm 12mm 0;position:relative;}
+  .sheet{min-height:250mm;margin:10mm auto;background:#FFFFFF;box-shadow:0 4px 30px rgba(70,25,90,.20);display:flex;flex-direction:column;overflow:hidden;padding:10mm 12mm 0;position:relative;}
 
   .masthead{position:relative;height:32mm;margin-bottom:9mm;}
   .head-plum{position:absolute;inset:0;background:#5B2170;clip-path:polygon(0 0,100% 0,100% 82%,26% 82%,16% 100%,0 100%);}
@@ -44,7 +44,7 @@
   table{width:100%;border-collapse:collapse;}
   .items th{background:#B06F2C;color:#fff;font-family:'Barlow Semi Condensed',sans-serif;font-weight:700;font-size:10pt;letter-spacing:.8px;padding:2mm;border:1.3px solid #2B2E38;text-transform:uppercase;}
   .items th:first-child{background:#5B2170;}
-  .items td{border:1.3px solid #2B2E38;padding:2.5mm 2mm;vertical-align:middle;font-weight:500;}
+  .items td{border:1.3px solid #2B2E38;padding:2mm;vertical-align:middle;font-weight:500;}
   .items tr:nth-child(even) td{background:#FAF7F2;}
   .c{text-align:center;} .r{text-align:right;padding-right:3mm !important;}
   .w-sn{width:10mm;} .w-qty{width:14mm;} .w-price{width:34mm;} .w-amt{width:36mm;}
@@ -61,12 +61,12 @@
   .terms ol{padding-left:5.5mm;font-weight:500;}
   .terms li{margin-bottom:1.2mm;}
   .notes{font-weight:500;margin-top:3mm;}
-  .thanks{font-weight:800;margin-top:9mm;font-size:10.5pt;}
+  .thanks{font-weight:800;margin-top:7mm;font-size:10.5pt;}
   .sign{margin-top:14mm;font-size:9.5pt;font-weight:600;}
   .sign .line{display:inline-block;border-top:1px solid #1A1D26;padding:1mm 10mm 0 0;margin-right:12mm;}
   .stamp{width:50mm;height:50mm;justify-self:center;transform:rotate(-6deg);opacity:.92;}
 
-  .foot-wrap{margin-top:auto;padding-bottom:10mm;}
+  .foot-wrap{margin-top:auto;padding-bottom:8mm;}
   .foot{background:#5B2170;color:#F0E6F6;padding:3mm 8mm;font-size:6.9pt;line-height:1.6;text-align:center;font-weight:600;}
   .foot-bars{display:flex;height:2mm;margin-top:1.2mm;}
   .foot-bars .b1{flex:1.2;background:#D91F26;}
@@ -112,7 +112,7 @@
   </header>
   <div class="rule"></div>
 
-  <table class="info" style="margin-top:7mm;"><tr>
+  <table class="info" style="margin-top:4mm;"><tr>
     <td class="bill">
       <h3>QUOTATION TO:</h3>
       <div class="line"><b>{{ $quotation->client_name }}</b></div>
@@ -211,8 +211,8 @@
     </td>
 
     <td class="tstamp">
-      <div style="width:44mm;height:44mm;border:2.5px solid #1B3FB4;border-radius:50%;margin:0 auto;transform:rotate(-8deg);opacity:.85;text-align:center;">
-        <div style="margin-top:9mm;display:inline-block;border-top:1.5px solid #1B3FB4;border-bottom:1.5px solid #1B3FB4;padding:2.5mm 3mm;">
+      <div style="width:38mm;height:38mm;border:2.5px solid #1B3FB4;border-radius:50%;margin:0 auto;transform:rotate(-8deg);opacity:.85;text-align:center;">
+        <div style="margin-top:7mm;display:inline-block;border-top:1.5px solid #1B3FB4;border-bottom:1.5px solid #1B3FB4;padding:2.5mm 3mm;">
           <div style="color:#1B3FB4;font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;font-size:10pt;letter-spacing:1px;line-height:1.25;">{{ strtoupper(substr($company->short_code ?? 'ASYX', 0, 10)) }}<br>GROUP</div>
           <div style="color:#1B3FB4;font-size:6pt;letter-spacing:1px;margin-top:1.5mm;">★ {{ strtoupper($company->city ?? 'DAR ES SALAAM') }} ★</div>
         </div>
