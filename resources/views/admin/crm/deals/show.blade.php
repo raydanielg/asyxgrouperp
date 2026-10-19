@@ -90,11 +90,13 @@
 </div>
 
 {{-- Deal PDF preview --}}
-<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
-    <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+<div class="bg-gray-100 rounded-md border border-gray-200 overflow-hidden">
+    <div class="px-5 py-3.5 bg-white border-b border-gray-100 flex items-center justify-between">
         <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Deal PDF</h4>
         <a href="{{ route('admin.crm-deals.pdf', $deal) }}" target="_blank" class="text-xs text-gray-400 hover:text-gray-700">Open full size &rarr;</a>
     </div>
-    <iframe src="{{ route('admin.crm-deals.pdf', $deal) }}" class="w-full border-0" style="height:800px;"></iframe>
+    <div class="p-4">
+        <iframe src="{{ route('admin.crm-deals.pdf', $deal) }}" class="w-full border-0 rounded shadow-sm" style="height:900px;background:#fff;"></iframe>
+    </div>
 </div>
 @endsection
