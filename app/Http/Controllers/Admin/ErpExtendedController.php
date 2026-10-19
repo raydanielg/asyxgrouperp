@@ -265,6 +265,32 @@ class ErpExtendedController extends Controller
         return redirect()->route('admin.employees.index')->with('success', 'Employee deleted.');
     }
 
+    public function employeeExport(Request $request)
+    {
+        $query = Employee::with(['manager']);
+
+        if ($search = $request->get('search')) {
+            $query->where(function ($sub) use ($search) {
+                $sub->where('first_name', 'like', "%{$search}%")
+                     ->orWhere('last_name', 'like', "%{$search}%")
+                     ->orWhere('email', 'like', "%{$search}%")
+                     ->orWhere('employee_id', 'like', "%{$search}%")
+                     ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+        if ($dept = $request->get('department')) $query->where('department', $dept);
+        if ($status = $request->get('status')) $query->where('status', $status);
+
+        $employees = $query->orderBy('employee_id')->get();
+        $company = auth()->user()->company ?? \App\Models\Company::where('is_group', true)->first();
+        $filters = [
+            'search' => $search ?? null,
+            'department' => $dept ?? null,
+            'status' => $status ?? null,
+        ];
+        return view('admin.hrm.employees.export', compact('employees', 'company', 'filters'));
+    }
+
     public function employeeBulkDestroy(Request $request)
     {
         $ids = $request->validate(['ids' => 'required|array', 'ids.*' => 'integer|exists:employees,id'])['ids'];
