@@ -42,24 +42,26 @@
           <button type="button" onclick="deselectAllPermissions()" class="text-xs font-medium text-gray-400 hover:text-gray-600">Clear</button>
         </div>
       </div>
-      <div class="p-5 space-y-4 max-h-[65vh] overflow-y-auto">
+      <div class="max-h-[65vh] overflow-y-auto divide-y divide-gray-100">
         @foreach($permissions as $module => $modulePerms)
         @php
           $moduleSlug = \Str::slug($module);
           $modulePermNames = collect($modulePerms)->pluck('name')->toArray();
           $checkedCount = count(array_intersect($modulePermNames, $rolePermissions));
           $allChecked = $checkedCount === count($modulePermNames);
+          $someChecked = $checkedCount > 0;
         @endphp
-        <div class="border border-gray-200 rounded-md overflow-hidden">
-          <div class="flex items-center gap-3 px-4 py-2.5 bg-gray-50/60 border-b border-gray-100">
-            <input type="checkbox" id="module-{{ $moduleSlug }}" class="rounded border-gray-300 text-gray-700 focus:ring-gray-400 module-checkbox w-4 h-4" onchange="toggleModule(this, '{{ $moduleSlug }}')" {{ $allChecked ? 'checked' : '' }}>
-            <label for="module-{{ $moduleSlug }}" class="text-xs font-semibold text-gray-800 cursor-pointer flex-1">{{ $module }}</label>
-            <span class="text-[10px] text-gray-400">{{ $checkedCount }}/{{ count($modulePerms) }}</span>
+        <div class="perm-module">
+          <div class="flex items-center gap-3 px-5 py-3 cursor-pointer select-none hover:bg-gray-50/60" onclick="toggleModuleRow('{{ $moduleSlug }}', event)">
+            <svg id="chev-{{ $moduleSlug }}" class="w-3.5 h-3.5 text-gray-400 transition-transform {{ $someChecked ? '' : '-rotate-90' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <input type="checkbox" id="module-{{ $moduleSlug }}" class="rounded border-gray-300 text-gray-700 focus:ring-gray-400 module-checkbox w-4 h-4" onchange="toggleModule(this, '{{ $moduleSlug }}')" onclick="event.stopPropagation()" {{ $allChecked ? 'checked' : '' }}>
+            <span class="text-xs font-semibold text-gray-800 flex-1">{{ $module }}</span>
+            <span class="text-[10px] {{ $checkedCount ? 'text-gray-700 font-medium' : 'text-gray-300' }}">{{ $checkedCount }}/{{ count($modulePerms) }}</span>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-2 p-4">
+          <div id="body-{{ $moduleSlug }}" class="{{ $someChecked ? '' : 'hidden' }} grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-2 px-5 pb-4 pt-1">
             @foreach($modulePerms as $perm)
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="permissions[]" value="{{ $perm->name }}" id="perm-{{ $perm->id }}" class="rounded border-gray-300 text-gray-700 focus:ring-gray-400 perm-checkbox module-{{ $moduleSlug }} w-4 h-4" {{ in_array($perm->name, $rolePermissions) ? 'checked' : '' }}>
+              <input type="checkbox" name="permissions[]" value="{{ $perm->name }}" id="perm-{{ $perm->id }}" class="rounded border-gray-300 text-gray-700 focus:ring-gray-400 perm-checkbox module-{{ $moduleSlug }} w-4 h-4" {{ in_array($perm->name, $rolePermissions) ? 'checked' : '' }} onchange="syncModuleCount('{{ $moduleSlug }}')">
               <span class="text-xs text-gray-600 select-none">{{ $perm->label }}</span>
             </label>
             @endforeach
@@ -81,6 +83,21 @@
 <script>
 function toggleModule(el, moduleSlug) {
   document.querySelectorAll('.perm-checkbox.module-' + moduleSlug).forEach(cb => cb.checked = el.checked);
+  syncModuleCount(moduleSlug);
+}
+function toggleModuleRow(moduleSlug, e) {
+  const body = document.getElementById('body-' + moduleSlug);
+  const chev = document.getElementById('chev-' + moduleSlug);
+  body.classList.toggle('hidden');
+  chev.classList.toggle('-rotate-90');
+}
+function syncModuleCount(moduleSlug) {
+  const checks = document.querySelectorAll('.perm-checkbox.module-' + moduleSlug);
+  const checked = Array.from(checks).filter(c => c.checked).length;
+  const counter = document.querySelector('#module-' + moduleSlug).closest('div').querySelector('span:last-child');
+  counter.textContent = checked + '/' + checks.length;
+  counter.className = 'text-[10px] ' + (checked ? 'text-gray-700 font-medium' : 'text-gray-300');
+  document.getElementById('module-' + moduleSlug).checked = checked === checks.length;
 }
 function selectAllPermissions() {
   document.querySelectorAll('.perm-checkbox').forEach(cb => cb.checked = true);
