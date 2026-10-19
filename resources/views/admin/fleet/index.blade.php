@@ -24,7 +24,7 @@
             <td class="px-5 py-3 text-xs text-gray-600 capitalize">{{ $vehicle->vehicle_type ?? '—' }}</td>
             <td class="px-5 py-3 text-xs text-gray-600">{{ number_format($vehicle->odometer_reading, 0) }} km</td>
             <td class="px-5 py-3 text-xs text-gray-600">{{ $vehicle->assignedTo?->name ?? 'Unassigned' }}</td>
-            <td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $vehicle->status === 'active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($vehicle->status === 'maintenance' ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-gray-50 text-gray-500 border border-gray-100') }}">{{ $vehicle->status }}</span></td>
+            <td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600 capitalize"><span style="width:6px;height:6px;border-radius:99px;background:{{ $vehicle->status === 'active' ? '#10b981' : ($vehicle->status === 'maintenance' ? '#f59e0b' : '#9ca3af') }}"></span>{{ $vehicle->status }}</span></td>
             <td class="px-5 py-3 flex items-center gap-3">
                 <a href="{{ route('admin.fleet.show', $vehicle) }}" class="text-gray-600 hover:text-gray-900 text-xs">View</a>
                 <a href="{{ route('admin.fleet.edit', $vehicle) }}" class="text-gray-600 hover:text-gray-900 text-xs">Edit</a>

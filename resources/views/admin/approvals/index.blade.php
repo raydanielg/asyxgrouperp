@@ -47,9 +47,9 @@
         @forelse($workflows as $wf)
         <tr class="border-t border-gray-100 hover:bg-gray-50/50">
             <td class="px-5 py-3 text-xs"><a href="{{ route('admin.approvals.show', $wf) }}" class="font-medium text-gray-800 hover:text-gray-700">{{ $wf->name }}</a></td>
-            <td class="px-5 py-3 text-xs"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700 border border-sky-100 capitalize">{{ str_replace('_', ' ', $wf->module) }}</span></td>
+            <td class="px-5 py-3 text-xs text-gray-600 capitalize">{{ str_replace('_', ' ', $wf->module) }}</td>
             <td class="px-5 py-3 text-xs text-gray-600">{{ $wf->steps->count() }} step(s)</td>
-            <td class="px-5 py-3">@if($wf->is_active)<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>@else<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-500 border border-gray-100">Inactive</span>@endif</td>
+            <td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $wf->is_active ? '#10b981' : '#9ca3af' }}"></span>{{ $wf->is_active ? 'Active' : 'Inactive' }}</span></td>
             <td class="px-5 py-3 flex items-center gap-3">
                 <a href="{{ route('admin.approvals.show', $wf) }}" class="text-gray-600 hover:text-gray-900 text-xs">View</a>
                 <form method="POST" action="{{ route('admin.approvals.destroy', $wf) }}" onsubmit="return confirmAction(this, {title: 'Delete this workflow?'})">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>

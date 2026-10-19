@@ -27,7 +27,7 @@
         @endif
         @if($tender->status !== 'converted')
         <div class="mt-4">
-            <form method="POST" action="{{ route('admin.tenders.convert-to-lead', $tender) }}">@csrf<button type="submit" class="w-full px-3 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700" onclick="return confirm('Convert this tender to a Lead?')">Convert to Lead →</button></form>
+            <form method="POST" action="{{ route('admin.tenders.convert-to-lead', $tender) }}">@csrf<button type="submit" class="w-full px-3 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700" onclick="return confirmAction(this.form, {title: 'Convert this tender to a Lead?'})">Convert to Lead →</button></form>
         </div>
         @endif
     </div>

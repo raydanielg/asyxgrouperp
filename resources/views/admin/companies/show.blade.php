@@ -65,7 +65,7 @@
             <label class="block text-xs font-medium text-gray-600 mb-1">Suspension reason (optional)</label>
             <input type="text" name="suspension_reason" class="w-full px-3 py-2 rounded border border-gray-200 text-sm outline-none focus:border-gray-400" placeholder="e.g. Unpaid subscription invoice">
         </div>
-        <button class="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded hover:bg-red-700" onclick="return confirm('Suspend {{ addslashes($company->name) }}? ALL {{ $company->users()->count() }} of its users will be locked out immediately.')">Confirm Suspension</button>
+        <button class="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded hover:bg-red-700" onclick="return confirmAction(this.form, {title: 'Suspend {{ addslashes($company->name) }}? ALL {{ $company->users()->count() }} of its users will be locked out immediately.'})">Confirm Suspension</button>
     </form>
     <p class="text-[11px] text-red-500 mt-2">Suspending instantly logs out active sessions and blocks logins for every {{ $company->name }} user until reactivation.</p>
 </div>

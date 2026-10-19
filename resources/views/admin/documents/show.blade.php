@@ -47,7 +47,7 @@
             <form method="POST" action="{{ route('admin.documents.sign', $document) }}">@csrf<button class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700">Sign</button></form>
             @endif
             @if($document->status !== 'archived')
-            <form method="POST" action="{{ route('admin.documents.archive', $document) }}">@csrf<button class="px-3 py-1.5 bg-gray-500 text-white text-xs font-medium rounded-lg hover:bg-gray-600" onclick="return confirm('Archive this document?')">Archive</button></form>
+            <form method="POST" action="{{ route('admin.documents.archive', $document) }}">@csrf<button class="px-3 py-1.5 bg-gray-500 text-white text-xs font-medium rounded-lg hover:bg-gray-600" onclick="return confirmAction(this.form, {title: 'Archive this document?'})">Archive</button></form>
             @endif
             <form id="del-doc-{{ $document->id }}" method="POST" action="{{ route('admin.documents.destroy', $document) }}">@csrf @method('DELETE')</form>
             <button onclick="confirmDelete('del-doc-{{ $document->id }}')" class="px-3 py-1.5 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600">Delete</button>

@@ -10,10 +10,10 @@
         </div>
         <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto">
         @foreach($products as $p)
-        <div class="product-card cursor-pointer border rounded-lg p-3 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all" data-id="{{ $p->id }}" data-name="{{ $p->name }}" data-price="{{ $p->sale_price }}" data-stock="{{ $p->stock_quantity }}" onclick="addToCart(this)">
-                <div class="w-full h-16 bg-emerald-100 rounded mb-2 flex items-center justify-center"><svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        <div class="product-card cursor-pointer border border-gray-200 rounded p-3 hover:border-gray-900 transition-all" data-id="{{ $p->id }}" data-name="{{ $p->name }}" data-price="{{ $p->sale_price }}" data-stock="{{ $p->stock_quantity }}" onclick="addToCart(this)">
+                <div class="w-full h-14 bg-gray-100 rounded mb-2 flex items-center justify-center"><svg class="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
                 <p class="text-xs font-medium text-gray-900 truncate">{{ $p->name }}</p>
-                <div class="flex items-center justify-between mt-1"><span class="text-xs font-bold text-emerald-700">TZS {{ number_format($p->sale_price) }}</span><span class="text-[10px] text-gray-400">{{ $p->stock_quantity }} in stock</span></div>
+                <div class="flex items-center justify-between mt-1"><span class="text-xs font-bold text-gray-900">TZS {{ number_format($p->sale_price) }}</span><span class="text-[10px] text-gray-400">{{ $p->stock_quantity }} in stock</span></div>
             </div>
         @endforeach
         </div>
@@ -28,10 +28,10 @@
             <div class="flex items-center justify-between text-xs"><span class="text-gray-500">Tax (%)</span><input type="number" id="taxRate" value="0" min="0" max="100" oninput="updateTotals()" class="w-16 px-2 py-1 rounded border border-gray-200 text-xs text-right"></div>
             <div class="flex justify-between text-xs"><span class="text-gray-500">Tax Amount</span><span class="text-gray-700" id="cartTax">TZS 0</span></div>
             <div class="flex items-center justify-between text-xs"><span class="text-gray-500">Discount</span><input type="number" id="discountAmount" value="0" min="0" oninput="updateTotals()" class="w-20 px-2 py-1 rounded border border-gray-200 text-xs text-right"></div>
-            <div class="flex justify-between text-sm font-bold border-t pt-2"><span class="text-gray-900">Total</span><span class="text-emerald-700" id="cartTotal">TZS 0</span></div>
+            <div class="flex justify-between text-sm font-bold border-t pt-2"><span class="text-gray-900">Total</span><span class="text-gray-900" id="cartTotal">TZS 0</span></div>
             <div class="flex items-center justify-between text-xs"><span class="text-gray-500">Payment Method</span><select id="paymentMethod" class="px-2 py-1 rounded border border-gray-200 text-xs"><option value="cash">Cash</option><option value="card">Card</option><option value="mobile">Mobile Money</option></select></div>
             <div class="flex items-center justify-between text-xs"><span class="text-gray-500">Paid Amount</span><input type="number" id="paidAmount" value="0" oninput="updateChange()" class="w-20 px-2 py-1 rounded border border-gray-200 text-xs text-right"></div>
-            <div class="flex justify-between text-xs"><span class="text-gray-500">Change</span><span class="font-medium text-emerald-700" id="changeAmount">TZS 0</span></div>
+            <div class="flex justify-between text-xs"><span class="text-gray-500">Change</span><span class="font-medium text-gray-900" id="changeAmount">TZS 0</span></div>
             <button onclick="processSale()" class="w-full py-3 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-700 transition-colors mt-2">Complete Sale</button>
         </div>
     </div>
@@ -62,7 +62,7 @@ function renderCart() {
         <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
             <div class="flex-1"><p class="text-xs font-medium text-gray-900">${item.product_name}</p><p class="text-[10px] text-gray-400">TZS ${item.unit_price.toLocaleString()} x ${item.quantity}</p></div>
             <div class="flex items-center gap-1"><button onclick="updateQty(${idx},-1)" class="w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs">-</button><span class="text-xs font-medium w-6 text-center">${item.quantity}</span><button onclick="updateQty(${idx},1)" class="w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs">+</button></div>
-            <span class="text-xs font-bold text-emerald-700 w-20 text-right">TZS ${Math.round(item.unit_price * item.quantity).toLocaleString()}</span>
+            <span class="text-xs font-bold text-gray-900 w-20 text-right">TZS ${Math.round(item.unit_price * item.quantity).toLocaleString()}</span>
             <button onclick="removeFromCart(${idx})" class="text-red-400 hover:text-red-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
     `).join('');
