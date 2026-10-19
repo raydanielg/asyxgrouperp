@@ -4,6 +4,8 @@
 @section('content')
 @php
 $money = fn($n) => 'TZS ' . number_format($n);
+// Row extractor tolerant of paginators, collections, arrays and nulls.
+$__pageRows = fn($v) => (is_object($v) && method_exists($v, 'items')) ? $v->items() : collect($v ?? [])->all();
 $permMap = [
     'employees' => ['create' => 'create-employees', 'edit' => 'edit-employees', 'delete' => 'delete-employees'],
     'sales-invoices' => ['create' => 'create-sales-invoices', 'edit' => 'edit-sales-invoices', 'delete' => 'delete-sales-invoices'],
@@ -212,7 +214,7 @@ $routeMap = [
     'team-leaves' => ['create' => 'admin.leaves.index', 'edit' => 'admin.leaves.index', 'delete' => 'admin.leaves.index'],
     'announcements' => ['create' => 'admin.announcements.index', 'delete' => 'admin.announcements.index'],
     'my-account' => ['edit' => 'admin.profile'],
-    'documents' => ['create' => 'admin.documents.create', 'edit' => 'admin.documents.edit', 'delete' => 'admin.documents.destroy'],
+    'documents' => ['create' => 'admin.documents.create', 'edit' => 'admin.documents.show', 'delete' => 'admin.documents.destroy'],
 ];
 $canCreate = isset($permMap[$module]['create']) && auth()->user()->hasPermission($permMap[$module]['create']);
 $canEdit = isset($permMap[$module]['edit']) && auth()->user()->hasPermission($permMap[$module]['edit']);
@@ -345,7 +347,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($projects ?? collect())->items() ?? [] as $project)
+        @foreach($__pageRows($projects ?? null) as $project)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3">
                             <div class="text-xs font-medium text-gray-900">{{ $project->title }}</div>
@@ -530,7 +532,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($bugs ?? collect())->items() ?? [] as $bug)
+        @foreach($__pageRows($bugs ?? null) as $bug)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $bug->title }}</td>
                         <td class="px-4 py-3 text-xs text-gray-600">{{ $bug->project?->title ?? '—' }}</td>
@@ -602,7 +604,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @forelse(($timesheets ?? collect())->items() ?? [] as $ts)
+        @forelse($__pageRows($timesheets ?? null) as $ts)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs text-gray-600">{{ $ts->date?->format('d M Y') ?? '-' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-900 font-medium">{{ $ts->project?->title ?? '—' }}</td>
@@ -711,7 +713,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($jobCards ?? collect())->items() ?? [] as $jc)
+        @foreach($__pageRows($jobCards ?? null) as $jc)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-mono text-gray-700">{{ $jc->job_number }}</td>
                         <td class="px-4 py-3 text-xs font-medium text-gray-900 max-w-[200px]">{{ \Illuminate\Support\Str::limit($jc->title, 40) }}</td>
@@ -826,7 +828,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($employees ?? collect())->items() ?? [] as $emp)
+        @foreach($__pageRows($employees ?? null) as $emp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->designation ?? '-' }}</td>
@@ -865,7 +867,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($invoices ?? collect())->items() ?? [] as $inv)
+        @foreach($__pageRows($invoices ?? null) as $inv)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $inv->invoice_number }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $inv->customer?->name ?? 'N/A' }}</td>
@@ -904,7 +906,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($invoices ?? collect())->items() ?? [] as $inv)
+        @foreach($__pageRows($invoices ?? null) as $inv)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $inv->invoice_number }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $inv->vendor?->name ?? 'N/A' }}</td>
@@ -943,7 +945,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($expenses ?? collect())->items() ?? [] as $exp)
+        @foreach($__pageRows($expenses ?? null) as $exp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $exp->description ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $exp->category ?? '-' }}</td>
@@ -979,7 +981,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($revenues ?? collect())->items() ?? [] as $rev)
+        @foreach($__pageRows($revenues ?? null) as $rev)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $rev->description ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $rev->category ?? '-' }}</td>
@@ -1044,7 +1046,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @forelse(($tickets ?? collect())->items() ?? [] as $ticket)
+        @forelse($__pageRows($tickets ?? null) as $ticket)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3">
                             <div class="text-xs font-medium text-gray-900">{{ $ticket->title ?? 'Ticket #' . $ticket->id }}</div>
@@ -1113,7 +1115,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($leads ?? collect())->items() ?? [] as $lead)
+        @foreach($__pageRows($leads ?? null) as $lead)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $lead->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $lead->company_name ?? '-' }}</td>
@@ -1148,7 +1150,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($contacts ?? collect())->items() ?? [] as $contact)
+        @foreach($__pageRows($contacts ?? null) as $contact)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $contact->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $contact->email ?? '-' }}</td>
@@ -1182,7 +1184,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($deals ?? collect())->items() ?? [] as $deal)
+        @foreach($__pageRows($deals ?? null) as $deal)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $deal->title ?? 'Deal #' . $deal->id }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($deal->value ?? 0) }}</td>
@@ -1216,7 +1218,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($contracts ?? collect())->items() ?? [] as $contract)
+        @foreach($__pageRows($contracts ?? null) as $contract)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $contract->title ?? 'Contract #' . $contract->id }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($contract->value ?? 0) }}</td>
@@ -1251,7 +1253,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($products ?? collect())->items() ?? [] as $product)
+        @foreach($__pageRows($products ?? null) as $product)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $product->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $product->sku ?? '-' }}</td>
@@ -1286,7 +1288,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($warehouses ?? collect())->items() ?? [] as $wh)
+        @foreach($__pageRows($warehouses ?? null) as $wh)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $wh->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $wh->location ?? '-' }}</td>
@@ -1322,7 +1324,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($movements ?? collect())->items() ?? [] as $m)
+        @foreach($__pageRows($movements ?? null) as $m)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $m->product?->name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($m->type ?? '-') }}</td>
@@ -1348,7 +1350,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($suppliers ?? collect())->items() ?? [] as $s)
+        @foreach($__pageRows($suppliers ?? null) as $s)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $s->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $s->phone ?? '-' }}</td>
@@ -1381,7 +1383,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($transfers ?? collect())->items() ?? [] as $t)
+        @foreach($__pageRows($transfers ?? null) as $t)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">Transfer #{{ $t->id }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ ucfirst($t->status ?? '-') }}</td>
@@ -1406,7 +1408,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($records ?? collect())->items() ?? [] as $r)
+        @foreach($__pageRows($records ?? null) as $r)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $r->employee?->first_name ?? '' }} {{ $r->employee?->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $r->date?->format('d M Y') ?? '-' }}</td>
@@ -1441,7 +1443,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($leaves ?? collect())->items() ?? [] as $l)
+        @foreach($__pageRows($leaves ?? null) as $l)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $l->employee?->first_name ?? '' }} {{ $l->employee?->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $l->leave_type ?? '-' }}</td>
@@ -1480,7 +1482,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($users ?? collect())->items() ?? [] as $u)
+        @foreach($__pageRows($users ?? null) as $u)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $u->name }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $u->email }}</td>
@@ -1555,7 +1557,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($bills ?? collect())->items() ?? [] as $bill)
+        @foreach($__pageRows($bills ?? null) as $bill)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $bill->bill_number ?? 'Bill #' . $bill->id }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $bill->vendor?->name ?? 'N/A' }}</td>
@@ -1590,7 +1592,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($accounts ?? collect())->items() ?? [] as $acc)
+        @foreach($__pageRows($accounts ?? null) as $acc)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $acc->bank_name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $acc->account_number ?? '-' }}</td>
@@ -1624,7 +1626,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($transfers ?? collect())->items() ?? [] as $t)
+        @foreach($__pageRows($transfers ?? null) as $t)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">Transfer #{{ $t->id }}</td>
                         <td class="px-4 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($t->amount ?? 0) }}</td>
@@ -1658,7 +1660,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-        @foreach(($employees ?? collect())->items() ?? [] as $emp)
+        @foreach($__pageRows($employees ?? null) as $emp)
                     <tr class="hover:bg-gray-50/50">
                         <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $emp->first_name ?? '' }} {{ $emp->last_name ?? '' }}</td>
                         <td class="px-4 py-3 text-xs text-gray-500">{{ $emp->designation ?? '-' }}</td>
@@ -1769,7 +1771,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            @forelse(($payrolls ?? collect())->items() ?? [] as $payroll)
+                            @forelse($__pageRows($payrolls ?? null) as $payroll)
                             <tr class="hover:bg-gray-50/50 transition-colors">
                                 <td class="px-4 py-3 text-xs font-semibold text-gray-900 whitespace-nowrap">{{ $payroll->month }} {{ $payroll->year }}</td>
                                 <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $money($payroll->basic_salary) }}</td>
@@ -1939,7 +1941,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-        @foreach(($sales ?? collect())->items() ?? [] as $sale)
+        @foreach($__pageRows($sales ?? null) as $sale)
                         <tr class="hover:bg-gray-50/50">
                             <td class="px-4 py-3 text-xs font-medium text-gray-900">Sale #{{ $sale->id }}</td>
                             <td class="px-4 py-3 text-xs font-semibold text-emerald-600">TZS {{ number_format($sale->total_amount) }}</td>
@@ -2347,7 +2349,7 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @forelse(($documents ?? collect())->items() ?? [] as $doc)
+                        @forelse($__pageRows($documents ?? null) as $doc)
                         <tr class="hover:bg-gray-50/50">
                             <td class="px-4 py-3 text-xs text-gray-500">{{ $loop->iteration + (($documents->currentPage() - 1) * $documents->perPage()) }}</td>
                             <td class="px-4 py-3">
@@ -2378,10 +2380,10 @@ $hasActions = $canEdit || $canDelete || $canApprove;
                             @if($hasActions)
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1">
-                                    @if($canEdit && isset($routeMap[$module]['edit']))
+                                    @if($canEdit && isset($routeMap[$module]['edit']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['edit']))
                                     <a href="{{ route($routeMap[$module]['edit'], $doc) }}" class="text-emerald-500 hover:text-emerald-700 p-1 rounded hover:bg-emerald-50 transition-colors" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></a>
                                     @endif
-                                    @if($canDelete && isset($routeMap[$module]['delete']))
+                                    @if($canDelete && isset($routeMap[$module]['delete']) && \Illuminate\Support\Facades\Route::has($routeMap[$module]['delete']))
                                     <form action="{{ route($routeMap[$module]['delete'], $doc) }}" method="POST" style="display:inline">@csrf @method('DELETE')<button type="submit" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="Delete" onclick="return confirm('Delete this document?')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></form>
                                     @endif
                                 </div>

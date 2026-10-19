@@ -54,6 +54,23 @@ class MasterDataSeeder extends Seeder
         $company = \App\Models\Company::where('short_code', 'ASYX')->first();
         $companyId = $company?->id;
 
+        // Map email domains to subsidiary companies so staff are seeded under
+        // the correct legal entity (ASYX group members see all, subsidiary
+        // staff see only their own company).
+        $domainCompanies = [
+            'parktech.co.tz' => 'PARKTECH',
+            'motisha.co.tz' => 'MOTISHA',
+            'terkmark.co.tz' => 'TERKMARK',
+            'glovin.co.tz' => 'GLOVIN',
+            'asyxgroup.co.tz' => 'ASYX',
+        ];
+        $companyIds = \App\Models\Company::pluck('id', 'short_code');
+        $companyForEmail = function (string $email) use ($domainCompanies, $companyIds, $companyId) {
+            $domain = substr(strrchr($email, '@'), 1) ?: '';
+            $code = $domainCompanies[$domain] ?? 'ASYX';
+            return $companyIds[$code] ?? $companyId;
+        };
+
         // Prevent duplicate seeding on reruns (e.g. redeploys) which would violate
         // unique constraints on date-based sequential numbers (expense_number, etc.)
         if ($companyId && Expense::where('company_id', $companyId)->exists()) {
@@ -107,10 +124,11 @@ class MasterDataSeeder extends Seeder
 
         foreach ($empData as $i => $e) {
             $empId = 'EMP-' . str_pad($i + 1, 4, '0', STR_PAD_LEFT);
+            $empCompanyId = $companyForEmail($e['e']);
             $emp = Employee::updateOrCreate(
                 ['employee_id' => $empId],
                 [
-                    'company_id' => $companyId,
+                    'company_id' => $empCompanyId,
                     'first_name' => $e['f'],
                     'last_name' => $e['l'],
                     'email' => $e['e'],
@@ -130,7 +148,7 @@ class MasterDataSeeder extends Seeder
             $user = User::updateOrCreate(
                 ['email' => $e['e']],
                 [
-                    'company_id' => $companyId,
+                    'company_id' => $empCompanyId,
                     'name' => $e['f'] . ' ' . $e['l'],
                     'first_name' => $e['f'],
                     'last_name' => $e['l'],

@@ -384,101 +384,6 @@
                 $iconDatabase = 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4';
                 $iconShield = 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z';
 
-                $roleMenus = [
-                    'director' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => $iconProjects, 'match' => 'admin.projects*'],
-                        ['label' => 'Sales Dashboard', 'route' => 'admin.sales-dashboard', 'icon' => $iconSalesDash, 'match' => 'admin.sales-dashboard*'],
-                        ['label' => 'Employees', 'route' => 'admin.employees.index', 'icon' => $iconEmployees, 'match' => 'admin.employees*'],
-                        ['label' => 'Sales Invoices', 'route' => 'admin.sales-invoices.index', 'icon' => $iconSales, 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Purchases', 'route' => 'admin.purchase-invoices.index', 'icon' => $iconPurchases, 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Expenses', 'route' => 'admin.expenses.index', 'icon' => $iconExpenses, 'match' => 'admin.expenses*'],
-                        ['label' => 'Helpdesk', 'route' => 'admin.helpdesk-tickets.index', 'icon' => $iconTickets, 'match' => 'admin.helpdesk*'],
-                    ],
-                    'accountant' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Journal Entries', 'route' => 'admin.journal-entries.index', 'icon' => $iconBills, 'match' => 'admin.journal-entries*'],
-                        ['label' => 'Sales Invoices', 'route' => 'admin.sales-invoices.index', 'icon' => $iconSales, 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Purchase Invoices', 'route' => 'admin.purchase-invoices.index', 'icon' => $iconPurchases, 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Expenses', 'route' => 'admin.expenses.index', 'icon' => $iconExpenses, 'match' => 'admin.expenses*'],
-                        ['label' => 'Revenues', 'route' => 'admin.revenues.index', 'icon' => $iconRevenues, 'match' => 'admin.revenues*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
-                        ['label' => 'My Salary', 'module' => 'salary', 'icon' => $iconPayroll],
-                        ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
-                    ],
-                    'finance_manager' => [
-                        ['label' => 'Finance Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'General Ledger', 'route' => 'admin.journal-entries.index', 'icon' => $iconBills, 'match' => 'admin.journal-entries*'],
-                        ['label' => 'Accounts Payable', 'route' => 'admin.purchase-invoices.index', 'icon' => $iconPurchases, 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Accounts Receivable', 'route' => 'admin.sales-invoices.index', 'icon' => $iconSales, 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Bank & Cash', 'route' => 'admin.bank-accounts.index', 'icon' => $iconBank, 'match' => 'admin.bank-accounts*'],
-                        ['label' => 'Budgeting', 'module' => 'budgets', 'icon' => $iconPerformance],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
-                        ['label' => 'Approvals', 'route' => 'admin.approvals.index', 'icon' => $iconRoles, 'match' => 'admin.approvals*'],
-                        ['label' => 'My Salary', 'module' => 'salary', 'icon' => $iconPayroll],
-                        ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
-                    ],
-                    'procurement_manager' => [
-                        ['label' => 'Procurement Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Vendors', 'route' => 'admin.suppliers.index', 'icon' => $iconSuppliers, 'match' => 'admin.suppliers*'],
-                        ['label' => 'RFQ', 'module' => 'rfqs', 'icon' => $iconSales],
-                        ['label' => 'Purchase Approvals', 'route' => 'admin.approvals.index', 'icon' => $iconRoles, 'match' => 'admin.approvals*'],
-                        ['label' => 'Purchase Reports', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
-                        ['label' => 'My Salary', 'module' => 'salary', 'icon' => $iconPayroll],
-                        ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
-                    ],
-                    'sales_manager' => [
-                        ['label' => 'Sales Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Deal Pipeline', 'route' => 'admin.crm-deals.index', 'icon' => $iconDeals, 'match' => 'admin.crm-deals*'],
-                        ['label' => 'Sales Forecast', 'module' => 'sales-forecast', 'icon' => $iconReports],
-                        ['label' => 'Quotations', 'module' => 'quotations', 'icon' => $iconSales],
-                        ['label' => 'Team Performance', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
-                        ['label' => 'My Salary', 'module' => 'salary', 'icon' => $iconPayroll],
-                        ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
-                    ],
-                    'project_manager' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => $iconProjects, 'match' => 'admin.projects*'],
-                        ['label' => 'Timesheets', 'route' => 'admin.timesheets.index', 'icon' => $iconTimesheets, 'match' => 'admin.timesheets*'],
-                        ['label' => 'Bugs', 'route' => 'admin.bugs.index', 'icon' => $iconBugs, 'match' => 'admin.bugs*'],
-                        ['label' => 'Deals', 'route' => 'admin.crm-deals.index', 'icon' => $iconDeals, 'match' => 'admin.crm-deals*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
-                    ],
-                    'technical_manager' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Tickets', 'module' => 'tickets', 'icon' => \App\Support\RoleModules::icon('tickets')],
-                        ['label' => 'Projects', 'module' => 'projects', 'icon' => \App\Support\RoleModules::icon('projects')],
-                        ['label' => 'Bugs', 'module' => 'bugs', 'icon' => \App\Support\RoleModules::icon('bugs')],
-                        ['label' => 'Employees', 'module' => 'employees', 'icon' => \App\Support\RoleModules::icon('employees')],
-                        ['label' => 'Settings', 'module' => 'settings', 'icon' => \App\Support\RoleModules::icon('settings')],
-                        ['label' => 'My Account', 'module' => 'my-account', 'icon' => \App\Support\RoleModules::icon('my-account')],
-                        ['label' => 'Payslips', 'module' => 'payslips', 'icon' => \App\Support\RoleModules::icon('payslips')],
-                        ['label' => 'Salary', 'module' => 'salary', 'icon' => \App\Support\RoleModules::icon('salary')],
-                    ],
-                    'operations_manager' => [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => $iconProducts, 'match' => 'admin.products*'],
-                        ['label' => 'Warehouses', 'route' => 'admin.warehouses.index', 'icon' => $iconWarehouses, 'match' => 'admin.warehouses*'],
-                        ['label' => 'Stock Movements', 'route' => 'admin.stock-movements.index', 'icon' => $iconStock, 'match' => 'admin.stock-movements*'],
-                        ['label' => 'Sales', 'route' => 'admin.sales-invoices.index', 'icon' => $iconSales, 'match' => 'admin.sales-invoices*'],
-                        ['label' => 'Purchases', 'route' => 'admin.purchase-invoices.index', 'icon' => $iconPurchases, 'match' => 'admin.purchase-invoices*'],
-                        ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => $iconProjects, 'match' => 'admin.projects*'],
-                        ['label' => 'Reports', 'route' => 'admin.reports', 'icon' => $iconReports, 'match' => 'admin.reports*'],
-                    ],
-                    'hr_manager' => [
-                        ['label' => 'HR Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                        ['label' => 'Employee Records', 'route' => 'admin.employees.index', 'icon' => $iconEmployees, 'match' => 'admin.employees*'],
-                        ['label' => 'Recruitment', 'route' => 'admin.job-postings.index', 'icon' => $iconRecruitment, 'match' => 'admin.job-postings*'],
-                        ['label' => 'Leave Approvals', 'route' => 'admin.leaves.index', 'icon' => $iconLeaves, 'match' => 'admin.leaves*'],
-                        ['label' => 'Payroll Approval', 'route' => 'admin.payroll.generate-form', 'icon' => $iconPayroll, 'match' => 'admin.payroll*'],
-                        ['label' => 'Disciplinary', 'module' => 'disciplinary', 'icon' => $iconBills],
-                        ['label' => 'Appraisals', 'route' => 'admin.performance.index', 'icon' => $iconPerformance, 'match' => 'admin.performance*'],
-                        ['label' => 'My Salary', 'module' => 'salary', 'icon' => $iconPayroll],
-                        ['label' => 'My Profile', 'module' => 'my-account', 'icon' => $iconUsers],
-                    ],
-                ];
-
                 $modulePermMap = [
                     'companies' => 'view-dashboard',
                     'intercompany' => 'view-dashboard',
@@ -490,9 +395,9 @@
                     'system-control' => 'view-settings',
                     'database-backup' => 'view-settings',
                     'employees' => 'view-employees',
-                    'attendance' => 'view-attendance',
+                    'attendance' => 'view-dashboard',
                     'payroll' => 'view-payroll',
-                    'leaves' => 'view-leaves',
+                    'leaves' => 'view-dashboard',
                     'performance' => 'view-performance',
                     'training' => 'view-training',
                     'recruitment' => 'view-recruitment',
@@ -511,14 +416,14 @@
                     'contracts' => 'view-crm-contracts',
                     'contacts' => 'view-crm-contacts',
                     'bank-accounts' => 'view-bank-accounts',
-                    'transfers' => 'view-acc-transfers',
+                    'transfers' => 'view-transfers',
                     'acc-transfers' => 'view-acc-transfers',
                     'expenses' => 'view-expenses',
                     'revenues' => 'view-revenues',
                     'bills' => 'view-bills',
                     'estimates' => 'view-dashboard',
                     'projects' => 'view-projects',
-                    'timesheets' => 'view-timesheets',
+                    'timesheets' => 'view-dashboard',
                     'bugs' => 'view-bugs',
                     'products' => 'view-products',
                     'product-categories' => 'view-product-categories',
@@ -564,13 +469,13 @@
                     'settlements' => 'view-projects',
                     'visitors' => 'view-dashboard',
                     'appointments' => 'view-dashboard',
-                    'calls' => 'view-dashboard',
+                    'calls' => 'view-calls',
                     'correspondence' => 'view-dashboard',
                     'parcels' => 'view-dashboard',
                     'front-desk' => 'view-dashboard',
                     'departments' => 'view-dashboard',
                     'announcements' => 'view-dashboard',
-                    'messages' => 'view-dashboard',
+                    'messages' => 'view-messages',
                     'salary-advance' => 'view-dashboard',
                     'my-account' => 'view-dashboard',
                     'payslips' => 'view-dashboard',
@@ -639,27 +544,22 @@
                     'cost-centre-budgets' => 'view-dashboard',
                 ];
 
-                if (isset($roleMenus[$roleName])) {
-                    $myMenu = $roleMenus[$roleName];
-                } else {
-                    // Any role not explicitly curated above (including brand-new roles created
-                    // and assigned in the future) gets its OWN menu auto-derived from the single
-                    // source of truth in App\Support\RoleModules, instead of silently inheriting
-                    // the administrator's menu.
-                    $autoModules = \App\Support\RoleModules::allowedModules($roleName, $currentUser);
-                    $myMenu = [
-                        ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
-                    ];
-                    foreach ($autoModules as $autoModule) {
-                        if ($autoModule === 'dashboard') {
-                            continue;
-                        }
-                        $myMenu[] = [
-                            'label' => \App\Support\RoleModules::label($autoModule),
-                            'module' => $autoModule,
-                            'icon' => \App\Support\RoleModules::icon($autoModule),
-                        ];
+                // Every role's menu is derived from the single source of truth in
+                // App\Support\RoleModules (curated lists per role, permission-derived
+                // for custom roles), so the sidebar always matches the access gate.
+                $autoModules = \App\Support\RoleModules::allowedModules($roleName, $currentUser);
+                $myMenu = [
+                    ['label' => 'Dashboard', 'route' => 'role.dashboard', 'icon' => $iconDashboard, 'match' => 'role.dashboard'],
+                ];
+                foreach ($autoModules as $autoModule) {
+                    if ($autoModule === 'dashboard') {
+                        continue;
                     }
+                    $myMenu[] = [
+                        'label' => \App\Support\RoleModules::label($autoModule),
+                        'module' => $autoModule,
+                        'icon' => \App\Support\RoleModules::icon($autoModule),
+                    ];
                 }
                 $filteredMenu = [];
                 foreach ($myMenu as $item) {

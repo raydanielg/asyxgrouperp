@@ -49,27 +49,84 @@ php artisan serve
 
 Password ya kila account ni: **`password123`**
 
-| Role | Email | Module Access |
-|---|---|---|
-| Super Admin | `admin@djanproject.com` | All modules |
-| Director | `director@djanproject.com` | Reports, Projects, Sales Dashboard, Employees, Invoices, Expenses, Helpdesk |
-| Admin Manager | `admin.manager@djanproject.com` | Users, Roles, Employees, Attendance, Leaves, Reports, Settings |
-| Administrator | `administrator@djanproject.com` | Users, Roles, Employees, Projects, Products, Settings, Reports |
-| Finance Officer | `finance@djanproject.com` | Sales/Purchase Invoices, Expenses, Revenues, Bills, Bank Accounts, Transfers, Reports |
-| Auditor | `auditor@djanproject.com` | Sales/Purchase Invoices, Expenses, Revenues, Bills, Bank Accounts, Reports |
-| HR Officer | `hr@djanproject.com` | Employees, Attendance, Payroll, Leaves, Performance, Training, Recruitment, Assets, Policies |
-| Legal Officer | `legal@djanproject.com` | Contracts, Contacts, Projects, Reports |
-| Receptionist | `receptionist@djanproject.com` | Leads, Contacts, Tickets |
-| Logistics Officer | `logistics@djanproject.com` | Products, Warehouses, Stock Movements, Suppliers, Transfers, Purchases |
-| Technical Manager | `tech.manager@djanproject.com` | Tickets, Projects, Timesheets, Bugs, Employees |
-| Technician | `technician@djanproject.com` | Tickets, Projects, Timesheets, Bugs |
-| ICT Officer | `ict.officer@djanproject.com` | Tickets, Projects, Bugs, Assets, Employees |
-| ICT Engineer | `ict.engineer@djanproject.com` | Tickets, Projects, Bugs, Assets, Settings |
-| Project Manager | `project.manager@djanproject.com` | Projects, Timesheets, Bugs, Deals, Reports |
-| Operations Manager | `operations@djanproject.com` | Products, Warehouses, Stock, Sales, Purchases, Projects, Reports |
-| Call Center Agent | `callcenter@djanproject.com` | Leads, Contacts, Tickets |
-| Cashier | `cashier@djanproject.com` | POS Terminal, POS Reports, Sales Invoices, Products, Revenues |
-| Supervisor | `supervisor@djanproject.com` | Employees, Attendance, Leaves, Projects, POS, Products, Reports |
+Super administrator: `admin@djanproject.com` (full access to everything).
+Group super admin: `superadmin@djanproject.com`.
+
+One demo account is seeded per role in the ASYX role catalog. Emails follow the
+pattern `<role.name.with.dots>@djanproject.com`, e.g.:
+
+| Role | Email |
+|---|---|
+| ERP Super Administrator | `superadmin@djanproject.com` |
+| ERP Administrator | `admin@djanproject.com` |
+| ICT Administrator | `ict.administrator@djanproject.com` |
+| Auditor | `auditor@djanproject.com` |
+| Managing Director | `managing.director@djanproject.com` |
+| General Manager | `general.manager@djanproject.com` |
+| Technical Manager | `technical.manager@djanproject.com` |
+| Operations Manager | `operations.manager@djanproject.com` |
+| Finance Manager | `finance.manager@djanproject.com` |
+| Chief Accountant | `chief.accountant@djanproject.com` |
+| Accountant | `accountant@djanproject.com` |
+| Accounts Receivable Officer | `accounts.receivable.officer@djanproject.com` |
+| Accounts Payable Officer | `accounts.payable.officer@djanproject.com` |
+| Cashier | `cashier@djanproject.com` |
+| Payroll Officer | `payroll.officer@djanproject.com` |
+| Budget Officer | `budget.officer@djanproject.com` |
+| Credit Controller | `credit.controller@djanproject.com` |
+| Procurement Manager | `procurement.manager@djanproject.com` |
+| Procurement Officer | `procurement.officer@djanproject.com` |
+| Tender Officer | `tender.officer@djanproject.com` |
+| Store Manager | `store.manager@djanproject.com` |
+| Storekeeper | `storekeeper@djanproject.com` |
+| Inventory Controller | `inventory.controller@djanproject.com` |
+| Asset Officer | `asset.officer@djanproject.com` |
+| Sales Manager | `sales.manager@djanproject.com` |
+| Business Development Manager | `business.development.manager@djanproject.com` |
+| Sales Executive | `sales.executive@djanproject.com` |
+| CRM Officer | `crm.officer@djanproject.com` |
+| Marketing Officer | `marketing.officer@djanproject.com` |
+| Project Director | `project.director@djanproject.com` |
+| Project Manager | `project.manager@djanproject.com` |
+| Technical Projects Manager | `technical.projects.manager@djanproject.com` |
+| Project Coordinator | `project.coordinator@djanproject.com` |
+| Project Engineer | `project.engineer@djanproject.com` |
+| Site Supervisor | `site.supervisor@djanproject.com` |
+| Team Leader | `team.leader@djanproject.com` |
+| Project Accountant | `project.accountant@djanproject.com` |
+| Senior Systems Engineer | `senior.systems.engineer@djanproject.com` |
+| Systems Engineer | `systems.engineer@djanproject.com` |
+| Network Engineer | `network.engineer@djanproject.com` |
+| Software Engineer | `software.engineer@djanproject.com` |
+| Cybersecurity Engineer | `cybersecurity.engineer@djanproject.com` |
+| Support Engineer | `support.engineer@djanproject.com` |
+| Field Technician | `field.technician@djanproject.com` |
+| Technician | `technician@djanproject.com` |
+| NOC Engineer | `noc.engineer@djanproject.com` |
+| Service Desk Manager | `service.desk.manager@djanproject.com` |
+| Helpdesk Supervisor | `helpdesk.supervisor@djanproject.com` |
+| Helpdesk Officer | `helpdesk.officer@djanproject.com` |
+| Call Center Supervisor | `call.center.supervisor@djanproject.com` |
+| Call Center Agent | `call.center.agent@djanproject.com` |
+| HR Manager | `hr.manager@djanproject.com` |
+| HR Officer | `hr.officer@djanproject.com` |
+| Recruitment Officer | `recruitment.officer@djanproject.com` |
+| Training Officer | `training.officer@djanproject.com` |
+| Time & Attendance Officer | `time.attendance.officer@djanproject.com` |
+| Operations Officer | `operations.officer@djanproject.com` |
+| Fleet Manager | `fleet.manager@djanproject.com` |
+| Logistics Officer | `logistics.officer@djanproject.com` |
+| Receptionist | `receptionist@djanproject.com` |
+| Employee Self-Service | `employee@djanproject.com` / `employee.self.service@djanproject.com` |
+| Manager Self-Service | `manager.self.service@djanproject.com` |
+
+Seeded ASYX staff accounts (MasterDataSeeder) use `@asyxgroup.co.tz` /
+subsidiary domains, e.g. `john.mushi@asyxgroup.co.tz` (Managing Director),
+`sarah.mkono@asyxgroup.co.tz` (Finance Manager), etc.
+
+Role menus, module access and permissions are driven by a single source of
+truth: `app/Support/RolePermissions.php` (permissions per role) and
+`app/Support/RoleModules.php` (sidebar modules per role).
 
 ---
 

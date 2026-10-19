@@ -14,18 +14,10 @@ class UserRoleSeeder extends Seeder
     {
         $now = now();
 
-        // Consolidated 11-role structure. superadmin/admin are seeded
-        // separately below with fixed credentials.
-        $allRoles = [
-            'director',
-            'accountant', 'finance_manager',
-            'procurement_manager',
-            'sales_manager',
-            'project_manager',
-            'technical_manager',
-            'operations_manager',
-            'hr_manager',
-        ];
+        // Full ASYX spec role catalog — one demo account per role so every
+        // role's dashboard/pages/menu can be exercised end to end.
+        // admin/superadmin are seeded separately below with fixed credentials.
+        $allRoles = array_keys(\App\Support\RolePermissions::ROLE_PERMISSIONS);
 
         $company = \App\Models\Company::where('short_code', 'ASYX')->first();
         $companyId = $company?->id;
@@ -62,8 +54,17 @@ class UserRoleSeeder extends Seeder
                     'role' => $roleName,
                     'email_verified_at' => $now,
                 ]);
-            } elseif ($companyId && !$user->company_id) {
-                $user->update(['company_id' => $companyId]);
+            } else {
+                $updates = [];
+                if ($companyId && !$user->company_id) {
+                    $updates['company_id'] = $companyId;
+                }
+                if ($user->role !== $roleName) {
+                    $updates['role'] = $roleName;
+                }
+                if ($updates) {
+                    $user->update($updates);
+                }
             }
 
             // Attach role via role_user pivot

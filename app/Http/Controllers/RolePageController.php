@@ -59,20 +59,77 @@ class RolePageController extends Controller
 
     private function getRoleLabel(string $role): string
     {
-        $labels = [
-            'superadmin' => 'Super Admin',
-            'admin' => 'System Admin',
-            'director' => 'Director',
-            'accountant' => 'Accountant',
-            'finance_manager' => 'Finance Manager',
-            'procurement_manager' => 'Procurement Manager',
-            'sales_manager' => 'Sales Manager',
-            'project_manager' => 'Project Manager',
+        return self::roleLabels()[$role] ?? ucwords(str_replace('_', ' ', $role));
+    }
+
+    public static function roleLabels(): array
+    {
+        return [
+            'superadmin' => 'ERP Super Administrator',
+            'admin' => 'ERP Administrator',
+            'ict_administrator' => 'ICT Administrator',
+            'auditor' => 'Auditor',
+            'managing_director' => 'Managing Director',
+            'director' => 'Managing Director',
+            'general_manager' => 'General Manager',
             'technical_manager' => 'Technical Manager',
             'operations_manager' => 'Operations Manager',
+            'finance_manager' => 'Finance Manager',
+            'chief_accountant' => 'Chief Accountant',
+            'accountant' => 'Accountant',
+            'accounts_receivable_officer' => 'Accounts Receivable Officer',
+            'accounts_payable_officer' => 'Accounts Payable Officer',
+            'cashier' => 'Cashier',
+            'payroll_officer' => 'Payroll Officer',
+            'budget_officer' => 'Budget Officer',
+            'credit_controller' => 'Credit Controller',
+            'procurement_manager' => 'Procurement Manager',
+            'procurement_officer' => 'Procurement Officer',
+            'tender_officer' => 'Tender Officer',
+            'store_manager' => 'Store Manager',
+            'storekeeper' => 'Storekeeper',
+            'inventory_controller' => 'Inventory Controller',
+            'asset_officer' => 'Asset Officer',
+            'sales_manager' => 'Sales Manager',
+            'business_development_manager' => 'Business Development Manager',
+            'sales_executive' => 'Sales Executive',
+            'crm_officer' => 'CRM Officer',
+            'marketing_officer' => 'Marketing Officer',
+            'project_director' => 'Project Director',
+            'project_manager' => 'Project Manager',
+            'technical_projects_manager' => 'Technical Projects Manager',
+            'project_coordinator' => 'Project Coordinator',
+            'project_engineer' => 'Project Engineer',
+            'site_supervisor' => 'Site Supervisor',
+            'team_leader' => 'Team Leader',
+            'project_accountant' => 'Project Accountant',
+            'senior_systems_engineer' => 'Senior Systems Engineer',
+            'systems_engineer' => 'Systems Engineer',
+            'network_engineer' => 'Network Engineer',
+            'software_engineer' => 'Software Engineer',
+            'cybersecurity_engineer' => 'Cybersecurity Engineer',
+            'support_engineer' => 'Support Engineer',
+            'field_technician' => 'Field Technician',
+            'technician' => 'Technician',
+            'noc_engineer' => 'NOC Engineer',
+            'service_desk_manager' => 'Service Desk Manager',
+            'helpdesk_supervisor' => 'Helpdesk Supervisor',
+            'helpdesk_officer' => 'Helpdesk Officer',
+            'call_center_supervisor' => 'Call Center Supervisor',
+            'call_center_agent' => 'Call Center Agent',
             'hr_manager' => 'HR Manager',
+            'hr_officer' => 'HR Officer',
+            'recruitment_officer' => 'Recruitment Officer',
+            'training_officer' => 'Training Officer',
+            'time_attendance_officer' => 'Time & Attendance Officer',
+            'operations_officer' => 'Operations Officer',
+            'fleet_manager' => 'Fleet Manager',
+            'logistics_officer' => 'Logistics Officer',
+            'receptionist' => 'Receptionist',
+            'employee' => 'Employee',
+            'employee_self_service' => 'Employee',
+            'manager_self_service' => 'Manager Self-Service',
         ];
-        return $labels[$role] ?? ucfirst(str_replace('_', ' ', $role));
     }
 
     private function roleSlug(string $role): string
@@ -89,15 +146,15 @@ class RolePageController extends Controller
 
     public function page(Request $request, string $module)
     {
+        $user = auth()->user();
+        $role = $this->getUserRole($user);
+
+        // Role-based access control: admin bypasses, all other roles are limited to their allowed modules
+        if (!$user->isAdmin() && !in_array($module, $this->getAllowedModulesForRole($role), true)) {
+            abort(403, 'You do not have permission to access this module.');
+        }
+
         try {
-            $user = auth()->user();
-            $role = $this->getUserRole($user);
-
-            // Role-based access control: admin bypasses, all other roles are limited to their allowed modules
-            if (!$user->isAdmin() && !in_array($module, $this->getAllowedModulesForRole($role), true)) {
-                abort(403, 'You do not have permission to access this module.');
-            }
-
             $roleLabel = $this->getRoleLabel($role);
             $roleSlug = $this->roleSlug($role);
             $money = fn($n) => 'TZS ' . number_format($n);
@@ -331,9 +388,13 @@ class RolePageController extends Controller
                 break;
 
             case 'attendance':
-                $data['records'] = Attendance::latest()->paginate(10);
-                $data['presentToday'] = Attendance::whereDate('date', today())->where('status', 'present')->count();
-                $data['absentToday'] = Attendance::whereDate('date', today())->where('status', 'absent')->count();
+                $attQuery = Attendance::query();
+                if (!auth()->user()->hasPermission('view-attendance')) {
+                    $attQuery->where('employee_id', auth()->user()->employee?->id ?? -1);
+                }
+                $data['records'] = (clone $attQuery)->latest()->paginate(10);
+                $data['presentToday'] = (clone $attQuery)->whereDate('date', today())->where('status', 'present')->count();
+                $data['absentToday'] = (clone $attQuery)->whereDate('date', today())->where('status', 'absent')->count();
                 break;
 
             case 'payroll':
@@ -342,9 +403,13 @@ class RolePageController extends Controller
                 break;
 
             case 'leaves':
-                $data['leaves'] = Leave::latest()->paginate(10);
-                $data['pendingLeaves'] = Leave::where('status', 'pending')->count();
-                $data['approvedLeaves'] = Leave::where('status', 'approved')->count();
+                $leaveQuery = Leave::query();
+                if (!auth()->user()->hasPermission('view-leaves')) {
+                    $leaveQuery->where('employee_id', auth()->user()->employee?->id ?? -1);
+                }
+                $data['leaves'] = (clone $leaveQuery)->latest()->paginate(10);
+                $data['pendingLeaves'] = (clone $leaveQuery)->where('status', 'pending')->count();
+                $data['approvedLeaves'] = (clone $leaveQuery)->where('status', 'approved')->count();
                 break;
 
             case 'users':
@@ -358,7 +423,7 @@ class RolePageController extends Controller
 
             case 'tickets':
                 $tkUser = auth()->user();
-                $tkManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'operations_manager'];
+                $tkManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'managing_director', 'general_manager', 'operations_manager', 'service_desk_manager', 'helpdesk_supervisor', 'call_center_supervisor', 'ict_administrator', 'technical_projects_manager', 'project_director', 'team_leader', 'senior_systems_engineer'];
                 $tkQuery = HelpdeskTicket::with(['category', 'creator', 'assignee']);
                 $tkStatsQuery = HelpdeskTicket::query();
                 if (!in_array($tkUser->role, $tkManagerRoles, true)) {
@@ -435,7 +500,7 @@ class RolePageController extends Controller
             case 'timesheets':
                 $tsUser = auth()->user();
                 $tsQuery = \App\Models\Timesheet::with(['project', 'task', 'employee']);
-                $managerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director'];
+                $managerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'managing_director', 'general_manager', 'project_director', 'technical_projects_manager', 'team_leader', 'ict_administrator'];
                 if (!in_array($tsUser->role, $managerRoles, true)) {
                     $tsEmployeeId = $tsUser->employee?->id;
                     $tsQuery->where('employee_id', $tsEmployeeId);
@@ -449,7 +514,7 @@ class RolePageController extends Controller
 
             case 'bugs':
                 $bugUser = auth()->user();
-                $bugManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director'];
+                $bugManagerRoles = ['admin', 'superadmin', 'project_manager', 'technical_manager', 'director', 'managing_director', 'general_manager', 'project_director', 'technical_projects_manager', 'team_leader', 'ict_administrator'];
                 $bugQuery = ProjectBug::with(['project', 'assignedTo']);
                 $bugStatsQuery = ProjectBug::query();
                 if (!in_array($bugUser->role, $bugManagerRoles, true)) {
@@ -601,14 +666,14 @@ class RolePageController extends Controller
 
             case 'documents':
                 $query = Document::with(['uploadedBy', 'project']);
-                if ($request->filled('category')) {
-                    $query->where('category', $request->category);
+                if (request()->filled('category')) {
+                    $query->where('category', request('category'));
                 }
-                if ($request->filled('status')) {
-                    $query->where('status', $request->status);
+                if (request()->filled('status')) {
+                    $query->where('status', request('status'));
                 }
-                if ($request->filled('search')) {
-                    $search = $request->search;
+                if (request()->filled('search')) {
+                    $search = request('search');
                     $query->where(function ($q) use ($search) {
                         $q->where('title', 'like', "%{$search}%")
                           ->orWhere('document_number', 'like', "%{$search}%")
@@ -659,29 +724,43 @@ class RolePageController extends Controller
     private function resolveModelClassForModule(string $module): ?string
     {
         $map = [
+            // Projects / teams
             'team-review' => Project::class,
-            'resource-allocation' => Project::class,
-            'milestones' => Project::class,
+            'resource-allocation' => Employee::class,
+            'milestones' => ProjectTask::class,
             'tasks' => ProjectTask::class,
             'team-tasks' => ProjectTask::class,
             'team-attendance' => Attendance::class,
             'team-timesheets' => Timesheet::class,
             'team-overview' => Employee::class,
             'team-leaves' => Leave::class,
+            'site-reports' => ProjectTask::class,
+            'project-profitability' => Project::class,
+            'project-budgets' => \App\Models\ProjectBudget::class,
+
+            // Service desk / technical
             'escalations' => HelpdeskTicket::class,
             'incidents' => HelpdeskTicket::class,
-            'site-visits' => HelpdeskTicket::class,
+            'site-visits' => JobCard::class,
             'knowledge-base' => HelpdeskTicket::class,
             'sla-reports' => HelpdeskTicket::class,
-            'site-reports' => ProjectTask::class,
-            'service-reports' => HelpdeskTicket::class,
+            'service-reports' => JobCard::class,
+            'monitoring-dashboard' => HelpdeskTicket::class,
             'call-statistics' => Call::class,
             'shift-schedule' => Attendance::class,
+            'customer-assets' => FixedAsset::class,
+            'maintenance' => \App\Models\VehicleMaintenance::class,
+
+            // CRM / sales
             'sales-forecast' => CrmDeal::class,
             'market-analysis' => CrmLead::class,
             'lead-source-reports' => CrmLead::class,
-            'project-profitability' => Project::class,
-            'campaigns' => \App\Models\Announcement::class,
+            'campaigns' => Announcement::class,
+            'tenders' => \App\Models\Tender::class,
+            'quotations' => \App\Models\Quotation::class,
+            'sales-proposals' => \App\Models\SalesProposal::class,
+
+            // Reception
             'messages' => Message::class,
             'announcements' => Announcement::class,
             'visitors' => Visitor::class,
@@ -690,26 +769,84 @@ class RolePageController extends Controller
             'correspondence' => Correspondence::class,
             'parcels' => Parcel::class,
             'departments' => Department::class,
+
+            // HR
             'overtime' => Attendance::class,
-            'onboarding' => Employee::class,
+            'onboarding' => \App\Models\JobApplication::class,
+            'job-postings' => \App\Models\JobPosting::class,
+            'applications' => \App\Models\JobApplication::class,
+            'recruitment' => \App\Models\JobPosting::class,
+            'training-records' => \App\Models\Training::class,
+            'certifications' => \App\Models\Training::class,
+            'disciplinary' => \App\Models\PerformanceReview::class,
+            'hr-events' => \App\Models\HrEvent::class,
+            'salary-records' => Employee::class,
+            'deductions' => \App\Models\Payroll::class,
+            'payslips-all' => \App\Models\Payroll::class,
+
+            // Finance
+            'journal-entries' => \App\Models\JournalEntry::class,
+            'petty-cash' => \App\Models\CashAccountTransaction::class,
+            'financial-reports' => \App\Models\JournalEntry::class,
+            'bank-reconciliation' => BankAccount::class,
+            'tax-management' => Expense::class,
+            'cost-centres' => \App\Models\CostCenter::class,
+            'cost-allocations' => \App\Models\CostAllocation::class,
+            'cost-centre-budgets' => \App\Models\CostCenter::class,
+            'budgets' => \App\Models\Budget::class,
+            'budget-vs-actual' => \App\Models\Budget::class,
             'credit-limits' => CrmContact::class,
             'overdue-accounts' => SalesInvoice::class,
             'collections' => SalesInvoice::class,
             'receivables-aging' => SalesInvoice::class,
             'payables-aging' => PurchaseInvoice::class,
-            'bank-reconciliation' => BankAccount::class,
-            'lpos' => PurchaseInvoice::class,
-            'grns' => StockMovement::class,
+            'credit-notes' => \App\Models\SalesInvoiceReturn::class,
+            'client-receipts' => \App\Models\ClientReceipt::class,
+            'vendor-invoices' => \App\Models\VendorInvoice::class,
+            'vendor-payments' => \App\Models\VendorPayment::class,
+            'office-expenses' => \App\Models\OfficeExpense::class,
+            'acc-transfers' => BankTransferAcc::class,
+
+            // Procurement / inventory
+            'rfqs' => \App\Models\Rfq::class,
+            'purchase-requisitions' => \App\Models\ProcurementRequisition::class,
+            'lpos' => \App\Models\Lpo::class,
+            'grns' => \App\Models\Grn::class,
+            'delivery-notes' => \App\Models\DeliveryNote::class,
             'stock-count' => StockMovement::class,
             'reorder-levels' => Product::class,
             'batch-tracking' => Product::class,
             'barcodes' => Product::class,
+            'product-categories' => \App\Models\ProductCategory::class,
+            'variance-reports' => StockMovement::class,
+            'inventory-reports' => Product::class,
             'inventory-transfers' => Transfer::class,
             'transfers' => Transfer::class,
             'pos-reports' => PosSale::class,
             'assets' => FixedAsset::class,
             'asset-assignment' => FixedAsset::class,
+            'asset-maintenance' => FixedAsset::class,
             'asset-disposal' => FixedAsset::class,
+
+            // Fleet / logistics
+            'vehicles' => \App\Models\Vehicle::class,
+            'driver-assignment' => \App\Models\Vehicle::class,
+            'fuel-logs' => \App\Models\FuelLog::class,
+            'trip-schedule' => \App\Models\Vehicle::class,
+            'deliveries' => \App\Models\DeliveryNote::class,
+            'shipments' => \App\Models\DeliveryNote::class,
+            'route-planning' => \App\Models\DeliveryNote::class,
+            'operations-log' => HelpdeskTicket::class,
+            'operations-tasks' => ProjectTask::class,
+
+            // Admin / governance
+            'companies' => \App\Models\Company::class,
+            'intercompany' => \App\Models\IntercompanyTransaction::class,
+            'approvals' => \App\Models\ApprovalRequest::class,
+            'audit-logs' => \App\Models\AuditLog::class,
+            'login-history' => \App\Models\LoginHistory::class,
+            'documents' => Document::class,
+            'meetings' => \App\Models\Meeting::class,
         ];
 
         return $map[$module] ?? null;

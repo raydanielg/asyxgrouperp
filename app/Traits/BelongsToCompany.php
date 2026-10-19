@@ -45,9 +45,9 @@ trait BelongsToCompany
                 return;
             }
 
-            // Group-level user sees all subsidiaries, or only the switched company
+            // Group-level / executive user sees all subsidiaries, or only the switched company
             $switchedId = session('switched_company_id');
-            if ($user->company_id && $user->company && $user->company->is_group) {
+            if (($user->company_id && $user->company && $user->company->is_group) || $user->hasPermission('switch-companies')) {
                 if ($switchedId !== null) {
                     $builder->where($table . '.company_id', $switchedId);
                 }
