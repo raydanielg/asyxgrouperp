@@ -3,46 +3,35 @@
 @section('page_title', 'Deals')
 @section('content')
 
-<div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
     {{-- Toolbar --}}
-    <div class="px-5 py-4 border-b bg-gray-50/40 flex flex-wrap items-center gap-3">
-        <div class="flex items-center gap-2 flex-1 min-w-[200px]">
-            <div class="relative flex-1">
-                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <input id="dealSearch" type="text" placeholder="Search deals..." class="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none bg-white">
-            </div>
-            <select id="dealStatusFilter" class="px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none bg-white">
-                <option value="">All Status</option>
-                <option value="open">Open</option>
-                <option value="won">Won</option>
-                <option value="lost">Lost</option>
-                <option value="cancelled">Cancelled</option>
-            </select>
-            <select id="dealStageFilter" class="px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none bg-white">
-                <option value="">All Stages</option>
-                <option value="prospecting">Prospecting</option>
-                <option value="qualification">Qualification</option>
-                <option value="negotiation">Negotiation</option>
-                <option value="proposal">Proposal</option>
-                <option value="closed_won">Closed Won</option>
-                <option value="closed_lost">Closed Lost</option>
-            </select>
-        </div>
-        <div class="flex items-center gap-2">
-            <select id="dealPerPage" class="px-3 py-2 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none bg-white">
+    <div class="px-5 py-3.5 border-b border-gray-200 flex flex-wrap items-center gap-2">
+        <input id="dealSearch" type="text" placeholder="Search deals..." class="px-3 py-2 border border-gray-200 rounded text-xs outline-none focus:border-gray-400 bg-white w-52">
+        <select id="dealStatusFilter" class="px-3 py-2 border border-gray-200 rounded text-xs outline-none focus:border-gray-400 bg-white">
+            <option value="">All Status</option>
+            <option value="open">Open</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+        <select id="dealStageFilter" class="px-3 py-2 border border-gray-200 rounded text-xs outline-none focus:border-gray-400 bg-white">
+            <option value="">All Stages</option>
+            <option value="prospecting">Prospecting</option>
+            <option value="qualification">Qualification</option>
+            <option value="negotiation">Negotiation</option>
+            <option value="proposal">Proposal</option>
+            <option value="closed_won">Closed Won</option>
+            <option value="closed_lost">Closed Lost</option>
+        </select>
+        <div class="flex items-center gap-2 ml-auto">
+            <select id="dealPerPage" class="px-3 py-2 border border-gray-200 rounded text-xs outline-none focus:border-gray-400 bg-white">
                 <option value="15">15 / page</option>
                 <option value="50">50 / page</option>
                 <option value="100">100 / page</option>
                 <option value="all">All</option>
             </select>
-            <button onclick="exportDealsPdf()" class="px-3 py-2 bg-violet-50 text-violet-700 border border-violet-200 text-xs font-semibold rounded-lg hover:bg-violet-100 transition-colors flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Export PDF
-            </button>
-            <button onclick="document.getElementById('createModal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-1.5 shadow-sm">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                New Deal
-            </button>
+            <button onclick="exportDealsPdf()" class="px-3 py-2 border border-gray-200 text-gray-600 text-xs font-medium rounded hover:bg-gray-50">Export PDF</button>
+            <button type="button" onclick="openDealDrawer()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">New Deal</button>
         </div>
     </div>
 
@@ -50,7 +39,7 @@
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
-                <tr class="text-left text-[10px] text-gray-500 uppercase tracking-wider bg-gray-50/50 border-b">
+                <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
                     <th class="px-5 py-3 font-semibold">Deal #</th>
                     <th class="px-5 py-3 font-semibold">Title</th>
                     <th class="px-5 py-3 font-semibold">Lead</th>
@@ -61,98 +50,158 @@
                     <th class="px-5 py-3 font-semibold text-right">Actions</th>
                 </tr>
             </thead>
-            <tbody id="dealsTableBody">
-                <tr><td colspan="8" class="px-5 py-12 text-center text-sm text-gray-400">Loading deals...</td></tr>
+            <tbody id="dealsTableBody" class="divide-y divide-gray-100">
+                <tr><td colspan="8" class="px-5 py-10 text-center text-xs text-gray-400">Loading deals...</td></tr>
             </tbody>
         </table>
     </div>
 
     {{-- Footer --}}
-    <div class="px-5 py-4 border-t bg-gray-50/30 flex items-center justify-between flex-wrap gap-2">
-        <div id="dealsInfo" class="text-[10px] text-gray-500 font-medium"></div>
+    <div class="px-5 py-3 border-t border-gray-100 flex items-center justify-between flex-wrap gap-2">
+        <div id="dealsInfo" class="text-[11px] text-gray-400"></div>
         <div id="dealsPagination"></div>
     </div>
 </div>
 
-{{-- Create Modal --}}
-<div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">New Deal</h3>
-        <form method="POST" action="{{ route('admin.crm-deals.store') }}" class="space-y-3">@csrf
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Lead</label><select name="lead_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">None</option>
-            @foreach($leads as $l)
-            <option value="{{ $l->id }}">{{ $l->full_name }} ({{ $l->company ?? 'N/A' }})</option>
-            @endforeach
-            </select></div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Value *</label><input name="value" type="number" step="0.01" required value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Stage</label><select name="stage" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="prospecting">Prospecting</option><option value="qualification">Qualification</option><option value="negotiation">Negotiation</option><option value="proposal">Proposal</option><option value="closed_won">Closed Won</option><option value="closed_lost">Closed Lost</option></select></div>
+{{-- New Deal Drawer --}}
+<div id="dealDrawer" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeDealDrawer()"></div>
+    <div id="dealDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
+            <div>
+                <h3 class="text-sm font-bold text-white">New Deal</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Sales opportunity</p>
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Expected Close</label><input name="expected_close_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Assigned To</label><select name="assigned_to" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Unassigned</option>
-                @foreach($users as $u)
-                <option value="{{ $u->id }}">{{ $u->name }}</option>
-                @endforeach
-                </select></div>
+            <button type="button" onclick="closeDealDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form method="POST" action="{{ route('admin.crm-deals.store') }}" class="flex-1 overflow-y-auto p-5">
+            @csrf
+            <div class="space-y-4">
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Title <span class="text-red-500">*</span></label><input name="title" required placeholder="e.g. Supply of office furniture" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Lead</label>
+                    <select name="lead_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— None —</option>
+                        @foreach($leads as $l)
+                        <option value="{{ $l->id }}">{{ $l->full_name }} ({{ $l->company ?? 'N/A' }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Value (TZS) <span class="text-red-500">*</span></label><input name="value" type="number" step="0.01" min="0" required value="0" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Stage</label><select name="stage" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white"><option value="prospecting">Prospecting</option><option value="qualification">Qualification</option><option value="negotiation">Negotiation</option><option value="proposal">Proposal</option><option value="closed_won">Closed Won</option><option value="closed_lost">Closed Lost</option></select></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Expected Close</label><input name="expected_close_date" type="date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Assigned To</label>
+                        <select name="assigned_to" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                            <option value="">— Unassigned —</option>
+                            @foreach($users as $u)
+                            <option value="{{ $u->id }}">{{ $u->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea name="notes" rows="3" placeholder="Deal context, next steps..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></textarea></div>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea name="notes" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></textarea></div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create</button></div>
+            <div class="flex items-center gap-3 pt-5 mt-2 border-t border-gray-100">
+                <button type="submit" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-700 transition-colors">Create Deal</button>
+                <button type="button" onclick="closeDealDrawer()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
+            </div>
         </form>
     </div>
 </div>
 
-{{-- Edit Modal --}}
-<div id="editModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Edit Deal</h3>
-        <form id="editDealForm" method="POST" action="" class="space-y-3">@csrf @method('PATCH')
-            <input type="hidden" name="deal_id" id="editDealId">
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" id="editTitle" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Lead</label><select name="lead_id" id="editLeadId" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">None</option>
-            @foreach($leads as $l)
-            <option value="{{ $l->id }}">{{ $l->full_name }}</option>
-            @endforeach
-            </select></div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Value *</label><input name="value" id="editValue" type="number" step="0.01" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Stage</label><select name="stage" id="editStage" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="prospecting">Prospecting</option><option value="qualification">Qualification</option><option value="negotiation">Negotiation</option><option value="proposal">Proposal</option><option value="closed_won">Closed Won</option><option value="closed_lost">Closed Lost</option></select></div>
+{{-- Edit Deal Drawer --}}
+<div id="editDrawer" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeEditDrawer()"></div>
+    <div id="editDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
+            <div>
+                <h3 class="text-sm font-bold text-white">Edit Deal</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5" id="editDrawerNum"></p>
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Expected Close</label><input name="expected_close_date" id="editCloseDate" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" id="editStatus" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="open">Open</option><option value="won">Won</option><option value="lost">Lost</option><option value="cancelled">Cancelled</option></select></div>
+            <button type="button" onclick="closeEditDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form id="editDealForm" method="POST" action="" class="flex-1 overflow-y-auto p-5">
+            @csrf @method('PATCH')
+            <div class="space-y-4">
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Title <span class="text-red-500">*</span></label><input name="title" id="editTitle" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Lead</label>
+                    <select name="lead_id" id="editLeadId" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— None —</option>
+                        @foreach($leads as $l)
+                        <option value="{{ $l->id }}">{{ $l->full_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Value (TZS) <span class="text-red-500">*</span></label><input name="value" id="editValue" type="number" step="0.01" min="0" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Stage</label><select name="stage" id="editStage" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white"><option value="prospecting">Prospecting</option><option value="qualification">Qualification</option><option value="negotiation">Negotiation</option><option value="proposal">Proposal</option><option value="closed_won">Closed Won</option><option value="closed_lost">Closed Lost</option></select></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Expected Close</label><input name="expected_close_date" id="editCloseDate" type="date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" id="editStatus" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white"><option value="open">Open</option><option value="won">Won</option><option value="lost">Lost</option><option value="cancelled">Cancelled</option></select></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Assigned To</label>
+                    <select name="assigned_to" id="editAssignedTo" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— Unassigned —</option>
+                        @foreach($users as $u)
+                        <option value="{{ $u->id }}">{{ $u->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea name="notes" id="editNotes" rows="3" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></textarea></div>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Assigned To</label><select name="assigned_to" id="editAssignedTo" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"><option value="">Unassigned</option>
-            @foreach($users as $u)
-            <option value="{{ $u->id }}">{{ $u->name }}</option>
-            @endforeach
-            </select></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Notes</label><textarea name="notes" id="editNotes" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></textarea></div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Update Deal</button></div>
+            <div class="flex items-center gap-3 pt-5 mt-2 border-t border-gray-100">
+                <button type="submit" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-700 transition-colors">Save Changes</button>
+                <button type="button" onclick="closeEditDrawer()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
+            </div>
         </form>
     </div>
 </div>
 
-{{-- View Modal --}}
-<div id="viewModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-900" id="viewDealNumber"></h3>
-            <span id="viewDealStatus" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-medium"></span>
+{{-- View Deal Drawer --}}
+<div id="viewDrawer" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeViewDrawer()"></div>
+    <div id="viewDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
+            <div>
+                <h3 class="text-sm font-bold text-white" id="viewDealNumber"></h3>
+                <p class="text-[11px] text-slate-400 mt-0.5"><span id="viewStatusDot"></span><span id="viewDealStatus"></span></p>
+            </div>
+            <button type="button" onclick="closeViewDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
-        <div class="grid grid-cols-2 gap-4 text-sm mb-4">
-            <div><span class="text-[10px] text-gray-400 uppercase">Title</span><p id="viewDealTitle" class="font-medium text-gray-900 mt-0.5"></p></div>
-            <div><span class="text-[10px] text-gray-400 uppercase">Lead</span><p id="viewDealLead" class="font-medium text-gray-900 mt-0.5"></p></div>
-            <div><span class="text-[10px] text-gray-400 uppercase">Value</span><p id="viewDealValue" class="font-bold text-emerald-700 mt-0.5"></p></div>
-            <div><span class="text-[10px] text-gray-400 uppercase">Stage</span><p id="viewDealStage" class="font-medium text-gray-900 mt-0.5"></p></div>
-            <div><span class="text-[10px] text-gray-400 uppercase">Expected Close</span><p id="viewDealClose" class="font-medium text-gray-900 mt-0.5"></p></div>
+        <div class="flex-1 overflow-y-auto p-5 space-y-5">
+            <div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Deal</div>
+                <div class="space-y-2.5">
+                    <div class="flex justify-between"><span class="text-xs text-gray-400">Title</span><span id="viewDealTitle" class="text-xs font-medium text-gray-900 text-right"></span></div>
+                    <div class="flex justify-between"><span class="text-xs text-gray-400">Lead</span><span id="viewDealLead" class="text-xs text-gray-700"></span></div>
+                    <div class="flex justify-between"><span class="text-xs text-gray-400">Value</span><span id="viewDealValue" class="text-xs font-bold text-gray-900"></span></div>
+                    <div class="flex justify-between"><span class="text-xs text-gray-400">Stage</span><span id="viewDealStage" class="text-xs text-gray-700"></span></div>
+                    <div class="flex justify-between"><span class="text-xs text-gray-400">Expected Close</span><span id="viewDealClose" class="text-xs text-gray-700"></span></div>
+                    <div class="flex justify-between"><span class="text-xs text-gray-400">Assigned To</span><span id="viewDealAssigned" class="text-xs text-gray-700"></span></div>
+                </div>
+            </div>
+            <div id="viewDealNotesWrap" class="hidden">
+                <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Notes</div>
+                <p id="viewDealNotes" class="text-xs text-gray-600 leading-relaxed"></p>
+            </div>
+            <div class="pt-4 border-t border-gray-100 flex items-center gap-4">
+                <button onclick="viewDealEdit()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700">Edit Deal</button>
+                <button onclick="viewDealPdf()" class="px-4 py-2 border border-gray-200 text-gray-600 text-xs font-medium rounded hover:bg-gray-50">View PDF</button>
+            </div>
         </div>
-        <div id="viewDealNotesWrap" class="hidden mb-4">
-            <span class="text-[10px] text-gray-400 uppercase">Notes</span>
-            <p id="viewDealNotes" class="text-sm text-gray-700 mt-1 bg-gray-50 border rounded-lg p-3"></p>
-        </div>
-        <button onclick="document.getElementById('viewModal').classList.add('hidden')" class="w-full px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Close</button>
     </div>
 </div>
 
@@ -165,6 +214,23 @@ const dealDestroyUrl = '{{ route("admin.crm-deals.destroy", "__ID__") }}';
 const dealConvertUrl = '{{ route("admin.crm-deals.convert-to-project", "__ID__") }}';
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
 let searchTimer = null;
+let currentDeal = null;
+
+const DEAL_COLORS = { open: '#3b82f6', won: '#10b981', lost: '#ef4444', cancelled: '#9ca3af' };
+
+function openDrawer(drawerId, panelId) {
+    document.getElementById(drawerId).classList.remove('hidden');
+    requestAnimationFrame(() => document.getElementById(panelId).classList.remove('-translate-x-full'));
+}
+function closeDrawer(drawerId, panelId) {
+    document.getElementById(panelId).classList.add('-translate-x-full');
+    setTimeout(() => document.getElementById(drawerId).classList.add('hidden'), 300);
+}
+function openDealDrawer() { openDrawer('dealDrawer', 'dealDrawerPanel'); }
+function closeDealDrawer() { closeDrawer('dealDrawer', 'dealDrawerPanel'); }
+function closeEditDrawer() { closeDrawer('editDrawer', 'editDrawerPanel'); }
+function closeViewDrawer() { closeDrawer('viewDrawer', 'viewDrawerPanel'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDealDrawer(); closeEditDrawer(); closeViewDrawer(); } });
 
 function loadDeals(page = 1) {
     const search = document.getElementById('dealSearch').value;
@@ -179,13 +245,11 @@ function loadDeals(page = 1) {
     params.set('per_page', perPage);
     params.set('page', page);
 
-    fetch(dealsDataUrl + '?' + params.toString(), {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-    })
+    fetch(dealsDataUrl + '?' + params.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
     .then(r => r.json())
     .then(res => renderDeals(res))
     .catch(() => {
-        document.getElementById('dealsTableBody').innerHTML = '<tr><td colspan="8" class="px-5 py-12 text-center text-sm text-red-400">Failed to load deals.</td></tr>';
+        document.getElementById('dealsTableBody').innerHTML = '<tr><td colspan="8" class="px-5 py-10 text-center text-xs text-red-400">Failed to load deals.</td></tr>';
     });
 }
 
@@ -194,33 +258,31 @@ function renderDeals(res) {
     const deals = res.data || [];
 
     if (deals.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="px-5 py-12 text-center"><svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg><p class="text-sm text-gray-400">No deals found</p></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="px-5 py-10 text-center text-xs text-gray-400">No deals found</td></tr>';
     } else {
         tbody.innerHTML = deals.map(d => {
             const stageLabel = (d.stage || '').replace(/_/g, ' ');
-            const statusColors = {open: 'sky', won: 'emerald', lost: 'red', cancelled: 'gray'};
-            const sc = statusColors[d.status] || 'gray';
+            const sc = DEAL_COLORS[d.status] || '#9ca3af';
             const closeDate = d.expected_close_date ? new Date(d.expected_close_date).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : '—';
             const isOverdue = d.expected_close_date && d.status === 'open' && new Date(d.expected_close_date) < new Date();
-            const leadName = d.lead ? (d.lead.full_name || 'N/A') : 'N/A';
-            let actions = '';
-            actions += '<button onclick="viewDeal(' + d.id + ')" title="View" class="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 flex items-center justify-center transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>';
-            actions += '<button onclick="editDeal(' + d.id + ')" title="Edit" class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>';
-            actions += '<button onclick="downloadDealPdf(' + d.id + ')" title="PDF" class="w-7 h-7 rounded-lg bg-violet-50 text-violet-600 hover:bg-violet-100 flex items-center justify-center transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button>';
+            const leadName = d.lead ? (d.lead.full_name || '—') : '—';
+            let actions = '<button onclick="viewDeal(' + d.id + ')" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</button>';
+            actions += '<button onclick="editDeal(' + d.id + ')" class="text-xs font-medium text-gray-600 hover:text-gray-900">Edit</button>';
+            actions += '<button onclick="downloadDealPdf(' + d.id + ')" class="text-xs font-medium text-gray-600 hover:text-gray-900">PDF</button>';
             if (d.status === 'open' && !d.project_id) {
-                actions += '<button onclick="convertDeal(' + d.id + ',\'' + (d.deal_number||'') + '\',\'' + escapeQuotes(d.title||'') + '\')" title="Convert to Project" class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></button>';
+                actions += '<button onclick="convertDeal(' + d.id + ',\'' + (d.deal_number||'') + '\',\'' + escapeQuotes(d.title||'') + '\')" class="text-xs font-medium text-emerald-600 hover:text-emerald-800">→ Project</button>';
             }
-            actions += '<button onclick="deleteDeal(' + d.id + ',\'' + (d.deal_number||'') + '\')" title="Delete" class="w-7 h-7 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>';
+            actions += '<button onclick="deleteDeal(' + d.id + ',\'' + (d.deal_number||'') + '\')" class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>';
 
-            return '<tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">' +
-                '<td class="px-5 py-3 text-xs font-mono text-gray-700 font-medium">' + (d.deal_number || '') + '</td>' +
-                '<td class="px-5 py-3 text-xs font-medium text-gray-900">' + escapeHtml(d.title || '') + '</td>' +
-                '<td class="px-5 py-3 text-xs text-gray-500">' + escapeHtml(leadName) + '</td>' +
-                '<td class="px-5 py-3 text-xs font-semibold text-gray-900 text-right">TZS ' + numberFormat(d.value || 0) + '</td>' +
-                '<td class="px-5 py-3"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-50 text-sky-700 border border-sky-100">' + capitalize(stageLabel) + '</span></td>' +
-                '<td class="px-5 py-3 text-xs ' + (isOverdue ? 'text-rose-600 font-medium' : 'text-gray-400') + '">' + closeDate + '</td>' +
-                '<td class="px-5 py-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-' + sc + '-50 text-' + sc + '-700 border border-' + sc + '-100">' + capitalize(d.status || '') + '</span></td>' +
-                '<td class="px-5 py-3 text-right"><div class="flex items-center justify-end gap-1">' + actions + '</div></td>' +
+            return '<tr class="hover:bg-gray-50/60">' +
+                '<td class="px-5 py-3.5 text-xs font-mono text-gray-700">' + (d.deal_number || '') + '</td>' +
+                '<td class="px-5 py-3.5 text-xs font-medium text-gray-900">' + escapeHtml(d.title || '') + '</td>' +
+                '<td class="px-5 py-3.5 text-xs text-gray-500">' + escapeHtml(leadName) + '</td>' +
+                '<td class="px-5 py-3.5 text-xs font-medium font-mono text-gray-900 text-right">' + numberFormat(d.value || 0) + '</td>' +
+                '<td class="px-5 py-3.5 text-xs text-gray-600">' + capitalize(stageLabel) + '</td>' +
+                '<td class="px-5 py-3.5 text-xs ' + (isOverdue ? 'text-red-500 font-medium' : 'text-gray-400') + '">' + closeDate + '</td>' +
+                '<td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:' + sc + '"></span>' + capitalize(d.status || '') + '</span></td>' +
+                '<td class="px-5 py-3.5"><div class="flex items-center justify-end gap-4">' + actions + '</div></td>' +
                 '</tr>';
         }).join('');
     }
@@ -234,8 +296,53 @@ function escapeQuotes(s) { return s.replace(/'/g, "\\'"); }
 function numberFormat(n) { return Number(n).toLocaleString('en-US'); }
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 
-function downloadDealPdf(id) {
-    window.open(dealPdfUrl.replace('__ID__', id), '_blank');
+function downloadDealPdf(id) { window.open(dealPdfUrl.replace('__ID__', id), '_blank'); }
+
+function fetchDeal(id, cb) {
+    fetch(dealsDataUrl + '?per_page=all&page=1', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => r.json())
+        .then(res => {
+            const d = (res.data || []).find(x => x.id === id);
+            if (d) { currentDeal = d; cb(d); }
+        });
+}
+
+function viewDeal(id) {
+    fetchDeal(id, d => {
+        document.getElementById('viewDealNumber').textContent = d.deal_number || 'Deal';
+        document.getElementById('viewDealTitle').textContent = d.title || '';
+        document.getElementById('viewDealLead').textContent = d.lead ? (d.lead.full_name || '—') : '—';
+        document.getElementById('viewDealValue').textContent = 'TZS ' + numberFormat(d.value || 0);
+        document.getElementById('viewDealStage').textContent = capitalize((d.stage || '').replace(/_/g, ' '));
+        document.getElementById('viewDealClose').textContent = d.expected_close_date ? new Date(d.expected_close_date).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : '—';
+        document.getElementById('viewDealAssigned').textContent = d.assigned_to_name || (d.assigned_to ? 'User #' + d.assigned_to : 'Unassigned');
+        const sc = DEAL_COLORS[d.status] || '#9ca3af';
+        document.getElementById('viewStatusDot').innerHTML = '<span style="display:inline-block;width:6px;height:6px;border-radius:99px;background:' + sc + ';margin-right:6px;vertical-align:1px;"></span>';
+        document.getElementById('viewDealStatus').textContent = capitalize(d.status || '');
+        var w = document.getElementById('viewDealNotesWrap');
+        if (d.notes) { w.classList.remove('hidden'); document.getElementById('viewDealNotes').textContent = d.notes; }
+        else { w.classList.add('hidden'); }
+        openDrawer('viewDrawer', 'viewDrawerPanel');
+    });
+}
+
+function viewDealEdit() { if (currentDeal) { closeViewDrawer(); setTimeout(() => editDeal(currentDeal.id), 300); } }
+function viewDealPdf() { if (currentDeal) downloadDealPdf(currentDeal.id); }
+
+function editDeal(id) {
+    fetchDeal(id, d => {
+        document.getElementById('editDrawerNum').textContent = d.deal_number || '';
+        document.getElementById('editTitle').value = d.title || '';
+        document.getElementById('editLeadId').value = d.lead_id || '';
+        document.getElementById('editValue').value = d.value || 0;
+        document.getElementById('editStage').value = d.stage || 'prospecting';
+        document.getElementById('editCloseDate').value = d.expected_close_date ? d.expected_close_date.substring(0, 10) : '';
+        document.getElementById('editAssignedTo').value = d.assigned_to || '';
+        document.getElementById('editNotes').value = d.notes || '';
+        document.getElementById('editStatus').value = d.status || 'open';
+        document.getElementById('editDealForm').action = dealUpdateUrl.replace('__ID__', id);
+        openDrawer('editDrawer', 'editDrawerPanel');
+    });
 }
 
 function exportDealsPdf() {
@@ -291,7 +398,7 @@ function deleteDeal(id, num) {
         title: 'Delete Deal?', text: 'Deal ' + num + ' will be permanently removed.',
         icon: 'warning', showCancelButton: true,
         confirmButtonColor: '#dc2626', cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Delete', cancelButtonText: 'Cancel', reverseButtons: true
+        confirmButtonText: 'Yes, delete', cancelButtonText: 'Cancel', reverseButtons: true
     }).then((r) => {
         if (r.isConfirmed) {
             const form = document.createElement('form');
@@ -308,50 +415,6 @@ function deleteDeal(id, num) {
     });
 }
 
-function viewDeal(id) {
-    fetch(dealsDataUrl + '?per_page=all&page=1', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-        .then(r => r.json())
-        .then(res => {
-            const d = (res.data || []).find(x => x.id === id);
-            if (!d) return;
-            document.getElementById('viewDealNumber').textContent = d.deal_number || '';
-            document.getElementById('viewDealTitle').textContent = d.title || '';
-            document.getElementById('viewDealLead').textContent = d.lead ? (d.lead.full_name || 'N/A') : 'N/A';
-            document.getElementById('viewDealValue').textContent = 'TZS ' + numberFormat(d.value || 0);
-            document.getElementById('viewDealStage').textContent = capitalize((d.stage || '').replace(/_/g, ' '));
-            document.getElementById('viewDealClose').textContent = d.expected_close_date ? new Date(d.expected_close_date).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : '—';
-            var s = document.getElementById('viewDealStatus');
-            s.textContent = capitalize(d.status || '');
-            const sc = {won:'emerald', lost:'red', cancelled:'gray', open:'sky'}[d.status] || 'gray';
-            s.className = 'inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-medium border bg-' + sc + '-50 text-' + sc + '-700 border-' + sc + '-200';
-            var w = document.getElementById('viewDealNotesWrap');
-            if (d.notes) { w.classList.remove('hidden'); document.getElementById('viewDealNotes').textContent = d.notes; }
-            else { w.classList.add('hidden'); }
-            document.getElementById('viewModal').classList.remove('hidden');
-        });
-}
-
-function editDeal(id) {
-    fetch(dealsDataUrl + '?per_page=all&page=1', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-        .then(r => r.json())
-        .then(res => {
-            const d = (res.data || []).find(x => x.id === id);
-            if (!d) return;
-            document.getElementById('editDealId').value = d.id;
-            document.getElementById('editTitle').value = d.title || '';
-            if (d.lead_id) document.getElementById('editLeadId').value = d.lead_id;
-            document.getElementById('editValue').value = d.value || 0;
-            document.getElementById('editStage').value = d.stage || 'prospecting';
-            document.getElementById('editCloseDate').value = d.expected_close_date ? d.expected_close_date.substring(0, 10) : '';
-            if (d.assigned_to) document.getElementById('editAssignedTo').value = d.assigned_to;
-            document.getElementById('editNotes').value = d.notes || '';
-            document.getElementById('editStatus').value = d.status || 'open';
-            document.getElementById('editDealForm').action = dealUpdateUrl.replace('__ID__', id);
-            document.getElementById('editModal').classList.remove('hidden');
-        });
-}
-
-// Event listeners
 document.getElementById('dealSearch').addEventListener('input', function() {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => loadDeals(1), 300);
@@ -368,7 +431,6 @@ document.getElementById('dealsPagination').addEventListener('click', function(e)
     loadDeals(page);
 });
 
-// Initial load
 loadDeals(1);
 </script>
 @endpush
