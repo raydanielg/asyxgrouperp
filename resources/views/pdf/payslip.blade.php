@@ -17,9 +17,7 @@
     .doc { font-size: 20px; font-weight: bold; letter-spacing: .14em; }
     .doc-meta { font-size: 10px; color: #555; margin-top: 3px; }
     .stamp { display: inline-block; margin-top: 6px; padding: 2px 10px; border: 1.5px solid; font-size: 9px; font-weight: bold; letter-spacing: .15em; text-transform: uppercase; }
-    .stamp-paid { color: #16a34a; border-color: #16a34a; }
-    .stamp-pending { color: #d97706; border-color: #d97706; }
-    .stamp-cancelled { color: #dc2626; border-color: #dc2626; }
+    .stamp-paid, .stamp-pending, .stamp-cancelled { color: #111; border-color: #111; }
 
     .info { width: 100%; border-collapse: collapse; margin-top: 18px; }
     .info td { vertical-align: top; font-size: 11px; padding: 0; }
@@ -31,7 +29,7 @@
     table.lines th { text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #555; border-bottom: 1.5px solid #111; padding: 0 4px 7px; }
     table.lines th.r, table.lines td.r { text-align: right; }
     table.lines td { padding: 8px 4px; border-bottom: 1px solid #ddd; font-size: 11px; }
-    table.lines td.neg { color: #b91c1c; }
+    table.lines td.neg { color: #111; }
     table.lines tr.total td { font-weight: bold; border-bottom: none; border-top: 1.5px solid #111; padding-top: 9px; }
 
     .netbar { margin-top: 26px; border-top: 2px solid #111; border-bottom: 2px solid #111; padding: 12px 4px; overflow: hidden; }
@@ -60,9 +58,8 @@
         <div class="left">
             <div class="co-name">{{ $company?->legal_name ?? $company?->name ?? config('app.name') }}</div>
             <div class="co-meta">
-                {{ $company?->address ?? 'Dar es Salaam' }}@if($company?->city), {{ $company->city }}@endif<br>
-                @if($company?->phone) Tel: {{ $company->phone }}@endif @if($company?->email) &middot; {{ $company->email }}@endif<br>
-                @if($company?->tin) TIN: {{ $company->tin }}@endif @if($company?->vrn) &middot; VRN: {{ $company->vrn }}@endif
+                {{ trim(($company?->address ?? 'Dar es Salaam') . ($company?->city ? ', ' . $company->city : '')) }}
+                @if($company?->tin) &middot; TIN: {{ $company->tin }}@endif
             </div>
         </div>
         <div class="right">
@@ -105,10 +102,10 @@
     <table class="lines" style="float:right;">
         <tr><th>Deductions</th><th class="r">Amount (TZS)</th></tr>
         @if(($payroll->deductions ?? 0) > 0)
-        <tr><td>PAYE</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.6, 2) }}</td></tr>
-        <tr><td>NSSF (10%)</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.2, 2) }}</td></tr>
-        <tr><td>NHIF</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
-        <tr><td>WCF / Other</td><td class="r neg">&minus;{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
+        <tr><td>PAYE</td><td class="r">&minus;{{ number_format($payroll->deductions * 0.6, 2) }}</td></tr>
+        <tr><td>NSSF (10%)</td><td class="r">&minus;{{ number_format($payroll->deductions * 0.2, 2) }}</td></tr>
+        <tr><td>NHIF</td><td class="r">&minus;{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
+        <tr><td>WCF / Other</td><td class="r">&minus;{{ number_format($payroll->deductions * 0.1, 2) }}</td></tr>
         @else
         <tr><td colspan="2" style="color:#999;">No deductions</td></tr>
         @endif
