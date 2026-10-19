@@ -199,7 +199,7 @@
             </div>
             <div class="pt-4 border-t border-gray-100 flex items-center gap-4">
                 <button onclick="viewDealEdit()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700">Edit Deal</button>
-                <button onclick="viewDealPdf()" class="px-4 py-2 border border-gray-200 text-gray-600 text-xs font-medium rounded hover:bg-gray-50">View PDF</button>
+                <button onclick="viewDealPdf()" class="px-4 py-2 border border-gray-200 text-gray-600 text-xs font-medium rounded hover:bg-gray-50">View Details</button>
             </div>
         </div>
     </div>
@@ -211,6 +211,7 @@ const dealsDataUrl = '{{ route("admin.crm-deals.data") }}';
 const dealUpdateUrl = '{{ route("admin.crm-deals.update", "__ID__") }}';
 const dealPdfUrl = '{{ route("admin.crm-deals.pdf", "__ID__") }}';
 const dealDestroyUrl = '{{ route("admin.crm-deals.destroy", "__ID__") }}';
+const dealShowUrl = '{{ route("admin.crm-deals.show", "__ID__") }}';
 const dealConvertUrl = '{{ route("admin.crm-deals.convert-to-project", "__ID__") }}';
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
 let searchTimer = null;
@@ -296,7 +297,7 @@ function escapeQuotes(s) { return s.replace(/'/g, "\\'"); }
 function numberFormat(n) { return Number(n).toLocaleString('en-US'); }
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 
-function downloadDealPdf(id) { window.open(dealPdfUrl.replace('__ID__', id), '_blank'); }
+function downloadDealPdf(id) { window.location.href = dealShowUrl.replace('__ID__', id); }
 
 function fetchDeal(id, cb) {
     fetch(dealsDataUrl + '?per_page=all&page=1', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
