@@ -146,30 +146,14 @@ function numberFormat(n) { return Number(n).toLocaleString('en-US'); }
 function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 
 function exportEmployeesPdf() {
+    const params = new URLSearchParams();
     const search = document.getElementById('empSearch').value;
     const dept = document.getElementById('empDeptFilter').value;
     const status = document.getElementById('empStatusFilter').value;
-    const params = new URLSearchParams();
     if (search) params.set('search', search);
     if (dept) params.set('department', dept);
     if (status) params.set('status', status);
-    params.set('per_page', 'all');
-    fetch(empDataUrl + '?' + params.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-        .then(r => r.json())
-        .then(res => {
-            const employees = res.data || [];
-            if (employees.length === 0) { Swal.fire('No Data', 'No employees to export.', 'info'); return; }
-            const w = window.open('', '_blank');
-            w.document.write('<html><head><title>Employees Export</title><style>body{font-family:Arial,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #ddd;padding:6px 8px;text-align:left}th{background:#f5f5f5;font-weight:bold}.right{text-align:right}</style></head><body>');
-            w.document.write('<h2>Employees Report</h2><p>Generated: ' + new Date().toLocaleString() + '</p>');
-            w.document.write('<table><thead><tr><th>Emp ID</th><th>Name</th><th>Email</th><th>Department</th><th>Designation</th><th>Type</th><th>Salary</th><th>Status</th></tr></thead><tbody>');
-            employees.forEach(e => {
-                w.document.write('<tr><td>' + (e.employee_id||'') + '</td><td>' + escapeHtml((e.first_name||'')+' '+(e.last_name||'')) + '</td><td>' + escapeHtml(e.email||'') + '</td><td>' + escapeHtml(e.department||'N/A') + '</td><td>' + escapeHtml(e.designation||'N/A') + '</td><td>' + escapeHtml(e.employment_type||'—') + '</td><td class="right">TZS ' + numberFormat(e.salary||0) + '</td><td>' + capitalize((e.status||'').replace(/_/g,' ')) + '</td></tr>');
-            });
-            w.document.write('</tbody></table></body></html>');
-            w.document.close();
-            w.print();
-        });
+    window.open('{{ route("admin.employees.export") }}?' + params.toString(), '_blank');
 }
 
 function deleteEmployee(id, empId, name) {
