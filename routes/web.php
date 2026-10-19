@@ -226,6 +226,11 @@ Route::get('/payslip/{payroll}/preview', function (\App\Models\Payroll $payroll)
     }
     $payroll->load('employee', 'creator');
     $company = $user->company ?? \App\Models\Company::where('is_group', true)->first();
+    if (request()->boolean('pdf')) {
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.payslip', compact('payroll', 'company'));
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('payslip-' . $payroll->payroll_number . '.pdf');
+    }
     return view('pdf.payslip', compact('payroll', 'company'));
 })->middleware('auth')->name('payslip.preview');
 

@@ -83,9 +83,9 @@
 {{-- Payslip preview --}}
 <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
     <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
-        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Payslip Preview</h4>
-        <a href="{{ url('/payslip/' . $payroll->id . '/preview') }}" target="_blank" class="text-xs text-gray-400 hover:text-gray-700">Open full size &rarr;</a>
+        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Payslip PDF</h4>
+        <a href="{{ url('/payslip/' . $payroll->id . '/preview?pdf=1') }}" target="_blank" class="text-xs text-gray-400 hover:text-gray-700">Open full size &rarr;</a>
     </div>
-    <iframe src="{{ url('/payslip/' . $payroll->id . '/preview') }}" class="w-full border-0" style="height:900px;background:#f3f4f6;"></iframe>
+    <iframe src="{{ url('/payslip/' . $payroll->id . '/preview?pdf=1') }}" class="w-full border-0" style="height:900px;"></iframe>
 </div>
 @endsection
