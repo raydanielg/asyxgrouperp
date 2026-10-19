@@ -7,8 +7,7 @@
 <div class="mb-4 flex items-center justify-between flex-wrap gap-3">
     <a href="{{ route('admin.vendor-invoices.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Vendor Invoices</a>
     <div class="flex items-center gap-2">
-        <a href="{{ route('admin.vendor-invoices.pdf', $invoice) }}" target="_blank" class="px-3 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded hover:bg-gray-50">View PDF</a>
-        <a href="{{ route('admin.vendor-invoices.pdf', $invoice) }}?download=1" class="px-3 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded hover:bg-gray-50 flex items-center gap-1.5">
+        <a href="{{ route('admin.vendor-invoices.pdf', $invoice) }}" class="px-3 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded hover:bg-gray-50 flex items-center gap-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             Download PDF
         </a>
@@ -167,6 +166,15 @@
             </div>
         </form>
     </div>
+</div>
+
+{{-- PDF Preview --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mt-5">
+    <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Invoice PDF</h4>
+        <a href="{{ route('admin.vendor-invoices.pdf', $invoice) }}" class="text-[11px] font-medium text-gray-500 hover:text-gray-900">Open full size →</a>
+    </div>
+    <iframe src="{{ route('admin.vendor-invoices.pdf', $invoice) }}?inline=1" class="w-full" style="height:720px;" title="Invoice PDF preview"></iframe>
 </div>
 
 {{-- ═══ Payment Receipt Drawer (slides from left) ═══ --}}
