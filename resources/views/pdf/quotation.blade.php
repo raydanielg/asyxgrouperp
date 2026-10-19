@@ -5,8 +5,8 @@
 <title>Quotation {{ $quotation->quotation_number }}</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  @page{size:A4;margin:20mm 18mm;}
-  body{font-family:'Helvetica','DejaVu Sans',sans-serif;color:#111827;font-size:10pt;line-height:1.5;}
+  @page{size:A4;margin:22mm 20mm;}
+  body{font-family:'Helvetica','DejaVu Sans',sans-serif;color:#111827;font-size:10pt;line-height:1.5;padding:22mm 20mm;margin:0;}
 
   .head{width:100%;border-collapse:collapse;margin-bottom:22mm;}
   .head td{vertical-align:top;}
