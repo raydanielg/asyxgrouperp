@@ -3,12 +3,12 @@
 @section('page_title', 'All Approval Requests')
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.approvals.index') }}" class="text-sm text-gray-500 hover:text-emerald-600">&larr; Back to Workflows</a>
+    <a href="{{ route('admin.approvals.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to Workflows</a>
 </div>
 @if(session('success'))
 <div class="mb-4 px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
 @endif
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Number</th><th class="px-5 py-3 font-medium">Module</th><th class="px-5 py-3 font-medium text-right">Amount</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Level</th><th class="px-5 py-3 font-medium">Requested By</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
@@ -23,7 +23,7 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $req->created_at->format('d M Y') }}</td>
             <td class="px-5 py-3 flex gap-2">
                 @if($req->status === 'pending')
-                <form method="POST" action="{{ route('admin.approvals.approve', $req) }}">@csrf<button class="text-xs text-emerald-600 hover:text-emerald-700">Approve</button></form>
+                <form method="POST" action="{{ route('admin.approvals.approve', $req) }}">@csrf<button class="text-xs text-gray-600 hover:text-gray-900">Approve</button></form>
                 <form method="POST" action="{{ route('admin.approvals.reject', $req) }}" onsubmit="return confirm('Reject?')">@csrf<input type="hidden" name="rejection_reason" value="Rejected"><button class="text-xs text-red-500 hover:text-red-700">Reject</button></form>
                 @endif
             </td>

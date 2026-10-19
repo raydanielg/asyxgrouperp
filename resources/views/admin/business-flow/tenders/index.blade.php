@@ -49,7 +49,7 @@
                 <div class="flex items-center justify-end gap-4">
                     <button type="button" onclick="openTenderView({{ $t->id }})" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</button>
                     @if($t->status==='received' || $t->status==='under_review')
-                    <form method="POST" action="{{ route('admin.tenders.convert-to-lead', $t) }}" class="inline" onsubmit="return confirmAction(this, {title:'Convert to Lead?', text:'{{ $t->tender_number }} will be converted to a CRM lead.', icon:'question', confirmText:'Yes, convert', color:'#059669'})">@csrf<button class="text-xs font-medium text-emerald-600 hover:text-emerald-800">→ Lead</button></form>
+                    <form method="POST" action="{{ route('admin.tenders.convert-to-lead', $t) }}" class="inline" onsubmit="return confirmAction(this, {title:'Convert to Lead?', text:'{{ $t->tender_number }} will be converted to a CRM lead.', icon:'question', confirmText:'Yes, convert', color:'#059669'})">@csrf<button class="text-xs font-medium text-gray-600 hover:text-gray-900">→ Lead</button></form>
                     @endif
                     <form method="POST" action="{{ route('admin.tenders.destroy', $t) }}" class="inline" onsubmit="return confirmAction(this, {title:'Delete Tender?', text:'{{ $t->tender_number }} will be permanently removed. This cannot be undone.', confirmText:'Yes, delete'})">@csrf @method('DELETE')<button class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button></form>
                 </div>
@@ -189,7 +189,7 @@
 
         <div class="px-5 py-4 border-t border-gray-100 flex items-center gap-4 flex-shrink-0">
             <form method="POST" id="tvConvertForm" class="inline" onsubmit="return confirmAction(this, {title:'Convert to Lead?', text:'This tender will be converted to a CRM lead.', icon:'question', confirmText:'Yes, convert', color:'#059669'})">@csrf
-                <button class="text-xs font-semibold text-emerald-600 hover:text-emerald-800">→ Convert to Lead</button>
+                <button class="text-xs font-semibold text-gray-600 hover:text-gray-900">→ Convert to Lead</button>
             </form>
             <form method="POST" id="tvDeleteForm" class="inline ml-auto" onsubmit="return confirmAction(this, {title:'Delete Tender?', text:'This tender will be permanently removed. This cannot be undone.', confirmText:'Yes, delete'})">@csrf @method('DELETE')
                 <button class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>

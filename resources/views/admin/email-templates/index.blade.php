@@ -2,7 +2,7 @@
 @section('title', 'Email Templates - ' . config('app.name'))
 @section('page_title', 'Email Templates')
 @section('content')
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Name</th><th class="px-5 py-3 font-medium">From</th><th class="px-5 py-3 font-medium">Subject</th><th class="px-5 py-3 font-medium">Module</th><th class="px-5 py-3 font-medium">Status</th></tr></thead>
         <tbody>

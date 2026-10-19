@@ -62,14 +62,14 @@
                         <div class="flex items-center justify-end gap-4">
                             @if($bonus->status === 'pending')
                             <form method="POST" action="{{ route('admin.bonuses.approve', $bonus) }}" class="inline" onsubmit="return confirmAction(this, {title:'Approve bonus?', text:'{{ number_format($bonus->amount) }} TZS for {{ addslashes($bonus->employee?->full_name ?? 'employee') }}', icon:'question', confirmText:'Yes, approve', color:'#059669'})">@csrf
-                                <button type="submit" class="text-xs font-medium text-emerald-600 hover:text-emerald-800">Approve</button>
+                                <button type="submit" class="text-xs font-medium text-gray-600 hover:text-gray-900">Approve</button>
                             </form>
                             <form method="POST" action="{{ route('admin.bonuses.reject', $bonus) }}" class="inline" onsubmit="return confirmAction(this, {title:'Reject bonus?', text:'This bonus will be rejected.', icon:'warning', confirmText:'Yes, reject', color:'#d97706'})">@csrf
                                 <button type="submit" class="text-xs font-medium text-amber-600 hover:text-amber-800">Reject</button>
                             </form>
                             @elseif($bonus->status === 'approved')
                             <form method="POST" action="{{ route('admin.bonuses.paid', $bonus) }}" class="inline" onsubmit="return confirmAction(this, {title:'Mark as paid?', text:'Mark this bonus as paid out.', icon:'question', confirmText:'Yes, mark paid', color:'#059669'})">@csrf
-                                <button type="submit" class="text-xs font-medium text-emerald-600 hover:text-emerald-800">Mark Paid</button>
+                                <button type="submit" class="text-xs font-medium text-gray-600 hover:text-gray-900">Mark Paid</button>
                             </form>
                             @endif
                             <form method="POST" action="{{ route('admin.bonuses.destroy', $bonus) }}" class="inline" onsubmit="return confirmAction(this, {title:'Delete bonus?', text:'This bonus will be permanently removed.', confirmText:'Yes, delete'})">@csrf @method('DELETE')

@@ -13,7 +13,7 @@
         ['label' => 'Gross Profit', 'value' => $money($grossProfit), 'from' => $grossProfit >= 0 ? 'sky-500' : 'red-500', 'to' => $grossProfit >= 0 ? 'sky-600' : 'red-600', 'border' => $grossProfit >= 0 ? 'sky-400' : 'red-400', 'text' => 'sky-100', 'sub' => 'All time', 'sub_color' => 'sky-200'],
         ['label' => 'Month Profit', 'value' => $money($monthProfit), 'from' => $monthProfit >= 0 ? 'violet-500' : 'red-500', 'to' => $monthProfit >= 0 ? 'violet-600' : 'red-600', 'border' => $monthProfit >= 0 ? 'violet-400' : 'red-400', 'text' => 'violet-100', 'sub' => 'This month', 'sub_color' => 'violet-200'],
     ] as $card)
-    <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-xl border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-md border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium {{ $card['text'] }}">{{ $card['label'] }}</span>
@@ -25,7 +25,7 @@
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b bg-emerald-50/50">
             <h3 class="text-sm font-semibold text-gray-900">Recent Revenues</h3>
         </div>
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b bg-amber-50/50">
             <h3 class="text-sm font-semibold text-gray-900">Recent Expenses</h3>
         </div>

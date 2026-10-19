@@ -11,19 +11,19 @@ $draftCount = $invoices->where('status', 'draft')->count();
 @endphp
 
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">Total Invoiced</span>
         <p class="text-xl font-bold text-gray-900 mt-1">TZS {{ number_format($totalAmount) }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-amber-200 p-4">
+    <div class="bg-white rounded-md border border-amber-200 p-4">
         <span class="text-[10px] font-medium text-amber-600 uppercase tracking-wider">Outstanding</span>
         <p class="text-xl font-bold text-amber-700 mt-1">TZS {{ number_format($totalBalance) }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-emerald-200 p-4">
+    <div class="bg-white rounded-md border border-emerald-200 p-4">
         <span class="text-[10px] font-medium text-emerald-600 uppercase tracking-wider">Paid</span>
         <p class="text-xl font-bold text-emerald-700 mt-1">{{ $paidCount }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-rose-200 p-4">
+    <div class="bg-white rounded-md border border-rose-200 p-4">
         <span class="text-[10px] font-medium text-rose-600 uppercase tracking-wider">Overdue</span>
         <p class="text-xl font-bold text-rose-700 mt-1">{{ $overdueCount }}</p>
     </div>
@@ -37,13 +37,13 @@ $draftCount = $invoices->where('status', 'draft')->count();
             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">Partial: {{ $invoices->where('status', 'partial')->count() }}</span>
         </div>
     </div>
-    <a href="{{ route('admin.sales-invoices.create') }}" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-sm">
+    <a href="{{ route('admin.sales-invoices.create') }}" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2 shadow-sm">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         New Invoice
     </a>
 </div>
 
-<div class="bg-white rounded-xl border overflow-hidden shadow-sm">
+<div class="bg-white rounded-md border overflow-hidden shadow-sm">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
@@ -59,7 +59,7 @@ $draftCount = $invoices->where('status', 'draft')->count();
             <tbody>
         @forelse($invoices as $invoice)
         <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
-            <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.sales-invoices.show', $invoice) }}" class="hover:text-emerald-600 font-semibold">{{ $invoice->invoice_number }}</a></td>
+            <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.sales-invoices.show', $invoice) }}" class="hover:text-gray-700 font-semibold">{{ $invoice->invoice_number }}</a></td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $invoice->customer?->name ?? 'N/A' }}</td>
             <td class="px-5 py-3 text-xs font-semibold text-gray-900 text-right">TZS {{ number_format($invoice->total_amount) }}</td>
             <td class="px-5 py-3 text-xs text-right {{ $invoice->balance_amount > 0 ? 'text-amber-600 font-medium' : 'text-gray-500' }}">TZS {{ number_format($invoice->balance_amount) }}</td>
@@ -103,7 +103,7 @@ $draftCount = $invoices->where('status', 'draft')->count();
             <div class="flex flex-col items-center gap-3">
                 <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 <p class="text-sm text-gray-400">No invoices found</p>
-                <a href="{{ route('admin.sales-invoices.create') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">Create your first invoice →</a>
+                <a href="{{ route('admin.sales-invoices.create') }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium">Create your first invoice →</a>
             </div>
         </td></tr>
         @endforelse

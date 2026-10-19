@@ -2,10 +2,10 @@
 @section('title', 'Tender Details - ' . config('app.name'))
 @section('page_title', 'Tender: ' . $tender->tender_number)
 @section('content')
-<div class="mb-4"><a href="{{ route('admin.tenders.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to Tenders</a></div>
+<div class="mb-4"><a href="{{ route('admin.tenders.index') }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to Tenders</a></div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Tender Information</h3>
         <div class="space-y-2 text-xs">
             <div class="flex justify-between"><span class="text-gray-400">Tender Number</span><span class="font-mono text-gray-700">{{ $tender->tender_number }}</span></div>
@@ -27,13 +27,13 @@
         @endif
         @if($tender->status !== 'converted')
         <div class="mt-4">
-            <form method="POST" action="{{ route('admin.tenders.convert-to-lead', $tender) }}">@csrf<button type="submit" class="w-full px-3 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700" onclick="return confirm('Convert this tender to a Lead?')">Convert to Lead →</button></form>
+            <form method="POST" action="{{ route('admin.tenders.convert-to-lead', $tender) }}">@csrf<button type="submit" class="w-full px-3 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700" onclick="return confirm('Convert this tender to a Lead?')">Convert to Lead →</button></form>
         </div>
         @endif
     </div>
     <div class="lg:col-span-2 space-y-4">
         @if($tender->lead)
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Converted Lead</h3>
             <div class="space-y-2 text-xs">
                 <div class="flex justify-between"><span class="text-gray-400">Lead Number</span><a href="{{ route('admin.crm-leads.index') }}" class="font-mono text-emerald-600">{{ $tender->lead->lead_number }}</a></div>

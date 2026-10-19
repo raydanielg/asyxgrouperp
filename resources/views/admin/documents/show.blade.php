@@ -11,7 +11,7 @@
 @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     {{-- Left: Document Info --}}
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="font-bold text-gray-800 mb-4">{{ $document->title }}</h3>
         @if($document->is_confidential)
         <div class="mb-3 px-3 py-1.5 bg-red-50 text-red-600 text-[10px] font-semibold rounded-lg border border-red-100 inline-flex items-center gap-1">
@@ -42,9 +42,9 @@
         <div class="mt-4 pt-4 border-t"><p class="text-xs text-gray-400 mb-1">Description</p><p class="text-sm text-gray-700">{{ $document->description }}</p></div>
         @endif
         <div class="mt-4 flex flex-wrap gap-2">
-            <a href="{{ route('admin.documents.download', $document) }}" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">Download</a>
+            <a href="{{ route('admin.documents.download', $document) }}" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700">Download</a>
             @if($document->signatures()->where('signer_id', auth()->id())->where('status', 'pending')->exists())
-            <form method="POST" action="{{ route('admin.documents.sign', $document) }}">@csrf<button class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">Sign</button></form>
+            <form method="POST" action="{{ route('admin.documents.sign', $document) }}">@csrf<button class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700">Sign</button></form>
             @endif
             @if($document->status !== 'archived')
             <form method="POST" action="{{ route('admin.documents.archive', $document) }}">@csrf<button class="px-3 py-1.5 bg-gray-500 text-white text-xs font-medium rounded-lg hover:bg-gray-600" onclick="return confirm('Archive this document?')">Archive</button></form>
@@ -57,7 +57,7 @@
     {{-- Right: Signatures, Versions, Access Logs --}}
     <div class="lg:col-span-2 space-y-6">
         {{-- Upload New Version --}}
-        <div class="bg-white rounded-xl border p-5">
+        <div class="bg-white rounded-md border p-5">
             <details>
                 <summary class="text-sm font-bold text-gray-700 cursor-pointer hover:text-bronze">Upload New Version</summary>
                 <form method="POST" action="{{ route('admin.documents.upload-version', $document) }}" enctype="multipart/form-data" class="mt-4 space-y-3">@csrf
@@ -69,7 +69,7 @@
         </div>
 
         {{-- E-Signatures --}}
-        <div class="bg-white rounded-xl border overflow-hidden">
+        <div class="bg-white rounded-md border overflow-hidden">
             <div class="px-5 py-3 border-b bg-gray-50/50"><h4 class="text-sm font-bold text-gray-700">E-Signatures</h4></div>
             <div class="overflow-x-auto"><table class="w-full text-sm">
                 <thead><tr class="text-left text-xs text-gray-500"><th class="px-4 py-2 font-medium">Signer</th><th class="px-4 py-2 font-medium">Email</th><th class="px-4 py-2 font-medium">Status</th><th class="px-4 py-2 font-medium">Signed At</th></tr></thead>
@@ -90,7 +90,7 @@
 
         {{-- Version History --}}
         @if($document->versions->count() > 0)
-        <div class="bg-white rounded-xl border overflow-hidden">
+        <div class="bg-white rounded-md border overflow-hidden">
             <div class="px-5 py-3 border-b bg-gray-50/50"><h4 class="text-sm font-bold text-gray-700">Version History</h4></div>
             <div class="divide-y divide-gray-100">
                 @foreach($document->versions as $version)
@@ -108,7 +108,7 @@
         @endif
 
         {{-- Access History --}}
-        <div class="bg-white rounded-xl border overflow-hidden">
+        <div class="bg-white rounded-md border overflow-hidden">
             <div class="px-5 py-3 border-b bg-gray-50/50"><h4 class="text-sm font-bold text-gray-700">Access History</h4></div>
             <div class="overflow-x-auto"><table class="w-full text-sm">
                 <thead><tr class="text-left text-xs text-gray-500"><th class="px-4 py-2 font-medium">User</th><th class="px-4 py-2 font-medium">Action</th><th class="px-4 py-2 font-medium">IP</th><th class="px-4 py-2 font-medium">Time</th></tr></thead>

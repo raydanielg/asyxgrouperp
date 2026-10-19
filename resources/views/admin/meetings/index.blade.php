@@ -13,34 +13,34 @@
 <div class="space-y-6">
     {{-- Stats --}}
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total</p>
             <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['total'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Scheduled</p>
             <p class="text-2xl font-bold text-blue-600 mt-1">{{ $stats['scheduled'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Completed</p>
             <p class="text-2xl font-bold text-green-600 mt-1">{{ $stats['completed'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Project</p>
             <p class="text-2xl font-bold text-purple-600 mt-1">{{ $stats['projectMeetings'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Office</p>
             <p class="text-2xl font-bold text-amber-600 mt-1">{{ $stats['officeMeetings'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Pending Actions</p>
             <p class="text-2xl font-bold text-red-600 mt-1">{{ $stats['pendingActions'] }}</p>
         </div>
     </div>
 
     {{-- Filters --}}
-    <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
         <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <select name="type" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
                 <option value="">All Types</option>
@@ -64,7 +64,7 @@
     </div>
 
     {{-- Meetings List --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>

@@ -4,7 +4,7 @@
 @section('content')
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse($addons as $addon)
-        <div class="bg-white rounded-xl border p-5 hover:shadow-lg transition-shadow">
+        <div class="bg-white rounded-md border p-5 hover:shadow-lg transition-shadow">
         <div class="flex items-start justify-between mb-3">
             <div><h3 class="text-sm font-bold text-gray-900">{{ $addon->name }}</h3><p class="text-xs text-gray-400 mt-0.5">{{ $addon->module }}</p></div>
         @if($addon->is_enable)
@@ -18,7 +18,7 @@
             <span class="text-xs text-gray-400 ml-2">TZS {{ number_format($addon->yearly_price) }}/yr</span>
         </div>
         <form method="POST" action="{{ route('admin.add-ons.toggle', $addon) }}" class="inline">@csrf @method('PATCH')
-            <button class="text-xs {{ $addon->is_enable ? 'text-red-500 hover:text-red-700' : 'text-emerald-600 hover:text-emerald-700' }}">{{ $addon->is_enable ? 'Disable' : 'Enable' }}</button>
+            <button class="text-xs {{ $addon->is_enable ? 'text-red-500 hover:text-red-700' : 'text-gray-600 hover:text-gray-900' }}">{{ $addon->is_enable ? 'Disable' : 'Enable' }}</button>
         </form>
     </div>
         @empty

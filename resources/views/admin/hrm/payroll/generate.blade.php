@@ -5,9 +5,9 @@
 
 <div class="max-w-3xl mx-auto">
     {{-- Info Card --}}
-    <div class="bg-white rounded-xl border p-6 mb-6">
+    <div class="bg-white rounded-md border p-6 mb-6">
         <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-md bg-emerald-50 flex items-center justify-center flex-shrink-0">
                 <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
             </div>
             <div>
@@ -28,7 +28,7 @@
     </div>
 
     {{-- Generate Form --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/30">
             <h3 class="text-sm font-bold text-gray-800">Select Period</h3>
         </div>
@@ -37,7 +37,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1.5">Month *</label>
-                    <select name="month" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none bg-white">
+                    <select name="month" required class="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none bg-white">
                         @foreach($months as $m)
                             <option value="{{ $m }}" @selected($m == date('F'))>{{ $m }}</option>
                         @endforeach
@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1.5">Year *</label>
-                    <select name="year" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none bg-white">
+                    <select name="year" required class="w-full px-3 py-2.5 rounded-md border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none bg-white">
                         @foreach($years as $y)
                             <option value="{{ $y }}" @selected($y == date('Y'))>{{ $y }}</option>
                         @endforeach
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-200">
+            <div class="mt-6 p-4 bg-amber-50 rounded-md border border-amber-200">
                 <div class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
                     <div>
@@ -64,8 +64,8 @@
             </div>
 
             <div class="flex gap-3 mt-6">
-                <a href="{{ route('admin.payroll.index') }}" class="px-4 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors">Cancel</a>
-                <button type="submit" class="px-6 py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200 flex items-center gap-2">
+                <a href="{{ route('admin.payroll.index') }}" class="px-4 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-md hover:bg-gray-50 transition-colors">Cancel</a>
+                <button type="submit" class="px-6 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-md hover:bg-gray-700 transition-colors shadow-lg shadow-emerald-200 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     Generate Payroll
                 </button>
@@ -75,7 +75,7 @@
 
     {{-- Existing Records --}}
     @if($existingCounts->isNotEmpty())
-    <div class="bg-white rounded-xl border overflow-hidden mt-6">
+    <div class="bg-white rounded-md border overflow-hidden mt-6">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/30">
             <h3 class="text-sm font-bold text-gray-800">Previously Generated Payrolls</h3>
         </div>

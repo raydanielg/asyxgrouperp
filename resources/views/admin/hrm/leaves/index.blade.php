@@ -44,7 +44,7 @@
                     <div class="flex items-center justify-end gap-4">
                         @if($l->status == 'pending')
                         <form method="POST" action="{{ route('admin.leaves.approve', $l) }}" class="inline" onsubmit="return confirmAction(this, {title:'Approve leave?', text:'Approve {{ $l->days }} day(s) of {{ $l->leave_type }} leave for {{ $l->employee?->full_name ?? 'this employee' }}?', icon:'question', confirmText:'Yes, approve', color:'#059669'})">@csrf @method('PATCH')
-                            <button type="submit" class="text-xs font-medium text-emerald-600 hover:text-emerald-800">Approve</button>
+                            <button type="submit" class="text-xs font-medium text-gray-600 hover:text-gray-900">Approve</button>
                         </form>
                         <form method="POST" action="{{ route('admin.leaves.reject', $l) }}" class="inline" onsubmit="return confirmAction(this, {title:'Reject leave?', text:'Reject this leave request?', icon:'warning', confirmText:'Yes, reject', color:'#d97706'})">@csrf @method('PATCH')
                             <button type="submit" class="text-xs font-medium text-amber-600 hover:text-amber-800">Reject</button>

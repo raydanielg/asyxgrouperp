@@ -12,7 +12,7 @@
 <div class="max-w-3xl mx-auto">
     <form method="POST" action="{{ route('admin.meetings.store') }}" class="space-y-6">
         @csrf
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-4">
+        <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100 space-y-4">
             <h2 class="text-lg font-bold text-gray-900">Meeting Details</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -74,7 +74,7 @@
         </div>
 
         {{-- Attendees --}}
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-3">
+        <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100 space-y-3">
             <h2 class="text-lg font-bold text-gray-900">Attendees</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
                 @foreach($users as $user)
@@ -87,7 +87,7 @@
         </div>
 
         {{-- Action Points --}}
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-3">
+        <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100 space-y-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-lg font-bold text-gray-900">Action Points</h2>
                 <button type="button" onclick="addActionPoint()" class="text-xs font-semibold text-bronze hover:underline">+ Add Action Point</button>

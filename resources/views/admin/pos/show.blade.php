@@ -3,10 +3,10 @@
 @section('page_title', 'Sale Receipt')
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.pos.reports') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to POS Reports</a>
+    <a href="{{ route('admin.pos.reports') }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to POS Reports</a>
 </div>
 <div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-xl border p-8">
+    <div class="bg-white rounded-md border p-8">
         <div class="text-center mb-6">
             <h2 class="text-lg font-bold text-gray-900">{{ config('app.name') }}</h2>
             <p class="text-xs text-gray-400">POS Sale Receipt</p>
@@ -35,7 +35,7 @@
         </div>
         <div class="text-center mt-6 pt-4 border-t">
             <p class="text-xs text-gray-400">Thank you for your purchase!</p>
-            <button onclick="window.print()" class="mt-3 px-4 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">Print Receipt</button>
+            <button onclick="window.print()" class="mt-3 px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700">Print Receipt</button>
         </div>
     </div>
 </div>

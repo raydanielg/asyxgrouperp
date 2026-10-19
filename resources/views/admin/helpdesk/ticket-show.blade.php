@@ -11,7 +11,7 @@
             Back to Tickets
         </a>
     </div>
-    <div class="bg-white rounded-xl border p-5 mb-4">
+    <div class="bg-white rounded-md border p-5 mb-4">
         <div class="flex items-start justify-between mb-3">
             <div>
                 <p class="text-xs font-mono text-emerald-700 mb-1">{{ $ticket->ticket_id }}</p>
@@ -27,7 +27,7 @@
             @if(auth()->user()->hasPermission('edit-helpdesk-tickets'))
             <form method="POST" action="{{ route('admin.helpdesk-tickets.status', $ticket) }}" class="flex items-center gap-2">
                 @csrf @method('PATCH')
-                <select name="status" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none">
+                <select name="status" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-gray-400 outline-none">
                     <option value="open" {{ $ticket->status === 'open' ? 'selected' : '' }}>Open</option>
                     <option value="in_progress" {{ $ticket->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
                     <option value="resolved" {{ $ticket->status === 'resolved' ? 'selected' : '' }}>Resolved</option>
@@ -48,7 +48,7 @@
         @if(auth()->user()->hasPermission('edit-helpdesk-tickets'))
         <form method="POST" action="{{ route('admin.helpdesk-tickets.assign', $ticket) }}" class="flex items-center gap-2 mt-3">
             @csrf @method('PATCH')
-            <select name="assigned_to" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 outline-none">
+            <select name="assigned_to" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-gray-400 outline-none">
                 <option value="">Assign to...</option>
                 @foreach($assignees as $user)
                 <option value="{{ $user->id }}" {{ $ticket->assigned_to == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
@@ -60,7 +60,7 @@
 
     <div class="space-y-3 mb-4">
         @foreach($ticket->replies as $reply)
-        <div class="bg-white rounded-xl border p-4 {{ $reply->is_internal ? 'border-amber-200 bg-amber-50/30' : '' }}">
+        <div class="bg-white rounded-md border p-4 {{ $reply->is_internal ? 'border-amber-200 bg-amber-50/30' : '' }}">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-medium text-gray-900">{{ $reply->creator?->name ?? 'Unknown' }}</span>
                 <span class="text-xs text-gray-400">{{ $reply->created_at->format('d M Y H:i') }}</span>
@@ -73,14 +73,14 @@
         @endforeach
         </div>
 
-    <div class="bg-white rounded-xl border p-5">
+    <div class="bg-white rounded-md border p-5">
         <h3 class="text-sm font-semibold text-gray-900 mb-3">Add Reply</h3>
         <form method="POST" action="{{ route('admin.helpdesk-replies.store', $ticket) }}" class="space-y-3">
             @csrf
-            <div><textarea name="message" required rows="3" placeholder="Type your reply..." class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
+            <div><textarea name="message" required rows="3" placeholder="Type your reply..." class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></textarea></div>
             <div class="flex items-center justify-between">
                 <label class="flex items-center gap-2"><input type="checkbox" name="is_internal" class="rounded border-gray-300 text-emerald-600"><span class="text-xs text-gray-600">Internal note</span></label>
-                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Reply</button>
+                <button type="submit" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Reply</button>
             </div>
         </form>
     </div>

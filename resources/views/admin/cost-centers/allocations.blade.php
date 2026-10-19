@@ -4,12 +4,12 @@
 @section('content')
 <div class="mb-4 flex items-center justify-between">
     <p class="text-sm text-gray-500">Track all cost allocations across cost centers</p>
-    <a href="{{ route('admin.cost-centers.index') }}" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 flex items-center gap-2">
+    <a href="{{ route('admin.cost-centers.index') }}" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
         Manage Cost Centers
     </a>
 </div>
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>

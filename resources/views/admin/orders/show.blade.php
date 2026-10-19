@@ -3,7 +3,7 @@
 @section('page_title', 'Order Details')
 @section('content')
 <div class="max-w-2xl">
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <div class="flex items-start justify-between mb-6">
             <div><p class="text-xs text-gray-400 mb-1">Order ID</p><h2 class="text-xl font-bold text-gray-900 font-mono">{{ $order->order_id }}</h2></div>
         @if($order->payment_status === 'succeeded')

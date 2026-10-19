@@ -4,7 +4,7 @@
 @section('page_title', 'User Management')
 
 @section('content')
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="px-5 py-4 border-b flex items-center justify-between">
         <h3 class="text-sm font-semibold text-gray-900">All Users</h3>
         <span class="text-xs text-gray-400">{{ $users->total() }} total</span>

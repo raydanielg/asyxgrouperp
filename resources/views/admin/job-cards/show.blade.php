@@ -36,7 +36,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-6">
         {{-- Main info --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <div class="flex items-start justify-between mb-4">
                 <div>
                     <h3 class="text-lg font-bold text-gray-900">{{ $jobCard->title }}</h3>
@@ -50,7 +50,7 @@
         </div>
 
         {{-- Service Call Report form --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <h4 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Service Call Report Details
@@ -114,7 +114,7 @@
 
     <div class="space-y-4">
         {{-- Approval workflow --}}
-        <div class="bg-white rounded-xl border p-5">
+        <div class="bg-white rounded-md border p-5">
             <h4 class="text-xs font-bold text-gray-900 mb-3">Sign-off & Payment Approval</h4>
             <div class="space-y-3">
                 <div class="flex items-center justify-between p-3 rounded-lg border {{ $jobCard->end_user_signed_at ? 'bg-emerald-50/50 border-emerald-200' : 'bg-gray-50 border-gray-200' }}">
@@ -141,7 +141,7 @@
 
                 @if($jobCard->payment_status !== 'approved')
                 <form method="POST" action="{{ route('admin.job-cards.approve-payment', $jobCard) }}" onsubmit="return confirm('Approve payment for this job card?')">@csrf
-                    <button type="submit" class="w-full px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors">Approve Payment</button>
+                    <button type="submit" class="w-full px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors">Approve Payment</button>
                 </form>
                 @else
                 <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
@@ -152,7 +152,7 @@
         </div>
 
         {{-- Signature pads --}}
-        <div class="bg-white rounded-xl border p-5">
+        <div class="bg-white rounded-md border p-5">
             <h4 class="text-xs font-bold text-gray-900 mb-3">Capture Signatures</h4>
 
             <form method="POST" action="{{ route('admin.job-cards.sign-off', $jobCard) }}" class="space-y-4">@csrf
@@ -189,7 +189,7 @@
         </div>
 
         {{-- Details --}}
-        <div class="bg-white rounded-xl border p-5">
+        <div class="bg-white rounded-md border p-5">
             <h4 class="text-xs font-bold text-gray-900 mb-3">Details</h4>
             <div class="space-y-3 text-sm">
                 <div class="flex justify-between"><span class="text-xs text-gray-400">Project</span><span class="text-xs font-medium text-gray-900">{{ $jobCard->project?->title ?? '—' }}</span></div>

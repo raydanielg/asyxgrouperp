@@ -80,7 +80,7 @@
                     <button type="button" onclick="openCompanyDrawer({{ $company->id }})" class="text-xs font-medium text-gray-600 hover:text-gray-900">Edit</button>
                     @if($isSuper && !$company->is_group)
                         @if($company->subscription_status === 'suspended')
-                        <form method="POST" action="{{ route('admin.companies.activate', $company) }}" class="inline" onsubmit="return confirmAction(this, {title:'Reactivate Company?', text:'{{ addslashes($company->name) }} — all {{ $company->users()->count() }} user(s) will be able to log in again.', icon:'question', confirmText:'Yes, activate', color:'#059669'})">@csrf<button class="text-xs font-medium text-emerald-600 hover:text-emerald-800">Activate</button></form>
+                        <form method="POST" action="{{ route('admin.companies.activate', $company) }}" class="inline" onsubmit="return confirmAction(this, {title:'Reactivate Company?', text:'{{ addslashes($company->name) }} — all {{ $company->users()->count() }} user(s) will be able to log in again.', icon:'question', confirmText:'Yes, activate', color:'#059669'})">@csrf<button class="text-xs font-medium text-gray-600 hover:text-gray-900">Activate</button></form>
                         @else
                         <form method="POST" action="{{ route('admin.companies.suspend', $company) }}" class="inline" onsubmit="return confirmAction(this, {title:'Suspend Company?', text:'{{ addslashes($company->name) }} — ALL {{ $company->users()->count() }} of its users will be locked out immediately.', confirmText:'Yes, suspend', color:'#d97706'})">@csrf<button class="text-xs font-medium text-amber-600 hover:text-amber-800">Suspend</button></form>
                         @endif

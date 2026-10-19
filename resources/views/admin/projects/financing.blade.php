@@ -3,7 +3,7 @@
 @section('page_title', 'Project Financing')
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.projects.show', $project) }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to {{ $project->title }}</a>
+    <a href="{{ route('admin.projects.show', $project) }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to {{ $project->title }}</a>
 </div>
 
 <div class="flex items-center justify-between mb-4">
@@ -15,10 +15,10 @@
 </div>
 
 @if(session('success'))
-<div class="bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-3 mb-4 text-sm text-emerald-800">{{ session('success') }}</div>
+<div class="bg-emerald-50 border border-emerald-200 rounded-md px-5 py-3 mb-4 text-sm text-emerald-800">{{ session('success') }}</div>
 @endif
 @if(session('error'))
-<div class="bg-rose-50 border border-rose-200 rounded-xl px-5 py-3 mb-4 text-sm text-rose-800">{{ session('error') }}</div>
+<div class="bg-rose-50 border border-rose-200 rounded-md px-5 py-3 mb-4 text-sm text-rose-800">{{ session('error') }}</div>
 @endif
 
 @php
@@ -28,22 +28,22 @@
 @endphp
 
 <div class="grid grid-cols-3 gap-4 mb-6">
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <p class="text-[10px] text-gray-400 uppercase tracking-wide">Total Financing</p>
         <p class="text-xl font-bold text-gray-900 mt-1">TZS {{ number_format($totalFinancing, 2) }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-emerald-200 p-4">
+    <div class="bg-white rounded-md border border-emerald-200 p-4">
         <p class="text-[10px] text-emerald-600 uppercase tracking-wide">Total Repaid</p>
         <p class="text-xl font-bold text-emerald-700 mt-1">TZS {{ number_format($totalRepaid, 2) }}</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <p class="text-[10px] text-gray-400 uppercase tracking-wide">Active Loans</p>
         <p class="text-xl font-bold text-gray-900 mt-1">{{ $activeCount }}</p>
     </div>
 </div>
 
 @forelse($financings as $financing)
-<div class="bg-white rounded-xl border overflow-hidden mb-4">
+<div class="bg-white rounded-md border overflow-hidden mb-4">
     <div class="px-5 py-3 border-b flex items-center justify-between {{ $financing->status === 'repaid' ? 'bg-emerald-50/50' : ($financing->status === 'defaulted' ? 'bg-rose-50/50' : 'bg-gray-50/50') }}">
         <div class="flex items-center gap-3">
             <h3 class="text-sm font-bold text-gray-900">{{ $financing->type === 'inter_project' ? 'Inter-Project Loan' : 'Internal Financing' }}</h3>
@@ -109,7 +109,7 @@
 
 @foreach($financing->repayments as $rep)
 <div id="repayModal-{{ $rep->id }}" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
+    <div class="bg-white rounded-md shadow-xl max-w-sm w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Record Repayment</h3>
         <form method="POST" action="{{ route('admin.projects.financing.repayment', $financing) }}" class="space-y-3">@csrf
             <input type="hidden" name="repayment_id" value="{{ $rep->id }}">
@@ -124,7 +124,7 @@
 </div>
 @endforeach
 @empty
-<div class="bg-white rounded-xl border p-8 text-center">
+<div class="bg-white rounded-md border p-8 text-center">
     <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
     <p class="text-sm text-gray-500">No financing records for this project yet.</p>
     <button onclick="document.getElementById('financingModal').classList.remove('hidden')" class="mt-3 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">+ Add Financing</button>
@@ -132,7 +132,7 @@
 @endforelse
 
 <div id="financingModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
+    <div class="bg-white rounded-md shadow-xl max-w-lg w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Financing for {{ $project->title }}</h3>
         <form method="POST" action="{{ route('admin.projects.financing.store', $project) }}" class="space-y-3">@csrf
             <div class="grid grid-cols-2 gap-3">

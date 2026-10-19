@@ -7,21 +7,21 @@
 @php $money = fn($n) => 'TZS ' . number_format($n ?? 0); @endphp
 
 <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-    <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl border border-emerald-400 p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-md border border-emerald-400 p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium text-emerald-50">Total Budgeted</span>
             <p class="text-xl font-bold text-white mt-1">{{ $money($budgets->sum('amount')) }}</p>
         </div>
     </div>
-    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl border border-amber-300 p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-md border border-amber-300 p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium text-amber-50">Total Actual</span>
             <p class="text-xl font-bold text-white mt-1">{{ $money($budgets->sum('actual_amount')) }}</p>
         </div>
     </div>
-    <div class="bg-gradient-to-br from-sky-500 to-sky-600 rounded-xl border border-sky-400 p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-sky-500 to-sky-600 rounded-md border border-sky-400 p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium text-sky-100">Variance</span>
@@ -30,7 +30,7 @@
     </div>
 </div>
 
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="px-5 py-4 border-b">
         <h3 class="text-sm font-semibold text-gray-900">Budgets</h3>
     </div>

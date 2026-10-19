@@ -48,7 +48,7 @@
         @if($isSuper && !$company->is_group)
             @if($company->subscription_status === 'suspended')
             <form method="POST" action="{{ route('admin.companies.activate', $company) }}" onsubmit="return confirm('Reactivate {{ addslashes($company->name) }}? All its users will be able to log in again.')">@csrf
-                <button class="px-3 py-2 text-xs font-medium bg-emerald-600 text-white rounded hover:bg-emerald-700">Activate</button>
+                <button class="px-3 py-2 text-xs font-medium bg-gray-900 text-white rounded hover:bg-gray-700">Activate</button>
             </form>
             @else
             <button type="button" onclick="document.getElementById('suspendBox').classList.toggle('hidden')" class="px-3 py-2 text-xs font-medium bg-red-600 text-white rounded hover:bg-red-700">Suspend</button>

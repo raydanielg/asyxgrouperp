@@ -12,7 +12,7 @@
 
     @foreach($users->getUrlRange(1, $users->lastPage()) as $page => $url)
     @if($page == $users->currentPage())
-    <span class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-medium">{{ $page }}</span>
+    <span class="px-3 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-medium">{{ $page }}</span>
     @else
     <button onclick="loadUsersPage('{{ $url }}')" class="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 text-xs hover:bg-gray-50 transition-colors">{{ $page }}</button>
     @endif

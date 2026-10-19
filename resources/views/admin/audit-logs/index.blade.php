@@ -8,11 +8,11 @@
         <div><label class="block text-xs font-medium text-gray-600 mb-1">Module</label><input type="text" name="module" placeholder="module name" value="{{ request('module') }}" class="px-3 py-2 text-sm border border-gray-200 rounded-lg"></div>
         <div><label class="block text-xs font-medium text-gray-600 mb-1">From</label><input type="date" name="date_from" value="{{ request('date_from') }}" class="px-3 py-2 text-sm border border-gray-200 rounded-lg"></div>
         <div><label class="block text-xs font-medium text-gray-600 mb-1">To</label><input type="date" name="date_to" value="{{ request('date_to') }}" class="px-3 py-2 text-sm border border-gray-200 rounded-lg"></div>
-        <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Filter</button>
+        <button type="submit" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Filter</button>
         <a href="{{ route('admin.audit-logs.index') }}" class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200">Clear</a>
     </form>
 </div>
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">User</th><th class="px-5 py-3 font-medium">Action</th><th class="px-5 py-3 font-medium">Module</th><th class="px-5 py-3 font-medium">IP</th><th class="px-5 py-3 font-medium">URL</th><th class="px-5 py-3 font-medium">Time</th></tr></thead>
         <tbody>

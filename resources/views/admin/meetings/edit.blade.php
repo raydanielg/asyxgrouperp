@@ -11,7 +11,7 @@
     <form method="POST" action="{{ route('admin.meetings.update', $meeting) }}" class="space-y-6">
         @csrf
         @method('PATCH')
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-4">
+        <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100 space-y-4">
             <h2 class="text-lg font-bold text-gray-900">Meeting Details</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

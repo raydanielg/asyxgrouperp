@@ -49,7 +49,7 @@
                 <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $a->is_active ? '#10b981' : '#9ca3af' }}"></span>{{ $a->is_active ? 'Active' : 'Inactive' }}</span></td>
                 <td class="px-5 py-3.5">
                     <div class="flex items-center justify-end gap-4">
-                        <button onclick="openDeposit(this)" class="text-xs font-medium text-emerald-600 hover:text-emerald-800">Deposit</button>
+                        <button onclick="openDeposit(this)" class="text-xs font-medium text-gray-600 hover:text-gray-900">Deposit</button>
                         <button onclick="openWithdraw(this)" class="text-xs font-medium text-amber-600 hover:text-amber-800">Withdraw</button>
                         <button onclick="openHistory(this)" class="text-xs font-medium text-gray-600 hover:text-gray-900">History</button>
                         <button onclick="openEdit(this)" class="text-xs font-medium text-gray-600 hover:text-gray-900">Edit</button>
@@ -121,7 +121,7 @@
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><input name="description" placeholder="Optional note..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
             </div>
             <div class="flex items-center gap-3 pt-5 mt-2 border-t border-gray-100">
-                <button type="submit" class="px-5 py-2 bg-emerald-600 text-white text-sm font-medium rounded hover:bg-emerald-700 transition-colors">Deposit</button>
+                <button type="submit" class="px-5 py-2 bg-gray-900 text-white text-sm font-medium rounded hover:bg-gray-700 transition-colors">Deposit</button>
                 <button type="button" onclick="closeDrawer('depositDrawer','depositDrawerPanel')" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
             </div>
         </form>

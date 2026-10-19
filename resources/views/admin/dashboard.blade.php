@@ -68,7 +68,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">HRM Overview</h3>
-            <a href="{{ route('admin.employees.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.employees.index') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Employees</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalEmployees'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeEmployees'] }} active</p></div>
@@ -79,7 +79,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">CRM Summary</h3>
-            <a href="{{ route('admin.crm-leads.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.crm-leads.index') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-sky-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Leads</p><p class="text-lg font-bold text-sky-700">{{ $stats['totalCrmLeads'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['newLeads'] }} new, {{ $stats['qualifiedLeads'] }} qualified</p></div>
@@ -90,7 +90,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Accounting</h3>
-            <a href="{{ route('admin.revenues.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.revenues.index') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Revenue (Month)</p><p class="text-lg font-bold text-emerald-700">{{ $money($stats['monthRevenues']) }}</p><p class="text-[10px] text-gray-400">{{ $money($stats['totalRevenues']) }} total</p></div>
@@ -101,7 +101,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Projects</h3>
-            <a href="{{ route('admin.projects.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.projects.index') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-amber-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Active</p><p class="text-lg font-bold text-amber-600">{{ $stats['activeProjects'] }}</p><p class="text-[10px] text-gray-400">in progress</p></div>
@@ -112,7 +112,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">POS Sales</h3>
-            <a href="{{ route('admin.pos.reports') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.pos.reports') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Today</p><p class="text-lg font-bold text-emerald-700">{{ $money($stats['posTodaySales']) }}</p><p class="text-[10px] text-gray-400">{{ $stats['posTodayCount'] }} transactions</p></div>
@@ -123,7 +123,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Products</h3>
-            <a href="{{ route('admin.products.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.products.index') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-emerald-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Total Products</p><p class="text-lg font-bold text-emerald-700">{{ $stats['totalProducts'] }}</p><p class="text-[10px] text-gray-400">in catalog</p></div>
@@ -134,7 +134,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Recruitment</h3>
-            <a href="{{ route('admin.applications.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.applications.index') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-sky-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Open Positions</p><p class="text-lg font-bold text-sky-700">{{ $stats['openJobPostings'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['totalApplications'] }} applications</p></div>
@@ -145,7 +145,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Multi-Company</h3>
-            <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.companies.index') }}" class="text-[10px] text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-violet-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Companies</p><p class="text-lg font-bold text-violet-700">{{ $stats['totalCompanies'] }}</p><p class="text-[10px] text-gray-400">{{ $stats['activeCompanies'] }} active</p></div>
@@ -156,7 +156,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-3">
             <h3 class="text-sm font-bold text-gray-900">Financial Summary</h3>
-            <a href="{{ route('admin.reports') }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">Reports</a>
+            <a href="{{ route('admin.reports') }}" class="text-[10px] text-gray-600 hover:text-gray-900">Reports</a>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-{{ $stats['netProfit'] >= 0 ? 'emerald' : 'red' }}-50/50 rounded p-3"><p class="text-[10px] text-gray-400 uppercase">Net Profit (All)</p><p class="text-lg font-bold text-{{ $stats['netProfit'] >= 0 ? 'emerald-700' : 'red-600' }}">{{ $money($stats['netProfit']) }}</p><p class="text-[10px] text-gray-400">revenue - costs</p></div>
@@ -196,7 +196,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
             <div class="flex-1 flex flex-col items-center gap-1">
                 <div class="w-full flex items-end justify-center gap-1 h-40">
                     <div class="w-1/2 bg-gray-50 rounded-t-md relative h-full overflow-hidden flex items-end">
-                        <div class="w-full bg-emerald-500 rounded-t-md transition-all duration-500 hover:bg-emerald-600" style="height: {{ max($sPct, 2) }}%" title="Sales: {{ $money($monthlySales[$i]) }}"></div>
+                        <div class="w-full bg-emerald-500 rounded-t-md transition-all duration-500 hover:bg-gray-900" style="height: {{ max($sPct, 2) }}%" title="Sales: {{ $money($monthlySales[$i]) }}"></div>
                     </div>
                     <div class="w-1/2 bg-gray-50 rounded-t-md relative h-full overflow-hidden flex items-end">
                         <div class="w-full bg-sky-500 rounded-t-md transition-all duration-500 hover:bg-sky-600" style="height: {{ max($pPct, 2) }}%" title="Purchases: {{ $money($monthlyPurchases[$i]) }}"></div>
@@ -277,7 +277,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Sales Invoices</h3>
-            <a href="{{ route('admin.sales-invoices.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.sales-invoices.index') }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -307,7 +307,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Purchase Invoices</h3>
-            <a href="{{ route('admin.purchase-invoices.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.purchase-invoices.index') }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -344,7 +344,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Support Tickets</h3>
-            <a href="{{ route('admin.helpdesk-tickets.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.helpdesk-tickets.index') }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="p-5 space-y-3">
         @forelse($recentTickets as $ticket)
@@ -353,7 +353,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                     <svg class="w-4 h-4 {{ ($ticket->priority === 'urgent') ? 'text-red-600' : (($ticket->priority === 'high') ? 'text-orange-600' : (($ticket->priority === 'medium') ? 'text-amber-600' : 'text-blue-600')) }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <a href="{{ route('admin.helpdesk-tickets.show', $ticket) }}" class="text-sm font-medium text-gray-900 truncate hover:text-emerald-600">{{ $ticket->title }}</a>
+                    <a href="{{ route('admin.helpdesk-tickets.show', $ticket) }}" class="text-sm font-medium text-gray-900 truncate hover:text-gray-700">{{ $ticket->title }}</a>
                     <p class="text-xs text-gray-400">{{ $ticket->ticket_id }} · {{ $ticket->created_at->diffForHumans() }}</p>
                 </div>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($ticket->status === 'open') ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : (($ticket->status === 'in_progress') ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-gray-50 text-gray-600 border border-gray-100') }} capitalize">{{ str_replace('_', ' ', $ticket->status) }}</span>
@@ -368,7 +368,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-900">Recent Proposals</h3>
-            <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
+            <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View All</a>
         </div>
         <div class="p-5 space-y-3">
         @forelse($recentProposals as $proposal)
@@ -377,7 +377,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
                     <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <a href="{{ route('admin.sales-proposals.show', $proposal) }}" class="text-sm font-medium text-gray-900 truncate hover:text-emerald-600">{{ $proposal->proposal_number }}</a>
+                    <a href="{{ route('admin.sales-proposals.show', $proposal) }}" class="text-sm font-medium text-gray-900 truncate hover:text-gray-700">{{ $proposal->proposal_number }}</a>
                     <p class="text-xs text-gray-400">{{ $proposal->customer?->name ?? 'N/A' }} · {{ $money($proposal->total_amount) }}</p>
                 </div>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ ($proposal->status === 'accepted') ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : (($proposal->status === 'sent') ? 'bg-sky-50 text-sky-700 border border-sky-100' : (($proposal->status === 'rejected') ? 'bg-red-50 text-red-700 border border-red-100' : 'bg-gray-50 text-gray-600 border border-gray-100')) }} capitalize">{{ $proposal->status }}</span>
@@ -399,7 +399,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-bold text-gray-800">Today's Attendance</h3>
-            <a href="{{ route('admin.attendance.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">View All →</a>
+            <a href="{{ route('admin.attendance.index') }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium">View All →</a>
         </div>
         <div class="space-y-3">
             <div class="flex items-center justify-between p-3 bg-emerald-50 rounded">
@@ -437,7 +437,7 @@ $money = fn($n) => 'TZS ' . number_format($n);
     <div class="bg-white rounded-md border p-5 lg:col-span-2">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-bold text-gray-800">Recent Clock-Ins Today</h3>
-            <a href="{{ route('admin.attendance.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">Manage →</a>
+            <a href="{{ route('admin.attendance.index') }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium">Manage →</a>
         </div>
         @if($recentAttendance->isNotEmpty())
         <div class="space-y-2">

@@ -3,11 +3,11 @@
 @section('page_title', 'Contract Details')
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.contracts.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to Contracts</a>
+    <a href="{{ route('admin.contracts.index') }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to Contracts</a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-    <div class="lg:col-span-2 bg-white rounded-xl border overflow-hidden">
+    <div class="lg:col-span-2 bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <div>
                 <h3 class="text-sm font-bold text-gray-900">{{ $contract->title }}</h3>
@@ -35,7 +35,7 @@
             <div class="mb-4">
                 <span class="text-[10px] text-gray-400 uppercase">Linked Project</span>
                 <p class="font-medium text-gray-900 mt-0.5">
-                    <a href="{{ route('admin.projects.show', $contract->project) }}" class="text-emerald-600 hover:text-emerald-700">{{ $contract->project->title }}</a>
+                    <a href="{{ route('admin.projects.show', $contract->project) }}" class="text-gray-600 hover:text-gray-900">{{ $contract->project->title }}</a>
                 </p>
             </div>
             @endif
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-3 border-b bg-gray-50/50"><h3 class="text-sm font-bold text-gray-800">Actions</h3></div>
         <div class="p-4 space-y-3">
             <button onclick="document.getElementById('editContractModal').classList.remove('hidden')" class="w-full px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700">Edit Contract</button>
@@ -68,7 +68,7 @@
 </div>
 
 <div id="editContractModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 my-8">
+    <div class="bg-white rounded-md shadow-xl max-w-2xl w-full p-6 my-8">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Edit Contract</h3>
         <form method="POST" action="{{ route('admin.contracts.update', $contract) }}" class="space-y-3">@csrf @method('PUT')
             <div class="grid grid-cols-2 gap-3">

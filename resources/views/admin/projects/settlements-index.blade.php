@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
     {{-- Header --}}
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100">
         <h2 class="text-lg font-bold text-gray-900">Project Settlements</h2>
         <p class="text-sm text-gray-500 mt-1">Track invoices vs receipts vs costs for each project (mkataba) — monthly recurring invoicing, costs, and net settlement</p>
     </div>
@@ -20,27 +20,27 @@
         $totalNet = array_sum(array_column($projectSummaries, 'net'));
     @endphp
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Invoiced</p>
             <p class="text-xl font-bold text-blue-600 mt-1">{{ number_format($totalInvoiced, 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Received</p>
             <p class="text-xl font-bold text-emerald-600 mt-1">{{ number_format($totalReceived, 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Outstanding</p>
             <p class="text-xl font-bold text-amber-600 mt-1">{{ number_format($totalOutstanding, 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Costs</p>
             <p class="text-xl font-bold text-red-600 mt-1">{{ number_format($totalCosts, 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Net Settlement</p>
             <p class="text-xl font-bold {{ $totalNet >= 0 ? 'text-emerald-600' : 'text-red-600' }} mt-1">{{ number_format($totalNet, 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS</p>
@@ -48,7 +48,7 @@
     </div>
 
     {{-- Projects Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-5 py-3 border-b bg-gray-50/50">
             <h3 class="text-sm font-bold text-gray-700">All Projects — Settlement Summary</h3>
         </div>
@@ -126,7 +126,7 @@
     </div>
 
     {{-- Info --}}
-    <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+    <div class="bg-blue-50 border border-blue-100 rounded-md p-4">
         <div class="flex gap-3">
             <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <div class="text-xs text-blue-700">

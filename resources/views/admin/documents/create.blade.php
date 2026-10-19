@@ -8,7 +8,7 @@
 <div class="mb-4 px-4 py-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-100">{{ session('error') }}</div>
 @endif
 
-<div class="bg-white rounded-xl border border-gray-100 p-6 max-w-3xl">
+<div class="bg-white rounded-md border border-gray-100 p-6 max-w-3xl">
     <form method="POST" action="{{ route('admin.documents.store') }}" enctype="multipart/form-data">@csrf
         <div class="space-y-5">
             {{-- Basic Info --}}

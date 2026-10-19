@@ -2,7 +2,7 @@
 @section('title', 'Notification Templates - ' . config('app.name'))
 @section('page_title', 'Notification Templates')
 @section('content')
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Name</th><th class="px-5 py-3 font-medium">Type</th><th class="px-5 py-3 font-medium">Subject</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
@@ -17,7 +17,7 @@
         @else
         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-600 border border-gray-100">Inactive</span>
         @endif</td>
-            <td class="px-5 py-3"><a href="{{ route('admin.notification-templates.edit', $template) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a></td>
+            <td class="px-5 py-3"><a href="{{ route('admin.notification-templates.edit', $template) }}" class="text-gray-600 hover:text-gray-900 text-xs">Edit</a></td>
         
         </tr>
         @empty

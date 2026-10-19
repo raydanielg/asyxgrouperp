@@ -271,7 +271,7 @@ function renderDeals(res) {
             actions += '<button onclick="editDeal(' + d.id + ')" class="text-xs font-medium text-gray-600 hover:text-gray-900">Edit</button>';
             actions += '<button onclick="downloadDealPdf(' + d.id + ')" class="text-xs font-medium text-gray-600 hover:text-gray-900">PDF</button>';
             if (d.status === 'open' && !d.project_id) {
-                actions += '<button onclick="convertDeal(' + d.id + ',\'' + (d.deal_number||'') + '\',\'' + escapeQuotes(d.title||'') + '\')" class="text-xs font-medium text-emerald-600 hover:text-emerald-800">→ Project</button>';
+                actions += '<button onclick="convertDeal(' + d.id + ',\'' + (d.deal_number||'') + '\',\'' + escapeQuotes(d.title||'') + '\')" class="text-xs font-medium text-gray-600 hover:text-gray-900">→ Project</button>';
             }
             actions += '<button onclick="deleteDeal(' + d.id + ',\'' + (d.deal_number||'') + '\')" class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>';
 

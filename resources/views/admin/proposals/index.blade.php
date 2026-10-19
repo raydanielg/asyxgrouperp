@@ -10,19 +10,19 @@ $sentCount = $proposals->where('status', 'sent')->count();
 @endphp
 
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">Total Quoted</span>
         <p class="text-xl font-bold text-gray-900 mt-1">TZS {{ number_format($totalValue) }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-emerald-200 p-4">
+    <div class="bg-white rounded-md border border-emerald-200 p-4">
         <span class="text-[10px] font-medium text-emerald-600 uppercase tracking-wider">Accepted</span>
         <p class="text-xl font-bold text-emerald-700 mt-1">{{ $acceptedCount }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-amber-200 p-4">
+    <div class="bg-white rounded-md border border-amber-200 p-4">
         <span class="text-[10px] font-medium text-amber-600 uppercase tracking-wider">Sent</span>
         <p class="text-xl font-bold text-amber-700 mt-1">{{ $sentCount }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-gray-200 p-4">
+    <div class="bg-white rounded-md border border-gray-200 p-4">
         <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">Draft</span>
         <p class="text-xl font-bold text-gray-700 mt-1">{{ $draftCount }}</p>
     </div>
@@ -39,7 +39,7 @@ $sentCount = $proposals->where('status', 'sent')->count();
     </a>
 </div>
 
-<div class="bg-white rounded-xl border overflow-hidden shadow-sm">
+<div class="bg-white rounded-md border overflow-hidden shadow-sm">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
             <th class="px-5 py-3 font-medium">Quotation #</th>
@@ -53,7 +53,7 @@ $sentCount = $proposals->where('status', 'sent')->count();
         <tbody>
         @forelse($proposals as $proposal)
         <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
-            <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.sales-proposals.show', $proposal) }}" class="hover:text-emerald-600 font-semibold">{{ $proposal->proposal_number }}</a></td>
+            <td class="px-5 py-3 text-xs font-mono text-gray-700"><a href="{{ route('admin.sales-proposals.show', $proposal) }}" class="hover:text-gray-700 font-semibold">{{ $proposal->proposal_number }}</a></td>
             <td class="px-5 py-3 text-xs text-gray-700">{{ $proposal->customer?->name ?? 'N/A' }}<br><span class="text-[10px] text-gray-400">{{ $proposal->customer?->email ?? '' }}</span></td>
             <td class="px-5 py-3 text-xs text-gray-500">{{ $proposal->proposal_date->format('d M Y') }}</td>
             <td class="px-5 py-3 text-xs {{ $proposal->due_date->isPast() && $proposal->status !== 'accepted' ? 'text-rose-600 font-medium' : 'text-gray-500' }}">{{ $proposal->due_date->format('d M Y') }}</td>
@@ -91,7 +91,7 @@ $sentCount = $proposals->where('status', 'sent')->count();
             <div class="flex flex-col items-center gap-3">
                 <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 <p class="text-sm text-gray-400">No quotations yet</p>
-                <a href="{{ route('admin.sales-proposals.create') }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">Create your first quotation →</a>
+                <a href="{{ route('admin.sales-proposals.create') }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium">Create your first quotation →</a>
             </div>
         </td></tr>
         @endforelse

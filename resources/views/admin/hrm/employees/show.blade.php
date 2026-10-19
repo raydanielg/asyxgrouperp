@@ -3,11 +3,11 @@
 @section('page_title', 'Employee Details')
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.employees.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to Employees</a>
+    <a href="{{ route('admin.employees.index') }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to Employees</a>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
     {{-- Profile Card --}}
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <div class="flex items-center gap-4 mb-4">
             <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xl">{{ strtoupper(substr($employee->first_name, 0, 1) . substr($employee->last_name ?? '', 0, 1)) }}</div>
             <div>
@@ -32,7 +32,7 @@
         <div class="mt-3 pt-3 border-t"><p class="text-[10px] text-gray-400 uppercase mb-1">Address</p><p class="text-xs text-gray-600">{{ $employee->address }}</p></div>
         @endif
         <div class="mt-4 flex gap-2">
-            <a href="{{ route('admin.employees.edit', $employee) }}" class="flex-1 px-3 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 text-center">Edit</a>
+            <a href="{{ route('admin.employees.edit', $employee) }}" class="flex-1 px-3 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700 text-center">Edit</a>
             <form id="del-emp-{{ $employee->id }}" method="POST" action="{{ route('admin.employees.destroy', $employee) }}">@csrf @method('DELETE')</form>
             <button onclick="confirmDelete('del-emp-{{ $employee->id }}')" class="flex-1 px-3 py-2 border border-red-200 text-red-600 text-xs font-medium rounded-lg hover:bg-red-50">Delete</button>
         </div>
@@ -41,7 +41,7 @@
     {{-- Right Column --}}
     <div class="lg:col-span-2 space-y-4">
         {{-- Project Assignments --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <div class="flex items-center justify-between border-b pb-3 mb-3">
                 <h3 class="text-sm font-bold text-gray-900">Project Assignments</h3>
                 <a href="{{ route('admin.bonuses.index') }}" class="text-xs text-bronze hover:underline font-semibold">+ Add Bonus</a>
@@ -75,7 +75,7 @@
         </div>
 
         {{-- Bonuses --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <div class="flex items-center justify-between border-b pb-3 mb-3">
                 <h3 class="text-sm font-bold text-gray-900">Bonuses</h3>
                 <span class="text-[10px] text-gray-400">{{ $employee->bonuses->count() }} bonuses | Total: {{ number_format($employee->bonuses->where('status', '!=', 'rejected')->sum('amount'), 0) }} TZS</span>
@@ -106,7 +106,7 @@
         </div>
 
         {{-- Assigned Tasks --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <div class="flex items-center justify-between border-b pb-3 mb-3">
                 <h3 class="text-sm font-bold text-gray-900">Assigned Tasks</h3>
                 <span class="text-[10px] text-gray-400">{{ $assignedTasks->count() }} tasks</span>
@@ -131,7 +131,7 @@
         </div>
 
         {{-- Performance Reviews --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <div class="flex items-center justify-between border-b pb-3 mb-3">
                 <h3 class="text-sm font-bold text-gray-900">Performance Reviews</h3>
                 <span class="text-[10px] text-gray-400">{{ $performanceReviews->count() }} reviews</span>
@@ -152,7 +152,7 @@
         </div>
 
         {{-- Recent Attendance --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Recent Attendance</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Date</th><th class="py-2">Check In</th><th class="py-2">Check Out</th><th class="py-2">Status</th></tr></thead>
@@ -168,7 +168,7 @@
         </div>
 
         {{-- Payroll History --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Payroll History</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Number</th><th class="py-2">Month</th><th class="py-2">Net Salary</th><th class="py-2">Status</th></tr></thead>
@@ -184,7 +184,7 @@
         </div>
 
         {{-- Leave History --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Leave History</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Type</th><th class="py-2">Dates</th><th class="py-2">Days</th><th class="py-2">Status</th></tr></thead>
@@ -200,7 +200,7 @@
         </div>
 
         {{-- Assets --}}
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Assigned Assets</h3>
             <div class="overflow-x-auto"><table class="w-full text-xs">
                 <thead><tr class="text-left text-gray-500"><th class="py-2">Asset</th><th class="py-2">Serial</th><th class="py-2">Assigned Date</th><th class="py-2">Status</th></tr></thead>

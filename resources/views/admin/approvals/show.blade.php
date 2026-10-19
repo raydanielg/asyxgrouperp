@@ -3,12 +3,12 @@
 @section('page_title', $workflow->name)
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('admin.approvals.index') }}" class="text-sm text-gray-500 hover:text-emerald-600">&larr; Back to Workflows</a>
+    <a href="{{ route('admin.approvals.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to Workflows</a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     {{-- Workflow Info --}}
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="font-bold text-gray-800 mb-3">{{ $workflow->name }}</h3>
         <p class="text-xs text-gray-500 mb-4">{{ $workflow->description }}</p>
         <dl class="space-y-2 text-sm">
@@ -33,7 +33,7 @@
     </div>
 
     {{-- Requests --}}
-    <div class="bg-white rounded-xl border overflow-hidden lg:col-span-2">
+    <div class="bg-white rounded-md border overflow-hidden lg:col-span-2">
         <div class="px-5 py-3 border-b bg-gray-50/50"><h4 class="text-sm font-bold text-gray-700">Approval Requests</h4></div>
         <div class="overflow-x-auto"><table class="w-full text-sm">
             <thead><tr class="text-left text-xs text-gray-500"><th class="px-4 py-2 font-medium">Number</th><th class="px-4 py-2 font-medium">Amount</th><th class="px-4 py-2 font-medium">Status</th><th class="px-4 py-2 font-medium">Level</th><th class="px-4 py-2 font-medium">Requested By</th><th class="px-4 py-2 font-medium">Date</th></tr></thead>

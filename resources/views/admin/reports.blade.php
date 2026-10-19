@@ -11,7 +11,7 @@
         ['label'=>'Inactive','value'=>number_format($stats['inactiveUsers']),'icon'=>'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'red-400','to'=>'red-500','border'=>'red-300','text'=>'red-50','sub'=>'red-100'],
         ['label'=>'Admins','value'=>number_format($stats['totalAdmins']),'icon'=>'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z','from'=>'sky-500','to'=>'sky-600','border'=>'sky-400','text'=>'sky-100','sub'=>'sky-200']
     ] as $card)
-    <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-xl border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden hover:shadow-lg transition-shadow">
+    <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-md border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden hover:shadow-lg transition-shadow">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <div class="flex items-start justify-between mb-2">
@@ -24,7 +24,7 @@
         @endforeach
         </div>
 
-<div class="bg-white rounded-xl border p-6">
+<div class="bg-white rounded-md border p-6">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">User Distribution</h3>
     <div class="space-y-4">
         <div>

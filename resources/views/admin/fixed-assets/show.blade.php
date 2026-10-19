@@ -2,7 +2,7 @@
 @section('title', $fixedAsset->asset_number . ' - ' . config('app.name'))
 @section('page_title', $fixedAsset->name)
 @section('content')
-<div class="mb-4"><a href="{{ route('admin.fixed-assets.index') }}" class="text-sm text-gray-500 hover:text-emerald-600">&larr; Back to Assets</a></div>
+<div class="mb-4"><a href="{{ route('admin.fixed-assets.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to Assets</a></div>
 @if(session('success'))
 <div class="mb-4 px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
 @endif
@@ -10,7 +10,7 @@
 <div class="mb-4 px-4 py-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-100">{{ session('error') }}</div>
 @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="font-bold text-gray-800 mb-4">{{ $fixedAsset->name }}</h3>
         <dl class="space-y-2 text-sm">
             <div class="flex justify-between"><dt class="text-gray-400">Asset #</dt><dd class="text-gray-700">{{ $fixedAsset->asset_number }}</dd></div>
@@ -28,11 +28,11 @@
         </dl>
         @if($fixedAsset->status === 'in_use')
         <div class="mt-4 flex gap-2">
-            <form method="POST" action="{{ route('admin.fixed-assets.depreciate', $fixedAsset) }}">@csrf<button class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">Run Depreciation</button></form>
+            <form method="POST" action="{{ route('admin.fixed-assets.depreciate', $fixedAsset) }}">@csrf<button class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700">Run Depreciation</button></form>
         </div>
         @endif
     </div>
-    <div class="bg-white rounded-xl border overflow-hidden lg:col-span-2">
+    <div class="bg-white rounded-md border overflow-hidden lg:col-span-2">
         <div class="px-5 py-3 border-b bg-gray-50/50"><h4 class="text-sm font-bold text-gray-700">Depreciation History</h4></div>
         <div class="overflow-x-auto"><table class="w-full text-sm">
             <thead><tr class="text-left text-xs text-gray-500"><th class="px-4 py-2 font-medium">Period</th><th class="px-4 py-2 font-medium">Date</th><th class="px-4 py-2 font-medium text-right">Amount</th><th class="px-4 py-2 font-medium text-right">Accumulated</th><th class="px-4 py-2 font-medium text-right">NBV</th></tr></thead>

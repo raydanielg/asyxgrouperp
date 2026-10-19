@@ -3,7 +3,7 @@
 @section('page_title', 'Project Details')
 @section('content')
 <div class="mb-4 flex items-center justify-between">
-    <a href="{{ route('admin.projects.index') }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to Projects</a>
+    <a href="{{ route('admin.projects.index') }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to Projects</a>
     <div class="flex items-center gap-2">
     @if(in_array($project->status, ['completed','in_progress','planning']) && !$project->recurring_invoicing)
         <form method="POST" action="{{ route('admin.projects.generate-invoice', $project) }}">@csrf
@@ -21,7 +21,7 @@
             </button>
         </form>
     @endif
-    <button onclick="downloadPdf('{{ route('admin.projects.pdf', $project) }}', '{{ $project->project_number }}')" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-all flex items-center gap-1.5">
+    <button onclick="downloadPdf('{{ route('admin.projects.pdf', $project) }}', '{{ $project->project_number }}')" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-all flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         Download PDF
     </button>
@@ -29,7 +29,7 @@
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m2 2v-4m2 4v-6m2 6V7m2 10V5M3 7l3-3 3 3M3 17l3 3 3-3"/></svg>
         Settlements
     </a>
-    <a href="{{ route('admin.projects.account', $project) }}" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-all flex items-center gap-1.5">
+    <a href="{{ route('admin.projects.account', $project) }}" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700 transition-all flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
         Account Card
     </a>
@@ -44,7 +44,7 @@
     </div>
 </div>
 @if($project->status === 'completed' && !$project->recurring_invoicing && !$project->invoices->where('type', 'service')->isNotEmpty())
-<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 flex items-center justify-between">
+<div class="bg-indigo-50 border border-indigo-200 rounded-md p-4 mb-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
             <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -60,7 +60,7 @@
 </div>
 @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 mb-3">{{ $project->title }}</h3>
         <p class="text-xs text-gray-500 mb-4">{{ $project->description ?? 'No description' }}</p>
         <div class="space-y-2 text-xs">
@@ -90,8 +90,8 @@
         </div>
         <div class="mt-4"><div class="flex items-center justify-between mb-1"><span class="text-[10px] text-gray-400 uppercase">Progress</span><span class="text-xs font-bold text-emerald-700">{{ $project->progress }}%</span></div><div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:{{ $project->progress }}%"></div></div></div>
     </div>
-    <div class="lg:col-span-2 bg-white rounded-xl border p-6">
-        <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-gray-900">Tasks</h3><button onclick="document.getElementById('taskModal').classList.remove('hidden')" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Add Task</button></div>
+    <div class="lg:col-span-2 bg-white rounded-md border p-6">
+        <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-gray-900">Tasks</h3><button onclick="document.getElementById('taskModal').classList.remove('hidden')" class="text-xs text-gray-600 hover:text-gray-900 font-medium">+ Add Task</button></div>
         <div class="space-y-2">
         @forelse($project->tasks as $t)
         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -106,7 +106,7 @@
     </div>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Bugs</h3>
         <div class="space-y-2">
         @forelse($project->bugs as $b)
@@ -120,7 +120,7 @@
         @endforelse
         </div>
     </div>
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Timesheets</h3>
         <div class="space-y-2">
         @forelse($project->timesheets as $ts)
@@ -136,7 +136,7 @@
     </div>
 </div>
 {{-- Job Cards --}}
-<div class="bg-white rounded-xl border p-6 mb-4">
+<div class="bg-white rounded-md border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-gray-900">Job Cards / Service Call Reports</h3>
         <a href="{{ route('admin.job-cards.index') }}?project_id={{ $project->id }}" class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">View All &rarr;</a>
@@ -176,10 +176,10 @@
     </div>
 </div>
 {{-- Project Meetings --}}
-<div class="bg-white rounded-xl border p-6 mb-4">
+<div class="bg-white rounded-md border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-gray-900">Project Meetings</h3>
-        <a href="{{ route('admin.meetings.create') }}?type=project&project_id={{ $project->id }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Schedule Meeting</a>
+        <a href="{{ route('admin.meetings.create') }}?type=project&project_id={{ $project->id }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium">+ Schedule Meeting</a>
     </div>
     <div class="space-y-2">
     @forelse($project->meetings ?? [] as $m)
@@ -197,13 +197,13 @@
     </div>
 </div>
 {{-- Assigned Staff --}}
-<div class="bg-white rounded-xl border p-6 mb-4">
+<div class="bg-white rounded-md border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-gray-900">Assigned Staff</h3>
         <div class="flex items-center gap-2">
             <span class="text-[10px] text-gray-400">{{ $project->employees->count() }} employees</span>
             @if($availableEmployees->count() > 0)
-            <button onclick="document.getElementById('assignStaffModal').classList.remove('hidden')" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Assign Staff</button>
+            <button onclick="document.getElementById('assignStaffModal').classList.remove('hidden')" class="text-xs text-gray-600 hover:text-gray-900 font-medium">+ Assign Staff</button>
             @endif
         </div>
     </div>
@@ -236,7 +236,7 @@
     </div>
 </div>
 {{-- Project Bonuses --}}
-<div class="bg-white rounded-xl border p-6 mb-4">
+<div class="bg-white rounded-md border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-gray-900">Project Bonuses</h3>
         <a href="{{ route('admin.bonuses.index') }}" class="text-xs text-bronze hover:underline font-medium">+ Add Bonus</a>
@@ -268,10 +268,10 @@
     </div>
 </div>
 {{-- Project Documents --}}
-<div class="bg-white rounded-xl border p-6 mb-4">
+<div class="bg-white rounded-md border p-6 mb-4">
     <div class="flex items-center justify-between mb-3">
         <h3 class="text-sm font-bold text-gray-900">Project Documents</h3>
-        <a href="{{ route('admin.documents.create', ['project_id' => $project->id]) }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Upload Document</a>
+        <a href="{{ route('admin.documents.create', ['project_id' => $project->id]) }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium">+ Upload Document</a>
     </div>
     <div class="space-y-2">
     @forelse($project->documents ?? [] as $doc)
@@ -298,27 +298,27 @@
     </div>
 </div>
 <div id="taskModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+    <div class="bg-white rounded-md shadow-xl max-w-md w-full p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Add Task</h3>
         <form method="POST" action="{{ route('admin.projects.tasks.store', $project) }}" class="space-y-3">@csrf
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Assigned To</label><select name="assigned_to" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">Unassigned</option>@foreach($users as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach</select></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date</label><input name="due_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-            <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="todo">To Do</option><option value="in_progress">In Progress</option><option value="review">Review</option><option value="done">Done</option></select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Priority</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Progress (%)</label><input name="progress" type="number" min="0" max="100" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('taskModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Add Task</button></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></textarea></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Assigned To</label><select name="assigned_to" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"><option value="">Unassigned</option>@foreach($users as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach</select></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date</label><input name="due_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
+            <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-medium text-gray-600 mb-1">Status</label><select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"><option value="todo">To Do</option><option value="in_progress">In Progress</option><option value="review">Review</option><option value="done">Done</option></select></div><div><label class="block text-xs font-medium text-gray-600 mb-1">Priority</label><select name="priority" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Progress (%)</label><input name="progress" type="number" min="0" max="100" value="0" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
+            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('taskModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Add Task</button></div>
         </form>
     </div>
 </div>
 <div id="assignStaffModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-md shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Assign Staff to Project</h3>
         @if($availableEmployees->count() > 0)
         <form method="POST" action="{{ route('admin.projects.employees.assign', $project) }}" class="space-y-4">@csrf
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Employee *</label>
-                <select name="employee_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                <select name="employee_id" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                     <option value="">Select employee...</option>
                     @foreach($availableEmployees as $emp)
                     <option value="{{ $emp->id }}">{{ $emp->full_name }} ({{ $emp->designation ?? 'No designation' }} — {{ $emp->department ?? 'N/A' }})</option>
@@ -327,11 +327,11 @@
             </div>
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Role on Project</label>
-                <input name="role" placeholder="e.g. Project Engineer, Developer, Supervisor" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                <input name="role" placeholder="e.g. Project Engineer, Developer, Supervisor" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
             </div>
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="document.getElementById('assignStaffModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Assign Employee</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Assign Employee</button>
             </div>
         </form>
         @else

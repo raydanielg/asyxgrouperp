@@ -10,13 +10,13 @@
     </button>
 </div>
 <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
-    <div class="bg-white rounded-xl border p-4"><span class="text-[10px] font-medium text-gray-500">Total</span><p class="text-xl font-bold text-gray-900 mt-1">{{ $stats['total'] }}</p></div>
-    <div class="bg-white rounded-xl border p-4"><span class="text-[10px] font-medium text-amber-600">Open</span><p class="text-xl font-bold text-amber-600 mt-1">{{ $stats['open'] }}</p></div>
-    <div class="bg-white rounded-xl border p-4"><span class="text-[10px] font-medium text-sky-600">In Progress</span><p class="text-xl font-bold text-sky-600 mt-1">{{ $stats['in_progress'] }}</p></div>
-    <div class="bg-white rounded-xl border p-4"><span class="text-[10px] font-medium text-emerald-600">Resolved</span><p class="text-xl font-bold text-emerald-600 mt-1">{{ $stats['resolved'] }}</p></div>
-    <div class="bg-white rounded-xl border p-4"><span class="text-[10px] font-medium text-rose-600">Pending Payment</span><p class="text-xl font-bold text-rose-600 mt-1">{{ $stats['pending_payment'] }}</p></div>
+    <div class="bg-white rounded-md border p-4"><span class="text-[10px] font-medium text-gray-500">Total</span><p class="text-xl font-bold text-gray-900 mt-1">{{ $stats['total'] }}</p></div>
+    <div class="bg-white rounded-md border p-4"><span class="text-[10px] font-medium text-amber-600">Open</span><p class="text-xl font-bold text-amber-600 mt-1">{{ $stats['open'] }}</p></div>
+    <div class="bg-white rounded-md border p-4"><span class="text-[10px] font-medium text-sky-600">In Progress</span><p class="text-xl font-bold text-sky-600 mt-1">{{ $stats['in_progress'] }}</p></div>
+    <div class="bg-white rounded-md border p-4"><span class="text-[10px] font-medium text-emerald-600">Resolved</span><p class="text-xl font-bold text-emerald-600 mt-1">{{ $stats['resolved'] }}</p></div>
+    <div class="bg-white rounded-md border p-4"><span class="text-[10px] font-medium text-rose-600">Pending Payment</span><p class="text-xl font-bold text-rose-600 mt-1">{{ $stats['pending_payment'] }}</p></div>
 </div>
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Job #</th><th class="px-5 py-3 font-medium">Title</th><th class="px-5 py-3 font-medium">Project</th><th class="px-5 py-3 font-medium">Assigned To</th><th class="px-5 py-3 font-medium">Priority</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Due Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
@@ -43,7 +43,7 @@
 </div>
 {{-- Create Modal --}}
 <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-start justify-center p-4 overflow-y-auto" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full my-8 p-6">
+    <div class="bg-white rounded-md shadow-xl max-w-4xl w-full my-8 p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Job Card / Service Call Report</h3>
         <form method="POST" action="{{ route('admin.job-cards.store') }}" class="space-y-4">@csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

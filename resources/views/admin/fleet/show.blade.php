@@ -2,12 +2,12 @@
 @section('title', $vehicle->vehicle_number . ' - ' . config('app.name'))
 @section('page_title', $vehicle->vehicle_number)
 @section('content')
-<div class="mb-4"><a href="{{ route('admin.fleet.index') }}" class="text-sm text-gray-500 hover:text-emerald-600">&larr; Back to Fleet</a></div>
+<div class="mb-4"><a href="{{ route('admin.fleet.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to Fleet</a></div>
 @if(session('success'))
 <div class="mb-4 px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
 @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="font-bold text-gray-800 mb-4">{{ $vehicle->make }} {{ $vehicle->model }}</h3>
         <dl class="space-y-2 text-sm">
             <div class="flex justify-between"><dt class="text-gray-400">Vehicle #</dt><dd class="text-gray-700">{{ $vehicle->vehicle_number }}</dd></div>
@@ -25,7 +25,7 @@
     </div>
     <div class="lg:col-span-2 space-y-6">
         {{-- Maintenance --}}
-        <div class="bg-white rounded-xl border overflow-hidden">
+        <div class="bg-white rounded-md border overflow-hidden">
             <div class="px-5 py-3 border-b bg-gray-50/50 flex items-center justify-between"><h4 class="text-sm font-bold text-gray-700">Maintenance Records</h4></div>
             <div class="overflow-x-auto"><table class="w-full text-sm">
                 <thead><tr class="text-left text-xs text-gray-500"><th class="px-4 py-2 font-medium">Date</th><th class="px-4 py-2 font-medium">Type</th><th class="px-4 py-2 font-medium">Provider</th><th class="px-4 py-2 font-medium text-right">Cost</th></tr></thead>
@@ -40,7 +40,7 @@
             <div class="px-5 py-3 border-t">{{ $maintenance->links() }}</div>
         </div>
         {{-- Fuel Logs --}}
-        <div class="bg-white rounded-xl border overflow-hidden">
+        <div class="bg-white rounded-md border overflow-hidden">
             <div class="px-5 py-3 border-b bg-gray-50/50"><h4 class="text-sm font-bold text-gray-700">Fuel Logs</h4></div>
             <div class="overflow-x-auto"><table class="w-full text-sm">
                 <thead><tr class="text-left text-xs text-gray-500"><th class="px-4 py-2 font-medium">Date</th><th class="px-4 py-2 font-medium text-right">Litres</th><th class="px-4 py-2 font-medium text-right">Cost/L</th><th class="px-4 py-2 font-medium text-right">Total</th></tr></thead>

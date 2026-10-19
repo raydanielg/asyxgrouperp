@@ -165,7 +165,7 @@ function renderLeads(res) {
             const assigned = l.assigned_to ? (l.assigned_to?.name || 'Unassigned') : 'Unassigned';
             let actions = '';
             if (l.status !== 'converted' && (!l.deals || l.deals.length === 0)) {
-                actions += '<button onclick="convertLead(' + l.id + ')" class="text-xs font-medium text-emerald-600 hover:text-emerald-800">→ Deal</button>';
+                actions += '<button onclick="convertLead(' + l.id + ')" class="text-xs font-medium text-gray-600 hover:text-gray-900">→ Deal</button>';
             }
             actions += '<button onclick="downloadLeadPdf(' + l.id + ')" class="text-xs font-medium text-gray-600 hover:text-gray-900">PDF</button>';
             actions += '<button onclick="deleteLead(' + l.id + ',\'' + escapeQuotes(l.lead_number || '') + '\')" class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>';

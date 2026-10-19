@@ -2,23 +2,23 @@
 @section('title', 'Project Profit - ' . config('app.name'))
 @section('page_title', 'Profit Analysis: ' . $project->title)
 @section('content')
-<div class="mb-4"><a href="{{ route('admin.projects.show', $project) }}" class="text-xs text-gray-500 hover:text-emerald-600">&larr; Back to Project</a></div>
+<div class="mb-4"><a href="{{ route('admin.projects.show', $project) }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to Project</a></div>
 
 {{-- Summary Cards --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <p class="text-[10px] text-gray-400 uppercase">Total Revenue</p>
         <p class="text-lg font-bold text-emerald-700">TZS {{ number_format($totalRevenue) }}</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <p class="text-[10px] text-gray-400 uppercase">Procurement Cost</p>
         <p class="text-lg font-bold text-amber-700">TZS {{ number_format($totalProcurement) }}</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <p class="text-[10px] text-gray-400 uppercase">Office Expenses</p>
         <p class="text-lg font-bold text-red-700">TZS {{ number_format($totalOfficeExp) }}</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <p class="text-[10px] text-gray-400 uppercase">Net Profit</p>
         <p class="text-lg font-bold {{ ($profit>=0) ? 'text-emerald-700' : 'text-red-700' }}">TZS {{ number_format($profit) }}</p>
         <p class="text-[10px] text-gray-400">Margin: {{ number_format($margin, 1) }}%</p>
@@ -27,7 +27,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
     {{-- Budget vs Actual --}}
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Budget vs Actual</h3>
         <div class="space-y-3 text-xs">
             <div class="flex justify-between items-center"><span class="text-gray-500">Planned Budget</span><span class="font-semibold text-gray-900">TZS {{ number_format($project->budget) }}</span></div>
@@ -45,7 +45,7 @@
     </div>
 
     {{-- Client Receipts --}}
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Client Receipts ({{ $project->clientReceipts->count() }})</h3>
         <div class="overflow-x-auto"><table class="w-full text-xs">
             <thead><tr class="text-left text-gray-500"><th class="py-2">Receipt No.</th><th class="py-2">Client</th><th class="py-2">Amount</th><th class="py-2">Date</th></tr></thead>
@@ -61,7 +61,7 @@
     </div>
 
     {{-- Vendor Invoices --}}
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Vendor Invoices ({{ $project->vendorInvoices->count() }})</h3>
         <div class="overflow-x-auto"><table class="w-full text-xs">
             <thead><tr class="text-left text-gray-500"><th class="py-2">Invoice No.</th><th class="py-2">Supplier</th><th class="py-2">Total</th><th class="py-2">Paid</th></tr></thead>
@@ -77,7 +77,7 @@
     </div>
 
     {{-- Office Expenses --}}
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <h3 class="text-sm font-bold text-gray-900 border-b pb-3 mb-3">Office Expenses ({{ $project->officeExpenses->count() }})</h3>
         <div class="overflow-x-auto"><table class="w-full text-xs">
             <thead><tr class="text-left text-gray-500"><th class="py-2">Expense No.</th><th class="py-2">Description</th><th class="py-2">Amount</th><th class="py-2">Status</th></tr></thead>

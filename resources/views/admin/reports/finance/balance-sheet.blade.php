@@ -8,7 +8,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     {{-- Assets --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b bg-emerald-50/50">
             <h3 class="text-sm font-semibold text-gray-900">Assets</h3>
         </div>
@@ -41,7 +41,7 @@
     </div>
 
     {{-- Liabilities --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b bg-red-50/50">
             <h3 class="text-sm font-semibold text-gray-900">Liabilities</h3>
         </div>
@@ -58,7 +58,7 @@
     </div>
 
     {{-- Equity --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b bg-violet-50/50">
             <h3 class="text-sm font-semibold text-gray-900">Equity</h3>
         </div>
@@ -75,8 +75,8 @@
     </div>
 </div>
 
-<div class="bg-white rounded-xl border p-5 mt-6">
-    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl text-white">
+<div class="bg-white rounded-md border p-5 mt-6">
+    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-md text-white">
         <span class="text-sm font-bold">Balance Check: Assets = Liabilities + Equity</span>
         <span class="text-sm font-bold">{{ $money($totalAssets) }} = {{ $money($totalLiabilities) }} + {{ $money($equity) }}</span>
     </div>

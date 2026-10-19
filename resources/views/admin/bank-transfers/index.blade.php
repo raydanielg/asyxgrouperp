@@ -2,7 +2,7 @@
 @section('title', 'Bank Transfers - ' . config('app.name'))
 @section('page_title', 'Bank Transfer Payments')
 @section('content')
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Order ID</th><th class="px-5 py-3 font-medium">User</th><th class="px-5 py-3 font-medium">Amount</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
@@ -16,7 +16,7 @@
             <td class="px-5 py-3">
         @if($transfer->status === 'pending')
         <form method="POST" action="{{ route('admin.bank-transfers.update', $transfer) }}" class="inline flex gap-2">@csrf @method('PATCH')
-                    <input type="hidden" name="status" value="approved"><button class="text-emerald-600 hover:text-emerald-700 text-xs">Approve</button>
+                    <input type="hidden" name="status" value="approved"><button class="text-gray-600 hover:text-gray-900 text-xs">Approve</button>
                 </form>
                 <form method="POST" action="{{ route('admin.bank-transfers.update', $transfer) }}" class="inline">@csrf @method('PATCH')
                     <input type="hidden" name="status" value="rejected"><button class="text-red-500 hover:text-red-700 text-xs">Reject</button>

@@ -27,7 +27,7 @@
 @isset($kpiCards)
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
     @foreach($kpiCards as $card)
-    <div class="bg-gradient-to-br from-{{ $card['from'] ?? 'emerald-600' }} to-{{ $card['to'] ?? 'emerald-700' }} rounded-xl border border-{{ $card['border'] ?? 'emerald-500' }} p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-{{ $card['from'] ?? 'emerald-600' }} to-{{ $card['to'] ?? 'emerald-700' }} rounded-md border border-{{ $card['border'] ?? 'emerald-500' }} p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium {{ $card['text'] ?? 'emerald-100' }}">{{ $card['label'] }}</span>

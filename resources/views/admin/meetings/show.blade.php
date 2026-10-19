@@ -10,7 +10,7 @@
 @section('content')
 <div class="space-y-6 max-w-5xl mx-auto">
     {{-- Header --}}
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100">
         <div class="flex items-start justify-between">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">{{ $meeting->title }}</h1>
@@ -52,7 +52,7 @@
     </div>
 
     {{-- Attendance --}}
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100">
         <h2 class="text-lg font-bold text-gray-900 mb-4">Attendance ({{ $meeting->attendees->where('attended', true)->count() }}/{{ $meeting->attendees->count() }})</h2>
         @if($meeting->attendees->count() > 0)
         <form method="POST" action="{{ route('admin.meetings.attendance', $meeting) }}" class="space-y-3">
@@ -84,7 +84,7 @@
     </div>
 
     {{-- Action Points --}}
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100">
         <h2 class="text-lg font-bold text-gray-900 mb-4">Action Points ({{ $meeting->actionPoints->count() }})</h2>
         @if($meeting->actionPoints->count() > 0)
         <div class="space-y-2">
@@ -117,7 +117,7 @@
 
     {{-- Minutes & Report --}}
     @if($meeting->minutes || $meeting->report)
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-4">
+    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100 space-y-4">
         @if($meeting->minutes)
         <div>
             <h2 class="text-lg font-bold text-gray-900 mb-2">Minutes</h2>

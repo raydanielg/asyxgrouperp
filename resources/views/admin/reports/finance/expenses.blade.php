@@ -7,21 +7,21 @@
 @php $money = fn($n) => 'TZS ' . number_format($n ?? 0); @endphp
 
 <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl border border-amber-300 p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-md border border-amber-300 p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium text-amber-50">Total Expenses</span>
             <p class="text-xl font-bold text-white mt-1">{{ $money($total) }}</p>
         </div>
     </div>
-    <div class="bg-gradient-to-br from-red-400 to-red-500 rounded-xl border border-red-300 p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-red-400 to-red-500 rounded-md border border-red-300 p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium text-red-50">This Month</span>
             <p class="text-xl font-bold text-white mt-1">{{ $money($monthTotal) }}</p>
         </div>
     </div>
-    <div class="bg-gradient-to-br from-sky-500 to-sky-600 rounded-xl border border-sky-400 p-4 text-white relative overflow-hidden">
+    <div class="bg-gradient-to-br from-sky-500 to-sky-600 rounded-md border border-sky-400 p-4 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
         <div class="relative z-10">
             <span class="text-[10px] font-medium text-sky-100">Avg / Month</span>
@@ -31,7 +31,7 @@
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-1 bg-white rounded-xl border p-5">
+    <div class="lg:col-span-1 bg-white rounded-md border p-5">
         <h3 class="text-sm font-semibold text-gray-900 mb-4">Monthly Breakdown</h3>
         <div class="space-y-3">
             @foreach($byMonth as $m)
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="lg:col-span-2 bg-white rounded-xl border overflow-hidden">
+    <div class="lg:col-span-2 bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b">
             <h3 class="text-sm font-semibold text-gray-900">Expense Entries</h3>
         </div>

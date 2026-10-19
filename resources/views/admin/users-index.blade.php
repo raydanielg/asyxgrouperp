@@ -4,12 +4,12 @@
 @section('content')
 <div class="mb-4 flex items-center justify-between">
     <p class="text-sm text-gray-500">Manage all system users</p>
-    <a href="{{ route('admin.users-create') }}" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2">
+    <a href="{{ route('admin.users-create') }}" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Add User
     </a>
 </div>
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Name</th><th class="px-5 py-3 font-medium">Email</th><th class="px-5 py-3 font-medium">Role</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Joined</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
         <tbody>
@@ -26,7 +26,7 @@
         @endif</td>
             <td class="px-5 py-3 text-xs text-gray-400">{{ $user->created_at->format('d M Y') }}</td>
             <td class="px-5 py-3 flex items-center gap-3">
-                <a href="{{ route('admin.users-edit', $user) }}" class="text-emerald-600 hover:text-emerald-700 text-xs">Edit</a>
+                <a href="{{ route('admin.users-edit', $user) }}" class="text-gray-600 hover:text-gray-900 text-xs">Edit</a>
         @if($user->id !== auth()->id())<form method="POST" action="{{ route('admin.users-destroy', $user) }}" class="inline" onsubmit="return confirm('Delete this user?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
         @endif
             </td>

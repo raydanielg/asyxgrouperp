@@ -3,16 +3,16 @@
 @section('page_title', 'POS Reports')
 @section('content')
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Today's Sales</p>
         <p class="text-2xl font-bold text-emerald-700">TZS {{ number_format($todayTotal) }}</p>
     </div>
-    <div class="bg-white rounded-xl border p-6">
+    <div class="bg-white rounded-md border p-6">
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">This Month's Sales</p>
         <p class="text-2xl font-bold text-emerald-700">TZS {{ number_format($monthTotal) }}</p>
     </div>
 </div>
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="px-5 py-4 border-b"><h3 class="text-sm font-bold text-gray-900">Sales History</h3></div>
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Sale #</th><th class="px-5 py-3 font-medium">Items</th><th class="px-5 py-3 font-medium">Total</th><th class="px-5 py-3 font-medium">Payment</th><th class="px-5 py-3 font-medium">Cashier</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>

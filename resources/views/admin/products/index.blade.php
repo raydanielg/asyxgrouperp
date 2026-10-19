@@ -18,14 +18,14 @@
         @endif
         <p class="text-sm text-gray-500">Manage products and services</p>
     </div>
-    <button onclick="openCreateModal()" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2">
+    <button onclick="openCreateModal()" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Add Product
     </button>
 </div>
 
 {{-- ═══ Products Table ═══ --}}
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm" id="productsTable">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
             <th class="px-5 py-3 font-medium">Code</th>
@@ -77,7 +77,7 @@
         <tr id="emptyRow"><td colspan="{{ $isGroupUser ? 9 : 8 }}" class="px-5 py-12 text-center">
             <svg class="w-12 h-12 mx-auto text-gray-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
             <p class="text-gray-400 text-xs">No products found</p>
-            <button onclick="openCreateModal()" class="mt-3 text-xs text-emerald-600 hover:text-emerald-700 font-medium">+ Add your first product</button>
+            <button onclick="openCreateModal()" class="mt-3 text-xs text-gray-600 hover:text-gray-900 font-medium">+ Add your first product</button>
         </td></tr>
         @endforelse
         </tbody>
@@ -87,7 +87,7 @@
 
 {{-- ═══ Create Product Modal ═══ --}}
 <div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)closeCreateModal()">
-    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-md shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-5">
             <div>
                 <h3 class="text-lg font-bold text-gray-900">Add Product</h3>
@@ -103,7 +103,7 @@
             @if($isGroupUser)
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Company / Branch *</label>
-                <select name="company_id" id="productCompany" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                <select name="company_id" id="productCompany" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                     <option value="">— Select Company —</option>
                     @foreach($companies as $c)
                     <option value="{{ $c->id }}" @selected($currentCompanyId == $c->id)>{{ $c->name }} @if($c->is_group)(Group)@endif</option>
@@ -117,23 +117,23 @@
 
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Name *</label>
-                <input name="name" id="pName" required placeholder="e.g. Cement Bag 50kg" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                <input name="name" id="pName" required placeholder="e.g. Cement Bag 50kg" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
             </div>
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Description</label>
-                <textarea name="description" id="pDesc" rows="2" placeholder="Optional description" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea>
+                <textarea name="description" id="pDesc" rows="2" placeholder="Optional description" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></textarea>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Category</label>
-                    <select name="category_id" id="pCategory" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <select name="category_id" id="pCategory" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                         <option value="">None</option>
                         @foreach($categories as $c)<option value="{{ $c->id }}">{{ $c->name }}</option>@endforeach
                     </select>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Warehouse</label>
-                    <select name="warehouse_id" id="pWarehouse" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <select name="warehouse_id" id="pWarehouse" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                         <option value="">None</option>
                         @foreach($warehouses as $w)<option value="{{ $w->id }}">{{ $w->name }}</option>@endforeach
                     </select>
@@ -142,41 +142,41 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Purchase Price (TZS)</label>
-                    <input name="purchase_price" id="pPurchase" type="number" step="0.01" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <input name="purchase_price" id="pPurchase" type="number" step="0.01" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Sale Price (TZS)</label>
-                    <input name="sale_price" id="pSale" type="number" step="0.01" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <input name="sale_price" id="pSale" type="number" step="0.01" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                 </div>
             </div>
             <div class="grid grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Stock Qty</label>
-                    <input name="stock_quantity" id="pStock" type="number" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <input name="stock_quantity" id="pStock" type="number" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Reorder Level</label>
-                    <input name="reorder_level" id="pReorder" type="number" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <input name="reorder_level" id="pReorder" type="number" value="0" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Unit</label>
-                    <input name="unit" id="pUnit" value="piece" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                    <input name="unit" id="pUnit" value="piece" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Type</label>
-                <select name="type" id="pType" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                <select name="type" id="pType" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                     <option value="product">Product</option>
                     <option value="service">Service</option>
                 </select>
             </div>
             <div class="flex items-center gap-2 pt-1">
-                <input type="checkbox" name="is_active" id="pActive" checked class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <input type="checkbox" name="is_active" id="pActive" checked class="rounded border-gray-300 text-emerald-600 focus:ring-gray-300">
                 <label class="text-xs text-gray-600">Active</label>
             </div>
             <div class="flex gap-2 pt-3 border-t">
                 <button type="button" onclick="closeCreateModal()" class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
-                <button type="submit" id="submitBtn" class="flex-1 px-4 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2">
+                <button type="submit" id="submitBtn" class="flex-1 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     <span id="submitText">Create Product</span>
                 </button>

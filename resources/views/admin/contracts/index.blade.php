@@ -6,11 +6,11 @@
     <div>
         <p class="text-xs text-gray-500">Manage service, supply, and project contracts</p>
     </div>
-    <button onclick="document.getElementById('contractModal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">+ New Contract</button>
+    <button onclick="document.getElementById('contractModal').classList.remove('hidden')" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">+ New Contract</button>
 </div>
 
 @if(session('success'))
-<div class="bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-3 mb-4 text-sm text-emerald-800">{{ session('success') }}</div>
+<div class="bg-emerald-50 border border-emerald-200 rounded-md px-5 py-3 mb-4 text-sm text-emerald-800">{{ session('success') }}</div>
 @endif
 
 @php
@@ -20,21 +20,21 @@
 @endphp
 
 <div class="grid grid-cols-3 gap-4 mb-6">
-    <div class="bg-white rounded-xl border p-4">
+    <div class="bg-white rounded-md border p-4">
         <p class="text-[10px] text-gray-400 uppercase tracking-wide">Total Value</p>
         <p class="text-xl font-bold text-gray-900 mt-1">TZS {{ number_format($totalValue, 2) }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-emerald-200 p-4">
+    <div class="bg-white rounded-md border border-emerald-200 p-4">
         <p class="text-[10px] text-emerald-600 uppercase tracking-wide">Active</p>
         <p class="text-xl font-bold text-emerald-700 mt-1">{{ $activeCount }}</p>
     </div>
-    <div class="bg-white rounded-xl border border-amber-200 p-4">
+    <div class="bg-white rounded-md border border-amber-200 p-4">
         <p class="text-[10px] text-amber-600 uppercase tracking-wide">Draft</p>
         <p class="text-xl font-bold text-amber-700 mt-1">{{ $draftCount }}</p>
     </div>
 </div>
 
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="bg-gray-50 border-b">
@@ -68,7 +68,7 @@
                     </td>
                     <td class="px-4 py-3 text-right">
                         <div class="flex items-center justify-end gap-1">
-                            <a href="{{ route('admin.contracts.show', $c) }}" class="px-2 py-1 text-[10px] font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 rounded hover:bg-emerald-50">View</a>
+                            <a href="{{ route('admin.contracts.show', $c) }}" class="px-2 py-1 text-[10px] font-semibold text-gray-600 hover:text-gray-900 border border-emerald-200 rounded hover:bg-emerald-50">View</a>
                             <button onclick="openEditContract({{ $c->id }})" class="px-2 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 border border-sky-200 rounded hover:bg-sky-50">Edit</button>
                             <form method="POST" action="{{ route('admin.contracts.destroy', $c) }}" class="inline" onsubmit="return confirm('Delete this contract?')">
                                 @csrf @method('DELETE')
@@ -87,16 +87,16 @@
 </div>
 
 <div id="contractModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 my-8">
+    <div class="bg-white rounded-md shadow-xl max-w-2xl w-full p-6 my-8">
         <h3 class="text-lg font-bold text-gray-900 mb-4">New Contract</h3>
         <form method="POST" action="{{ route('admin.contracts.store') }}" class="space-y-3">@csrf
             <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Contractor Name *</label><input name="contractor_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Title *</label><input name="title" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Contractor Name *</label><input name="contractor_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Type *</label>
-                    <select name="type" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none">
+                    <select name="type" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none">
                         <option value="service">Service</option>
                         <option value="supply">Supply</option>
                         <option value="construction">Construction</option>
@@ -106,7 +106,7 @@
                     </select>
                 </div>
                 <div><label class="block text-xs font-medium text-gray-600 mb-1">Project (optional)</label>
-                    <select name="project_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none">
+                    <select name="project_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none">
                         <option value="">None</option>
                         @foreach($projects as $p)
                         <option value="{{ $p->id }}">{{ $p->title }}</option>
@@ -115,13 +115,13 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Start Date *</label><input name="start_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">End Date</label><input name="end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Start Date *</label><input name="start_date" type="date" required value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">End Date</label><input name="end_date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Contract Value *</label><input name="contract_value" type="number" step="0.01" min="0" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none" rows="2"></textarea></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Terms & Conditions</label><textarea name="terms" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none" rows="3"></textarea></div>
-            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('contractModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save Contract</button></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Contract Value *</label><input name="contract_value" type="number" step="0.01" min="0" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea name="description" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none" rows="2"></textarea></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Terms & Conditions</label><textarea name="terms" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none" rows="3"></textarea></div>
+            <div class="flex gap-2 pt-2"><button type="button" onclick="document.getElementById('contractModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Save Contract</button></div>
         </form>
     </div>
 </div>

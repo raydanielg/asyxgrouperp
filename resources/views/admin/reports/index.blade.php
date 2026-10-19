@@ -26,7 +26,7 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         @foreach($category['reports'] as $report)
-        <a href="{{ route($report['route']) }}" class="bg-white rounded-xl border p-4 hover:shadow-md hover:border-{{ $category['color'] }}-300 transition-all group">
+        <a href="{{ route($report['route']) }}" class="bg-white rounded-md border p-4 hover:shadow-md hover:border-{{ $category['color'] }}-300 transition-all group">
             <div class="flex items-start gap-3">
                 <div class="w-9 h-9 rounded-lg bg-{{ $category['color'] }}-50 flex items-center justify-center shrink-0 group-hover:bg-{{ $category['color'] }}-100 transition-colors">
                     <svg class="w-4 h-4 text-{{ $category['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>

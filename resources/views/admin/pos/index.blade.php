@@ -3,10 +3,10 @@
 @section('page_title', 'POS Terminal')
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <div class="lg:col-span-2 bg-white rounded-xl border p-6">
+    <div class="lg:col-span-2 bg-white rounded-md border p-6">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-sm font-bold text-gray-900">Products</h3>
-            <input type="text" id="productSearch" placeholder="Search products..." class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none w-48">
+            <input type="text" id="productSearch" placeholder="Search products..." class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none w-48">
         </div>
         <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto">
         @foreach($products as $p)
@@ -18,7 +18,7 @@
         @endforeach
         </div>
     </div>
-    <div class="bg-white rounded-xl border p-6 flex flex-col">
+    <div class="bg-white rounded-md border p-6 flex flex-col">
         <h3 class="text-sm font-bold text-gray-900 mb-4">Cart</h3>
         <div id="cartItems" class="flex-1 overflow-y-auto max-h-[40vh] space-y-2 mb-4">
             <p class="text-xs text-gray-400 text-center py-4" id="emptyCart">Cart is empty. Click products to add.</p>
@@ -32,7 +32,7 @@
             <div class="flex items-center justify-between text-xs"><span class="text-gray-500">Payment Method</span><select id="paymentMethod" class="px-2 py-1 rounded border border-gray-200 text-xs"><option value="cash">Cash</option><option value="card">Card</option><option value="mobile">Mobile Money</option></select></div>
             <div class="flex items-center justify-between text-xs"><span class="text-gray-500">Paid Amount</span><input type="number" id="paidAmount" value="0" oninput="updateChange()" class="w-20 px-2 py-1 rounded border border-gray-200 text-xs text-right"></div>
             <div class="flex justify-between text-xs"><span class="text-gray-500">Change</span><span class="font-medium text-emerald-700" id="changeAmount">TZS 0</span></div>
-            <button onclick="processSale()" class="w-full py-3 bg-emerald-600 text-white text-sm font-bold rounded-lg hover:bg-emerald-700 transition-colors mt-2">Complete Sale</button>
+            <button onclick="processSale()" class="w-full py-3 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-700 transition-colors mt-2">Complete Sale</button>
         </div>
     </div>
 </div>

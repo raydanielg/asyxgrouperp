@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="max-w-3xl">
-    <div class="bg-white rounded-xl border p-6 mb-4">
+    <div class="bg-white rounded-md border p-6 mb-4">
         <div class="flex items-start justify-between mb-6">
             <div>
                 <p class="text-xs text-gray-400 mb-1">Invoice Number</p>
@@ -33,7 +33,7 @@
         @endif
     </div>
         @if($purchaseInvoice->items->count() > 0)
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b"><h3 class="text-sm font-semibold text-gray-900">Items</h3></div>
         <table class="w-full text-sm">
             <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-2 font-medium">Product</th><th class="px-5 py-2 font-medium">Qty</th><th class="px-5 py-2 font-medium">Unit Price</th><th class="px-5 py-2 font-medium">Total</th></tr></thead>

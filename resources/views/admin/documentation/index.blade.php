@@ -24,7 +24,7 @@
         ['label'=>'Published','value'=>number_format($stats['published']),'color'=>'emerald','icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
         ['label'=>'Draft','value'=>number_format($stats['draft']),'color'=>'amber','icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z']
     ] as $card)
-    <div class="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow">
+    <div class="bg-white rounded-md border p-4 hover:shadow-md transition-shadow">
         <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-medium text-gray-500">{{ $card['label'] }}</span>
             <div class="w-7 h-7 rounded-md bg-{{ $card['color'] }}-50 flex items-center justify-center">
@@ -37,13 +37,13 @@
 </div>
 
 {{-- Table --}}
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="px-5 py-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h3 class="text-sm font-semibold text-gray-900">All Pages</h3>
         <div class="flex items-center gap-2 flex-wrap">
             <form method="GET" class="flex items-center gap-2">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search pages..." class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg outline-none focus:border-emerald-500 w-40">
-                <select name="category" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg outline-none focus:border-emerald-500 bg-white" onchange="this.form.submit()">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search pages..." class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg outline-none focus:border-gray-400 w-40">
+                <select name="category" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg outline-none focus:border-gray-400 bg-white" onchange="this.form.submit()">
                     <option value="">All Categories</option>
                     @foreach($categories as $cat)
                     <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $cat)) }}</option>
@@ -55,7 +55,7 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Export
             </a>
-            <a href="{{ route('admin.documentation.create') }}" class="px-3 py-1.5 text-xs font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">New Page</a>
+            <a href="{{ route('admin.documentation.create') }}" class="px-3 py-1.5 text-xs font-bold bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors">New Page</a>
         </div>
     </div>
     <div class="overflow-x-auto">
@@ -93,7 +93,7 @@
                     </td>
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $pg->updated_at->format('M d, Y') }}</td>
                     <td class="px-5 py-3 text-right">
-                        <a href="{{ route('admin.documentation.edit', $pg->id) }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium mr-2">Edit</a>
+                        <a href="{{ route('admin.documentation.edit', $pg->id) }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium mr-2">Edit</a>
                         <a href="{{ route('admin.documentation.export', $pg->id) }}" class="text-xs text-blue-600 hover:text-blue-700 font-medium mr-2">Export</a>
                         <button type="button" onclick="copyDocMd('{{ addslashes($pg->title) }}', `{{ addslashes($pg->content) }}`, '{{ $pg->slug }}', '{{ $pg->category }}')" class="text-xs text-gray-500 hover:text-gray-700 font-medium mr-2">Copy</button>
                         <form action="{{ route('admin.documentation.destroy', $pg->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this page?')">

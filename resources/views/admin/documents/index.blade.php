@@ -18,27 +18,27 @@
 
     {{-- Stats --}}
     <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total</p>
             <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['total'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Signed</p>
             <p class="text-2xl font-bold text-emerald-600 mt-1">{{ $stats['signed'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Pending Sig.</p>
             <p class="text-2xl font-bold text-amber-600 mt-1">{{ $stats['pending'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Drafts</p>
             <p class="text-2xl font-bold text-blue-600 mt-1">{{ $stats['draft'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Archived</p>
             <p class="text-2xl font-bold text-gray-500 mt-1">{{ $stats['archived'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Expired</p>
             <p class="text-2xl font-bold text-red-600 mt-1">{{ $stats['expired'] }}</p>
         </div>
@@ -47,7 +47,7 @@
     {{-- Category Cards --}}
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         @foreach($categories as $slug => $cat)
-        <a href="{{ route('admin.documents.index', ['category' => $slug]) }}" class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-md transition-shadow group">
+        <a href="{{ route('admin.documents.index', ['category' => $slug]) }}" class="bg-white rounded-md border border-gray-100 p-3 hover:shadow-md transition-shadow group">
             <div class="flex items-center gap-2 mb-2">
                 <div class="w-8 h-8 rounded-lg bg-{{ $cat['color'] }}-50 flex items-center justify-center">
                     <svg class="w-4 h-4 text-{{ $cat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $cat['icon'] }}"/></svg>
@@ -60,7 +60,7 @@
     </div>
 
     {{-- Filters --}}
-    <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
         <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-3">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search title, number, tags..." class="px-3 py-2 border border-gray-200 rounded-lg text-sm md:col-span-2">
             <select name="category" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
@@ -89,7 +89,7 @@
     </div>
 
     {{-- Documents Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>

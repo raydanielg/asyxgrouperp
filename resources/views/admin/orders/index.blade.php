@@ -4,7 +4,7 @@
 @section('page_title', 'Orders')
 
 @section('content')
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">

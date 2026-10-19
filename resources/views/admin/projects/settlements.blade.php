@@ -9,7 +9,7 @@
 @section('content')
 <div class="space-y-6">
     {{-- Project Header --}}
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100">
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-lg font-bold text-gray-900">{{ $project->title }}</h2>
@@ -26,27 +26,27 @@
 
     {{-- Summary Cards --}}
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Invoiced</p>
             <p class="text-xl font-bold text-blue-600 mt-1">{{ number_format($totals['invoiced'], 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Received</p>
             <p class="text-xl font-bold text-emerald-600 mt-1">{{ number_format($totals['received'], 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Outstanding</p>
             <p class="text-xl font-bold text-amber-600 mt-1">{{ number_format($totals['outstanding'], 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS (invoiced - paid)</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Costs</p>
             <p class="text-xl font-bold text-red-600 mt-1">{{ number_format($totals['total_cost'], 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS (vendor + office + staff)</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Net Settlement</p>
             <p class="text-xl font-bold {{ $totals['net'] >= 0 ? 'text-emerald-600' : 'text-red-600' }} mt-1">{{ number_format($totals['net'], 0) }}</p>
             <p class="text-[10px] text-gray-400">TZS ({{ number_format($totals['margin'], 1) }}% margin)</p>
@@ -55,26 +55,26 @@
 
     {{-- Cost Breakdown --}}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="bg-white rounded-xl border p-4">
+        <div class="bg-white rounded-md border p-4">
             <p class="text-xs font-semibold text-gray-500 mb-2">Vendor / Procurement Costs</p>
             <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['vendor_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
         </div>
-        <div class="bg-white rounded-xl border p-4">
+        <div class="bg-white rounded-md border p-4">
             <p class="text-xs font-semibold text-gray-500 mb-2">Office Expenses</p>
             <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['office_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
         </div>
-        <div class="bg-white rounded-xl border p-4">
+        <div class="bg-white rounded-md border p-4">
             <p class="text-xs font-semibold text-gray-500 mb-2">Staff Costs ({{ number_format($totals['staff_hours'], 0) }} hrs)</p>
             <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['staff_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
         </div>
-        <div class="bg-white rounded-xl border p-4">
+        <div class="bg-white rounded-md border p-4">
             <p class="text-xs font-semibold text-gray-500 mb-2">Staff Bonuses</p>
             <p class="text-2xl font-bold text-amber-600">{{ number_format($totals['bonus_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
         </div>
     </div>
 
     {{-- Monthly Settlements Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-5 py-3 border-b bg-gray-50/50">
             <h3 class="text-sm font-bold text-gray-700">Monthly Settlement Breakdown</h3>
             <p class="text-[10px] text-gray-400 mt-0.5">Kila mwezi: invoiced, received, costs, na net settlement</p>
@@ -198,7 +198,7 @@
     </div>
 
     {{-- Info --}}
-    <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+    <div class="bg-blue-50 border border-blue-100 rounded-md p-4">
         <div class="flex gap-3">
             <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <div class="text-xs text-blue-700">

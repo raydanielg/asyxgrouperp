@@ -5,7 +5,7 @@
 <div class="mb-4">
     <p class="text-sm text-gray-500">Track all inventory stock movements</p>
 </div>
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="bg-white rounded-md border overflow-hidden">
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Product</th><th class="px-5 py-3 font-medium">Warehouse</th><th class="px-5 py-3 font-medium">Type</th><th class="px-5 py-3 font-medium">Quantity</th><th class="px-5 py-3 font-medium">Balance After</th><th class="px-5 py-3 font-medium">Reference</th><th class="px-5 py-3 font-medium">Date</th></tr></thead>
         <tbody>

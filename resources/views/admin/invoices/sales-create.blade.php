@@ -5,50 +5,50 @@
 <div class="max-w-4xl">
     <form method="POST" action="{{ route('admin.sales-invoices.store') }}" class="space-y-6">
         @csrf
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <h3 class="text-sm font-semibold text-gray-900 mb-4">Invoice Details</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Invoice Number *</label><input name="invoice_number" value="INV-S-{{ date('Ymd') }}-{{ strtoupper(\Illuminate\Support\Str::random(4)) }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm font-mono focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Invoice Date *</label><input name="invoice_date" type="date" value="{{ date('Y-m-d') }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date *</label><input name="due_date" type="date" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Type *</label><select name="type" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="product">Product</option><option value="service">Service</option></select></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Invoice Number *</label><input name="invoice_number" value="INV-S-{{ date('Ymd') }}-{{ strtoupper(\Illuminate\Support\Str::random(4)) }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm font-mono focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Invoice Date *</label><input name="invoice_date" type="date" value="{{ date('Y-m-d') }}" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Due Date *</label><input name="due_date" type="date" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Type *</label><select name="type" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"><option value="product">Product</option><option value="service">Service</option></select></div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Customer *</label>
                     <div class="flex gap-2">
-                        <select id="customerSelect" name="customer_id" required class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none">
+                        <select id="customerSelect" name="customer_id" required class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none">
                             <option value="">Select...</option>
                             @foreach($customers as $c)
                             <option value="{{ $c->id }}">{{ $c->name }} - {{ $c->email }}</option>
                             @endforeach
                         </select>
-                        <button type="button" onclick="openCustomerModal()" class="px-3 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-all flex items-center gap-1" title="Add New Customer">
+                        <button type="button" onclick="openCustomerModal()" class="px-3 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-all flex items-center gap-1" title="Add New Customer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         </button>
                     </div>
                 </div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Warehouse</label><select name="warehouse_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"><option value="">None</option>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Warehouse</label><select name="warehouse_id" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"><option value="">None</option>
         @foreach($warehouses as $w)
         <option value="{{ $w->id }}">{{ $w->name }}</option>
         @endforeach
         </select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Payment Terms</label><input name="payment_terms" placeholder="e.g., Net 30" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Payment Terms</label><input name="payment_terms" placeholder="e.g., Net 30" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
             </div>
             <div class="mt-4">
                 <label class="block text-xs font-medium text-gray-600 mb-2">Bank Accounts (select one or more for payment)</label>
                 <div class="grid grid-cols-2 lg:grid-cols-3 gap-2" id="bankAccountsCheckboxes">
                     @foreach($bankAccounts as $ba)
                     <label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:border-emerald-300 cursor-pointer transition-colors has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50">
-                        <input type="checkbox" name="bank_account_ids[]" value="{{ $ba->id }}" class="rounded text-emerald-600 focus:ring-emerald-500">
+                        <input type="checkbox" name="bank_account_ids[]" value="{{ $ba->id }}" class="rounded text-emerald-600 focus:ring-gray-300">
                         <div><span class="text-xs font-medium text-gray-900">{{ $ba->account_name }}</span><p class="text-[10px] text-gray-400">{{ $ba->bank_name }} - {{ $ba->account_number }}</p></div>
                     </label>
                     @endforeach
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl border p-6">
+        <div class="bg-white rounded-md border p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold text-gray-900">Invoice Items</h3>
-                <button type="button" onclick="addRow()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700">+ Add Item</button>
+                <button type="button" onclick="addRow()" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700">+ Add Item</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm" id="itemsTable">
@@ -63,11 +63,11 @@
                     </tr></thead>
                     <tbody id="itemsBody">
                         <tr class="border-t border-gray-100">
-                            <td class="px-3 py-2"><input name="items[0][product_name]" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-                            <td class="px-3 py-2"><input name="items[0][quantity]" type="number" step="0.01" value="1" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-                            <td class="px-3 py-2"><input name="items[0][unit_price]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-                            <td class="px-3 py-2"><input name="items[0][discount_amount]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-                            <td class="px-3 py-2"><input name="items[0][tax_percentage]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
+                            <td class="px-3 py-2"><input name="items[0][product_name]" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+                            <td class="px-3 py-2"><input name="items[0][quantity]" type="number" step="0.01" value="1" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+                            <td class="px-3 py-2"><input name="items[0][unit_price]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+                            <td class="px-3 py-2"><input name="items[0][discount_amount]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+                            <td class="px-3 py-2"><input name="items[0][tax_percentage]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
                             <td class="px-3 py-2 text-xs font-semibold text-gray-900" id="rowTotal-0">TZS 0</td>
                             <td class="px-3 py-2"><button type="button" onclick="removeRow(this)" class="text-red-400 hover:text-red-600 text-xs">&times;</button></td>
                         </tr>
@@ -87,23 +87,23 @@
             <input type="hidden" name="discount_amount" id="discountInput" value="0">
             <input type="hidden" name="total_amount" id="totalInput" value="0">
         </div>
-        <div class="bg-white rounded-xl border p-6 space-y-4">
+        <div class="bg-white rounded-md border p-6 space-y-4">
             <div>
                 <label class="block text-xs font-medium text-gray-600 mb-1">Notes</label>
-                <textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea>
+                <textarea name="notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></textarea>
             </div>
             <div>
                 <div class="flex items-center justify-between mb-1">
                     <label class="block text-xs font-medium text-gray-600">Terms & Conditions</label>
-                    <button type="button" onclick="setDefaultTerms()" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-medium">Load Default Terms</button>
+                    <button type="button" onclick="setDefaultTerms()" class="text-[10px] text-gray-600 hover:text-gray-900 font-medium">Load Default Terms</button>
                 </div>
-                <textarea id="termsField" name="terms_and_conditions" rows="4" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none"></textarea>
+                <textarea id="termsField" name="terms_and_conditions" rows="4" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></textarea>
                 <p class="text-[10px] text-gray-400 mt-1">Click “Load Default Terms” to auto-fill standard terms.</p>
             </div>
         </div>
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.sales-invoices.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</a>
-            <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Create Invoice</button>
+            <button type="submit" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Create Invoice</button>
         </div>
     </form>
 </div>
@@ -113,11 +113,11 @@ function addRow() {
     const tbody = document.getElementById('itemsBody');
     const tr = document.createElement('tr');
     tr.className = 'border-t border-gray-100';
-    tr.innerHTML = `<td class="px-3 py-2"><input name="items[${rowIdx}][product_name]" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-        <td class="px-3 py-2"><input name="items[${rowIdx}][quantity]" type="number" step="0.01" value="1" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-        <td class="px-3 py-2"><input name="items[${rowIdx}][unit_price]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-        <td class="px-3 py-2"><input name="items[${rowIdx}][discount_amount]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
-        <td class="px-3 py-2"><input name="items[${rowIdx}][tax_percentage]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-emerald-500 outline-none"></td>
+    tr.innerHTML = `<td class="px-3 py-2"><input name="items[${rowIdx}][product_name]" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+        <td class="px-3 py-2"><input name="items[${rowIdx}][quantity]" type="number" step="0.01" value="1" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+        <td class="px-3 py-2"><input name="items[${rowIdx}][unit_price]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+        <td class="px-3 py-2"><input name="items[${rowIdx}][discount_amount]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
+        <td class="px-3 py-2"><input name="items[${rowIdx}][tax_percentage]" type="number" step="0.01" value="0" oninput="calcRow(this)" class="w-full px-2 py-1.5 rounded border border-gray-200 text-xs focus:border-gray-400 outline-none"></td>
         <td class="px-3 py-2 text-xs font-semibold text-gray-900" id="rowTotal-${rowIdx}">TZS 0</td>
         <td class="px-3 py-2"><button type="button" onclick="removeRow(this)" class="text-red-400 hover:text-red-600 text-xs">&times;</button></td>`;
     tbody.appendChild(tr);
@@ -157,7 +157,7 @@ function setDefaultTerms() {
 }
 </script>
 <div id="customerModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-xl max-w-md w-full">
+    <div class="bg-white rounded-md shadow-xl max-w-md w-full">
         <div class="flex items-center justify-between px-6 py-4 border-b">
             <h3 class="text-sm font-bold text-gray-900">Add New Customer</h3>
             <button type="button" onclick="closeCustomerModal()" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
@@ -165,15 +165,15 @@ function setDefaultTerms() {
         <form id="customerForm" class="p-6 space-y-4">
             @csrf
             <div class="grid grid-cols-2 gap-4">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">First Name *</label><input name="first_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Last Name</label><input name="last_name" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">First Name *</label><input name="first_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Last Name</label><input name="last_name" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
             </div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Email</label><input name="email" type="email" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Phone</label><input name="phone" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Company</label><input name="company" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Email</label><input name="email" type="email" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Phone</label><input name="phone" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
+            <div><label class="block text-xs font-medium text-gray-600 mb-1">Company</label><input name="company" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 outline-none"></div>
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="closeCustomerModal()" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700">Save Customer</button>
+                <button type="submit" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Save Customer</button>
             </div>
         </form>
     </div>

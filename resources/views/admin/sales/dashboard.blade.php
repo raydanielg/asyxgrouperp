@@ -5,22 +5,22 @@
 
 {{-- Stats Cards --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-    <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl p-5 text-white shadow-lg">
+    <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-md p-5 text-white shadow-lg">
         <div class="flex items-center justify-between mb-2"><div class="p-2 bg-white/20 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div></div>
         <p class="text-3xl font-bold">{{ $stats['totalProposals'] }}</p>
         <p class="text-emerald-100 text-xs mt-1">Total Proposals</p>
     </div>
-    <div class="bg-gradient-to-br from-sky-500 to-sky-700 rounded-xl p-5 text-white shadow-lg">
+    <div class="bg-gradient-to-br from-sky-500 to-sky-700 rounded-md p-5 text-white shadow-lg">
         <div class="flex items-center justify-between mb-2"><div class="p-2 bg-white/20 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div></div>
         <p class="text-3xl font-bold">{{ $stats['totalInvoices'] }}</p>
         <p class="text-sky-100 text-xs mt-1">Total Invoices</p>
     </div>
-    <div class="bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl p-5 text-white shadow-lg">
+    <div class="bg-gradient-to-br from-amber-500 to-amber-700 rounded-md p-5 text-white shadow-lg">
         <div class="flex items-center justify-between mb-2"><div class="p-2 bg-white/20 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div></div>
         <p class="text-2xl font-bold">TZS {{ number_format($stats['totalRevenue']) }}</p>
         <p class="text-amber-100 text-xs mt-1">Total Revenue</p>
     </div>
-    <div class="bg-gradient-to-br from-red-500 to-red-700 rounded-xl p-5 text-white shadow-lg">
+    <div class="bg-gradient-to-br from-red-500 to-red-700 rounded-md p-5 text-white shadow-lg">
         <div class="flex items-center justify-between mb-2"><div class="p-2 bg-white/20 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div></div>
         <p class="text-2xl font-bold">TZS {{ number_format($stats['totalOutstanding']) }}</p>
         <p class="text-red-100 text-xs mt-1">Outstanding Balance</p>
@@ -28,10 +28,10 @@
 </div>
 
 {{-- Quick Actions --}}
-<div class="bg-white rounded-xl border p-5 mb-6">
+<div class="bg-white rounded-md border p-5 mb-6">
     <h3 class="text-sm font-bold text-gray-900 mb-3">Quick Actions</h3>
     <div class="flex flex-wrap gap-3">
-        <a href="{{ route('admin.sales-proposals.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm">
+        <a href="{{ route('admin.sales-proposals.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             New Quotation
         </a>
@@ -52,10 +52,10 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     {{-- Recent Proposals --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Quotations</h3>
-            <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs text-emerald-600 hover:text-emerald-700">View All →</a>
+            <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs text-gray-600 hover:text-gray-900">View All →</a>
         </div>
         <div class="divide-y divide-gray-100">
         @forelse($recentProposals as $p)
@@ -72,7 +72,7 @@
     </div>
 
     {{-- Recent Invoices --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div class="bg-white rounded-md border overflow-hidden">
         <div class="px-5 py-4 border-b flex items-center justify-between">
             <h3 class="text-sm font-bold text-gray-900">Recent Invoices</h3>
             <a href="{{ route('admin.sales-invoices.index') }}" class="text-xs text-sky-600 hover:text-sky-700">View All →</a>

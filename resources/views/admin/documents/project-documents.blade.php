@@ -13,22 +13,22 @@
 @section('content')
 <div class="space-y-6">
     {{-- Project Header --}}
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100">
         <h2 class="text-lg font-bold text-gray-900">{{ $project->title }}</h2>
         <p class="text-sm text-gray-500 mt-1">Project #: {{ $project->project_number }} - All documents linked to this project</p>
     </div>
 
     {{-- Stats --}}
     <div class="grid grid-cols-3 gap-4">
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Documents</p>
             <p class="text-2xl font-bold text-gray-900 mt-1">{{ $stats['total'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Signed</p>
             <p class="text-2xl font-bold text-emerald-600 mt-1">{{ $stats['signed'] }}</p>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
             <p class="text-[10px] text-gray-400 uppercase font-semibold">Pending Signature</p>
             <p class="text-2xl font-bold text-amber-600 mt-1">{{ $stats['pending'] }}</p>
         </div>
@@ -37,7 +37,7 @@
     {{-- Category Cards --}}
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         @foreach($categories as $slug => $cat)
-        <div class="bg-white rounded-xl border border-gray-100 p-3">
+        <div class="bg-white rounded-md border border-gray-100 p-3">
             <div class="flex items-center gap-2 mb-2">
                 <div class="w-8 h-8 rounded-lg bg-{{ $cat['color'] }}-50 flex items-center justify-center">
                     <svg class="w-4 h-4 text-{{ $cat['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $cat['icon'] }}"/></svg>
@@ -50,7 +50,7 @@
     </div>
 
     {{-- Documents Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
