@@ -2183,7 +2183,7 @@ class ErpExtendedController extends Controller
             'isRemoteEnabled' => true,
         ]);
 
-        return $pdf->download('deal-' . $deal->deal_number . '.pdf');
+        return $pdf->stream('deal-' . $deal->deal_number . '.pdf');
     }
 
     public function projectPdf(Project $project)
