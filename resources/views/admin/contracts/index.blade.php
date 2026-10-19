@@ -70,7 +70,7 @@
                         <div class="flex items-center justify-end gap-1">
                             <a href="{{ route('admin.contracts.show', $c) }}" class="px-2 py-1 text-[10px] font-semibold text-gray-600 hover:text-gray-900 border border-emerald-200 rounded hover:bg-emerald-50">View</a>
                             <button onclick="openEditContract({{ $c->id }})" class="px-2 py-1 text-[10px] font-semibold text-sky-600 hover:text-sky-700 border border-sky-200 rounded hover:bg-sky-50">Edit</button>
-                            <form method="POST" action="{{ route('admin.contracts.destroy', $c) }}" class="inline" onsubmit="return confirm('Delete this contract?')">
+                            <form method="POST" action="{{ route('admin.contracts.destroy', $c) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this contract?'})">
                                 @csrf @method('DELETE')
                                 <button class="px-2 py-1 text-[10px] font-semibold text-rose-600 hover:text-rose-700 border border-rose-200 rounded hover:bg-rose-50">Delete</button>
                             </form>

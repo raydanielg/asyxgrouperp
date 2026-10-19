@@ -24,7 +24,7 @@
             <td class="px-5 py-3 flex gap-2">
                 @if($req->status === 'pending')
                 <form method="POST" action="{{ route('admin.approvals.approve', $req) }}">@csrf<button class="text-xs text-gray-600 hover:text-gray-900">Approve</button></form>
-                <form method="POST" action="{{ route('admin.approvals.reject', $req) }}" onsubmit="return confirm('Reject?')">@csrf<input type="hidden" name="rejection_reason" value="Rejected"><button class="text-xs text-red-500 hover:text-red-700">Reject</button></form>
+                <form method="POST" action="{{ route('admin.approvals.reject', $req) }}" onsubmit="return confirmAction(this, {title: 'Reject?'})">@csrf<input type="hidden" name="rejection_reason" value="Rejected"><button class="text-xs text-red-500 hover:text-red-700">Reject</button></form>
                 @endif
             </td>
         </tr>

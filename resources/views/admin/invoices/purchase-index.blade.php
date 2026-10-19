@@ -41,7 +41,7 @@
         @if($invoice->status === 'draft')
         <form method="POST" action="{{ route('admin.purchase-invoices.post', $invoice) }}" class="inline">@csrf<button class="text-sky-600 hover:text-sky-700 text-xs">Post</button></form>
         @endif
-                        <form method="POST" action="{{ route('admin.purchase-invoices.destroy', $invoice) }}" class="inline" onsubmit="return confirm('Delete?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
+                        <form method="POST" action="{{ route('admin.purchase-invoices.destroy', $invoice) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete?'})">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
                     </td>
                 </tr>
         @empty

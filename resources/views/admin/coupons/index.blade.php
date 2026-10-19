@@ -41,7 +41,7 @@
                     </td>
                     <td class="px-5 py-3 flex items-center gap-2">
                         <a href="{{ route('admin.coupons.edit', $coupon) }}" class="text-gray-600 hover:text-gray-900 text-xs">Edit</a>
-                        <form method="POST" action="{{ route('admin.coupons.destroy', $coupon) }}" class="inline" onsubmit="return confirm('Delete this coupon?')">
+                        <form method="POST" action="{{ route('admin.coupons.destroy', $coupon) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this coupon?'})">
                             @csrf @method('DELETE')
                             <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>
                         </form>

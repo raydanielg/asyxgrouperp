@@ -30,7 +30,7 @@
             <td class="px-5 py-2 text-xs">Level {{ $req->current_level }}</td>
             <td class="px-5 py-2 flex gap-2">
                 <form method="POST" action="{{ route('admin.approvals.approve', $req) }}">@csrf<button class="text-xs text-gray-600 hover:text-gray-900">Approve</button></form>
-                <form method="POST" action="{{ route('admin.approvals.reject', $req) }}" onsubmit="return confirm('Reject this request?')">@csrf<input type="hidden" name="rejection_reason" value="Rejected by approver"><button class="text-xs text-red-500 hover:text-red-700">Reject</button></form>
+                <form method="POST" action="{{ route('admin.approvals.reject', $req) }}" onsubmit="return confirmAction(this, {title: 'Reject this request?'})">@csrf<input type="hidden" name="rejection_reason" value="Rejected by approver"><button class="text-xs text-red-500 hover:text-red-700">Reject</button></form>
             </td>
         </tr>
         @endforeach
@@ -52,7 +52,7 @@
             <td class="px-5 py-3">@if($wf->is_active)<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>@else<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-50 text-gray-500 border border-gray-100">Inactive</span>@endif</td>
             <td class="px-5 py-3 flex items-center gap-3">
                 <a href="{{ route('admin.approvals.show', $wf) }}" class="text-gray-600 hover:text-gray-900 text-xs">View</a>
-                <form method="POST" action="{{ route('admin.approvals.destroy', $wf) }}" onsubmit="return confirm('Delete this workflow?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
+                <form method="POST" action="{{ route('admin.approvals.destroy', $wf) }}" onsubmit="return confirmAction(this, {title: 'Delete this workflow?'})">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
             </td>
         </tr>
         @empty

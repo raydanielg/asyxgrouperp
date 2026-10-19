@@ -58,7 +58,7 @@
         <div class="px-5 py-3 border-b bg-gray-50/50"><h3 class="text-sm font-bold text-gray-800">Actions</h3></div>
         <div class="p-4 space-y-3">
             <button onclick="document.getElementById('editContractModal').classList.remove('hidden')" class="w-full px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700">Edit Contract</button>
-            <form method="POST" action="{{ route('admin.contracts.destroy', $contract) }}" onsubmit="return confirm('Delete this contract?')">
+            <form method="POST" action="{{ route('admin.contracts.destroy', $contract) }}" onsubmit="return confirmAction(this, {title: 'Delete this contract?'})">
                 @csrf @method('DELETE')
                 <button class="w-full px-4 py-2 border border-rose-200 text-rose-600 text-sm font-medium rounded-lg hover:bg-rose-50">Delete</button>
             </form>

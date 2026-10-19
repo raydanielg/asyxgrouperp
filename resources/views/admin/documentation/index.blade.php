@@ -96,7 +96,7 @@
                         <a href="{{ route('admin.documentation.edit', $pg->id) }}" class="text-xs text-gray-600 hover:text-gray-900 font-medium mr-2">Edit</a>
                         <a href="{{ route('admin.documentation.export', $pg->id) }}" class="text-xs text-blue-600 hover:text-blue-700 font-medium mr-2">Export</a>
                         <button type="button" onclick="copyDocMd('{{ addslashes($pg->title) }}', `{{ addslashes($pg->content) }}`, '{{ $pg->slug }}', '{{ $pg->category }}')" class="text-xs text-gray-500 hover:text-gray-700 font-medium mr-2">Copy</button>
-                        <form action="{{ route('admin.documentation.destroy', $pg->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this page?')">
+                        <form action="{{ route('admin.documentation.destroy', $pg->id) }}" method="POST" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this page?'})">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-xs text-red-600 hover:text-red-700 font-medium">Delete</button>

@@ -27,7 +27,7 @@
             <td class="px-5 py-3 text-xs text-gray-400">{{ $user->created_at->format('d M Y') }}</td>
             <td class="px-5 py-3 flex items-center gap-3">
                 <a href="{{ route('admin.users-edit', $user) }}" class="text-gray-600 hover:text-gray-900 text-xs">Edit</a>
-        @if($user->id !== auth()->id())<form method="POST" action="{{ route('admin.users-destroy', $user) }}" class="inline" onsubmit="return confirm('Delete this user?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
+        @if($user->id !== auth()->id())<form method="POST" action="{{ route('admin.users-destroy', $user) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this user?'})">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
         @endif
             </td>
         

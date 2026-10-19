@@ -37,12 +37,12 @@
                     </td>
                     <td class="px-5 py-3 flex items-center gap-2">
                         @if(($transfer->status ?? 'pending') !== 'completed')
-                        <form method="POST" action="{{ route('admin.transfers.approve', $transfer) }}" class="inline" onsubmit="return confirm('Approve this transfer?')">
+                        <form method="POST" action="{{ route('admin.transfers.approve', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve this transfer?'})">
                             @csrf @method('PATCH')
                             <button class="text-gray-600 hover:text-gray-900 text-xs">Approve</button>
                         </form>
                         @endif
-                        <form method="POST" action="{{ route('admin.transfers.destroy', $transfer) }}" class="inline" onsubmit="return confirm('Delete this transfer?')">
+                        <form method="POST" action="{{ route('admin.transfers.destroy', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this transfer?'})">
                             @csrf @method('DELETE')
                             <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>
                         </form>

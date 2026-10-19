@@ -34,9 +34,9 @@
         @endif
         <div class="mt-4 flex gap-2">
             @if($intercompany->status === 'completed')
-            <form method="POST" action="{{ route('admin.intercompany.eliminate', $intercompany) }}" onsubmit="return confirm('Mark as eliminated for consolidation?')">@csrf<button class="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-700">Eliminate</button></form>
+            <form method="POST" action="{{ route('admin.intercompany.eliminate', $intercompany) }}" onsubmit="return confirmAction(this, {title: 'Mark as eliminated for consolidation?'})">@csrf<button class="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-700">Eliminate</button></form>
             @endif
-            <form method="POST" action="{{ route('admin.intercompany.destroy', $intercompany) }}" onsubmit="return confirm('Delete this transaction?')">@csrf @method('DELETE')<button class="px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded-lg hover:bg-red-700">Delete</button></form>
+            <form method="POST" action="{{ route('admin.intercompany.destroy', $intercompany) }}" onsubmit="return confirmAction(this, {title: 'Delete this transaction?'})">@csrf @method('DELETE')<button class="px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded-lg hover:bg-red-700">Delete</button></form>
         </div>
     </div>
 

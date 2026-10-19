@@ -39,7 +39,7 @@
                     </td>
                     <td class="px-5 py-3 flex items-center gap-2">
                         <a href="{{ route('admin.warehouses.edit', $warehouse) }}" class="text-gray-600 hover:text-gray-900 text-xs">Edit</a>
-                        <form method="POST" action="{{ route('admin.warehouses.destroy', $warehouse) }}" class="inline" onsubmit="return confirm('Delete this warehouse?')">
+                        <form method="POST" action="{{ route('admin.warehouses.destroy', $warehouse) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this warehouse?'})">
                             @csrf @method('DELETE')
                             <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>
                         </form>

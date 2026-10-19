@@ -140,7 +140,7 @@
                 </div>
 
                 @if($jobCard->payment_status !== 'approved')
-                <form method="POST" action="{{ route('admin.job-cards.approve-payment', $jobCard) }}" onsubmit="return confirm('Approve payment for this job card?')">@csrf
+                <form method="POST" action="{{ route('admin.job-cards.approve-payment', $jobCard) }}" onsubmit="return confirmAction(this, {title: 'Approve payment for this job card?'})">@csrf
                     <button type="submit" class="w-full px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors">Approve Payment</button>
                 </form>
                 @else
@@ -199,7 +199,7 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('admin.job-cards.destroy', $jobCard) }}" onsubmit="return confirm('Delete this job card?')">@csrf @method('DELETE')
+        <form method="POST" action="{{ route('admin.job-cards.destroy', $jobCard) }}" onsubmit="return confirmAction(this, {title: 'Delete this job card?'})">@csrf @method('DELETE')
             <button type="submit" class="w-full px-4 py-2 border border-red-200 text-red-600 text-sm rounded-lg hover:bg-red-50 transition-colors">Delete Job Card</button>
         </form>
     </div>

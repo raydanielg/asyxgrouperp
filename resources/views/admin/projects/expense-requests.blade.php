@@ -78,7 +78,7 @@
                                 @csrf
                                 <button class="px-2 py-1 text-[10px] font-semibold text-gray-600 hover:text-gray-900 border border-emerald-200 rounded hover:bg-emerald-50">Approve</button>
                             </form>
-                            <form method="POST" action="{{ route('admin.projects.expense-requests.reject', $req) }}" class="inline" onsubmit="return confirm('Reject this request?')">
+                            <form method="POST" action="{{ route('admin.projects.expense-requests.reject', $req) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Reject this request?'})">
                                 @csrf
                                 <button class="px-2 py-1 text-[10px] font-semibold text-rose-600 hover:text-rose-700 border border-rose-200 rounded hover:bg-rose-50">Reject</button>
                             </form>

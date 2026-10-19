@@ -23,7 +23,7 @@
             <span class="text-xs text-gray-400">{{ $category->tickets_count }} tickets</span>
         </div>
         <p class="text-xs text-gray-400 mb-3">{{ $category->description ?? 'No description' }}</p>
-        <form method="POST" action="{{ route('admin.helpdesk-categories.destroy', $category) }}" class="inline" onsubmit="return confirm('Delete this category?')">
+        <form method="POST" action="{{ route('admin.helpdesk-categories.destroy', $category) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this category?'})">
             @csrf @method('DELETE')
             <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>
         </form>

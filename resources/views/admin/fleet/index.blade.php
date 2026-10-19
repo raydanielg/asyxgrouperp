@@ -28,7 +28,7 @@
             <td class="px-5 py-3 flex items-center gap-3">
                 <a href="{{ route('admin.fleet.show', $vehicle) }}" class="text-gray-600 hover:text-gray-900 text-xs">View</a>
                 <a href="{{ route('admin.fleet.edit', $vehicle) }}" class="text-gray-600 hover:text-gray-900 text-xs">Edit</a>
-                <form method="POST" action="{{ route('admin.fleet.destroy', $vehicle) }}" onsubmit="return confirm('Delete this vehicle?')">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
+                <form method="POST" action="{{ route('admin.fleet.destroy', $vehicle) }}" onsubmit="return confirmAction(this, {title: 'Delete this vehicle?'})">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
             </td>
         </tr>
         @empty
