@@ -8,6 +8,8 @@
   $editableRoles = $roles->where('editable', true)->count();
 @endphp
 
+<p class="text-xs text-gray-400 mb-3">Role access is defined in code (<code class="bg-gray-100 px-1 rounded text-[10px]">app/Support/RolePermissions.php</code>) — edit that file to change actual access.</p>
+
 <div class="bg-white rounded-md border border-gray-200 px-5 py-4 mb-4 flex items-center justify-between flex-wrap gap-4">
   <div class="flex items-center gap-6">
     <div><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Roles</p><p class="text-lg font-bold text-gray-900">{{ number_format($totalRoles) }}</p></div>
