@@ -2,9 +2,9 @@
 @section('title', $vehicle->vehicle_number . ' - ' . config('app.name'))
 @section('page_title', $vehicle->vehicle_number)
 @section('content')
-<div class="mb-4"><a href="{{ route('admin.fleet.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to Fleet</a></div>
+<div class="mb-4"><a href="{{ route('admin.fleet.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Fleet</a></div>
 @if(session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
+<div class="bg-gray-50 border border-gray-200 rounded-md px-5 py-3 mb-4 text-xs text-gray-700">{{ session('success') }}</div>
 @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="bg-white rounded-md border p-6">
@@ -20,7 +20,7 @@
             <div class="flex justify-between"><dt class="text-gray-400">Assigned To</dt><dd class="text-gray-700">{{ $vehicle->assignedTo?->name ?? 'Unassigned' }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Insurance</dt><dd class="text-gray-700">{{ $vehicle->insurance_expiry?->format('d M Y') ?? '—' }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400">Reg. Expiry</dt><dd class="text-gray-700">{{ $vehicle->registration_expiry?->format('d M Y') ?? '—' }}</dd></div>
-            <div class="flex justify-between"><dt class="text-gray-400">Status</dt><dd><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $vehicle->status === 'active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-amber-50 text-amber-700 border border-amber-100' }}">{{ $vehicle->status }}</span></dd></div>
+            <div class="flex justify-between"><dt class="text-gray-400">Status</dt><dd><span class="inline-flex items-center gap-1.5 text-xs text-gray-600 capitalize"><span style="width:6px;height:6px;border-radius:99px;background:{{ $vehicle->status === 'active' ? '#10b981' : ($vehicle->status === 'maintenance' ? '#f59e0b' : '#9ca3af') }}"></span>{{ $vehicle->status }}</span></dd></div>
         </dl>
     </div>
     <div class="lg:col-span-2 space-y-6">

@@ -2,12 +2,12 @@
 @section('title', $fixedAsset->asset_number . ' - ' . config('app.name'))
 @section('page_title', $fixedAsset->name)
 @section('content')
-<div class="mb-4"><a href="{{ route('admin.fixed-assets.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; Back to Assets</a></div>
+<div class="mb-4"><a href="{{ route('admin.fixed-assets.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Assets</a></div>
 @if(session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
+<div class="bg-gray-50 border border-gray-200 rounded-md px-5 py-3 mb-4 text-xs text-gray-700">{{ session('success') }}</div>
 @endif
 @if(session('error'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-100">{{ session('error') }}</div>
+<div class="bg-red-50 border border-red-200 rounded-md px-5 py-3 mb-4 text-xs text-red-600">{{ session('error') }}</div>
 @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="bg-white rounded-md border p-6">
@@ -24,7 +24,7 @@
             <div class="flex justify-between"><dt class="text-gray-400">Monthly Dep.</dt><dd class="text-gray-700">{{ number_format($fixedAsset->calculateMonthlyDepreciation(), 0) }}</dd></div>
             <div class="flex justify-between border-t pt-2"><dt class="text-gray-400">Acc. Dep.</dt><dd class="text-red-600 font-medium">{{ number_format($fixedAsset->accumulated_depreciation, 0) }}</dd></div>
             <div class="flex justify-between"><dt class="text-gray-400 font-bold">Net Book Value</dt><dd class="text-emerald-600 font-bold">{{ number_format($fixedAsset->net_book_value, 0) }}</dd></div>
-            <div class="flex justify-between"><dt class="text-gray-400">Status</dt><dd><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $fixedAsset->status === 'in_use' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-gray-50 text-gray-500 border border-gray-100') }}">{{ $fixedAsset->status }}</span></dd></div>
+            <div class="flex justify-between"><dt class="text-gray-400">Status</dt><dd><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $fixedAsset->status === 'in_use' ? '#10b981' : ($fixedAsset->status === 'disposed' ? '#9ca3af' : '#f59e0b') }}"></span>{{ ucfirst(str_replace('_', ' ', $fixedAsset->status)) }}</span></dd></div>
         </dl>
         @if($fixedAsset->status === 'in_use')
         <div class="mt-4 flex gap-2">
