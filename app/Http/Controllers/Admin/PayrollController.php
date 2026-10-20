@@ -61,12 +61,12 @@ class PayrollController extends Controller
             'allowances' => 'nullable|numeric|min:0',
             'deductions' => 'nullable|numeric|min:0',
             'net_salary' => 'required|numeric|min:0',
-            'status' => 'nullable|string|in:pending,paid,cancelled',
         ]);
 
         $data['allowances'] = $data['allowances'] ?? 0;
         $data['deductions'] = $data['deductions'] ?? 0;
-        $data['status'] = $data['status'] ?? 'pending';
+        // Client status is never trusted — new payrolls are always pending
+        $data['status'] = 'pending';
         $data['created_by'] = auth()->id();
         $data['company_id'] = auth()->user()->company_id;
 
@@ -77,19 +77,35 @@ class PayrollController extends Controller
 
     public function update(Request $request, Payroll $payroll)
     {
+        // Paid payrolls are immutable — corrections go through a new entry
+        abort_if($payroll->status === 'paid', 403, 'Paid payrolls cannot be edited.');
+
         $data = $request->validate([
             'basic_salary' => 'required|numeric|min:0',
             'allowances' => 'nullable|numeric|min:0',
             'deductions' => 'nullable|numeric|min:0',
             'net_salary' => 'required|numeric|min:0',
-            'status' => 'nullable|string|in:pending,paid,cancelled',
+            'status' => 'nullable|string|in:pending,cancelled',
         ]);
 
         $data['allowances'] = $data['allowances'] ?? 0;
         $data['deductions'] = $data['deductions'] ?? 0;
-        $data['status'] = $data['status'] ?? 'pending';
+        // 'paid' is never settable from the client — only via markPaid
+        $data['status'] = $data['status'] ?? $payroll->status;
+
+        // Material change → invalidate any previous approval
+        $materialChanged =
+            (float)$payroll->basic_salary !== (float)$data['basic_salary'] ||
+            (float)$payroll->net_salary !== (float)$data['net_salary'] ||
+            (float)$payroll->deductions !== (float)$data['deductions'];
 
         $payroll->update($data);
+
+        if ($materialChanged) {
+            \App\Services\ApprovalService::invalidateAndResubmit(
+                'payroll', $payroll, "Payroll {$payroll->payroll_number}", $payroll->net_salary, auth()->user()
+            );
+        }
 
         return back()->with('success', 'Payroll updated successfully.');
     }
