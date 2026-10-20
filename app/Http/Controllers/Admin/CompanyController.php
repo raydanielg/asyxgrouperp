@@ -308,6 +308,10 @@ class CompanyController extends Controller
         $company = $request->get('company', 'all');
 
         if ($company === 'all') {
+            if (!$user->isSuperAdmin()) {
+                session(['switched_company_id' => $user->company_id]);
+                return redirect()->back()->with('error', 'You do not have access to the group view.');
+            }
             session(['switched_company_id' => null]);
             return redirect()->back()->with('success', 'Group view enabled.');
         }
@@ -319,9 +323,12 @@ class CompanyController extends Controller
             return redirect()->back()->with('error', 'Company not found or inactive.');
         }
 
-        // Regular users can only switch to their own company
-        if (!$user->isAdmin() && !$user->isSuperAdmin() && $user->company_id !== $companyId) {
+        // Tenant admins and regular users can only switch to their own company
+        if (!$user->isSuperAdmin() && !$user->hasPermission('switch-companies') && $user->company_id !== $companyId) {
             return redirect()->back()->with('error', 'You do not have access to that company.');
+        }
+        if ($user->isAdmin() && !$user->isSuperAdmin()) {
+            return redirect()->back()->with('error', 'Company admins cannot switch companies.');
         }
 
         session(['switched_company_id' => $companyId]);
