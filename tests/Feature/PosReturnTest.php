@@ -104,7 +104,8 @@ class PosReturnTest extends TestCase
 
         $this->assertEquals(43, $this->stockAt($product, $wh));
         $this->assertEquals('processed', $return->fresh()->status);
-        $this->assertEquals('processed', $return->fresh()->refund_status);
+        // Internal record — awaiting manual reconciliation, NOT externally confirmed
+        $this->assertEquals('awaiting_reconciliation', $return->fresh()->refund_status);
         $this->assertDatabaseHas('stock_movements', [
             'product_id' => $product->id, 'type' => 'in', 'quantity' => 3,
         ]);
