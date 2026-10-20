@@ -181,7 +181,7 @@ class ErpController extends Controller
                 // Reserve the full quantity at source — locks + revalidates
                 if ($locked->product_id) {
                     app(\App\Services\InventoryService::class)->reserveStock(
-                        $locked->product_id, $locked->from_warehouse, $locked->quantity
+                        $locked->product_id, $locked->from_warehouse, $locked->quantity, $locked->id
                     );
                 }
 
@@ -227,7 +227,7 @@ class ErpController extends Controller
                 if ($locked->product_id) {
                     $inv = app(\App\Services\InventoryService::class);
                     // Consume reserved stock at source (decrements reserved + on-hand)
-                    $inv->consumeReserved($locked->product_id, $locked->from_warehouse, $qty);
+                    $inv->consumeReserved($locked->product_id, $locked->from_warehouse, $qty, $locked->id);
                     // Add to destination (its own lock + movement)
                     $inv->addStock(
                         $locked->product_id, $locked->to_warehouse, $qty,
@@ -282,7 +282,7 @@ class ErpController extends Controller
             $remaining = $locked->quantity - $locked->transferred_quantity;
             if ($locked->product_id && $remaining > 0) {
                 app(\App\Services\InventoryService::class)->releaseReservation(
-                    $locked->product_id, $locked->from_warehouse, $remaining
+                    $locked->product_id, $locked->from_warehouse, $remaining, $locked->id
                 );
             }
 

@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Warehouse;
 use App\Models\ProductWarehouseStock;
 use App\Models\StockMovement;
+use App\Models\StockReservation;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -167,14 +168,17 @@ class InventoryService
      * Reserve stock for an eligible operation — locks the row and
      * revalidates availability inside the transaction so concurrent
      * reservations cannot exceed available stock.
+     * When a source record (transfer) is given, a traceable reservation
+     * record is created; duplicate active holds for the same source are
+     * rejected so retries cannot double-reserve.
      */
-    public function reserveStock(int $productId, int $warehouseId, float $quantity): ProductWarehouseStock
+    public function reserveStock(int $productId, int $warehouseId, float $quantity, ?int $transferId = null): ProductWarehouseStock
     {
         if ($quantity <= 0) {
             throw new RuntimeException('Reserve quantity must be greater than zero.');
         }
 
-        return DB::transaction(function () use ($productId, $warehouseId, $quantity) {
+        return DB::transaction(function () use ($productId, $warehouseId, $quantity, $transferId) {
             $stock = ProductWarehouseStock::where('product_id', $productId)
                 ->where('warehouse_id', $warehouseId)
                 ->lockForUpdate()
@@ -185,6 +189,24 @@ class InventoryService
                 throw new RuntimeException("Insufficient available stock. Available: {$available}, requested: {$quantity}.");
             }
 
+            if ($transferId) {
+                // Prevent duplicate active holds for the same source on retries
+                $exists = StockReservation::where('transfer_id', $transferId)
+                    ->where('status', 'active')->lockForUpdate()->exists();
+                if ($exists) {
+                    throw new RuntimeException('An active reservation already exists for this transfer.');
+                }
+                StockReservation::create([
+                    'company_id' => $stock->warehouse?->company_id ?? auth()->user()?->company_id,
+                    'product_id' => $productId,
+                    'warehouse_id' => $warehouseId,
+                    'transfer_id' => $transferId,
+                    'quantity' => $quantity,
+                    'status' => 'active',
+                    'created_by' => auth()->id(),
+                ]);
+            }
+
             $stock->increment('reserved_quantity', $quantity);
             return $stock->fresh();
         });
@@ -192,11 +214,12 @@ class InventoryService
 
     /**
      * Release a reservation — floored at zero so double-release can never
-     * create negative reservations.
+     * create negative reservations. Marks matching reservation records
+     * released (attribution preserved, history never deleted).
      */
-    public function releaseReservation(int $productId, int $warehouseId, float $quantity): ProductWarehouseStock
+    public function releaseReservation(int $productId, int $warehouseId, float $quantity, ?int $transferId = null): ProductWarehouseStock
     {
-        return DB::transaction(function () use ($productId, $warehouseId, $quantity) {
+        return DB::transaction(function () use ($productId, $warehouseId, $quantity, $transferId) {
             $stock = ProductWarehouseStock::where('product_id', $productId)
                 ->where('warehouse_id', $warehouseId)
                 ->lockForUpdate()
@@ -204,6 +227,13 @@ class InventoryService
 
             $newReserved = max(0, $stock->reserved_quantity - $quantity);
             $stock->update(['reserved_quantity' => $newReserved]);
+
+            // Mark matching active reservations released (attribution kept)
+            if ($transferId) {
+                StockReservation::where('transfer_id', $transferId)
+                    ->where('status', 'active')->lockForUpdate()
+                    ->update(['status' => 'released']);
+            }
 
             return $stock->fresh();
         });
@@ -216,7 +246,7 @@ class InventoryService
      * Returns the decremented stock row. Must be called inside the
      * caller's transaction.
      */
-    public function consumeReserved(int $productId, int $warehouseId, float $quantity): ProductWarehouseStock
+    public function consumeReserved(int $productId, int $warehouseId, float $quantity, ?int $transferId = null): ProductWarehouseStock
     {
         if ($quantity <= 0) {
             throw new RuntimeException('Consume quantity must be greater than zero.');
@@ -232,6 +262,19 @@ class InventoryService
         }
         if ($quantity > $stock->quantity + 0.0001) {
             throw new RuntimeException("Insufficient on-hand stock to consume {$quantity}.");
+        }
+
+        // Attribute consumption to the source reservation record
+        if ($transferId) {
+            $res = StockReservation::where('transfer_id', $transferId)
+                ->where('status', 'active')->lockForUpdate()->first();
+            if ($res) {
+                $newConsumed = min((float) $res->quantity, (float) $res->consumed_quantity + $quantity);
+                $res->update([
+                    'consumed_quantity' => $newConsumed,
+                    'status' => $newConsumed >= (float) $res->quantity ? 'consumed' : 'active',
+                ]);
+            }
         }
 
         $stock->decrement('reserved_quantity', $quantity);
