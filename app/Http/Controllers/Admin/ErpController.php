@@ -160,44 +160,136 @@ class ErpController extends Controller
         return back()->with('success', 'Transfer deleted.');
     }
 
+    /**
+     * Approve a transfer — reserves the full requested quantity at the
+     * source. Stock only moves on execute (supports partial execution).
+     */
     public function transferApprove(Transfer $transfer)
     {
         $user = auth()->user();
         abort_if($transfer->status === 'completed', 403, 'This transfer is already completed.');
-        abort_if($transfer->status === 'cancelled', 403, 'Cancelled transfers cannot be completed.');
+        abort_if($transfer->status === 'cancelled', 403, 'Cancelled transfers cannot be approved.');
+        abort_if($transfer->status === 'approved', 403, 'This transfer is already approved.');
         abort_if($transfer->created_by === $user->id || $transfer->creator_id === $user->id,
             403, 'You cannot approve a transfer you created.');
 
-        \Illuminate\Support\Facades\DB::transaction(function () use ($transfer, $user) {
-            // Lock + revalidate inside transaction — concurrent attempts can't double-execute
-            $locked = Transfer::lockForUpdate()->findOrFail($transfer->id);
-            abort_if($locked->status === 'completed', 403, 'This transfer is already completed.');
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($transfer, $user) {
+                $locked = Transfer::lockForUpdate()->findOrFail($transfer->id);
+                abort_if($locked->status !== 'pending', 403, 'This transfer is not pending.');
 
-            // Real stock movement — InventoryService locks stock rows and
-            // revalidates availability inside its own transaction
-            if ($locked->product_id) {
-                try {
-                    app(\App\Services\InventoryService::class)->transferStock(
-                        $locked->product_id,
-                        $locked->from_warehouse,
-                        $locked->to_warehouse,
-                        $locked->quantity,
-                        $user->id,
-                        "Transfer #{$locked->id}"
+                // Reserve the full quantity at source — locks + revalidates
+                if ($locked->product_id) {
+                    app(\App\Services\InventoryService::class)->reserveStock(
+                        $locked->product_id, $locked->from_warehouse, $locked->quantity
                     );
-                } catch (\Throwable $e) {
-                    abort(422, $e->getMessage());
                 }
+
+                $locked->update(['status' => 'approved', 'approved_by' => $user->id, 'approved_at' => now()]);
+                \App\Models\AuditLog::log('approve', 'stock_transfers', [
+                    'module_action' => 'transfer_approved',
+                    'new_values' => ['transfer' => $locked->id, 'product' => $locked->product_name, 'qty' => $locked->quantity],
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Transfer approved — stock reserved. Execute to move stock.');
+    }
+
+    /**
+     * Execute a transfer — moves stock (full or partial) from reserved
+     * source inventory to the destination. Idempotent: status recheck +
+     * outstanding cap inside a row lock.
+     */
+    public function transferExecute(Request $request, Transfer $transfer)
+    {
+        $user = auth()->user();
+        $validated = $request->validate(['quantity' => 'nullable|numeric|min:0.0001']);
+
+        abort_if($transfer->created_by === $user->id || $transfer->creator_id === $user->id,
+            403, 'You cannot execute a transfer you created.');
+
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($transfer, $user, $validated) {
+                $locked = Transfer::lockForUpdate()->findOrFail($transfer->id);
+                abort_if($locked->status === 'completed', 403, 'This transfer is already completed.');
+                abort_if($locked->status === 'cancelled', 403, 'Cancelled transfers cannot be executed.');
+                abort_if($locked->status !== 'approved' && $locked->status !== 'partially_transferred', 403, 'This transfer is not approved.');
+
+                $outstanding = $locked->quantity - $locked->transferred_quantity;
+                $qty = min($validated['quantity'] ?? $outstanding, $outstanding);
+                abort_if($qty <= 0, 403, 'Nothing left to transfer.');
+
+                if ($locked->product_id) {
+                    $inv = app(\App\Services\InventoryService::class);
+                    // Consume reserved stock at source (decrements reserved + on-hand)
+                    $inv->consumeReserved($locked->product_id, $locked->from_warehouse, $qty);
+                    // Add to destination (its own lock + movement)
+                    $inv->addStock(
+                        $locked->product_id, $locked->to_warehouse, $qty,
+                        "Transfer #{$locked->id} — in", $user->id
+                    );
+                    // Source movement record
+                    \App\Models\StockMovement::create([
+                        'product_id' => $locked->product_id,
+                        'warehouse_id' => $locked->from_warehouse,
+                        'type' => 'transfer_out',
+                        'quantity' => (int) $qty,
+                        'balance_after' => (int) \App\Models\ProductWarehouseStock::where('product_id', $locked->product_id)->where('warehouse_id', $locked->from_warehouse)->value('quantity'),
+                        'reference' => "Transfer #{$locked->id} — out",
+                        'created_by' => $user->id,
+                    ]);
+                }
+
+                $newTransferred = $locked->transferred_quantity + $qty;
+                $locked->update([
+                    'transferred_quantity' => $newTransferred,
+                    'status' => $newTransferred >= $locked->quantity ? 'completed' : 'partially_transferred',
+                ]);
+
+                \App\Models\AuditLog::log('execute', 'stock_transfers', [
+                    'module_action' => 'transfer_executed',
+                    'new_values' => ['transfer' => $locked->id, 'qty' => $qty, 'total_transferred' => $newTransferred],
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Transfer executed.');
+    }
+
+    /**
+     * Cancel a pending/approved transfer — releases the remaining
+     * reservation safely (floored, once).
+     */
+    public function transferCancel(Transfer $transfer)
+    {
+        $user = auth()->user();
+        abort_if(!in_array($transfer->status, ['pending', 'approved', 'partially_transferred']), 403, 'This transfer cannot be cancelled.');
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($transfer, $user) {
+            $locked = Transfer::lockForUpdate()->findOrFail($transfer->id);
+            abort_if(!in_array($locked->status, ['pending', 'approved', 'partially_transferred']), 403, 'This transfer cannot be cancelled.');
+
+            // Release the un-moved portion of the reservation
+            $remaining = $locked->quantity - $locked->transferred_quantity;
+            if ($locked->product_id && $remaining > 0) {
+                app(\App\Services\InventoryService::class)->releaseReservation(
+                    $locked->product_id, $locked->from_warehouse, $remaining
+                );
             }
 
-            $locked->approve($user);
-            \App\Models\AuditLog::log('approve', 'stock_transfers', [
-                'module_action' => 'transfer_approved',
-                'new_values' => ['transfer' => $locked->id, 'product' => $locked->product_name, 'qty' => $locked->quantity],
+            $locked->update(['status' => 'cancelled']);
+            \App\Models\AuditLog::log('update', 'stock_transfers', [
+                'module_action' => 'transfer_cancelled',
+                'new_values' => ['transfer' => $locked->id, 'released' => $remaining],
             ]);
         });
 
-        return back()->with('success', 'Transfer approved and completed.');
+        return back()->with('success', 'Transfer cancelled — reservation released.');
     }
 
     // ─── Plans ───

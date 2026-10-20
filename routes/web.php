@@ -579,6 +579,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/transfers', [$erp, 'transferIndex'])->name('transfers.index');
     Route::post('/transfers', [$erp, 'transferStore'])->name('transfers.store');
     Route::patch('/transfers/{transfer}/approve', [$erp, 'transferApprove'])->name('transfers.approve');
+    Route::post('/transfers/{transfer}/execute', [$erp, 'transferExecute'])->name('transfers.execute');
+    Route::post('/transfers/{transfer}/cancel', [$erp, 'transferCancel'])->name('transfers.cancel');
     Route::delete('/transfers/{transfer}', [$erp, 'transferDestroy'])->name('transfers.destroy');
 
     // Inventory audit + legacy product reconciliation
