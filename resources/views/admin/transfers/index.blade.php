@@ -28,19 +28,38 @@
             <td class="px-5 py-3.5 text-xs text-gray-500">{{ $transfer->toWarehouse?->name ?? '—' }}</td>
             <td class="px-5 py-3.5 text-xs text-right font-mono font-bold text-gray-900">{{ number_format($transfer->quantity) }}</td>
             <td class="px-5 py-3.5 text-xs text-gray-400">{{ $transfer->date?->format('d M Y') ?? '—' }}</td>
-            <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600 capitalize"><span style="width:6px;height:6px;border-radius:99px;background:{{ ($transfer->status ?? 'pending') === 'completed' ? '#10b981' : '#f59e0b' }}"></span>{{ $transfer->status ?? 'pending' }}</span></td>
+            <td class="px-5 py-3.5">
+                @php $tsc=['completed'=>'#10b981','approved'=>'#3b82f6','partially_transferred'=>'#f59e0b','cancelled'=>'#6b7280','pending'=>'#f59e0b'][$transfer->status ?? 'pending'] ?? '#9ca3af'; @endphp
+                <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $tsc }}"></span>{{ str_replace('_',' ',$transfer->status ?? 'pending') }}
+                @if($transfer->transferred_quantity > 0 && $transfer->status !== 'completed')
+                <span class="text-[10px] text-gray-400">({{ number_format($transfer->transferred_quantity) }}/{{ number_format($transfer->quantity) }})</span>
+                @endif
+                </span>
+            </td>
             <td class="px-5 py-3.5">
                 <div class="flex items-center justify-end gap-4">
-                    @if(($transfer->status ?? 'pending') !== 'completed')
-                    <form method="POST" action="{{ route('admin.transfers.approve', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve this transfer?'})">
+                    @if(($transfer->status ?? 'pending') === 'pending' && $transfer->created_by !== auth()->id())
+                    <form method="POST" action="{{ route('admin.transfers.approve', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve this transfer?', text: 'Full quantity will be reserved at the source warehouse.'})">
                         @csrf @method('PATCH')
                         <button class="text-xs font-medium text-emerald-600 hover:text-emerald-700">Approve</button>
                     </form>
                     @endif
+                    @if(in_array($transfer->status ?? '', ['approved','partially_transferred']) && $transfer->created_by !== auth()->id())
+                    <form method="POST" action="{{ route('admin.transfers.execute', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Execute transfer?', text: 'Outstanding quantity will move to the destination warehouse.', confirmText:'Execute', color:'#059669'})">
+                        @csrf
+                        <button class="text-xs font-semibold text-blue-700 hover:text-blue-900">Execute</button>
+                    </form>
+                    <form method="POST" action="{{ route('admin.transfers.cancel', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Cancel transfer?', text: 'Remaining reservation will be released.', confirmText:'Cancel transfer'})">
+                        @csrf
+                        <button class="text-xs font-medium text-gray-400 hover:text-red-600">Cancel</button>
+                    </form>
+                    @endif
+                    @unless(($transfer->status ?? '') === 'completed')
                     <form method="POST" action="{{ route('admin.transfers.destroy', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this transfer?'})">
                         @csrf @method('DELETE')
                         <button class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>
                     </form>
+                    @endunless
                 </div>
             </td>
         </tr>
