@@ -231,7 +231,7 @@ function processSale() {
         body: JSON.stringify({ subtotal, tax_amount: tax, discount_amount: discount, total_amount: total, paid_amount: paid, payment_method: document.getElementById('paymentMethod').value, items: cart.map(i => ({product_id: i.product_id, product_name: i.product_name, quantity: i.quantity, unit_price: i.unit_price, total: i.unit_price * i.quantity})) })
     }).then(r => r.json()).then(data => {
         if (data.success) {
-            showReceipt(data.sale_number, {subtotal, tax, discount, total, paid, method: document.getElementById('paymentMethod').value, items: cart});
+            showReceipt(data.sale_number, {subtotal, tax, taxRate, discount, total, paid, method: document.getElementById('paymentMethod').value, items: cart});
         } else { Swal.fire({icon:'error',title:'Error',text:'Failed to process sale',confirmButtonColor:'#0f172a'}); }
     }).catch(e => Swal.fire({icon:'error',title:'Error',text:'Network error',confirmButtonColor:'#0f172a'}))
     .finally(() => { btn.disabled = false; btn.textContent = 'Complete Sale'; });
