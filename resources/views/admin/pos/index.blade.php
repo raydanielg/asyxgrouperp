@@ -99,7 +99,12 @@
 </div>
 
 {{-- ═══ RECEIPT OVERLAY (tick + thermal print animation) ═══ --}}
-<div id="receiptOverlay" class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/70">
+<div id="receiptOverlay" class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/70" onclick="if(event.target===this)closeReceipt()">
+
+    {{-- Corner close --}}
+    <button onclick="closeReceipt()" title="Close" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur flex items-center justify-center text-slate-300 hover:text-white transition-all">
+        <svg class="w-4.5 h-4.5 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
 
     {{-- Phase 1: success tick --}}
     <div id="tickPhase" class="flex flex-col items-center">
@@ -130,8 +135,14 @@
             <div style="height:8px;background:linear-gradient(-45deg,transparent 4px,#fff 0) 0 0/8px 8px repeat-x,linear-gradient(45deg,transparent 4px,#fff 0) 4px 0/8px 8px repeat-x;"></div>
         </div>
         <div id="receiptActions" class="w-[280px] mt-4 flex gap-2 opacity-0 transition-opacity duration-300">
-            <button onclick="printReceipt()" class="flex-1 py-2.5 bg-white text-gray-900 text-xs font-bold rounded hover:bg-gray-100">Print</button>
-            <button onclick="closeReceipt()" class="flex-1 py-2.5 bg-slate-700 text-white text-xs font-bold rounded hover:bg-slate-600">New Sale</button>
+            <button onclick="printReceipt()" class="flex-1 py-2.5 bg-white text-gray-900 text-xs font-bold rounded hover:bg-gray-100 flex items-center justify-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                Print
+            </button>
+            <button onclick="closeReceipt()" class="flex-1 py-2.5 bg-slate-700 text-white text-xs font-bold rounded hover:bg-slate-600 flex items-center justify-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                New Sale
+            </button>
         </div>
     </div>
 </div>
