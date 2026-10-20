@@ -55,7 +55,7 @@ class ApprovalService
                 'module' => $module,
                 'module_id' => $model->id,
                 'module_label' => $label,
-                'amount' => $amount,
+                'amount' => $amount ?? 0,
                 'status' => 'pending',
                 'current_level' => $workflow->steps->min('level') ?? 1,
                 'requested_by' => $requester->id,
