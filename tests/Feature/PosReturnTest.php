@@ -260,3 +260,4 @@ class PosReturnTest extends TestCase
         ]);
     }
 }
+
