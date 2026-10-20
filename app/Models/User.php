@@ -53,6 +53,35 @@ class User extends Authenticatable
         return $this->hasMany(UserPermission::class);
     }
 
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class, 'branch_user')->withTimestamps();
+    }
+
+    /**
+     * Branch scope resolution:
+     * - superadmin → all branches
+     * - user with no branch assignments → whole company (default access)
+     * - user with assignments → only those branches
+     */
+    public function accessibleBranchIds(): ?array
+    {
+        if ($this->isSuperAdmin()) {
+            return null; // null = unrestricted
+        }
+        $ids = $this->branches()->pluck('branches.id')->all();
+        return $ids === [] ? null : $ids; // null = company-wide default
+    }
+
+    public function canAccessBranch(?int $branchId): bool
+    {
+        $allowed = $this->accessibleBranchIds();
+        if ($allowed === null) {
+            return true;
+        }
+        return in_array($branchId, $allowed);
+    }
+
     /**
      * Database-driven permission resolution.
      * Resolution order:
