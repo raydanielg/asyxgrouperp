@@ -1920,11 +1920,17 @@ class ErpExtendedController extends Controller
         return back()->with('success', 'Timesheet deleted.');
     }
 
-    public function bugIndex()
+    public function bugIndex(Request $request)
     {
-        $bugs = ProjectBug::with('project')->latest()->paginate(15);
+        $bugs = ProjectBug::with(['project', 'assignedTo', 'reportedBy'])
+            ->when($request->search, fn($q) => $q->where(fn($w) => $w->where('title', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%')))
+            ->when($request->project_id, fn($q) => $q->where('project_id', $request->project_id))
+            ->when($request->severity, fn($q) => $q->where('severity', $request->severity))
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->latest()->paginate(15)->withQueryString();
         $projects = Project::all();
-        return view('admin.projects.bugs', compact('bugs', 'projects'));
+        $users = \App\Models\User::orderBy('name')->get();
+        return view('admin.projects.bugs', compact('bugs', 'projects', 'users'));
     }
 
     public function bugStore(Request $request)
