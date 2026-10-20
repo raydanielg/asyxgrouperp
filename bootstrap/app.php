@@ -35,8 +35,14 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson() || $request->ajax(),
         );
 
-        // Ensure no company/user ever sees a raw error on any page
+        // Ensure no company/user ever sees a raw error on any page.
+        // HTTP exceptions (403/404/419 etc.) pass through to normal handling —
+        // only unexpected errors get the safe error page.
         $exceptions->render(function (\Throwable $e, Request $request) {
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface) {
+                return null;
+            }
+
             if ($request->is('api/*') || $request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -47,7 +53,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if (!app()->environment('local')) {
                 return response()->view('errors.safe', [
                     'message' => 'We encountered an issue while loading this page. Our team has been notified.',
-                    'code' => method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500,
+                    'code' => 500,
                 ], 500);
             }
         });
