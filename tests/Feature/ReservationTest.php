@@ -227,13 +227,14 @@ class ReservationTest extends TestCase
         $this->seedStock($product, $from, 50, 20);
 
         // Open approved transfer claims this reservation → NOT stale
+        $this->actingAs($admin);
         Transfer::create([
             'from_warehouse' => $from->id, 'to_warehouse' => $to->id, 'product_id' => $product->id,
             'product_name' => $product->name, 'quantity' => 20, 'transferred_quantity' => 0,
             'status' => 'approved', 'created_by' => $admin->id, 'company_id' => $this->company()->id,
         ]);
 
-        $response = $this->actingAs($admin)->get('/admin/inventory/audit');
+        $response = $this->get('/admin/inventory/audit');
         $response->assertStatus(200);
         $response->assertDontSee('No open transfer claims this reservation');
     }
