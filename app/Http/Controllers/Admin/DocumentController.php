@@ -194,8 +194,14 @@ class DocumentController extends Controller
         $path = Storage::disk('local')->path($document->file_path);
         abort_unless(file_exists($path), 404);
 
+        $mimes = [
+            'pdf' => 'application/pdf', 'png' => 'image/png', 'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg', 'gif' => 'image/gif', 'webp' => 'image/webp',
+            'svg' => 'image/svg+xml', 'txt' => 'text/plain',
+        ];
+
         return response()->file($path, [
-            'Content-Type' => $document->mime_type ?? 'application/octet-stream',
+            'Content-Type' => $mimes[strtolower($document->file_type)] ?? 'application/octet-stream',
             'Content-Disposition' => 'inline; filename="' . $document->title . '.' . $document->file_type . '"',
         ]);
     }
