@@ -166,6 +166,7 @@ class ReservationTest extends TestCase
         $product = $this->makeProduct();
         $this->seedStock($product, $from, 50);
 
+        $this->actingAs($creator);
         $transfer = Transfer::create([
             'from_warehouse' => $from->id, 'to_warehouse' => $to->id, 'product_id' => $product->id,
             'product_name' => $product->name, 'quantity' => 20, 'status' => 'approved',
