@@ -380,6 +380,7 @@ class BusinessFlowController extends Controller
             'items.*.quantity_ordered' => 'required|numeric|min:0',
             'items.*.unit' => 'nullable|string',
             'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.product_id' => ['nullable', \Illuminate\Validation\Rule::exists('products','id')->where('company_id', auth()->user()->company_id)],
             'branch_id' => ['nullable', \Illuminate\Validation\Rule::exists('branches','id')->where('company_id', auth()->user()->company_id)],
         ]);
 
@@ -412,6 +413,7 @@ class BusinessFlowController extends Controller
         foreach ($data['items'] as $item) {
             LpoItem::create([
                 'lpo_id' => $lpo->id,
+                'product_id' => $item['product_id'] ?? null,
                 'description' => $item['description'],
                 'quantity_ordered' => $item['quantity_ordered'],
                 'quantity_received' => 0,
@@ -483,8 +485,10 @@ class BusinessFlowController extends Controller
             'received_date' => 'required|date',
             'delivery_note_number' => 'nullable|string',
             'notes' => 'nullable|string',
+            'warehouse_id' => ['nullable', \Illuminate\Validation\Rule::exists('warehouses','id')->where('company_id', auth()->user()->company_id)],
             'items' => 'required|array|min:1',
             'items.*.lpo_item_id' => 'nullable|exists:lpo_items,id',
+            'items.*.product_id' => ['nullable', \Illuminate\Validation\Rule::exists('products','id')->where('company_id', auth()->user()->company_id)],
             'items.*.description' => 'required|string',
             'items.*.quantity_expected' => 'nullable|numeric|min:0',
             'items.*.quantity_received' => 'required|numeric|min:0',
@@ -508,6 +512,7 @@ class BusinessFlowController extends Controller
             'grn_number' => 'GRN-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
             'lpo_id' => $data['lpo_id'] ?? null,
             'supplier_id' => $data['supplier_id'] ?? null,
+            'warehouse_id' => $data['warehouse_id'] ?? null,
             'received_date' => $data['received_date'],
             'delivery_note_number' => $data['delivery_note_number'] ?? null,
             'status' => $status,
@@ -520,6 +525,7 @@ class BusinessFlowController extends Controller
             GrnItem::create([
                 'grn_id' => $grn->id,
                 'lpo_item_id' => $item['lpo_item_id'] ?? null,
+                'product_id' => $item['product_id'] ?? null,
                 'description' => $item['description'],
                 'quantity_expected' => $item['quantity_expected'] ?? $item['quantity_received'],
                 'quantity_received' => $item['quantity_received'],
@@ -533,7 +539,13 @@ class BusinessFlowController extends Controller
             \App\Services\ApprovalService::submit('grn', $grn, "GRN {$grn->grn_number}", null, auth()->user());
         } else {
             // No workflow — apply receipt effects immediately (documented policy)
-            $this->applyGrnReceipt($grn);
+            try {
+                $this->applyGrnReceipt($grn);
+            } catch (\Throwable $e) {
+                $grn->items()->delete();
+                $grn->delete();
+                return back()->withInput()->with('error', $e->getMessage());
+            }
         }
 
         return back()->with('success', $workflow ? "GRN {$grn->grn_number} submitted for approval." : 'GRN created successfully.');
@@ -574,11 +586,18 @@ class BusinessFlowController extends Controller
     }
 
     /**
-     * Apply LPO received quantities for a finalized GRN — rejects over-receipt.
-     * Must be called inside a transaction.
+     * Apply receipt effects for a finalized GRN:
+     * 1. Reject over-receipt + update LPO item quantities (locked)
+     * 2. Post stock movements when the GRN targets a warehouse — each item
+     *    must resolve a product (direct product_id or via lpo_item) or the
+     *    entire receipt fails.
+     * 3. Update LPO received status.
+     * All changes share the caller's transaction — failure rolls back fully.
      */
     private function applyGrnReceipt(Grn $grn): void
     {
+        $inventory = app(\App\Services\InventoryService::class);
+
         foreach ($grn->items as $item) {
             if (!$item->lpo_item_id) {
                 continue;
@@ -592,6 +611,24 @@ class BusinessFlowController extends Controller
                 throw new \RuntimeException("Over-receipt on '{$item->description}': ordered {$lpoItem->quantity_ordered}, would reach " . ($lpoItem->quantity_received + $item->quantity_received) . ".");
             }
             $lpoItem->increment('quantity_received', $item->quantity_received);
+        }
+
+        // Stock posting — only when a receiving warehouse is set
+        if ($grn->warehouse_id) {
+            foreach ($grn->items as $item) {
+                $productId = $item->product_id
+                    ?? ($item->lpo_item_id ? LpoItem::where('id', $item->lpo_item_id)->value('product_id') : null);
+                if (!$productId) {
+                    throw new \RuntimeException("GRN item '{$item->description}' has no product mapping — cannot post stock. Set a product on the LPO item or GRN item.");
+                }
+                if ($item->quantity_received > 0) {
+                    // addStock is atomic (lock + movement + balance + product sync)
+                    $inventory->addStock(
+                        $productId, $grn->warehouse_id, $item->quantity_received,
+                        "GRN {$grn->grn_number}", auth()->id()
+                    );
+                }
+            }
         }
 
         // Update LPO status
