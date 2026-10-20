@@ -172,14 +172,21 @@ class LedgerService
      */
     public function postEntry(array $header, array $lines): JournalEntry
     {
-        $totalDebit = round(array_sum(array_column($lines, 'debit')), 2);
-        $totalCredit = round(array_sum(array_column($lines, 'credit')), 2);
+        // Decimal-safe balance check — integer cents, never floats
+        $totalDebitCents = 0;
+        $totalCreditCents = 0;
+        foreach ($lines as $line) {
+            $totalDebitCents += (int) round(($line['debit'] ?? 0) * 100);
+            $totalCreditCents += (int) round(($line['credit'] ?? 0) * 100);
+        }
+        $totalDebit = $totalDebitCents / 100;
+        $totalCredit = $totalCreditCents / 100;
 
         if (count($lines) < 2) {
             throw new RuntimeException('A journal entry needs at least two lines.');
         }
 
-        if (abs($totalDebit - $totalCredit) > 0.01) {
+        if ($totalDebitCents !== $totalCreditCents) {
             throw new RuntimeException("Journal entry is not balanced: debit {$totalDebit} != credit {$totalCredit}.");
         }
 
@@ -192,6 +199,23 @@ class LedgerService
 
         if ($lockedPeriod) {
             throw new RuntimeException("Accounting period '{$lockedPeriod->name}' is closed. No entries can be posted to this period.");
+        }
+
+        // Every account must exist, be active, and belong to the posting company
+        $companyId = $header['company_id'] ?? auth()->user()?->company_id;
+        $accountIds = array_column($lines, 'chart_of_account_id');
+        $accounts = \App\Models\ChartOfAccount::withoutGlobalScopes()->whereIn('id', $accountIds)->get()->keyBy('id');
+        foreach ($accountIds as $aid) {
+            $acct = $accounts->get($aid);
+            if (!$acct) {
+                throw new RuntimeException("Chart of account #{$aid} does not exist.");
+            }
+            if (!$acct->is_active) {
+                throw new RuntimeException("Chart of account '{$acct->name}' is inactive.");
+            }
+            if ($companyId && $acct->company_id && $acct->company_id !== $companyId) {
+                throw new RuntimeException("Chart of account '{$acct->name}' belongs to another company.");
+            }
         }
 
         return DB::transaction(function () use ($header, $lines) {

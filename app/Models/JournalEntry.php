@@ -42,8 +42,24 @@ class JournalEntry extends Model
         return $this->lines()->sum('credit');
     }
 
+    public function reversalOf()
+    {
+        return $this->belongsTo(JournalEntry::class, 'reversal_of_id');
+    }
+
+    public function reversal()
+    {
+        return $this->hasOne(JournalEntry::class, 'reversal_of_id');
+    }
+
     public function scopePosted($query)
     {
         return $query->where('status', 'posted');
+    }
+
+    /** Whether the entry is reversible: posted and not already reversed. */
+    public function isReversible(): bool
+    {
+        return $this->status === 'posted' && !$this->reversal()->exists();
     }
 }
