@@ -74,6 +74,29 @@
       </div>
     </div>
 
+    @if($companyBranches->isNotEmpty())
+    {{-- Branches --}}
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-gray-100">
+        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Branches</h4>
+        <p class="text-[10px] text-gray-400 mt-0.5">Restrict this user to specific branches — no selection means company-wide access.</p>
+      </div>
+      <div class="p-5">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          @foreach($companyBranches as $b)
+          <label class="flex items-start gap-2.5 p-3 rounded border border-gray-200 cursor-pointer hover:border-gray-300 has-[:checked]:border-gray-400 has-[:checked]:bg-gray-50">
+            <input type="checkbox" name="assigned_branches[]" value="{{ $b->id }}" {{ in_array($b->id, old('assigned_branches', $userBranches)) ? 'checked' : '' }} class="mt-0.5 w-4 h-4 rounded border-gray-300 text-gray-700">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-gray-900 leading-tight">{{ $b->name }}</p>
+              @if($b->code)<p class="text-[10px] text-gray-400 mt-0.5 font-mono">{{ $b->code }}</p>@endif
+            </div>
+          </label>
+          @endforeach
+        </div>
+      </div>
+    </div>
+    @endif
+
     {{-- Roles --}}
     <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
       <div class="px-5 py-3.5 border-b border-gray-100"><h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Roles &amp; Permissions</h4></div>

@@ -174,8 +174,10 @@ class UserController extends Controller
                 ->get()->groupBy('module')->sortKeys();
         $overrides = $user->directPermissions()->with(['permission', 'granter'])->latest()->get();
         $allPermissions = $isPrivileged ? collect() : Permission::orderBy('module')->orderBy('name')->get()->groupBy('module');
+        $companyBranches = \App\Models\Branch::where('company_id', $user->company_id)->active()->orderBy('name')->get();
+        $userBranches = $user->branches->pluck('id')->all();
 
-        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'companies', 'effectivePerms', 'overrides', 'allPermissions', 'resolution', 'isPrivileged'));
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'companies', 'effectivePerms', 'overrides', 'allPermissions', 'resolution', 'isPrivileged', 'companyBranches', 'userBranches'));
     }
 
     public function update(Request $request, User $user)
