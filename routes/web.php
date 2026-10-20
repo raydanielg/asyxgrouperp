@@ -1004,6 +1004,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     // GRNs
     Route::get('/grns', [$bf, 'grnIndex'])->name('grns.index');
     Route::post('/grns', [$bf, 'grnStore'])->name('grns.store');
+    Route::post('/grns/{grn}/receive', [$bf, 'grnReceive'])->name('grns.receive');
     Route::get('/grns/{grn}', [$bf, 'grnShow'])->name('grns.show');
     Route::delete('/grns/{grn}', [$bf, 'grnDestroy'])->name('grns.destroy');
 

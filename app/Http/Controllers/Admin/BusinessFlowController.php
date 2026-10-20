@@ -39,7 +39,7 @@ class BusinessFlowController extends Controller
             // (self-approval, designated approver, pending-state checks) so
             // non-admin designated approvers can reach them. Read/write
             // operations still require admin.
-            $decisionMethods = ['officeExpenseApprove', 'officeExpenseReject', 'vendorPaymentExecute'];
+            $decisionMethods = ['officeExpenseApprove', 'officeExpenseReject', 'vendorPaymentExecute', 'grnReceive'];
             if (in_array($request->route()->getActionMethod(), $decisionMethods)) {
                 return $next($request);
             }
@@ -614,6 +614,9 @@ class BusinessFlowController extends Controller
 
     public function grnDestroy(Grn $grn)
     {
+        // Finalized receipts cannot be deleted — that would orphan the LPO
+        // quantity updates. Corrections require a new GRN or void workflow.
+        abort_if(in_array($grn->status, ['received', 'discrepant']), 403, 'Finalized GRNs cannot be deleted. Create a corrective entry instead.');
         $grn->items()->delete();
         $grn->delete();
         return back()->with('success', 'GRN deleted.');
