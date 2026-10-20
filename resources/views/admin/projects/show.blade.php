@@ -26,7 +26,50 @@
 @php
     $statusColor = ['planning'=>'#3b82f6','in_progress'=>'#f59e0b','completed'=>'#10b981','on_hold'=>'#9ca3af','cancelled'=>'#ef4444'][$project->status] ?? '#9ca3af';
     $priorityColor = ['low'=>'#9ca3af','medium'=>'#3b82f6','high'=>'#f59e0b','critical'=>'#ef4444'][$project->priority] ?? '#9ca3af';
+    $isTerminal = in_array($project->status, ['on_hold', 'cancelled']);
+    $pipeline = [
+        ['key' => 'planning', 'label' => 'Planning'],
+        ['key' => 'in_progress', 'label' => 'In Progress'],
+        ['key' => 'completed', 'label' => 'Completed'],
+        ['key' => 'on_hold', 'label' => 'On Hold'],
+        ['key' => 'cancelled', 'label' => 'Cancelled'],
+    ];
+    $pipelineKeys = array_column($pipeline, 'key');
+    $currentIdx = array_search($project->status, $pipelineKeys);
+    $currentIdx = $currentIdx === false ? -1 : $currentIdx;
 @endphp
+
+{{-- Pipeline tracker --}}
+@if(!$isTerminal)
+<div class="bg-white rounded-md border border-gray-200 px-5 py-4 mb-4">
+    <div class="flex items-center">
+        @foreach(array_slice($pipeline, 0, 3) as $idx => $stage)
+        @php $reached = $idx <= $currentIdx; $isCurrent = $idx === $currentIdx; @endphp
+        @if($idx > 0)
+        <div class="flex-1 h-px {{ $reached ? 'bg-gray-800' : 'bg-gray-200' }}"></div>
+        @endif
+        <div class="flex items-center gap-2 px-1">
+            <span class="w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 {{ $reached ? 'bg-gray-900 border-gray-900' : 'border-gray-300 bg-white' }}">
+                @if($reached && !$isCurrent)
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                @elseif($isCurrent)
+                <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                @endif
+            </span>
+            <span class="text-xs {{ $isCurrent ? 'font-bold text-gray-900' : ($reached ? 'text-gray-600' : 'text-gray-400') }}">{{ $stage['label'] }}</span>
+        </div>
+        @endforeach
+    </div>
+</div>
+@else
+<div class="bg-gray-50 border border-gray-200 rounded-md px-5 py-3.5 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+        <span style="width:8px;height:8px;border-radius:99px;background:{{ $statusColor }}"></span>
+        <p class="text-xs font-semibold text-gray-800">Project is {{ str_replace('_', ' ', $project->status) }}</p>
+    </div>
+    <p class="text-[11px] text-gray-400">{{ $project->progress }}% complete</p>
+</div>
+@endif
 
 @if($project->status === 'completed' && !$project->recurring_invoicing && !$project->invoices->where('type', 'service')->isNotEmpty())
 <div class="bg-gray-50 border border-gray-200 rounded-md px-5 py-3.5 mb-4 flex items-center justify-between flex-wrap gap-3">
