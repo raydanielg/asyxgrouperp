@@ -877,6 +877,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/journal-entries', [$glCtrl, 'journalEntriesIndex'])->name('journal-entries.index');
     Route::get('/journal-entries/create', [$glCtrl, 'journalEntriesCreate'])->name('journal-entries.create');
     Route::post('/journal-entries', [$glCtrl, 'journalEntriesStore'])->name('journal-entries.store');
+    Route::post('/journal-entries/{journalEntry}/post', [$glCtrl, 'journalEntriesPost'])->name('journal-entries.post');
+    Route::post('/journal-entries/{journalEntry}/reverse', [$glCtrl, 'journalEntriesReverse'])->name('journal-entries.reverse');
     Route::get('/journal-entries/{journalEntry}', [$glCtrl, 'journalEntriesShow'])->name('journal-entries.show');
 
     // ─── Financial Reports ───

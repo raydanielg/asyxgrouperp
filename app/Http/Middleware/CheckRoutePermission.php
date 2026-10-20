@@ -62,6 +62,8 @@ class CheckRoutePermission
         'admin.estimates*' => 'view-dashboard',
         'admin.chart-of-accounts*' => 'view-journal-entries',
         'admin.journal-entries.store' => 'create-journal-entries',
+        'admin.journal-entries.post' => 'post-journal-entries',
+        'admin.journal-entries.reverse' => 'reverse-journal-entries',
         'admin.journal-entries*' => 'view-journal-entries',
         'admin.financial-reports*' => 'view-financial-reports',
         'admin.petty-cash*' => 'view-petty-cash',

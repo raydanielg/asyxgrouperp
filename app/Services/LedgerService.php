@@ -227,6 +227,7 @@ class LedgerService
                 'source_type' => $header['source_type'] ?? 'manual',
                 'source_id' => $header['source_id'] ?? null,
                 'project_id' => $header['project_id'] ?? null,
+                'branch_id' => $header['branch_id'] ?? null,
                 'status' => 'posted',
                 'created_by' => $header['created_by'] ?? auth()->id(),
                 'posted_at' => now(),

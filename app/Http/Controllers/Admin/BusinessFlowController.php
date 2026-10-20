@@ -208,6 +208,7 @@ class BusinessFlowController extends Controller
             'terms' => $data['terms'] ?? null,
             'notes' => $data['notes'] ?? null,
             'status' => 'draft',
+            'branch_id' => $data['branch_id'] ?? null,
             'created_by' => auth()->id(),
         ]);
 
@@ -379,6 +380,7 @@ class BusinessFlowController extends Controller
             'items.*.quantity_ordered' => 'required|numeric|min:0',
             'items.*.unit' => 'nullable|string',
             'items.*.unit_price' => 'required|numeric|min:0',
+            'branch_id' => ['nullable', \Illuminate\Validation\Rule::exists('branches','id')->where('company_id', auth()->user()->company_id)],
         ]);
 
         $subtotal = 0;
@@ -403,6 +405,7 @@ class BusinessFlowController extends Controller
             'terms' => $data['terms'] ?? null,
             'notes' => $data['notes'] ?? null,
             'status' => 'draft',
+            'branch_id' => $data['branch_id'] ?? null,
             'created_by' => auth()->id(),
         ]);
 
@@ -703,6 +706,7 @@ class BusinessFlowController extends Controller
             'payment_method' => 'required|in:cash,bank_transfer,cheque,mobile_money',
             'reference_number' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
+            'branch_id' => ['nullable', \Illuminate\Validation\Rule::exists('branches','id')->where('company_id', auth()->user()->company_id)],
         ]);
 
         $invoice = VendorInvoice::findOrFail($data['vendor_invoice_id']);
@@ -807,6 +811,7 @@ class BusinessFlowController extends Controller
             'payment_method' => 'nullable|in:cash,bank_transfer,cheque,mobile_money',
             'receipt_number' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
+            'branch_id' => ['nullable', \Illuminate\Validation\Rule::exists('branches','id')->where('company_id', auth()->user()->company_id)],
         ]);
         $data['expense_number'] = 'OEXP-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['status'] = 'pending';

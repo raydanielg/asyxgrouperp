@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ChartOfAccount;
 use App\Models\JournalEntry;
+use App\Models\JournalEntryLine;
 use App\Models\Project;
 use App\Services\LedgerService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AccountingLedgerController extends Controller
 {
@@ -85,6 +87,7 @@ class AccountingLedgerController extends Controller
             'reference' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'project_id' => 'nullable|exists:projects,id',
+            'branch_id' => ['nullable', \Illuminate\Validation\Rule::exists('branches','id')->where('company_id', auth()->user()->company_id)],
             'lines' => 'required|array|min:2',
             'lines.*.chart_of_account_id' => 'required|exists:chart_of_accounts,id',
             'lines.*.debit' => 'nullable|numeric|min:0',
