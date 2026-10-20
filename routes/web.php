@@ -1108,6 +1108,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::redirect('/appointments', '/reception/appointments', 301);
     Route::redirect('/approval-workflows', '/admin/approvals', 301);
     Route::redirect('/notifications', '/admin/notification-templates', 301);
+    Route::get('/my-notifications', function () {
+        $notifications = auth()->user()->notifications()->latest()->paginate(20);
+        return view('admin.notifications.index', compact('notifications'));
+    })->name('my-notifications');
+    Route::post('/my-notifications/{notification}/read', function (\App\Models\UserNotification $notification) {
+        abort_unless($notification->user_id === auth()->id(), 403);
+        $notification->update(['read_at' => now()]);
+        return back();
+    })->name('my-notifications.read');
     Route::redirect('/permissions', '/admin/roles', 301);
     Route::redirect('/system', '/admin/settings', 301);
 });

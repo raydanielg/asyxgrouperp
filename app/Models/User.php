@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(UserPermission::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(UserNotification::class);
+    }
+
     public function branches()
     {
         return $this->belongsToMany(Branch::class, 'branch_user')->withTimestamps();
