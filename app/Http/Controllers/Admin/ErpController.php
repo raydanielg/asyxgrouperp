@@ -200,7 +200,7 @@ class ErpController extends Controller
     {
         $user = auth()->user();
         $query = Order::withoutGlobalScope('company')->with('plan')->latest();
-        if (!($user->isSuperAdmin() || $user->hasPermission('switch-companies'))) {
+        if (!$user->isSuperAdmin()) {
             $query->where('company_id', $user->company_id);
         }
         return view('admin.orders.index', ['orders' => $query->paginate(10)]);
@@ -211,8 +211,14 @@ class ErpController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    protected function canManagePlatformOrders(): bool
+    {
+        return auth()->user()->isSuperAdmin();
+    }
+
     public function orderApprove($order)
     {
+        abort_unless($this->canManagePlatformOrders(), 403);
         $order = Order::withoutGlobalScope('company')->findOrFail($order);
         $order->update(['payment_status' => 'succeeded']);
         if ($order->company_id && ($company = Company::find($order->company_id))) {
@@ -228,6 +234,7 @@ class ErpController extends Controller
 
     public function orderReject($order)
     {
+        abort_unless($this->canManagePlatformOrders(), 403);
         $order = Order::withoutGlobalScope('company')->findOrFail($order);
         $order->update(['payment_status' => 'failed']);
         return back()->with('success', 'Order rejected.');
