@@ -88,6 +88,10 @@ class TransactionApprovalTest extends TestCase
         $this->workflowFor('office_expense');
         $requester = $this->makeUser();
         $fm = $this->makeUser(['role' => 'finance_manager']);
+        // Grant the route permission (mirrors production role_permission)
+        $perm = \App\Models\Permission::firstOrCreate(['name' => 'view-expenses'], ['label' => 'view-expenses']);
+        $fm->directPermissions()->create(['permission_id' => $perm->id, 'granted' => true]);
+        \Illuminate\Support\Facades\Cache::forget("user_perms_{$fm->id}");
         $expense = OfficeExpense::create([
             'expense_number' => 'OEXP-2', 'description' => 'x', 'amount' => 300000,
             'expense_date' => '2026-10-20', 'status' => 'pending',
