@@ -195,6 +195,22 @@ class UserController extends Controller
         $this->guardSuperadminRole($validated['role']);
         $this->guardSuperadminTarget($user, $validated['role'], $request->boolean('is_enable_login', true));
 
+        // Tenant admin cannot move users to a different company
+        $actor = auth()->user();
+        if (!$actor->isSuperAdmin() && (int)($validated['company_id'] ?? $user->company_id) !== (int)$actor->company_id) {
+            abort(403, 'You can only manage users inside your own company.');
+        }
+
+        // Branch assignments must belong to the user's company
+        $branchIds = collect($request->input('assigned_branches', []))->filter()->values();
+        if ($branchIds->isNotEmpty()) {
+            $companyId = $validated['company_id'] ?? $user->company_id;
+            $valid = \App\Models\Branch::withoutGlobalScopes()
+                ->where('company_id', $companyId)
+                ->whereIn('id', $branchIds)->count();
+            abort_if($valid !== $branchIds->count(), 403, 'Invalid branch selection for this company.');
+        }
+
         $data = [
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -218,6 +234,8 @@ class UserController extends Controller
         } else {
             $user->roles()->detach();
         }
+
+        $user->branches()->sync($branchIds->all());
 
         Cache::forget("user_perms_{$user->id}");
 
