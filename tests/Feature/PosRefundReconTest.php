@@ -154,7 +154,6 @@ class PosRefundReconTest extends TestCase
             'created_at' => now(), 'updated_at' => now(),
         ]);
 
-        $this->withoutExceptionHandling();
         $this->actingAs($admin)->post('/admin/inventory/reconcile-transfer', [
             'transfer_id' => $transferId, 'reason' => 'Consistent warehouses',
         ])->assertRedirect();
@@ -179,10 +178,9 @@ class PosRefundReconTest extends TestCase
             'created_at' => now(), 'updated_at' => now(),
         ]);
 
-        $resp = $this->actingAs($admin)->post('/admin/inventory/reconcile-transfer', [
+        $this->actingAs($admin)->post('/admin/inventory/reconcile-transfer', [
             'transfer_id' => $transferId, 'reason' => 'guess',
         ]);
-        fwrite(STDERR, "\nSTATUS={$resp->status()}\n");
 
         $this->assertNull(\App\Models\Transfer::withoutGlobalScopes()->find($transferId)->company_id); // not assigned — ambiguous
     }
