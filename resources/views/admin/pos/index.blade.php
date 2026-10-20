@@ -98,6 +98,34 @@
     </div>
 </div>
 
+{{-- ═══ RECEIPT OVERLAY (thermal print animation) ═══ --}}
+<div id="receiptOverlay" class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/70">
+    <div class="flex flex-col items-center w-full max-w-[320px]">
+        {{-- Printer slot --}}
+        <div class="w-[280px] bg-slate-800 rounded-t-lg px-4 py-2.5 flex items-center justify-between relative z-10">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300" id="printerStatus">Printing receipt...</span>
+            </div>
+            <span class="text-slate-500 text-[10px] font-mono">EFD</span>
+        </div>
+        <div class="w-[280px] h-1.5 bg-slate-950 relative z-10 shadow-[0_6px_12px_rgba(0,0,0,0.5)]"></div>
+
+        {{-- Receipt paper --}}
+        <div id="receiptPaper" class="w-[280px] bg-white shadow-2xl relative" style="clip-path: inset(0 0 100% 0);">
+            <div class="px-4 py-5 text-[11px] leading-relaxed font-mono text-gray-900" id="receiptContent"></div>
+            {{-- torn edge --}}
+            <div style="height:8px;background:linear-gradient(-45deg,transparent 4px,#fff 0) 0 0/8px 8px repeat-x,linear-gradient(45deg,transparent 4px,#fff 0) 4px 0/8px 8px repeat-x;"></div>
+        </div>
+
+        {{-- Actions --}}
+        <div id="receiptActions" class="w-[280px] mt-4 flex gap-2 opacity-0 transition-opacity duration-300">
+            <button onclick="printReceipt()" class="flex-1 py-2.5 bg-white text-gray-900 text-xs font-bold rounded hover:bg-gray-100">Print</button>
+            <button onclick="closeReceipt()" class="flex-1 py-2.5 bg-slate-700 text-white text-xs font-bold rounded hover:bg-slate-600">New Sale</button>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 let cart = [];
@@ -203,10 +231,106 @@ function processSale() {
         body: JSON.stringify({ subtotal, tax_amount: tax, discount_amount: discount, total_amount: total, paid_amount: paid, payment_method: document.getElementById('paymentMethod').value, items: cart.map(i => ({product_id: i.product_id, product_name: i.product_name, quantity: i.quantity, unit_price: i.unit_price, total: i.unit_price * i.quantity})) })
     }).then(r => r.json()).then(data => {
         if (data.success) {
-            Swal.fire({icon:'success',title:'Sale Completed!',text:'Sale #: ' + data.sale_number,confirmButtonColor:'#0f172a'}).then(() => { cart = []; renderCart(); location.reload(); });
+            showReceipt(data.sale_number, {subtotal, tax, discount, total, paid, method: document.getElementById('paymentMethod').value, items: cart});
         } else { Swal.fire({icon:'error',title:'Error',text:'Failed to process sale',confirmButtonColor:'#0f172a'}); }
     }).catch(e => Swal.fire({icon:'error',title:'Error',text:'Network error',confirmButtonColor:'#0f172a'}))
     .finally(() => { btn.disabled = false; btn.textContent = 'Complete Sale'; });
+}
+
+const COMPANY = {
+    name: @json($company->name ?? config('app.name')),
+    address: @json($company->address ?? 'Dar es Salaam, Tanzania'),
+    phone: @json($company->phone ?? ''),
+    tin: @json($company->tax_id ?? ''),
+    vrn: @json($company->vrn ?? ''),
+};
+const CASHIER = @json(auth()->user()->name);
+const VERIF = 'xxxxxxxxxxxx'.replace(/x/g, () => '0123456789ABCDEF'[Math.floor(Math.random()*16)]);
+
+function showReceipt(saleNumber, sale) {
+    const now = new Date();
+    const fmt = n => Math.round(n).toLocaleString();
+    const sep = '='.repeat(34) + '\n';
+    const dSep = '-'.repeat(34) + '\n';
+    const pad = (l, r) => l + ' '.repeat(Math.max(1, 34 - l.length - String(r).length)) + r;
+
+    let html = '<div class="text-center">';
+    html += '<p class="font-bold">*** RISITI / RECEIPT ***</p>';
+    html += '<p class="font-bold text-[13px] mt-1">' + COMPANY.name.toUpperCase() + '</p>';
+    html += '<p class="text-gray-600">' + COMPANY.address.toUpperCase() + '</p>';
+    if (COMPANY.phone) html += '<p class="text-gray-600">MOBILE: ' + COMPANY.phone + '</p>';
+    if (COMPANY.tin) html += '<p class="text-gray-600">TIN: ' + COMPANY.tin + '</p>';
+    if (COMPANY.vrn) html += '<p class="text-gray-600">VRN: ' + COMPANY.vrn + '</p>';
+    html += '<p class="text-gray-500 mt-1">' + sep.trim() + '</p></div>';
+
+    html += '<div class="mt-1">';
+    html += '<p>' + pad('CUSTOMER NAME:', 'WALK-IN') + '</p>';
+    html += '<p>' + pad('RECEIPT NO:', saleNumber.replace('POS-','')) + '</p>';
+    html += '<p>' + pad('CASHIER:', CASHIER.toUpperCase().slice(0,16)) + '</p>';
+    html += '<p>' + pad('DATE:', now.toLocaleDateString('en-GB')) + '</p>';
+    html += '<p>' + pad('TIME:', now.toLocaleTimeString('en-GB')) + '</p>';
+    html += '<p class="text-gray-500 mt-1">' + sep.trim() + '</p></div>';
+
+    sale.items.forEach(it => {
+        html += '<p class="font-medium">' + it.product_name.toUpperCase() + '</p>';
+        html += '<p class="pl-3">' + pad(it.quantity + ' x ' + fmt(it.unit_price), fmt(it.unit_price * it.quantity) + ' A') + '</p>';
+    });
+    html += '<p class="text-gray-500 mt-1">' + dSep.trim() + '</p>';
+
+    const excl = sale.subtotal;
+    html += '<p>' + pad('TOTAL EXCL TAX:', fmt(excl)) + '</p>';
+    if (sale.tax > 0) html += '<p>' + pad('TAX A (' + (sale.taxRate||'') + '%):', fmt(sale.tax)) + '</p>';
+    if (sale.discount > 0) html += '<p>' + pad('DISCOUNT:', '-' + fmt(sale.discount)) + '</p>';
+    html += '<p class="font-bold">' + pad('TOTAL INCL TAX:', fmt(sale.total)) + '</p>';
+    html += '<p class="text-gray-500 mt-1">' + sep.trim() + '</p>';
+
+    const methodLabel = {cash:'CASH / TASLIMU', card:'CARD / KADI', mobile:'MOBILE / SIMU'}[sale.method] || 'PAID';
+    html += '<p class="font-bold">' + pad('JUMLA / TOTAL (TZS):', fmt(sale.total)) + '</p>';
+    html += '<p>' + pad(methodLabel + ':', fmt(sale.paid)) + '</p>';
+    html += '<p>' + pad('CHANGE / CHENJI:', fmt(Math.max(0, sale.paid - sale.total))) + '</p>';
+    html += '<p class="text-gray-500 mt-1">' + dSep.trim() + '</p>';
+
+    html += '<div class="text-center mt-1">';
+    html += '<p class="text-gray-500">RECEIPT VERIFICATION CODE</p>';
+    html += '<p class="font-bold tracking-widest">' + VERIF + '</p>';
+    html += '<p class="mt-1 text-gray-600">Z NUMBER: ' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '/' + saleNumber.slice(-4) + '</p>';
+    html += '<p class="text-gray-500 mt-1">' + dSep.trim() + '</p>';
+    html += '<p class="font-bold mt-1">ASANTE KWA KUNUNUA!</p>';
+    html += '<p class="text-gray-600">THANK YOU, KARIBU TENA</p>';
+    html += '<p class="text-[9px] text-gray-400 mt-1">Bidhaa zilizonunuliwa hazirudishwi<br>Goods sold are not returnable</p>';
+    html += '</div>';
+
+    document.getElementById('receiptContent').innerHTML = html;
+    document.getElementById('receiptOverlay').classList.remove('hidden');
+    document.getElementById('receiptOverlay').classList.add('flex');
+    document.getElementById('receiptActions').style.opacity = '0';
+    document.getElementById('printerStatus').textContent = 'Printing receipt...';
+
+    const paper = document.getElementById('receiptPaper');
+    paper.style.transition = 'none';
+    paper.style.clipPath = 'inset(0 0 100% 0)';
+    requestAnimationFrame(() => {
+        paper.style.transition = 'clip-path 2.2s cubic-bezier(0.3, 0.6, 0.4, 1)';
+        paper.style.clipPath = 'inset(0 0 0% 0)';
+    });
+    setTimeout(() => {
+        document.getElementById('printerStatus').textContent = 'Receipt ready';
+        document.getElementById('receiptActions').style.opacity = '1';
+    }, 2300);
+}
+
+function printReceipt() {
+    const w = window.open('', '_blank', 'width=320,height=640');
+    w.document.write('<html><head><title>Receipt</title><style>body{font-family:monospace;font-size:11px;margin:10px;white-space:pre-wrap;}</style></head><body>' + document.getElementById('receiptContent').innerText.replace(/\n/g,'<br>') + '</body></html>');
+    w.document.close();
+    setTimeout(() => w.print(), 300);
+}
+
+function closeReceipt() {
+    document.getElementById('receiptOverlay').classList.add('hidden');
+    document.getElementById('receiptOverlay').classList.remove('flex');
+    cart = [];
+    location.reload();
 }
 
 document.getElementById('productSearch').addEventListener('input', function() {
