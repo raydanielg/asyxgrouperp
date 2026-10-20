@@ -1,234 +1,145 @@
 @extends('layouts.admin')
 @section('title', 'Invoice ' . $salesInvoice->invoice_number)
-@section('page_title', '')
+@section('page_title', 'Invoice: ' . $salesInvoice->invoice_number)
 @section('content')
+@php
+    $sc = ['draft'=>'#9ca3af','posted'=>'#3b82f6','partial'=>'#f59e0b','paid'=>'#10b981','overdue'=>'#ef4444'][$salesInvoice->status] ?? '#9ca3af';
+@endphp
 
-<div class="max-w-[760px] mx-auto">
-    {{-- Toolbar --}}
-    <div class="flex items-center justify-between mb-4 max-w-[760px] no-print">
-        <div class="text-xs" style="color:#6E7570;">
-            Invoice <b style="color:#1C2321;">{{ $salesInvoice->invoice_number }}</b> &middot; {{ config('app.name') }}
-        </div>
-        <div class="flex items-center gap-2">
-            <a href="{{ route('admin.sales-invoices.receipt', $salesInvoice) }}" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all inline-flex items-center gap-2" style="background:#0F3D3E;color:#fff;" onmouseover="this.style.background='#0A2D2E'" onmouseout="this.style.background='#0F3D3E'">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Receipt
-            </a>
-            <button onclick="printInvoicePdf()" class="px-4 py-2.5 text-xs font-bold rounded-lg transition-all inline-flex items-center gap-2" style="background:#C9A227;color:#23270F;" onmouseover="this.style.background='#B8941F'" onmouseout="this.style.background='#C9A227'">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                Print
-            </button>
-            <a href="{{ route('admin.sales-invoices.index') }}" class="px-4 py-2.5 text-xs font-bold rounded-lg border transition-all" style="border-color:#E3DDCB;color:#6E7570;" onmouseover="this.style.background='#FBF9F2'" onmouseout="this.style.background='transparent'">Back</a>
-        </div>
-    </div>
-
-    {{-- ═══ INVOICE A4 ═══ --}}
-    <div id="invoice-a4" style="background:#fff;border-radius:6px;box-shadow:0 18px 40px -10px rgba(15,61,62,.25),0 0 0 1px #E3DDCB;overflow:hidden;position:relative;font-family:'Inter',sans-serif;">
-
-        {{-- Stamp --}}
-        @php
-            $stampColors = ['paid'=>'#2F7A3D','partial'=>'#C9A227','posted'=>'#0F3D3E','draft'=>'#6E7570','overdue'=>'#B23A2E'];
-            $stampColor = $stampColors[$salesInvoice->status] ?? '#6E7570';
-        @endphp
-        <div style="position:absolute;top:26px;right:-52px;background:{{ $stampColor }};color:#fff;font-size:12px;font-weight:700;letter-spacing:.12em;padding:6px 68px;transform:rotate(35deg);box-shadow:0 4px 10px rgba(0,0,0,.15);z-index:10;">{{ strtoupper($salesInvoice->status) }}</div>
-
-        {{-- Head --}}
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:38px 44px 26px;border-bottom:1px solid #E3DDCB;">
-            <div style="display:flex;align-items:center;gap:16px;">
-                <div style="flex-shrink:0;">
-                    <img src="{{ asset('asyxgrouplogo.png') }}" alt="{{ config('app.name') }}" style="height:46px;max-width:160px;object-fit:contain;">
-                </div>
-                <div>
-                    <div style="font-family:'Fraunces',serif;font-weight:700;font-size:17px;color:#0F3D3E;">{{ $salesInvoice->company?->name ?? config('app.name') }}</div>
-                    <div style="font-size:11.5px;color:#6E7570;margin-top:3px;line-height:1.55;">
-                        {{ $salesInvoice->company?->address ?? 'Dar es Salaam, Tanzania' }}<br>
-                        @if($salesInvoice->company?->tax_id)<span>TIN: {{ $salesInvoice->company->tax_id }}</span>@endif
-                        @if($salesInvoice->company?->tax_id && $salesInvoice->company?->vrn) &middot; @endif
-                        @if($salesInvoice->company?->vrn)<span>VRN: {{ $salesInvoice->company->vrn }}</span>@endif
-                    </div>
-                </div>
-            </div>
-            <div style="text-align:right;">
-                <h1 style="font-family:'Fraunces',serif;font-size:24px;margin:0 0 8px;color:#1C2321;">Invoice {{ $salesInvoice->invoice_number }}</h1>
-                <div style="font-size:12px;color:#6E7570;line-height:1.6;">
-                    Invoice Date: <b style="color:#1C2321;">{{ $salesInvoice->invoice_date->format('M d, Y') }}</b><br>
-                    Due Date: <b style="color:#1C2321;">{{ $salesInvoice->due_date->format('M d, Y') }}</b>
-                </div>
-            </div>
-        </div>
-
-        {{-- Body --}}
-        <div style="padding:30px 44px;">
-
-            {{-- Customer --}}
-            <div style="display:flex;justify-content:space-between;margin-bottom:28px;">
-                <div>
-                    <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6E7570;margin-bottom:6px;">Invoiced To</div>
-                    <b style="display:block;font-size:14.5px;color:#1C2321;">{{ $salesInvoice->customer?->name ?? 'N/A' }}</b>
-                    <div style="font-size:12.5px;color:#6E7570;line-height:1.6;margin-top:2px;">
-                        {{ $salesInvoice->customer?->email ?? '' }}<br>
-                        {{ $salesInvoice->customer?->phone ?? '' }}
-                    </div>
-                </div>
-                @if($salesInvoice->warehouse)
-                <div style="text-align:right;">
-                    <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6E7570;margin-bottom:6px;">Warehouse</div>
-                    <b style="display:block;font-size:14.5px;color:#1C2321;">{{ $salesInvoice->warehouse->name }}</b>
-                </div>
-                @endif
-            </div>
-
-            {{-- Items Table --}}
-            <table style="width:100%;border-collapse:collapse;font-size:13px;">
-                <tr>
-                    <th style="text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6E7570;border-bottom:1.5px solid #1C2321;padding:0 4px 10px;">Description</th>
-                    <th style="text-align:center;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6E7570;border-bottom:1.5px solid #1C2321;padding:0 4px 10px;">Qty</th>
-                    <th style="text-align:right;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6E7570;border-bottom:1.5px solid #1C2321;padding:0 4px 10px;">Unit Price</th>
-                    <th style="text-align:right;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6E7570;border-bottom:1.5px solid #1C2321;padding:0 4px 10px;">Total</th>
-                </tr>
-                @forelse($salesInvoice->items as $item)
-                <tr>
-                    <td style="padding:14px 4px;border-bottom:1px solid #E3DDCB;color:#1C2321;">{{ $item->product_name }}</td>
-                    <td style="padding:14px 4px;border-bottom:1px solid #E3DDCB;text-align:center;color:#1C2321;">{{ $item->quantity }}</td>
-                    <td style="padding:14px 4px;border-bottom:1px solid #E3DDCB;text-align:right;color:#1C2321;">{{ number_format($item->unit_price, 2) }} Tsh</td>
-                    <td style="padding:14px 4px;border-bottom:1px solid #E3DDCB;text-align:right;color:#1C2321;font-weight:600;">{{ number_format($item->total_amount, 2) }} Tsh</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4" style="padding:24px 4px;text-align:center;color:#6E7570;font-size:12px;">No items</td>
-                </tr>
-                @endforelse
-            </table>
-
-            {{-- Totals --}}
-            <div style="margin-left:auto;width:280px;margin-top:14px;font-size:13.5px;">
-                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #E3DDCB;color:#6E7570;">
-                    <span>Sub Total</span>
-                    <b style="color:#1C2321;font-weight:600;">{{ number_format($salesInvoice->subtotal, 2) }} Tsh</b>
-                </div>
-                @if($salesInvoice->tax_amount > 0)
-                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #E3DDCB;color:#6E7570;">
-                    <span>18.00% VAT</span>
-                    <b style="color:#1C2321;font-weight:600;">{{ number_format($salesInvoice->tax_amount, 2) }} Tsh</b>
-                </div>
-                @endif
-                @if($salesInvoice->discount_amount > 0)
-                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #E3DDCB;color:#6E7570;">
-                    <span>Discount</span>
-                    <b style="color:#B23A2E;font-weight:600;">&minus;{{ number_format($salesInvoice->discount_amount, 2) }} Tsh</b>
-                </div>
-                @endif
-                <div style="display:flex;justify-content:space-between;padding:14px 0 8px;border-bottom:none;color:#0F3D3E;font-weight:700;font-size:17px;">
-                    <span>Total</span>
-                    <b style="color:#0F3D3E;">{{ number_format($salesInvoice->total_amount, 2) }} Tsh</b>
-                </div>
-            </div>
-
-            {{-- Balance Bar --}}
-            @if($salesInvoice->status != 'paid')
-            <div style="margin-top:24px;padding:16px 20px;border-radius:10px;background:#FBE7E2;display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:12px;color:#B23A2E;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Balance Due</span>
-                <b style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#B23A2E;">{{ number_format($salesInvoice->balance_amount, 2) }} Tsh</b>
-            </div>
-            @else
-            <div style="margin-top:24px;padding:16px 20px;border-radius:10px;background:#E2F0E5;display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:12px;color:#2F7A3D;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Paid in Full</span>
-                <b style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#2F7A3D;">{{ number_format($salesInvoice->paid_amount, 2) }} Tsh</b>
-            </div>
-            @endif
-
-            {{-- Notes --}}
-            @if($salesInvoice->notes)
-            <div style="margin-top:20px;padding:14px 16px;background:#FBF9F2;border-radius:8px;border:1px solid #E3DDCB;">
-                <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6E7570;margin-bottom:4px;">Notes</div>
-                <p style="font-size:12.5px;color:#1C2321;margin:0;line-height:1.5;">{{ $salesInvoice->notes }}</p>
-            </div>
-            @endif
-
-            {{-- Bank Accounts --}}
-            @php $invoiceBanks = $salesInvoice->bankAccounts; @endphp
-            @if($invoiceBanks->count())
-            <div style="margin-top:20px;padding:14px 16px;background:#F0F4F8;border-radius:8px;border:1px solid #D8E3DE;">
-                <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:#6E7570;margin-bottom:8px;">Payment To</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                    @foreach($invoiceBanks as $ba)
-                    <div style="padding:8px 10px;background:#fff;border-radius:6px;border:1px solid #E3DDCB;">
-                        <b style="font-size:12px;color:#1C2321;display:block;">{{ $ba->account_name }}</b>
-                        <span style="font-size:11px;color:#6E7570;">{{ $ba->bank_name }}</span>
-                        <span style="font-size:11px;color:#6E7570;display:block;">{{ $ba->account_number }}</span>
-                        @if($ba->branch)<span style="font-size:10px;color:#9CA3AF;">{{ $ba->branch }}</span>@endif
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            {{-- Terms & Conditions --}}
-            <div style="margin-top:24px;padding:18px 20px;background:#F5F7F6;border-radius:10px;border:1px solid #D8E3DE;">
-                <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#0F3D3E;font-weight:700;margin-bottom:8px;">Terms & Conditions</div>
-                <div style="font-size:12px;color:#1C2321;line-height:1.7;white-space:pre-line;">{{ $salesInvoice->terms_and_conditions ?? "1. Prices Are Quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of " . config('app.name') . " until fully paid\n\nThank You For Your Business." }}</div>
-            </div>
-
-            {{-- Thank You Card --}}
-            <div style="margin-top:24px;padding:16px 20px;border-radius:10px;background:linear-gradient(135deg,#0F3D3E 0%,#1A5A5B 100%);color:#fff;text-align:center;">
-                <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;letter-spacing:.02em;">Thank You For Your Business</div>
-                <div style="font-size:11px;opacity:.85;margin-top:4px;">For inquiries contact: {{ $salesInvoice->company?->email ?? 'billing@asyxgroup.tz' }}</div>
-            </div>
-
-            {{-- Watermark --}}
-            <div class="invoice-watermark" style="position:absolute;bottom:120px;left:50%;transform:translateX(-50%) rotate(-30deg);opacity:.06;pointer-events:none;z-index:0;">
-                <img src="{{ asset('asyxgrouplogo.png') }}" alt="" style="height:180px;object-fit:contain;filter:grayscale(100%);">
-            </div>
-        </div>
-
-        {{-- Footer --}}
-        <div style="padding:18px 44px;border-top:1px solid #E3DDCB;background:#FBF9F2;font-size:11px;color:#6E7570;text-align:center;">
-            PDF Generated on {{ now()->format('l, F jS, Y') }} &middot; {{ config('app.name') }}
-        </div>
+<div class="mb-4 flex items-center justify-between flex-wrap gap-3">
+    <a href="{{ route('admin.sales-invoices.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Invoices</a>
+    <div class="flex items-center gap-2 flex-wrap">
+        @if($salesInvoice->status === 'draft')
+        <form method="POST" action="{{ route('admin.sales-invoices.post', $salesInvoice) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Post invoice {{ $salesInvoice->invoice_number }}?'})">@csrf
+            <button class="px-3 py-1.5 border border-gray-200 text-gray-700 text-xs font-medium rounded hover:bg-gray-50">Post</button>
+        </form>
+        <a href="{{ route('admin.sales-invoices.edit', $salesInvoice) }}" class="px-3 py-1.5 border border-gray-200 text-gray-700 text-xs font-medium rounded hover:bg-gray-50">Edit</a>
+        @endif
+        <a href="{{ route('admin.sales-invoices.receipt', $salesInvoice) }}" class="px-3 py-1.5 border border-gray-200 text-gray-700 text-xs font-medium rounded hover:bg-gray-50">Receipt</a>
+        <a href="{{ route('admin.sales-invoices.pdf', $salesInvoice) }}" target="_blank" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700">Download PDF</a>
+        <form method="POST" action="{{ route('admin.sales-invoices.destroy', $salesInvoice) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete invoice {{ $salesInvoice->invoice_number }}?', color: '#dc2626'})">@csrf @method('DELETE')
+            <button class="px-3 py-1.5 border border-gray-200 text-red-600 text-xs font-medium rounded hover:bg-red-50 hover:border-red-200">Delete</button>
+        </form>
     </div>
 </div>
 
-<style>
-#invoice-a4 { font-family: 'Inter','Nunito',system-ui,sans-serif; position: relative; }
-#invoice-a4 h1 { font-family: 'Fraunces','Georgia',serif; }
-@media print {
-    @page { margin: 10mm; size: A4; }
-    html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-size: 12pt; }
-    body * { visibility: hidden; }
-    #invoice-a4, #invoice-a4 * { visibility: visible; }
-    #invoice-a4 {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 190mm;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-    }
-    #invoice-a4 > div { padding: 6mm !important; }
-    #invoice-a4 .invoice-watermark { opacity: .04 !important; }
-    .no-print, nav, header, .sidebar, .toolbar { display: none !important; }
-}
-</style>
+{{-- Header card --}}
+<div class="bg-white rounded-md border border-gray-200 px-5 py-4 mb-4">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-mono text-sm font-bold text-gray-900">{{ $salesInvoice->invoice_number }}</span>
+                <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $sc }}"></span>{{ ucfirst($salesInvoice->status) }}</span>
+                <span class="text-xs text-gray-400 capitalize">{{ $salesInvoice->type }}</span>
+            </div>
+            <h1 class="text-base font-bold text-gray-900 mt-1.5">{{ $salesInvoice->customer?->name ?? '—' }}</h1>
+            <p class="text-[11px] text-gray-400 mt-1">{{ $salesInvoice->customer?->email }}{{ $salesInvoice->customer?->phone ? ' · ' . $salesInvoice->customer->phone : '' }}</p>
+        </div>
+        <div class="text-right flex-shrink-0">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">{{ $salesInvoice->balance_amount > 0 ? 'Balance Due' : 'Total' }}</p>
+            <p class="text-xl font-bold {{ $salesInvoice->balance_amount > 0 ? 'text-amber-600' : 'text-gray-900' }} mt-0.5">TZS {{ number_format($salesInvoice->balance_amount > 0 ? $salesInvoice->balance_amount : $salesInvoice->total_amount) }}</p>
+            @if($salesInvoice->balance_amount > 0)
+            <p class="text-[10px] text-gray-400 mt-0.5">of TZS {{ number_format($salesInvoice->total_amount) }}</p>
+            @endif
+        </div>
+    </div>
+    <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3 text-xs">
+        <div><p class="text-gray-400">Invoice Date</p><p class="text-gray-800 mt-0.5">{{ $salesInvoice->invoice_date->format('d M Y') }}</p></div>
+        <div><p class="text-gray-400">Due Date</p><p class="mt-0.5 {{ $salesInvoice->due_date->isPast() && $salesInvoice->balance_amount > 0 ? 'text-red-600 font-medium' : 'text-gray-800' }}">{{ $salesInvoice->due_date->format('d M Y') }}</p></div>
+        @if($salesInvoice->warehouse)
+        <div><p class="text-gray-400">Warehouse</p><p class="text-gray-800 mt-0.5">{{ $salesInvoice->warehouse->name }}</p></div>
+        @endif
+        <div><p class="text-gray-400">Items</p><p class="text-gray-800 mt-0.5">{{ $salesInvoice->items->count() }} line{{ $salesInvoice->items->count() === 1 ? '' : 's' }}</p></div>
+        <div><p class="text-gray-400">Paid</p><p class="mt-0.5 text-emerald-600 font-medium">TZS {{ number_format($salesInvoice->paid_amount) }}</p></div>
+    </div>
+</div>
 
-@push('scripts')
-<script>
-function printInvoicePdf() {
-    const url = '{{ route('admin.sales-invoices.pdf', $salesInvoice) }}';
-    const w = window.open(url, '_blank');
-    if (w) {
-        const tryPrint = function() {
-            try {
-                w.print();
-            } catch (e) {}
-        };
-        setTimeout(tryPrint, 1000);
-        setTimeout(tryPrint, 2500);
-    }
-}
-</script>
-@endpush
+{{-- Items --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Items</h3></div>
+    <div class="overflow-x-auto"><table class="w-full text-sm">
+        <thead>
+            <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-100">
+                <th class="px-5 py-2.5 font-semibold w-8">#</th>
+                <th class="px-5 py-2.5 font-semibold">Description</th>
+                <th class="px-5 py-2.5 font-semibold text-right">Qty</th>
+                <th class="px-5 py-2.5 font-semibold text-right">Unit Price</th>
+                <th class="px-5 py-2.5 font-semibold text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+        @forelse($salesInvoice->items as $i => $item)
+        <tr>
+            <td class="px-5 py-3 text-xs text-gray-400">{{ $i + 1 }}</td>
+            <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $item->product_name }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono text-gray-500">{{ $item->quantity }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono text-gray-500">{{ number_format($item->unit_price, 2) }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono font-bold text-gray-900">{{ number_format($item->total_amount, 2) }}</td>
+        </tr>
+        @empty
+        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No items</td></tr>
+        @endforelse
+        </tbody>
+    </table></div>
+</div>
 
-@push('styles')
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-@endpush
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    {{-- Summary --}}
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Summary</h3></div>
+        <div class="divide-y divide-gray-100">
+            <div class="flex justify-between px-5 py-3"><span class="text-xs text-gray-500">Subtotal</span><span class="text-xs font-mono font-medium text-gray-900">TZS {{ number_format($salesInvoice->subtotal, 2) }}</span></div>
+            @if($salesInvoice->discount_amount > 0)
+            <div class="flex justify-between px-5 py-3"><span class="text-xs text-gray-500">Discount</span><span class="text-xs font-mono text-red-500">-TZS {{ number_format($salesInvoice->discount_amount, 2) }}</span></div>
+            @endif
+            @if($salesInvoice->tax_amount > 0)
+            <div class="flex justify-between px-5 py-3"><span class="text-xs text-gray-500">VAT (18%)</span><span class="text-xs font-mono font-medium text-gray-900">+TZS {{ number_format($salesInvoice->tax_amount, 2) }}</span></div>
+            @endif
+            <div class="flex justify-between px-5 py-3.5 bg-gray-50/60"><span class="text-xs font-bold text-gray-900">Total</span><span class="text-sm font-mono font-bold text-gray-900">TZS {{ number_format($salesInvoice->total_amount, 2) }}</span></div>
+            <div class="flex justify-between px-5 py-3"><span class="text-xs text-gray-500">Paid</span><span class="text-xs font-mono text-emerald-600">TZS {{ number_format($salesInvoice->paid_amount, 2) }}</span></div>
+            <div class="flex justify-between px-5 py-3.5 bg-gray-50/60"><span class="text-xs font-bold {{ $salesInvoice->balance_amount > 0 ? 'text-amber-600' : 'text-gray-400' }}">Balance</span><span class="text-sm font-mono font-bold {{ $salesInvoice->balance_amount > 0 ? 'text-amber-600' : 'text-gray-400' }}">TZS {{ number_format($salesInvoice->balance_amount, 2) }}</span></div>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        {{-- Payment To --}}
+        @if($salesInvoice->bankAccounts->count())
+        <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Payment To</h3></div>
+            <div class="divide-y divide-gray-100">
+                @foreach($salesInvoice->bankAccounts as $ba)
+                <div class="px-5 py-3">
+                    <p class="text-xs font-medium text-gray-900">{{ $ba->account_name }}</p>
+                    <p class="text-[11px] text-gray-400 mt-0.5">{{ $ba->bank_name }} · {{ $ba->account_number }}{{ $ba->branch ? ' · ' . $ba->branch : '' }}</p>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- Terms --}}
+        <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Terms &amp; Conditions</h3></div>
+            <div class="px-5 py-4"><p class="text-xs text-gray-600 leading-relaxed whitespace-pre-line">{{ $salesInvoice->terms_and_conditions ?? "1. Prices are quoted in TZS\n2. Prices are subject to change without prior notice\n3. Payment terms must be strictly observed\n4. Goods remain property of " . config('app.name') . " until fully paid" }}</p></div>
+        </div>
+
+        @if($salesInvoice->notes)
+        <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Notes</h3></div>
+            <div class="px-5 py-4"><p class="text-xs text-gray-600 leading-relaxed whitespace-pre-line">{{ $salesInvoice->notes }}</p></div>
+        </div>
+        @endif
+    </div>
+</div>
+
+{{-- PDF preview --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+    <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Invoice PDF</h3>
+        <a href="{{ route('admin.sales-invoices.pdf', $salesInvoice) }}" target="_blank" class="text-xs font-medium text-gray-600 hover:text-gray-900">Open full size →</a>
+    </div>
+    <div class="bg-gray-100 p-4 md:p-8">
+        <iframe src="{{ route('admin.sales-invoices.pdf', $salesInvoice) }}" class="w-full bg-white rounded border border-gray-300 shadow-sm" style="height:900px;border:0"></iframe>
+    </div>
+</div>
 @endsection
