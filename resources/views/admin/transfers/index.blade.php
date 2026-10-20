@@ -4,86 +4,127 @@
 @section('page_title', 'Stock Transfers')
 
 @section('content')
-<div class="mb-4 flex items-center justify-between">
-    <p class="text-sm text-gray-500">Manage stock transfers between warehouses</p>
-    <button onclick="document.getElementById('createModal').classList.remove('hidden')" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        New Transfer
-    </button>
-</div>
 
-<div class="bg-white rounded-md border overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50">
-                <th class="px-5 py-3 font-medium">Product</th>
-                <th class="px-5 py-3 font-medium">From</th>
-                <th class="px-5 py-3 font-medium">To</th>
-                <th class="px-5 py-3 font-medium">Qty</th>
-                <th class="px-5 py-3 font-medium">Date</th>
-                <th class="px-5 py-3 font-medium">Status</th>
-                <th class="px-5 py-3 font-medium">Actions</th>
-            </tr></thead>
-            <tbody>
+@if(session('success'))
+<div class="bg-gray-50 border border-gray-200 rounded-md px-5 py-3 mb-4 text-xs text-gray-700">{{ session('success') }}</div>
+@endif
+
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+    <div class="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
+        <span class="text-xs text-gray-400">Manage stock transfers between warehouses</span>
+        <button type="button" onclick="openDrawer()" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">New Transfer</button>
+    </div>
+    <div class="overflow-x-auto"><table class="w-full text-sm">
+        <thead>
+            <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+                <th class="px-5 py-3 font-semibold">Product</th><th class="px-5 py-3 font-semibold">From</th><th class="px-5 py-3 font-semibold">To</th><th class="px-5 py-3 font-semibold text-right">Qty</th><th class="px-5 py-3 font-semibold">Date</th><th class="px-5 py-3 font-semibold">Status</th><th class="px-5 py-3 font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
         @forelse($transfers as $transfer)
-        <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
-                    <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $transfer->product_name ?? 'N/A' }}</td>
-                    <td class="px-5 py-3 text-xs text-gray-500">{{ $transfer->fromWarehouse?->name ?? 'N/A' }}</td>
-                    <td class="px-5 py-3 text-xs text-gray-500">{{ $transfer->toWarehouse?->name ?? 'N/A' }}</td>
-                    <td class="px-5 py-3 text-xs font-semibold text-gray-900">{{ number_format($transfer->quantity) }}</td>
-                    <td class="px-5 py-3 text-xs text-gray-400">{{ $transfer->date ? $transfer->date->format('d M Y') : 'N/A' }}</td>
-                    <td class="px-5 py-3">
-                        <span class="px-2 py-1 rounded-full text-[10px] font-medium {{ $transfer->status === 'completed' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">{{ ucfirst($transfer->status ?? 'pending') }}</span>
-                    </td>
-                    <td class="px-5 py-3 flex items-center gap-2">
-                        @if(($transfer->status ?? 'pending') !== 'completed')
-                        <form method="POST" action="{{ route('admin.transfers.approve', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve this transfer?'})">
-                            @csrf @method('PATCH')
-                            <button class="text-gray-600 hover:text-gray-900 text-xs">Approve</button>
-                        </form>
-                        @endif
-                        <form method="POST" action="{{ route('admin.transfers.destroy', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this transfer?'})">
-                            @csrf @method('DELETE')
-                            <button class="text-red-500 hover:text-red-700 text-xs">Delete</button>
-                        </form>
-                    </td>
-                </tr>
+        <tr class="hover:bg-gray-50/60">
+            <td class="px-5 py-3.5 text-xs font-medium text-gray-900">{{ $transfer->product_name ?? '—' }}</td>
+            <td class="px-5 py-3.5 text-xs text-gray-500">{{ $transfer->fromWarehouse?->name ?? '—' }}</td>
+            <td class="px-5 py-3.5 text-xs text-gray-500">{{ $transfer->toWarehouse?->name ?? '—' }}</td>
+            <td class="px-5 py-3.5 text-xs text-right font-mono font-bold text-gray-900">{{ number_format($transfer->quantity) }}</td>
+            <td class="px-5 py-3.5 text-xs text-gray-400">{{ $transfer->date?->format('d M Y') ?? '—' }}</td>
+            <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600 capitalize"><span style="width:6px;height:6px;border-radius:99px;background:{{ ($transfer->status ?? 'pending') === 'completed' ? '#10b981' : '#f59e0b' }}"></span>{{ $transfer->status ?? 'pending' }}</span></td>
+            <td class="px-5 py-3.5">
+                <div class="flex items-center justify-end gap-4">
+                    @if(($transfer->status ?? 'pending') !== 'completed')
+                    <form method="POST" action="{{ route('admin.transfers.approve', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve this transfer?'})">
+                        @csrf @method('PATCH')
+                        <button class="text-xs font-medium text-emerald-600 hover:text-emerald-700">Approve</button>
+                    </form>
+                    @endif
+                    <form method="POST" action="{{ route('admin.transfers.destroy', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this transfer?'})">
+                        @csrf @method('DELETE')
+                        <button class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
         @empty
-        <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400 text-xs">No transfers found</td></tr>
+        <tr><td colspan="7" class="px-5 py-10 text-center text-gray-400 text-xs">No transfers found</td></tr>
         @endforelse
         </tbody>
-        </table>
-    </div>
-    <div class="px-5 py-4 border-t">{{ $transfers->links() }}</div>
+    </table></div>
+    @if($transfers->hasPages())
+    <div class="px-5 py-3 border-t border-gray-100">{{ $transfers->links() }}</div>
+    @endif
 </div>
 
-<div id="createModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onclick="if(event.target===this)this.classList.add('hidden')">
-    <div class="bg-white rounded-md shadow-xl max-w-md w-full p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">New Transfer</h3>
-        <form method="POST" action="{{ route('admin.transfers.store') }}" class="space-y-3">
+{{-- New Transfer Drawer --}}
+<div id="createDrawer" class="fixed inset-0 z-[80] hidden">
+    <div class="absolute inset-0 bg-black/40" onclick="closeDrawer()"></div>
+    <div id="createDrawerPanel" class="absolute left-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+        <div class="px-5 py-4 bg-slate-900 flex items-center justify-between flex-shrink-0">
+            <div><h3 class="text-sm font-bold text-white">New Transfer</h3><p class="text-[11px] text-slate-400 mt-0.5">Move stock between warehouses</p></div>
+            <button type="button" onclick="closeDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form method="POST" action="{{ route('admin.transfers.store') }}" class="flex-1 overflow-y-auto p-5" onsubmit="return validateTransfer()">
             @csrf
-            <div><label class="block text-xs font-medium text-gray-600 mb-1">Product Name *</label><input name="product_name" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">From *</label><select name="from_warehouse" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"><option value="">Select...</option>
-        @foreach($warehouses as $w)
-        <option value="{{ $w->id }}">{{ $w->name }}</option>
-        @endforeach
-        </select></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">To *</label><select name="to_warehouse" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"><option value="">Select...</option>
-        @foreach($warehouses as $w)
-        <option value="{{ $w->id }}">{{ $w->name }}</option>
-        @endforeach
-        </select></div>
+            <div class="space-y-4">
+                <div><label class="block text-xs font-medium text-gray-600 mb-1">Product Name <span class="text-red-500">*</span></label><input name="product_name" required placeholder="e.g. Laptop - Dell 5530" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">From <span class="text-red-500">*</span></label>
+                        <select name="from_warehouse" id="from_warehouse" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                            <option value="">Select...</option>
+                            @foreach($warehouses as $w)
+                            <option value="{{ $w->id }}">{{ $w->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">To <span class="text-red-500">*</span></label>
+                        <select name="to_warehouse" id="to_warehouse" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                            <option value="">Select...</option>
+                            @foreach($warehouses as $w)
+                            <option value="{{ $w->id }}">{{ $w->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Quantity <span class="text-red-500">*</span></label><input name="quantity" type="number" step="0.01" min="0.01" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Date</label><input name="date" type="date" value="{{ date('Y-m-d') }}" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
+                </div>
+                <p id="sameWarehouseMsg" class="hidden text-[11px] text-red-500">From and To warehouses cannot be the same.</p>
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Quantity *</label><input name="quantity" type="number" step="0.01" required class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Date</label><input name="date" type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-gray-400 focus:ring-2 focus:ring-gray-200 outline-none"></div>
-            </div>
-            <div class="flex gap-2 pt-2">
-                <button type="button" onclick="document.getElementById('createModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50">Cancel</button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700">Create</button>
+            <div class="flex items-center gap-3 pt-5 mt-2 border-t border-gray-100">
+                <button type="submit" class="px-5 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-700 transition-colors">Create Transfer</button>
+                <button type="button" onclick="closeDrawer()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function openDrawer() {
+    document.getElementById('createDrawer').classList.remove('hidden');
+    requestAnimationFrame(() => document.getElementById('createDrawerPanel').classList.remove('-translate-x-full'));
+}
+function closeDrawer() {
+    document.getElementById('createDrawerPanel').classList.add('-translate-x-full');
+    setTimeout(() => document.getElementById('createDrawer').classList.add('hidden'), 300);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+function validateTransfer() {
+    const from = document.getElementById('from_warehouse').value;
+    const to = document.getElementById('to_warehouse').value;
+    const msg = document.getElementById('sameWarehouseMsg');
+    if (from && to && from === to) {
+        msg.classList.remove('hidden');
+        return false;
+    }
+    msg.classList.add('hidden');
+    return true;
+}
+</script>
+@endpush
