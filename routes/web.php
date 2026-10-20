@@ -201,10 +201,9 @@ Route::get('/login', function () {
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-// Registration disabled — show notice
-Route::get('/register', function () {
-    return view('auth.register-disabled');
-})->name('register');
+// Registration — controlled by System Settings (enableRegistration)
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register.store');
 
 // Custom password reset with activation code
 Route::get('password/reset', [App\Http\Controllers\Auth\PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');

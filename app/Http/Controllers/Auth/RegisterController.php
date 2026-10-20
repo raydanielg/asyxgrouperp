@@ -31,6 +31,28 @@ class RegisterController extends Controller
     protected $redirectTo = '/home';
 
     /**
+     * Registration is only available when enabled in System Settings.
+     */
+    protected function registrationEnabled(): bool
+    {
+        return \App\Models\Setting::get('enableRegistration') === 'on';
+    }
+
+    public function showRegistrationForm()
+    {
+        abort_unless($this->registrationEnabled(), 404);
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        abort_unless($this->registrationEnabled(), 404);
+        $this->validator($request->all())->validate();
+        $user = $this->create($request->all());
+        return $this->registered($request, $user) ?: redirect($this->redirectPath());
+    }
+
+    /**
      * Create a new controller instance.
      *
      * @return void
