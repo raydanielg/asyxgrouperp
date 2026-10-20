@@ -2,33 +2,58 @@
 @section('title', 'Bank Transfers - ' . config('app.name'))
 @section('page_title', 'Bank Transfer Payments')
 @section('content')
-<div class="bg-white rounded-md border overflow-hidden">
+
+@php
+    $pendingCount = $transfers->where('status', 'pending')->count();
+    $sc = ['pending' => '#f59e0b', 'approved' => '#10b981', 'rejected' => '#ef4444'];
+@endphp
+
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+    <div class="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
+        <span class="text-xs text-gray-400">{{ $transfers->total() }} transfers</span>
+        @if($pendingCount > 0)
+        <span class="text-xs text-amber-600 font-medium">{{ $pendingCount }} awaiting approval</span>
+        @endif
+    </div>
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Order ID</th><th class="px-5 py-3 font-medium">User</th><th class="px-5 py-3 font-medium">Amount</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Date</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>
+        <thead>
+            <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+                <th class="px-5 py-3 font-semibold">Order ID</th><th class="px-5 py-3 font-semibold">User</th><th class="px-5 py-3 font-semibold text-right">Amount</th><th class="px-5 py-3 font-semibold">Status</th><th class="px-5 py-3 font-semibold">Date</th><th class="px-5 py-3 font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
         @forelse($transfers as $transfer)
-        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
-            <td class="px-5 py-3 text-xs font-mono text-gray-700">{{ $transfer->order_id }}</td>
-            <td class="px-5 py-3 text-xs text-gray-700">{{ $transfer->user?->name ?? 'N/A' }}</td>
-            <td class="px-5 py-3 text-xs font-semibold text-gray-900">TZS {{ number_format($transfer->price ?? 0) }} {{ $transfer->price_currency }}</td>
-            <td class="px-5 py-3">@php $c=['pending'=>'amber','approved'=>'emerald','rejected'=>'red']; @endphp<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-{{ $c[$transfer->status] ?? 'gray' }}-50 text-{{ $c[$transfer->status] ?? 'gray' }}-700 border border-{{ $c[$transfer->status] ?? 'gray' }}-100">{{ ucfirst($transfer->status) }}</span></td>
-            <td class="px-5 py-3 text-xs text-gray-400">{{ $transfer->created_at->format('d M Y') }}</td>
-            <td class="px-5 py-3">
-        @if($transfer->status === 'pending')
-        <form method="POST" action="{{ route('admin.bank-transfers.update', $transfer) }}" class="inline flex gap-2">@csrf @method('PATCH')
-                    <input type="hidden" name="status" value="approved"><button class="text-gray-600 hover:text-gray-900 text-xs">Approve</button>
-                </form>
-                <form method="POST" action="{{ route('admin.bank-transfers.update', $transfer) }}" class="inline">@csrf @method('PATCH')
-                    <input type="hidden" name="status" value="rejected"><button class="text-red-500 hover:text-red-700 text-xs">Reject</button>
-                </form>
-        @endif</td>
-        
+        <tr class="hover:bg-gray-50/60">
+            <td class="px-5 py-3.5 text-xs font-mono font-medium text-gray-900">{{ $transfer->order_id }}</td>
+            <td class="px-5 py-3.5">
+                <p class="text-xs text-gray-800">{{ $transfer->user?->name ?? '—' }}</p>
+                @if($transfer->user?->email)<p class="text-[10px] text-gray-400 mt-0.5">{{ $transfer->user->email }}</p>@endif
+            </td>
+            <td class="px-5 py-3.5 text-xs text-right font-mono font-bold text-gray-900">TZS {{ number_format($transfer->price ?? 0) }}</td>
+            <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $sc[$transfer->status] ?? '#9ca3af' }}"></span>{{ ucfirst($transfer->status) }}</span></td>
+            <td class="px-5 py-3.5 text-xs text-gray-400">{{ $transfer->created_at->format('d M Y, H:i') }}</td>
+            <td class="px-5 py-3.5">
+                @if($transfer->status === 'pending')
+                <div class="flex items-center justify-end gap-4">
+                    <form method="POST" action="{{ route('admin.bank-transfers.update', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve this transfer?', color: '#059669'})">@csrf @method('PATCH')
+                        <input type="hidden" name="status" value="approved"><button class="text-xs font-medium text-emerald-600 hover:text-emerald-700">Approve</button>
+                    </form>
+                    <form method="POST" action="{{ route('admin.bank-transfers.update', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Reject this transfer?', color: '#dc2626'})">@csrf @method('PATCH')
+                        <input type="hidden" name="status" value="rejected"><button class="text-xs font-medium text-gray-400 hover:text-red-600">Reject</button>
+                    </form>
+                </div>
+                @else
+                <div class="text-right text-xs text-gray-300">—</div>
+                @endif
+            </td>
         </tr>
         @empty
-        <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400 text-xs">No bank transfers found</td></tr>
+        <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400 text-xs">No bank transfers found</td></tr>
         @endforelse
         </tbody>
     </table></div>
-    <div class="px-5 py-4 border-t">{{ $transfers->links() }}</div>
+    @if($transfers->hasPages())
+    <div class="px-5 py-3 border-t border-gray-100">{{ $transfers->links() }}</div>
+    @endif
 </div>
 @endsection
