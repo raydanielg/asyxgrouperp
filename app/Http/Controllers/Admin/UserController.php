@@ -31,7 +31,8 @@ class UserController extends Controller
         // Tenant admins only manage users inside their own company
         $user = auth()->user();
         if ($user->isAdmin() && !$user->isSuperAdmin()) {
-            $query->where('company_id', $user->company_id);
+            $query->where('company_id', $user->company_id)
+                  ->where('role', '!=', 'superadmin');
         }
 
         if ($request->filled('name')) {
