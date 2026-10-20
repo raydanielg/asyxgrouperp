@@ -185,6 +185,21 @@ class DocumentController extends Controller
         );
     }
 
+    public function preview(Document $document)
+    {
+        if ($document->is_confidential && $document->uploaded_by !== auth()->id() && auth()->user()?->role !== 'admin' && auth()->user()?->role !== 'superadmin') {
+            abort(403, 'You do not have permission to view this confidential document.');
+        }
+
+        $path = Storage::disk('local')->path($document->file_path);
+        abort_unless(file_exists($path), 404);
+
+        return response()->file($path, [
+            'Content-Type' => $document->mime_type ?? 'application/octet-stream',
+            'Content-Disposition' => 'inline; filename="' . $document->title . '.' . $document->file_type . '"',
+        ]);
+    }
+
     public function sign(Request $request, Document $document)
     {
         $signature = $document->signatures()

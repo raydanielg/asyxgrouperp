@@ -536,6 +536,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/documents', [$docCtrl, 'store'])->name('documents.store');
     Route::get('/documents/{document}', [$docCtrl, 'show'])->name('documents.show');
     Route::get('/documents/{document}/download', [$docCtrl, 'download'])->name('documents.download');
+    Route::get('/documents/{document}/preview', [$docCtrl, 'preview'])->name('documents.preview');
     Route::post('/documents/{document}/sign', [$docCtrl, 'sign'])->name('documents.sign');
     Route::post('/documents/{document}/decline', [$docCtrl, 'decline'])->name('documents.decline');
     Route::post('/documents/{document}/archive', [$docCtrl, 'archive'])->name('documents.archive');
