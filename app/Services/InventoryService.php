@@ -163,34 +163,81 @@ class InventoryService
         });
     }
 
+    /**
+     * Reserve stock for an eligible operation — locks the row and
+     * revalidates availability inside the transaction so concurrent
+     * reservations cannot exceed available stock.
+     */
     public function reserveStock(int $productId, int $warehouseId, float $quantity): ProductWarehouseStock
     {
         if ($quantity <= 0) {
             throw new RuntimeException('Reserve quantity must be greater than zero.');
         }
 
-        $available = $this->getAvailableStock($productId, $warehouseId);
-        if ($quantity > $available) {
-            throw new RuntimeException("Insufficient available stock. Available: {$available}, requested: {$quantity}.");
+        return DB::transaction(function () use ($productId, $warehouseId, $quantity) {
+            $stock = ProductWarehouseStock::where('product_id', $productId)
+                ->where('warehouse_id', $warehouseId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $available = $stock->quantity - $stock->reserved_quantity;
+            if ($quantity > $available) {
+                throw new RuntimeException("Insufficient available stock. Available: {$available}, requested: {$quantity}.");
+            }
+
+            $stock->increment('reserved_quantity', $quantity);
+            return $stock->fresh();
+        });
+    }
+
+    /**
+     * Release a reservation — floored at zero so double-release can never
+     * create negative reservations.
+     */
+    public function releaseReservation(int $productId, int $warehouseId, float $quantity): ProductWarehouseStock
+    {
+        return DB::transaction(function () use ($productId, $warehouseId, $quantity) {
+            $stock = ProductWarehouseStock::where('product_id', $productId)
+                ->where('warehouse_id', $warehouseId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $newReserved = max(0, $stock->reserved_quantity - $quantity);
+            $stock->update(['reserved_quantity' => $newReserved]);
+
+            return $stock->fresh();
+        });
+    }
+
+    /**
+     * Consume reserved stock — decrements reserved AND on-hand atomically.
+     * Used when an operation physically takes its reserved stock (e.g.
+     * transfer execution moves qty to the destination afterwards).
+     * Returns the decremented stock row. Must be called inside the
+     * caller's transaction.
+     */
+    public function consumeReserved(int $productId, int $warehouseId, float $quantity): ProductWarehouseStock
+    {
+        if ($quantity <= 0) {
+            throw new RuntimeException('Consume quantity must be greater than zero.');
         }
 
         $stock = ProductWarehouseStock::where('product_id', $productId)
             ->where('warehouse_id', $warehouseId)
+            ->lockForUpdate()
             ->firstOrFail();
 
-        $stock->increment('reserved_quantity', $quantity);
-
-        return $stock->fresh();
-    }
-
-    public function releaseReservation(int $productId, int $warehouseId, float $quantity): ProductWarehouseStock
-    {
-        $stock = ProductWarehouseStock::where('product_id', $productId)
-            ->where('warehouse_id', $warehouseId)
-            ->firstOrFail();
+        if ($quantity > $stock->reserved_quantity + 0.0001) {
+            throw new RuntimeException("Cannot consume {$quantity} — only {$stock->reserved_quantity} is reserved.");
+        }
+        if ($quantity > $stock->quantity + 0.0001) {
+            throw new RuntimeException("Insufficient on-hand stock to consume {$quantity}.");
+        }
 
         $stock->decrement('reserved_quantity', $quantity);
+        $stock->decrement('quantity', $quantity);
 
+        $this->syncProductTotalStock($productId);
         return $stock->fresh();
     }
 
