@@ -135,21 +135,27 @@ class ErpController extends Controller
 
     public function transferStore(Request $request)
     {
+        $companyId = auth()->user()->company_id;
         $data = $request->validate([
-            'from_warehouse' => 'required|exists:warehouses,id',
-            'to_warehouse' => 'required|exists:warehouses,id|different:from_warehouse',
-            'product_name' => 'required|string|max:255',
-            'quantity' => 'required|numeric|min:0',
+            'from_warehouse' => ['required', \Illuminate\Validation\Rule::exists('warehouses','id')->where('company_id', $companyId)],
+            'to_warehouse' => ['required', 'different:from_warehouse', \Illuminate\Validation\Rule::exists('warehouses','id')->where('company_id', $companyId)],
+            'product_id' => ['required', \Illuminate\Validation\Rule::exists('products','id')->where('company_id', $companyId)],
+            'product_name' => 'nullable|string|max:255',
+            'quantity' => 'required|numeric|min:0.0001',
             'date' => 'nullable|date',
         ]);
         $data['creator_id'] = auth()->id();
         $data['created_by'] = auth()->id();
+        $data['product_name'] = $data['product_name'] ?? \App\Models\Product::withoutGlobalScopes()->find($data['product_id'])?->name;
+        $data['status'] = 'pending';
         Transfer::create($data);
         return back()->with('success', 'Transfer created successfully.');
     }
 
     public function transferDestroy(Transfer $transfer)
     {
+        // Completed transfers moved real stock — history is preserved
+        abort_if($transfer->status === 'completed', 403, 'Completed transfers cannot be deleted. Create a reversing transfer instead.');
         $transfer->delete();
         return back()->with('success', 'Transfer deleted.');
     }
@@ -158,14 +164,39 @@ class ErpController extends Controller
     {
         $user = auth()->user();
         abort_if($transfer->status === 'completed', 403, 'This transfer is already completed.');
+        abort_if($transfer->status === 'cancelled', 403, 'Cancelled transfers cannot be completed.');
         abort_if($transfer->created_by === $user->id || $transfer->creator_id === $user->id,
             403, 'You cannot approve a transfer you created.');
 
-        \App\Models\AuditLog::log('approve', 'stock_transfers', [
-            'module_action' => 'transfer_approved',
-            'new_values' => ['transfer' => $transfer->id, 'product' => $transfer->product_name, 'qty' => $transfer->quantity],
-        ]);
-        $transfer->approve($user);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($transfer, $user) {
+            // Lock + revalidate inside transaction — concurrent attempts can't double-execute
+            $locked = Transfer::lockForUpdate()->findOrFail($transfer->id);
+            abort_if($locked->status === 'completed', 403, 'This transfer is already completed.');
+
+            // Real stock movement — InventoryService locks stock rows and
+            // revalidates availability inside its own transaction
+            if ($locked->product_id) {
+                try {
+                    app(\App\Services\InventoryService::class)->transferStock(
+                        $locked->product_id,
+                        $locked->from_warehouse,
+                        $locked->to_warehouse,
+                        $locked->quantity,
+                        $user->id,
+                        "Transfer #{$locked->id}"
+                    );
+                } catch (\Throwable $e) {
+                    abort(422, $e->getMessage());
+                }
+            }
+
+            $locked->approve($user);
+            \App\Models\AuditLog::log('approve', 'stock_transfers', [
+                'module_action' => 'transfer_approved',
+                'new_values' => ['transfer' => $locked->id, 'product' => $locked->product_name, 'qty' => $locked->quantity],
+            ]);
+        });
+
         return back()->with('success', 'Transfer approved and completed.');
     }
 
