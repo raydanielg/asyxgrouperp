@@ -2,35 +2,40 @@
 @section('title', 'Approval Workflows - ' . config('app.name'))
 @section('page_title', 'Approval Workflows')
 @section('content')
-<div class="mb-4 flex items-center justify-between">
-    <p class="text-sm text-gray-500">Configure multi-level approval processes</p>
-    <a href="{{ route('admin.approvals.create') }}" class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        New Workflow
-    </a>
-</div>
 
 @if(session('success'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">{{ session('success') }}</div>
+<div class="bg-gray-50 border border-gray-200 rounded-md px-5 py-3 mb-4 text-xs text-gray-700">{{ session('success') }}</div>
 @endif
 
-{{-- Pending Requests --}}
+{{-- Pending Approvals --}}
 @if($pendingRequests->isNotEmpty())
-<div class="bg-white rounded-md border overflow-hidden mb-6">
-    <div class="px-5 py-3 border-b bg-amber-50/50"><h3 class="text-sm font-bold text-amber-700">Pending Approvals ({{ $pendingRequests->count() }})</h3></div>
+<div class="bg-white rounded-md border border-amber-200 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 border-b border-amber-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span style="width:7px;height:7px;border-radius:99px;background:#f59e0b"></span>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-amber-700">Pending Your Approval</h3>
+        </div>
+        <span class="text-[11px] font-bold text-amber-700">{{ $pendingRequests->count() }}</span>
+    </div>
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-2 font-medium">Number</th><th class="px-5 py-2 font-medium">Module</th><th class="px-5 py-2 font-medium">Amount</th><th class="px-5 py-2 font-medium">Requested By</th><th class="px-5 py-2 font-medium">Level</th><th class="px-5 py-2 font-medium">Actions</th></tr></thead>
-        <tbody>
+        <thead>
+            <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-100">
+                <th class="px-5 py-2.5 font-semibold">Number</th><th class="px-5 py-2.5 font-semibold">Module</th><th class="px-5 py-2.5 font-semibold text-right">Amount</th><th class="px-5 py-2.5 font-semibold">Requested By</th><th class="px-5 py-2.5 font-semibold">Level</th><th class="px-5 py-2.5 font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
         @foreach($pendingRequests as $req)
-        <tr class="border-t border-gray-100">
-            <td class="px-5 py-2 text-xs font-medium">{{ $req->request_number }}</td>
-            <td class="px-5 py-2 text-xs">{{ $req->module_label ?? $req->module }}</td>
-            <td class="px-5 py-2 text-xs font-medium">{{ number_format($req->amount, 0) }}</td>
-            <td class="px-5 py-2 text-xs text-gray-600">{{ $req->requestedBy?->name }}</td>
-            <td class="px-5 py-2 text-xs">Level {{ $req->current_level }}</td>
-            <td class="px-5 py-2 flex gap-2">
-                <form method="POST" action="{{ route('admin.approvals.approve', $req) }}">@csrf<button class="text-xs text-gray-600 hover:text-gray-900">Approve</button></form>
-                <form method="POST" action="{{ route('admin.approvals.reject', $req) }}" onsubmit="return confirmAction(this, {title: 'Reject this request?'})">@csrf<input type="hidden" name="rejection_reason" value="Rejected by approver"><button class="text-xs text-red-500 hover:text-red-700">Reject</button></form>
+        <tr class="hover:bg-gray-50/60">
+            <td class="px-5 py-3 text-xs font-mono font-medium text-gray-900">{{ $req->request_number }}</td>
+            <td class="px-5 py-3 text-xs text-gray-600 capitalize">{{ $req->module_label ?? str_replace('_', ' ', $req->module) }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono font-bold text-gray-900">TZS {{ number_format($req->amount, 0) }}</td>
+            <td class="px-5 py-3 text-xs text-gray-500">{{ $req->requestedBy?->name ?? '—' }}</td>
+            <td class="px-5 py-3 text-xs text-gray-400">Level {{ $req->current_level }}</td>
+            <td class="px-5 py-3">
+                <div class="flex items-center justify-end gap-4">
+                    <form method="POST" action="{{ route('admin.approvals.approve', $req) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve {{ $req->request_number }}?', color: '#059669'})">@csrf<button class="text-xs font-medium text-emerald-600 hover:text-emerald-700">Approve</button></form>
+                    <form method="POST" action="{{ route('admin.approvals.reject', $req) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Reject {{ $req->request_number }}?', color: '#dc2626'})">@csrf<input type="hidden" name="rejection_reason" value="Rejected by approver"><button class="text-xs font-medium text-gray-400 hover:text-red-600">Reject</button></form>
+                </div>
             </td>
         </tr>
         @endforeach
@@ -40,23 +45,33 @@
 @endif
 
 {{-- Workflows --}}
-<div class="bg-white rounded-md border overflow-hidden">
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+    <div class="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
+        <span class="text-xs text-gray-400">{{ $workflows->count() }} workflows · configure multi-level approvals</span>
+        <a href="{{ route('admin.approvals.create') }}" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">New Workflow</a>
+    </div>
     <div class="overflow-x-auto"><table class="w-full text-sm">
-        <thead><tr class="text-left text-xs text-gray-500 bg-gray-50/50"><th class="px-5 py-3 font-medium">Workflow</th><th class="px-5 py-3 font-medium">Module</th><th class="px-5 py-3 font-medium">Steps</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Actions</th></tr></thead>
-        <tbody>
+        <thead>
+            <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+                <th class="px-5 py-3 font-semibold">Workflow</th><th class="px-5 py-3 font-semibold">Module</th><th class="px-5 py-3 font-semibold text-right">Steps</th><th class="px-5 py-3 font-semibold">Status</th><th class="px-5 py-3 font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
         @forelse($workflows as $wf)
-        <tr class="border-t border-gray-100 hover:bg-gray-50/50">
-            <td class="px-5 py-3 text-xs"><a href="{{ route('admin.approvals.show', $wf) }}" class="font-medium text-gray-800 hover:text-gray-700">{{ $wf->name }}</a></td>
-            <td class="px-5 py-3 text-xs text-gray-600 capitalize">{{ str_replace('_', ' ', $wf->module) }}</td>
-            <td class="px-5 py-3 text-xs text-gray-600">{{ $wf->steps->count() }} step(s)</td>
-            <td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $wf->is_active ? '#10b981' : '#9ca3af' }}"></span>{{ $wf->is_active ? 'Active' : 'Inactive' }}</span></td>
-            <td class="px-5 py-3 flex items-center gap-3">
-                <a href="{{ route('admin.approvals.show', $wf) }}" class="text-gray-600 hover:text-gray-900 text-xs">View</a>
-                <form method="POST" action="{{ route('admin.approvals.destroy', $wf) }}" onsubmit="return confirmAction(this, {title: 'Delete this workflow?'})">@csrf @method('DELETE')<button class="text-red-500 hover:text-red-700 text-xs">Delete</button></form>
+        <tr class="hover:bg-gray-50/60">
+            <td class="px-5 py-3.5"><a href="{{ route('admin.approvals.show', $wf) }}" class="text-xs font-medium text-gray-900 hover:text-gray-600">{{ $wf->name }}</a></td>
+            <td class="px-5 py-3.5 text-xs text-gray-500 capitalize">{{ str_replace('_', ' ', $wf->module) }}</td>
+            <td class="px-5 py-3.5 text-xs text-right font-mono text-gray-500">{{ $wf->steps->count() }}</td>
+            <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $wf->is_active ? '#10b981' : '#d1d5db' }}"></span>{{ $wf->is_active ? 'Active' : 'Inactive' }}</span></td>
+            <td class="px-5 py-3.5">
+                <div class="flex items-center justify-end gap-4">
+                    <a href="{{ route('admin.approvals.show', $wf) }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</a>
+                    <form method="POST" action="{{ route('admin.approvals.destroy', $wf) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Delete this workflow?'})">@csrf @method('DELETE')<button class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button></form>
+                </div>
             </td>
         </tr>
         @empty
-        <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400 text-xs">No workflows defined</td></tr>
+        <tr><td colspan="5" class="px-5 py-10 text-center text-gray-400 text-xs">No workflows defined</td></tr>
         @endforelse
         </tbody>
     </table></div>
