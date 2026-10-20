@@ -131,7 +131,7 @@
                             $roleGroups = [
                                 'Administration' => [
                                     ['superadmin@djanproject.com', 'ERP Super Administrator', 'emerald'],
-                                    ['admin@djanproject.com', 'ERP Administrator', 'emerald'],
+                                    ['admin@djanproject.com', 'ERP Administrator', 'emerald', 'admin12345'],
                                 ],
                                 'Executive' => [
                                     ['managing.director@djanproject.com', 'Managing Director', 'violet'],
@@ -219,7 +219,7 @@
                                 </div>
                                 <div class="space-y-1.5">
                                     @foreach($items as $r)
-                                        <button type="button" data-role-label="{{ strtolower($r[1]) }} {{ strtolower($groupName) }}" onclick="quickLogin('{{ $r[0] }}')" class="role-chip w-full px-3 py-2.5 rounded border border-gray-200 bg-white hover:border-gray-400 hover:bg-gray-50 transition-all flex items-center gap-3 group">
+                                        <button type="button" data-role-label="{{ strtolower($r[1]) }} {{ strtolower($groupName) }}" onclick="quickLogin('{{ $r[0] }}'{{ isset($r[3]) ? ", '" . $r[3] . "'" : '' }})" class="role-chip w-full px-3 py-2.5 rounded border border-gray-200 bg-white hover:border-gray-400 hover:bg-gray-50 transition-all flex items-center gap-3 group">
                                             <span class="w-8 h-8 rounded bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0 font-bold text-xs group-hover:scale-110 transition-transform">{{ strtoupper(substr($r[1], 0, 1)) }}</span>
                                             <div class="flex-1 text-left">
                                                 <p class="text-[13px] font-bold text-gray-700 group-hover:text-gray-900 leading-tight">{{ $r[1] }}</p>
