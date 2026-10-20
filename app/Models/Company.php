@@ -40,11 +40,13 @@ class Company extends Model
         'subscription_ends_at',
         'suspended_at',
         'suspension_reason',
+        'emails_enabled',
     ];
 
     protected $casts = [
         'is_group' => 'boolean',
         'is_active' => 'boolean',
+        'emails_enabled' => 'boolean',
         'mrr' => 'decimal:2',
         'subscription_starts_at' => 'date',
         'subscription_ends_at' => 'date',
