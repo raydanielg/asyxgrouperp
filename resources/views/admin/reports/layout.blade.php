@@ -25,17 +25,16 @@
 
 {{-- Summary KPI Cards --}}
 @isset($kpiCards)
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-    @foreach($kpiCards as $card)
-    <div class="bg-gradient-to-br from-{{ $card['from'] ?? 'emerald-600' }} to-{{ $card['to'] ?? 'emerald-700' }} rounded-md border border-{{ $card['border'] ?? 'emerald-500' }} p-4 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
-        <div class="relative z-10">
-            <span class="text-[10px] font-medium {{ $card['text'] ?? 'emerald-100' }}">{{ $card['label'] }}</span>
-            <p class="text-xl font-bold tracking-tight text-white mt-1">{{ $card['value'] }}</p>
-            @isset($card['sub'])<p class="text-[10px] {{ $card['sub_color'] ?? 'emerald-200' }} font-medium mt-1">{{ $card['sub'] }}</p>@endisset
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-gray-100">
+        @foreach($kpiCards as $card)
+        <div class="px-4 py-3.5">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">{{ $card['label'] }}</p>
+            <p class="text-lg font-bold text-gray-900 mt-0.5">{{ $card['value'] }}</p>
+            @isset($card['sub'])<p class="text-[10px] text-gray-400 mt-0.5">{{ $card['sub'] }}</p>@endisset
         </div>
+        @endforeach
     </div>
-    @endforeach
 </div>
 @endisset
 

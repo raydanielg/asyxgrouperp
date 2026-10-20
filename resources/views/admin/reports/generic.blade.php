@@ -7,17 +7,16 @@
 @php $money = fn($n) => 'TZS ' . number_format($n ?? 0); @endphp
 
 @isset($kpiCards)
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-    @foreach($kpiCards as $card)
-    <div class="bg-gradient-to-br from-{{ $card['from'] ?? 'emerald-600' }} to-{{ $card['to'] ?? 'emerald-700' }} rounded-md border border-{{ $card['border'] ?? 'emerald-500' }} p-4 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
-        <div class="relative z-10">
-            <span class="text-[10px] font-medium {{ $card['text'] ?? 'emerald-100' }}">{{ $card['label'] }}</span>
-            <p class="text-xl font-bold text-white mt-1">{{ $card['value'] }}</p>
-            @isset($card['sub'])<p class="text-[10px] {{ $card['sub_color'] ?? 'emerald-200' }} font-medium mt-1">{{ $card['sub'] }}</p>@endisset
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-gray-100">
+        @foreach($kpiCards as $card)
+        <div class="px-4 py-3.5">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">{{ $card['label'] }}</p>
+            <p class="text-lg font-bold text-gray-900 mt-0.5">{{ $card['value'] }}</p>
+            @isset($card['sub'])<p class="text-[10px] text-gray-400 mt-0.5">{{ $card['sub'] }}</p>@endisset
         </div>
+        @endforeach
     </div>
-    @endforeach
 </div>
 @endisset
 
@@ -33,7 +32,7 @@
                     <span class="text-xs font-bold text-gray-900">{{ is_numeric($value) ? number_format($value) : $value }}</span>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-gradient-to-r from-emerald-400 to-emerald-600 h-2 rounded-full" style="width: {{ (collect($breakdown)->max(fn($v) => is_numeric($v) ? $v : 0) > 0 && is_numeric($value) ? ($value / collect($breakdown)->max(fn($v) => is_numeric($v) ? $v : 0)) * 100 : 0) }}%"></div>
+                    <div class="bg-gray-900 h-2 rounded-full" style="width: {{ (collect($breakdown)->max(fn($v) => is_numeric($v) ? $v : 0) > 0 && is_numeric($value) ? ($value / collect($breakdown)->max(fn($v) => is_numeric($v) ? $v : 0)) * 100 : 0) }}%"></div>
                 </div>
             </div>
             @endforeach
@@ -50,7 +49,7 @@
                     <span class="text-xs font-bold text-gray-900">{{ is_numeric($value) ? number_format($value) : $value }}</span>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-gradient-to-r from-amber-400 to-amber-600 h-2 rounded-full" style="width: {{ (collect($secondaryBreakdown)->max(fn($v) => is_numeric($v) ? $v : 0) > 0 && is_numeric($value) ? ($value / collect($secondaryBreakdown)->max(fn($v) => is_numeric($v) ? $v : 0)) * 100 : 0) }}%"></div>
+                    <div class="bg-amber-500 h-2 rounded-full" style="width: {{ (collect($secondaryBreakdown)->max(fn($v) => is_numeric($v) ? $v : 0) > 0 && is_numeric($value) ? ($value / collect($secondaryBreakdown)->max(fn($v) => is_numeric($v) ? $v : 0)) * 100 : 0) }}%"></div>
                 </div>
             </div>
             @endforeach
