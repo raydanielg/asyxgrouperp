@@ -205,6 +205,13 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register.store');
 
+// Company onboarding wizard (after self-registration)
+Route::middleware('auth')->group(function () {
+    Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'index'])->name('onboarding.index');
+    Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
+    Route::get('/onboarding/pending', [App\Http\Controllers\OnboardingController::class, 'pending'])->name('onboarding.pending');
+});
+
 // Custom password reset with activation code
 Route::get('password/reset', [App\Http\Controllers\Auth\PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [App\Http\Controllers\Auth\PasswordResetController::class, 'sendResetCode'])->name('password.email');

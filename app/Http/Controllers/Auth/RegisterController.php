@@ -98,7 +98,8 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        return redirect()->route('register.success')->with('registered_email', $user->email);
+        auth()->login($user);
+        return redirect()->route('onboarding.index');
     }
 
     public function showSuccess()
