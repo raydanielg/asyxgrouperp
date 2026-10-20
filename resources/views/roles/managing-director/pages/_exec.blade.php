@@ -3,7 +3,19 @@
 @section('page_title', ucwords(str_replace('-', ' ', $module)))
 @section('content')
 @php
-$rows = collect(method_exists($items ?? null, 'items') ? $items->items() : ($items ?? []));
+// Resolve the row source: 'items' when present, otherwise the first
+// paginator/collection supplied by the module's data builder.
+$__src = $items ?? null;
+if (!$__src) {
+    foreach (get_defined_vars() as $__v) {
+        if ($__v instanceof \Illuminate\Pagination\LengthAwarePaginator
+            || $__v instanceof \Illuminate\Pagination\Paginator
+            || ($__v instanceof \Illuminate\Support\Collection && $__v->count() > 0)) {
+            $__src = $__v; break;
+        }
+    }
+}
+$rows = collect(method_exists($__src, 'items') ? $__src->items() : ($__src ?? []));
 $title = ucwords(str_replace('-', ' ', $module));
 $moneyFmt = fn($n) => 'TZS ' . number_format((float) $n);
 
@@ -37,7 +49,7 @@ $statusDot = fn($s) => match(strtolower((string) $s)) {
 <div class="flex items-center justify-between mb-5">
     <div>
         <h2 class="text-lg font-bold text-gray-900">{{ $title }}</h2>
-        <p class="text-xs text-gray-400 mt-0.5">{{ $rows->count() }} {{ Str::plural('record', $rows->count()) }}{{ method_exists($items ?? null, 'total') ? ' of ' . $items->total() : '' }}</p>
+        <p class="text-xs text-gray-400 mt-0.5">{{ $rows->count() }} {{ Str::plural('record', $rows->count()) }}{{ method_exists($__src, 'total') ? ' of ' . $__src->total() : '' }}</p>
     </div>
     <a href="{{ route('role.dashboard') }}" class="text-[10px] text-slate-600 hover:text-slate-800">← Back to dashboard</a>
 </div>
@@ -100,8 +112,8 @@ $moneySum = collect($moneyFields)->first(fn($k) => $rows->isNotEmpty() && isset(
             @endforelse
         </tbody>
     </table>
-    @if(method_exists($items ?? null, 'links'))
-    <div class="px-5 py-3 border-t border-gray-50">{{ $items->links() }}</div>
+    @if(method_exists($__src, 'links'))
+    <div class="px-5 py-3 border-t border-gray-50">{{ $__src->links() }}</div>
     @endif
 </div>
 @endsection
