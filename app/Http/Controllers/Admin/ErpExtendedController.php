@@ -2208,8 +2208,26 @@ class ErpExtendedController extends Controller
 
     public function posSaleShow(PosSale $posSale)
     {
-        $posSale->load('items');
-        return view('admin.pos.show', compact('posSale'));
+        $posSale->load('items', 'cashier');
+        $company = $posSale->company ?? (session('switched_company_id') ? \App\Models\Company::find(session('switched_company_id')) : auth()->user()->company);
+        $verificationCode = strtoupper(substr(md5($posSale->sale_number . $posSale->id . $posSale->total_amount), 0, 12));
+        $qrText = implode('|', [
+            $posSale->sale_number,
+            number_format($posSale->total_amount, 2, '.', ''),
+            $posSale->created_at->format('YmdHis'),
+            $verificationCode,
+        ]);
+        $qrSvg = null;
+        try {
+            $writer = new \BaconQrCode\Writer(
+                new \BaconQrCode\Renderer\ImageRenderer(
+                    new \BaconQrCode\Renderer\RendererStyle\RendererStyle(120),
+                    new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
+                )
+            );
+            $qrSvg = base64_encode($writer->writeString($qrText));
+        } catch (\Throwable $e) {}
+        return view('admin.pos.show', compact('posSale', 'company', 'verificationCode', 'qrSvg'));
     }
 
     public function posSaleDestroy(PosSale $posSale)
