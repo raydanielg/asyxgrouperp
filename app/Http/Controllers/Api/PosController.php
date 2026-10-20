@@ -123,9 +123,6 @@ class PosController extends Controller
     {
         return response()->json($posSale->load('items.product'));
     }
-}
-
-
 
     /**
      * List returns for the user's company.

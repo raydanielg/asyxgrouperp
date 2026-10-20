@@ -68,6 +68,10 @@ Route::middleware(['auth:sanctum', 'api-permission'])->group(function () {
     Route::get('/pos/sales', [PosController::class, 'sales'])->name('api.pos.sales');
     Route::get('/pos/today-summary', [PosController::class, 'todaySummary'])->name('api.pos.today-summary');
     Route::get('/pos/sales/{posSale}', [PosController::class, 'show'])->name('api.pos.sales.show');
+    Route::get('/pos/returns', [PosController::class, 'returns'])->name('api.pos.returns');
+    Route::post('/pos/sales/{posSale}/returns', [PosController::class, 'returnStore'])->name('api.pos.returns.store');
+    Route::post('/pos/returns/{posReturn}/process', [PosController::class, 'returnProcess'])->name('api.pos.returns.process');
+    Route::post('/pos/returns/{posReturn}/confirm-refund', [PosController::class, 'returnConfirmRefund'])->name('api.pos.returns.confirm-refund');
 
     // ═══ Fleet Management ═══
     Route::get('/fleet', [FleetController::class, 'index'])->name('api.fleet.index');
