@@ -241,6 +241,10 @@ class ApprovalService
         match ($req->module) {
             'office_expense' => self::finalizeOfficeExpense($req, $user, true),
             'vendor_payment' => null, // payment stays 'pending' until explicit execution
+            'journal_entry' => \App\Models\JournalEntry::withoutGlobalScopes()
+                ->where('id', $req->module_id)->update(['status' => 'approved']),
+            'lpo' => null, // LPO issues via the 'sent' status transition
+            'payroll' => null, // payroll pays via markPaid
             default => null,
         };
     }
@@ -329,6 +333,9 @@ class ApprovalService
                 self::finalizeOfficeExpense($req, $user, false);
             } elseif ($req->module === 'vendor_payment') {
                 \App\Models\VendorPayment::where('id', $req->module_id)->update(['status' => 'rejected']);
+            } elseif ($req->module === 'journal_entry') {
+                \App\Models\JournalEntry::withoutGlobalScopes()
+                    ->where('id', $req->module_id)->update(['status' => 'rejected']);
             }
 
             return $req;
