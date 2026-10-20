@@ -738,8 +738,13 @@ class ErpController extends Controller
     // ─── Email Templates ───
     public function emailTemplateIndex()
     {
-        $templates = EmailTemplate::latest()->paginate(10);
+        $templates = EmailTemplate::latest()->paginate(12);
         return view('admin.email-templates.index', compact('templates'));
+    }
+
+    public function emailTemplateEdit(EmailTemplate $emailTemplate)
+    {
+        return view('admin.email-templates.edit', compact('emailTemplate'));
     }
 
     public function emailTemplateUpdate(Request $request, EmailTemplate $emailTemplate)

@@ -11,7 +11,7 @@
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead>
             <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
-                <th class="px-5 py-3 font-semibold">Name</th><th class="px-5 py-3 font-semibold">From</th><th class="px-5 py-3 font-semibold">Subject</th><th class="px-5 py-3 font-semibold">Module</th><th class="px-5 py-3 font-semibold">Status</th>
+                <th class="px-5 py-3 font-semibold">Name</th><th class="px-5 py-3 font-semibold">From</th><th class="px-5 py-3 font-semibold">Subject</th><th class="px-5 py-3 font-semibold">Module</th><th class="px-5 py-3 font-semibold">Status</th><th class="px-5 py-3 font-semibold text-right">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
@@ -22,9 +22,10 @@
             <td class="px-5 py-3.5 text-xs text-gray-500 max-w-xs truncate">{{ $template->subject ?? '—' }}</td>
             <td class="px-5 py-3.5 text-xs text-gray-500 capitalize">{{ $template->module_name ?? '—' }}</td>
             <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $template->is_active ? '#10b981' : '#d1d5db' }}"></span>{{ $template->is_active ? 'Active' : 'Inactive' }}</span></td>
+            <td class="px-5 py-3.5 text-right"><a href="{{ route('admin.email-templates.edit', $template) }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">Edit</a></td>
         </tr>
         @empty
-        <tr><td colspan="5" class="px-5 py-10 text-center text-gray-400 text-xs">No templates found</td></tr>
+        <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400 text-xs">No templates found</td></tr>
         @endforelse
         </tbody>
     </table></div>
