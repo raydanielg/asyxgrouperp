@@ -71,8 +71,8 @@ class ReservationTest extends TestCase
         // 50 on-hand, 45 reserved for a transfer → only 5 available
         $this->seedStock($product, $wh, 50, 45);
 
-        $response = $this->actingAs($admin)->post('/admin/pos/sales', [
-            'total_amount' => 100, 'received_amount' => 100, 'paid_amount' => 100,
+        $response = $this->actingAs($admin)->post('/admin/pos', [
+            'subtotal' => 100, 'total_amount' => 100, 'paid_amount' => 100,
             'payment_method' => 'cash',
             'items' => [
                 ['product_id' => $product->id, 'product_name' => $product->name,
@@ -92,8 +92,8 @@ class ReservationTest extends TestCase
         $product = $this->makeProduct($wh->id);
         $this->seedStock($product, $wh, 50, 45); // 5 available
 
-        $this->actingAs($admin)->post('/admin/pos/sales', [
-            'total_amount' => 50, 'received_amount' => 50, 'paid_amount' => 50,
+        $this->actingAs($admin)->post('/admin/pos', [
+            'subtotal' => 50, 'total_amount' => 50, 'paid_amount' => 50,
             'payment_method' => 'cash',
             'items' => [
                 ['product_id' => $product->id, 'product_name' => $product->name,
