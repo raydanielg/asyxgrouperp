@@ -161,6 +161,7 @@ class CheckRoutePermission
 
             if ($matches) {
                 if (!$user->hasPermission($permission)) {
+                    \Log::info("perm-deny route={$currentRoute} perm={$permission} user={$user->id} role={$user->role} perms=" . implode(',', $user->permissionNames()));
                     $message = $isFinanceRoute
                         ? 'You are not allowed to access this finance account.'
                         : 'You are not allowed to access this page.';
