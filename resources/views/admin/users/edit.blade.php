@@ -128,6 +128,7 @@
           <span class="text-gray-400">System role: <span class="font-mono text-gray-800">{{ $user->role }}</span></span>
           <span class="text-gray-400">Assigned roles: <span class="font-medium text-gray-800">{{ $user->roles->pluck('label')->implode(', ') ?: '—' }}</span></span>
           <span class="text-gray-400">Company: <span class="font-medium text-gray-800">{{ $user->company?->name ?? '—' }}</span></span>
+          <span class="text-gray-400">Branches: <span class="font-medium text-gray-800">{{ $user->branches->pluck('name')->implode(', ') ?: 'Company-wide' }}</span></span>
           <span class="text-gray-400">Login: <span class="font-medium text-gray-800">{{ $user->is_enable_login ? 'Enabled' : 'Disabled' }}</span></span>
         </div>
 
