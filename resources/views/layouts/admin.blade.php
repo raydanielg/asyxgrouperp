@@ -213,7 +213,6 @@
                         ['label' => 'Categories', 'route' => 'admin.helpdesk-categories.index', 'icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16', 'match' => 'admin.helpdesk-categories*'],
                     ]],
                     ['title' => 'System', 'items' => [
-                        ['label' => 'Add-ons', 'route' => 'admin.add-ons.index', 'icon' => 'M11 3.055A5.001 5.001 0 005.035 9H11V3.055zM13 3.055V9h5.965A5.001 5.001 0 0013 3.055zM11 11v6.945A5.001 5.001 0 015.035 11H11zM13 11h5.965A5.001 5.001 0 0113 17.945V11z', 'match' => 'admin.add-ons*'],
                         ['label' => 'Email Templates', 'route' => 'admin.email-templates.index', 'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', 'match' => 'admin.email-templates*'],
                         ['label' => 'Notification Templates', 'route' => 'admin.notification-templates.index', 'icon' => 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9', 'match' => 'admin.notification-templates*'],
                         ['label' => 'Media Library', 'route' => 'admin.media.index', 'icon' => 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'match' => 'admin.media*'],
