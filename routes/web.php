@@ -719,6 +719,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/users/{user}', [$userCtrl, 'destroy'])->name('users.destroy');
     Route::patch('/users/{user}/password', [$userCtrl, 'changePassword'])->name('users.change-password');
     Route::post('/users/{user}/permissions', [$userCtrl, 'updatePermission'])->name('users.update-permission');
+
+    // Branches — company-scoped organizational units
+    $branchCtrl = App\Http\Controllers\Admin\BranchController::class;
+    Route::get('/branches', [$branchCtrl, 'index'])->name('branches.index');
+    Route::post('/branches', [$branchCtrl, 'store'])->name('branches.store');
+    Route::patch('/branches/{branch}', [$branchCtrl, 'update'])->name('branches.update');
+    Route::delete('/branches/{branch}', [$branchCtrl, 'destroy'])->name('branches.destroy');
     Route::post('/users/bulk-toggle-login', [$userCtrl, 'bulkToggleLogin'])->name('users.bulk-toggle-login');
     Route::get('/users-login-history', [$userCtrl, 'loginHistory'])->name('users.login-history');
     Route::post('/users/{user}/impersonate', [$userCtrl, 'impersonate'])->name('users.impersonate');

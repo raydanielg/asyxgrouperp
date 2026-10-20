@@ -110,6 +110,7 @@ class CheckRoutePermission
         'admin.contracts.store' => 'create-crm-contracts',
         'admin.contracts.update' => 'edit-crm-contracts',
         'admin.contracts.destroy' => 'delete-crm-contracts',
+        'admin.branches*' => 'view-users',
     ];
 
     /**
