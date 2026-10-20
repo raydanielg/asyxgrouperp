@@ -136,7 +136,7 @@ class JournalBranchTest extends TestCase
     public function test_post_requires_permission(): void
     {
         $creator = $this->makeUser();
-        $noPerm = $this->makeUser();
+        $noPerm = $this->makeUser(['role' => 'accountant']); // admin role bypasses route perms by design
         $entry = $this->makeJournalEntry($creator, 'approved');
         $this->actingAs($noPerm)->post("/admin/journal-entries/{$entry->id}/post")->assertStatus(403);
     }
@@ -204,7 +204,8 @@ class JournalBranchTest extends TestCase
 
     public function test_foreign_branch_id_rejected_on_store(): void
     {
-        $bB = Branch::create(['company_id' => 999, 'name' => 'Foreign', 'is_active' => true]);
+        $otherCo = Company::create(['name' => 'Other Co', 'legal_name' => 'Other Co Ltd', 'short_code' => 'OTH', 'is_active' => true]);
+        $bB = Branch::create(['company_id' => $otherCo->id, 'name' => 'Foreign', 'code' => 'F', 'is_active' => true]);
         $user = $this->makeUser();
 
         $this->actingAs($user)->post('/admin/office-expenses', [
