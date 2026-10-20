@@ -309,8 +309,13 @@
                 // Filter nav groups based on user permissions for ALL users
                 $currentUser = auth()->user();
                 $isFullAdmin = $currentUser->isAdmin() || $currentUser->isSuperAdmin();
+                $isPlatformAdmin = $currentUser->isSuperAdmin();
                 $filteredGroups = [];
                 foreach ($navGroups as $group) {
+                    // Multi-company management is platform-level — superadmin only
+                    if ($group['title'] === 'Multi-Company' && !$isPlatformAdmin) {
+                        continue;
+                    }
                     $visibleItems = [];
                     foreach ($group['items'] as $item) {
                         if ($isFullAdmin) {
