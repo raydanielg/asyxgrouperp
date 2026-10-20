@@ -591,6 +591,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/inventory/release-reservation', [$inv, 'releaseReservation'])->name('inventory.release');
     Route::post('/inventory/assign-warehouse', [$inv, 'assignWarehouse'])->name('inventory.assign-warehouse');
 
+    // POS returns & refunds
+    $posRet = App\Http\Controllers\Admin\PosReturnController::class;
+    Route::get('/pos-returns', [$posRet, 'index'])->name('pos-returns.index');
+    Route::post('/pos-sales/{posSale}/returns', [$posRet, 'store'])->name('pos-returns.store');
+    Route::post('/pos-returns/{posReturn}/process', [$posRet, 'process'])->name('pos-returns.process');
+    Route::delete('/pos-returns/{posReturn}', [$posRet, 'destroy'])->name('pos-returns.destroy');
+
     // Plans
     Route::get('/plans', [$erp, 'planIndex'])->name('plans.index')->middleware('platform.admin');
     Route::post('/plans', [$erp, 'planStore'])->name('plans.store')->middleware('platform.admin');
