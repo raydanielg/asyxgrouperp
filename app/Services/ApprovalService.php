@@ -225,6 +225,40 @@ class ApprovalService
     }
 
     /**
+     * Invalidate prior approvals after a material change and resubmit.
+     * - pending request → keeps pending (approver decides on new data)
+     * - approved/rejected request → superseded + fresh pending request
+     * Never revives executed transactions — caller must gate those.
+     */
+    public static function invalidateAndResubmit(string $module, Model $model, string $label, ?float $amount, User $actor): ?ApprovalRequest
+    {
+        $req = ApprovalRequest::where('module', $module)
+            ->where('module_id', $model->id)->latest()->first();
+
+        if (!$req) {
+            return null;
+        }
+
+        if ($req->status === 'pending') {
+            // Still awaiting decision — nothing to invalidate
+            return $req;
+        }
+
+        return DB::transaction(function () use ($req, $module, $model, $label, $amount, $actor) {
+            $req->update(['status' => 'superseded']);
+
+            AuditLog::log('update', 'approvals', [
+                'module_action' => 'approval_invalidated',
+                'old_values' => ['status' => $req->status, 'request' => $req->request_number],
+                'new_values' => ['module' => $module, 'transaction' => $label, 'reason' => 'Material change after decision'],
+            ]);
+
+            // Resubmit for fresh approval
+            return self::submit($module, $model, $label, $amount, $actor);
+        });
+    }
+
+    /**
      * Reject the request — terminal decision.
      */
     public static function reject(ApprovalRequest $req, User $user, string $reason): ApprovalRequest

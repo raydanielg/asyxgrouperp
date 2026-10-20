@@ -413,7 +413,8 @@ class ErpExtendedController extends Controller
         // and reach 'paid' only through the authorized markPaid endpoint.
         $data['created_by'] = auth()->id();
         $data['status'] = 'pending';
-        Payroll::create($data);
+        $payroll = Payroll::create($data);
+        \App\Services\ApprovalService::submit('payroll', $payroll, "Payroll {$payroll->payroll_number}", $payroll->net_salary, auth()->user());
         return back()->with('success', 'Payroll created.');
     }
 

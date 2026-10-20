@@ -772,6 +772,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/payroll/{payroll}', [$payCtrl, 'show'])->name('payroll.show');
     Route::post('/payroll', [$payCtrl, 'store'])->name('payroll.store');
     Route::patch('/payroll/{payroll}', [$payCtrl, 'update'])->name('payroll.update');
+    Route::post('/payroll/{payroll}/mark-paid', [App\Http\Controllers\Admin\ErpExtendedController::class, 'payrollMarkPaid'])->name('payroll.mark-paid');
     Route::delete('/payroll/{payroll}', [$payCtrl, 'destroy'])->name('payroll.destroy');
     Route::get('/payroll/{payroll}/pdf', [$payCtrl, 'pdf'])->name('payroll.pdf');
 

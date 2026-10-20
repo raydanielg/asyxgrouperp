@@ -70,7 +70,8 @@ class PayrollController extends Controller
         $data['created_by'] = auth()->id();
         $data['company_id'] = auth()->user()->company_id;
 
-        Payroll::create($data);
+        $payroll = Payroll::create($data);
+        \App\Services\ApprovalService::submit('payroll', $payroll, "Payroll {$payroll->payroll_number}", $payroll->net_salary, auth()->user());
 
         return back()->with('success', 'Payroll created successfully.');
     }
