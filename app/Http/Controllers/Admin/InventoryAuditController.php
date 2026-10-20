@@ -45,7 +45,43 @@ class InventoryAuditController extends Controller
 
         $products = Product::where('is_active', true)->orderBy('name')->get(['id', 'name', 'product_code']);
 
-        return view('admin.inventory.reconciliation', compact('unmappedLpoItems', 'unmappedGrnItems', 'products'));
+        // Products missing warehouse assignment — POS cannot sell these
+        $unmappedProducts = Product::withoutGlobalScopes()
+            ->where('company_id', auth()->user()->company_id)
+            ->where('is_active', true)->whereNull('warehouse_id')
+            ->orderBy('name')->limit(100)->get();
+
+        $warehouses = \App\Models\Warehouse::where('is_active', true)->orderBy('name')->get(['id', 'name']);
+
+        return view('admin.inventory.reconciliation', compact(
+            'unmappedLpoItems', 'unmappedGrnItems', 'products', 'unmappedProducts', 'warehouses'
+        ));
+    }
+
+    /**
+     * Assign a warehouse to a product — the authorized reconciliation for
+     * products blocked from POS checkout. Company-validated and audited.
+     */
+    public function assignWarehouse(Request $request)
+    {
+        $data = $request->validate([
+            'product_id' => ['required', \Illuminate\Validation\Rule::exists('products','id')->where('company_id', auth()->user()->company_id)],
+            'warehouse_id' => ['required', \Illuminate\Validation\Rule::exists('warehouses','id')->where('company_id', auth()->user()->company_id)],
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $product = Product::withoutGlobalScopes()->findOrFail($data['product_id']);
+        abort_unless(is_null($product->warehouse_id), 403, 'This product already has a warehouse — use a controlled change process.');
+
+        $product->update(['warehouse_id' => $data['warehouse_id']]);
+
+        AuditLog::log('update', 'inventory', [
+            'module_action' => 'product_warehouse_assigned',
+            'old_values' => ['product' => $product->name, 'warehouse_id' => null],
+            'new_values' => ['warehouse_id' => $data['warehouse_id'], 'reason' => $data['reason']],
+        ]);
+
+        return back()->with('success', "Warehouse assigned to {$product->name}.");
     }
 
     /**

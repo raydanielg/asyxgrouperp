@@ -71,7 +71,12 @@ class PosController extends Controller
                 // Reservation-aware stock removal — respects
                 // available = on-hand − reserved at the product's home warehouse
                 $product = Product::where('id', $item['product_id'])->first();
-                if ($product && $product->warehouse_id) {
+                if ($product) {
+                    // Explicit policy: missing warehouse_id never bypasses
+                    // stock validation — assign a warehouse first.
+                    if (!$product->warehouse_id) {
+                        abort(422, "Product '{$product->name}' has no warehouse assignment — stock cannot be verified.");
+                    }
                     try {
                         app(\App\Services\InventoryService::class)->removeStock(
                             $product->id, $product->warehouse_id, $item['quantity'],
@@ -80,9 +85,6 @@ class PosController extends Controller
                     } catch (\RuntimeException $e) {
                         abort(422, "Insufficient available stock for {$product->name}: {$e->getMessage()}");
                     }
-                } elseif ($product) {
-                    // Legacy path — no warehouse assignment on product
-                    $product->decrement('stock_quantity', $item['quantity']);
                 }
             }
 

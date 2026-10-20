@@ -2195,20 +2195,20 @@ class ErpExtendedController extends Controller
             if (!empty($item['product_id'])) {
                 $product = Product::find($item['product_id']);
                 if ($product) {
-                    if ($product->warehouse_id) {
-                        // Reservation-aware stock removal — respects
-                        // available = on-hand − reserved, records movement
-                        try {
-                            app(\App\Services\InventoryService::class)->removeStock(
-                                $product->id, $product->warehouse_id, $item['quantity'],
-                                "POS {$sale->sale_number}"
-                            );
-                        } catch (\RuntimeException $e) {
-                            abort(422, "Insufficient available stock for {$product->name}: {$e->getMessage()}");
-                        }
-                    } else {
-                        // Legacy path — product has no warehouse assignment
-                        $product->decrement('stock_quantity', $item['quantity']);
+                    // Explicit policy: warehouse-managed stock only — a
+                    // missing warehouse_id never bypasses availability
+                    // checks. Reconcile unmapped products via the
+                    // inventory reconciliation tools.
+                    if (!$product->warehouse_id) {
+                        abort(422, "Product '{$product->name}' has no warehouse assignment — stock cannot be verified. Assign a warehouse in Inventory → Reconciliation first.");
+                    }
+                    try {
+                        app(\App\Services\InventoryService::class)->removeStock(
+                            $product->id, $product->warehouse_id, $item['quantity'],
+                            "POS {$sale->sale_number}"
+                        );
+                    } catch (\RuntimeException $e) {
+                        abort(422, "Insufficient available stock for {$product->name}: {$e->getMessage()}");
                     }
                 }
             }
