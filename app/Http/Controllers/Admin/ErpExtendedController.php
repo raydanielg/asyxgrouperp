@@ -2191,7 +2191,7 @@ class ErpExtendedController extends Controller
         $data['status'] = 'completed';
 
         try {
-            $sale = DB::transaction(function () use ($data) {
+            $sale = \Illuminate\Support\Facades\DB::transaction(function () use ($data) {
                 $sale = PosSale::create($data);
                 foreach ($data['items'] as $item) {
                     $sale->items()->create($item);
