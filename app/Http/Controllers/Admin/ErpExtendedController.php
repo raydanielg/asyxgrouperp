@@ -2110,10 +2110,17 @@ class ErpExtendedController extends Controller
         return back()->with('success', 'Supplier deleted.');
     }
 
-    public function stockMovementIndex()
+    public function stockMovementIndex(Request $request)
     {
-        $movements = StockMovement::with(['product', 'warehouse'])->latest()->paginate(15);
-        return view('admin.products.stock-movements', compact('movements'));
+        $movements = StockMovement::with(['product', 'warehouse', 'creator'])
+            ->when($request->search, fn($q) => $q->where(fn($w) => $w->where('reference', 'like', '%' . $request->search . '%')->orWhereHas('product', fn($p) => $p->where('name', 'like', '%' . $request->search . '%'))))
+            ->when($request->product_id, fn($q) => $q->where('product_id', $request->product_id))
+            ->when($request->warehouse_id, fn($q) => $q->where('warehouse_id', $request->warehouse_id))
+            ->when($request->type, fn($q) => $q->where('type', $request->type))
+            ->latest()->paginate(15)->withQueryString();
+        $products = \App\Models\Product::orderBy('name')->get();
+        $warehouses = \App\Models\Warehouse::orderBy('name')->get();
+        return view('admin.products.stock-movements', compact('movements', 'products', 'warehouses'));
     }
 
     // ═══════════════════════════════════════════════════════
