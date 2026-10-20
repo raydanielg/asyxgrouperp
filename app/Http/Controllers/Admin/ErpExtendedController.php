@@ -408,11 +408,45 @@ class ErpExtendedController extends Controller
             'allowances' => 'nullable|numeric|min:0',
             'deductions' => 'nullable|numeric|min:0',
             'net_salary' => 'required|numeric|min:0',
-            'status' => 'nullable|string',
         ]);
+        // Client-supplied status is never trusted — payrolls start pending
+        // and reach 'paid' only through the authorized markPaid endpoint.
         $data['created_by'] = auth()->id();
+        $data['status'] = 'pending';
         Payroll::create($data);
         return back()->with('success', 'Payroll created.');
+    }
+
+    /**
+     * Mark a payroll as paid — the only path to 'paid' status.
+     * Requires an approved payroll workflow request when configured;
+     * creator cannot pay their own payroll; already-paid rows are immutable.
+     */
+    public function payrollMarkPaid(Payroll $payroll)
+    {
+        $user = auth()->user();
+        abort_if($payroll->status === 'paid', 403, 'This payroll is already paid.');
+        abort_if($payroll->status === 'cancelled', 403, 'Cancelled payrolls cannot be paid.');
+        abort_if($payroll->created_by === $user->id, 403, 'You cannot pay a payroll you created.');
+
+        $req = \App\Models\ApprovalRequest::where('module', 'payroll')
+            ->where('module_id', $payroll->id)->latest()->first();
+
+        if (\App\Services\ApprovalService::findWorkflow('payroll', $payroll->company_id)) {
+            abort_if(!$req, 403, 'This payroll has not been submitted for approval.');
+            abort_if($req->status === 'rejected', 403, 'This payroll was rejected.');
+            abort_if($req->status !== 'approved', 403, 'This payroll is still awaiting approval.');
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($payroll, $user) {
+            $payroll->update(['status' => 'paid', 'paid_at' => now()]);
+            \App\Models\AuditLog::log('execute', 'payroll', [
+                'module_action' => 'payroll_paid',
+                'new_values' => ['payroll' => $payroll->payroll_number, 'net' => $payroll->net_salary, 'employee' => $payroll->employee_id],
+            ]);
+        });
+
+        return back()->with('success', "Payroll {$payroll->payroll_number} marked as paid.");
     }
 
     public function payrollDestroy(Payroll $payroll)
