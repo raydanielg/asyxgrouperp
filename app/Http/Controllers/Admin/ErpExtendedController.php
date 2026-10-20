@@ -2164,7 +2164,31 @@ class ErpExtendedController extends Controller
                 }
             }
         }
-        return response()->json(['success' => true, 'sale_number' => $sale->sale_number]);
+
+        $verificationCode = strtoupper(substr(md5($sale->sale_number . $sale->id . $sale->total_amount), 0, 12));
+        $qrText = implode('|', [
+            $sale->sale_number,
+            number_format($sale->total_amount, 2, '.', ''),
+            $sale->created_at->format('YmdHis'),
+            $verificationCode,
+        ]);
+        $qrSvg = null;
+        try {
+            $writer = new \BaconQrCode\Writer(
+                new \BaconQrCode\Renderer\ImageRenderer(
+                    new \BaconQrCode\Renderer\RendererStyle\RendererStyle(120),
+                    new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
+                )
+            );
+            $qrSvg = base64_encode($writer->writeString($qrText));
+        } catch (\Throwable $e) {}
+
+        return response()->json([
+            'success' => true,
+            'sale_number' => $sale->sale_number,
+            'verification_code' => $verificationCode,
+            'qr_svg' => $qrSvg,
+        ]);
     }
 
     public function posReports()
