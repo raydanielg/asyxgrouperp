@@ -562,8 +562,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     // ═══ Audit Logs ═══
     $alCtrl = App\Http\Controllers\Admin\AuditLogController::class;
-    Route::get('/audit-logs', [$alCtrl, 'index'])->name('audit-logs.index');
-    Route::get('/audit-logs/filter', [$alCtrl, 'filter'])->name('audit-logs.filter');
+    Route::get('/audit-logs', [$alCtrl, 'index'])->name('audit-logs.index')->middleware('platform.admin');
+    Route::get('/audit-logs/filter', [$alCtrl, 'filter'])->name('audit-logs.filter')->middleware('platform.admin');
 
     // ERP Modules
     $erp = App\Http\Controllers\Admin\ErpController::class;
@@ -582,11 +582,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/transfers/{transfer}', [$erp, 'transferDestroy'])->name('transfers.destroy');
 
     // Plans
-    Route::get('/plans', [$erp, 'planIndex'])->name('plans.index');
-    Route::post('/plans', [$erp, 'planStore'])->name('plans.store');
-    Route::get('/plans/{plan}/edit', [$erp, 'planEdit'])->name('plans.edit');
-    Route::patch('/plans/{plan}', [$erp, 'planUpdate'])->name('plans.update');
-    Route::delete('/plans/{plan}', [$erp, 'planDestroy'])->name('plans.destroy');
+    Route::get('/plans', [$erp, 'planIndex'])->name('plans.index')->middleware('platform.admin');
+    Route::post('/plans', [$erp, 'planStore'])->name('plans.store')->middleware('platform.admin');
+    Route::get('/plans/{plan}/edit', [$erp, 'planEdit'])->name('plans.edit')->middleware('platform.admin');
+    Route::patch('/plans/{plan}', [$erp, 'planUpdate'])->name('plans.update')->middleware('platform.admin');
+    Route::delete('/plans/{plan}', [$erp, 'planDestroy'])->name('plans.destroy')->middleware('platform.admin');
 
     // Orders
     Route::get('/orders', [$erp, 'orderIndex'])->name('orders.index');
@@ -595,11 +595,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::patch('/orders/{order}/reject', [$erp, 'orderReject'])->name('orders.reject');
 
     // Coupons
-    Route::get('/coupons', [$erp, 'couponIndex'])->name('coupons.index');
-    Route::post('/coupons', [$erp, 'couponStore'])->name('coupons.store');
-    Route::get('/coupons/{coupon}/edit', [$erp, 'couponEdit'])->name('coupons.edit');
-    Route::patch('/coupons/{coupon}', [$erp, 'couponUpdate'])->name('coupons.update');
-    Route::delete('/coupons/{coupon}', [$erp, 'couponDestroy'])->name('coupons.destroy');
+    Route::get('/coupons', [$erp, 'couponIndex'])->name('coupons.index')->middleware('platform.admin');
+    Route::post('/coupons', [$erp, 'couponStore'])->name('coupons.store')->middleware('platform.admin');
+    Route::get('/coupons/{coupon}/edit', [$erp, 'couponEdit'])->name('coupons.edit')->middleware('platform.admin');
+    Route::patch('/coupons/{coupon}', [$erp, 'couponUpdate'])->name('coupons.update')->middleware('platform.admin');
+    Route::delete('/coupons/{coupon}', [$erp, 'couponDestroy'])->name('coupons.destroy')->middleware('platform.admin');
 
     // Helpdesk
     Route::get('/helpdesk-categories', [$erp, 'helpdeskCategoryIndex'])->name('helpdesk-categories.index');
@@ -674,8 +674,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/login-history', [$erp, 'loginHistory'])->name('login-history');
 
     // Bank Transfers
-    Route::get('/bank-transfers', [$erp, 'bankTransferIndex'])->name('bank-transfers.index');
-    Route::patch('/bank-transfers/{bankTransfer}', [$erp, 'bankTransferUpdate'])->name('bank-transfers.update');
+    Route::get('/bank-transfers', [$erp, 'bankTransferIndex'])->name('bank-transfers.index')->middleware('platform.admin');
+    Route::patch('/bank-transfers/{bankTransfer}', [$erp, 'bankTransferUpdate'])->name('bank-transfers.update')->middleware('platform.admin');
 
     // Messenger
     Route::get('/messenger', [$erp, 'messengerIndex'])->name('messenger.index');
@@ -686,9 +686,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::delete('/media/{media}', [$erp, 'mediaDestroy'])->name('media.destroy');
 
     // Notification Templates
-    Route::get('/notification-templates', [$erp, 'notificationTemplateIndex'])->name('notification-templates.index');
-    Route::get('/notification-templates/{notificationTemplate}/edit', [$erp, 'notificationTemplateEdit'])->name('notification-templates.edit');
-    Route::patch('/notification-templates/{notificationTemplate}', [$erp, 'notificationTemplateUpdate'])->name('notification-templates.update');
+    Route::get('/notification-templates', [$erp, 'notificationTemplateIndex'])->name('notification-templates.index')->middleware('platform.admin');
+    Route::get('/notification-templates/{notificationTemplate}/edit', [$erp, 'notificationTemplateEdit'])->name('notification-templates.edit')->middleware('platform.admin');
+    Route::patch('/notification-templates/{notificationTemplate}', [$erp, 'notificationTemplateUpdate'])->name('notification-templates.update')->middleware('platform.admin');
 
     // User Management (ERP)
     Route::get('/users-manage', [$erp, 'userIndex'])->name('users-index');
@@ -700,12 +700,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     // ═══ Roles & Permissions ═══
     $roleCtrl = App\Http\Controllers\Admin\RoleController::class;
-    Route::get('/roles', [$roleCtrl, 'index'])->name('roles.index');
-    Route::get('/roles/create', [$roleCtrl, 'create'])->name('roles.create');
-    Route::post('/roles', [$roleCtrl, 'store'])->name('roles.store');
-    Route::get('/roles/{role}/edit', [$roleCtrl, 'edit'])->name('roles.edit');
-    Route::patch('/roles/{role}', [$roleCtrl, 'update'])->name('roles.update');
-    Route::delete('/roles/{role}', [$roleCtrl, 'destroy'])->name('roles.destroy');
+    Route::get('/roles', [$roleCtrl, 'index'])->name('roles.index')->middleware('platform.admin');
+    Route::get('/roles/create', [$roleCtrl, 'create'])->name('roles.create')->middleware('platform.admin');
+    Route::post('/roles', [$roleCtrl, 'store'])->name('roles.store')->middleware('platform.admin');
+    Route::get('/roles/{role}/edit', [$roleCtrl, 'edit'])->name('roles.edit')->middleware('platform.admin');
+    Route::patch('/roles/{role}', [$roleCtrl, 'update'])->name('roles.update')->middleware('platform.admin');
+    Route::delete('/roles/{role}', [$roleCtrl, 'destroy'])->name('roles.destroy')->middleware('platform.admin');
 
     // ═══ Enhanced User Management ═══
     $userCtrl = App\Http\Controllers\Admin\UserController::class;
