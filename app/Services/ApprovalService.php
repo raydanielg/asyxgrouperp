@@ -186,8 +186,42 @@ class ApprovalService
                 'new_values' => ['request' => $req->request_number, 'module' => $req->module, 'transaction' => $req->module_label, 'outcome' => $outcome],
             ]);
 
-            return $req->fresh();
+            $req = $req->fresh();
+            if ($req->status === 'approved') {
+                self::finalizeTransaction($req, $user);
+            }
+
+            return $req;
         });
+    }
+
+    /**
+     * Sync the linked business transaction when a request is decided.
+     */
+    private static function finalizeTransaction(ApprovalRequest $req, User $user): void
+    {
+        match ($req->module) {
+            'office_expense' => self::finalizeOfficeExpense($req, $user, true),
+            'vendor_payment' => null, // payment stays 'pending' until explicit execution
+            default => null,
+        };
+    }
+
+    private static function finalizeOfficeExpense(ApprovalRequest $req, User $user, bool $approved): void
+    {
+        $expense = \App\Models\OfficeExpense::find($req->module_id);
+        if (!$expense) {
+            return;
+        }
+        $expense->update([
+            'status' => $approved ? 'approved' : 'rejected',
+            'approved_by' => $approved ? $user->id : null,
+            'approved_at' => $approved ? now() : null,
+            'approval_level' => $req->current_level,
+        ]);
+        if ($approved && $expense->project_id) {
+            $expense->project?->increment('actual_cost', $expense->amount);
+        }
     }
 
     /**
@@ -218,7 +252,14 @@ class ApprovalService
                 'new_values' => ['request' => $req->request_number, 'module' => $req->module, 'transaction' => $req->module_label, 'reason' => $reason],
             ]);
 
-            return $req->fresh();
+            $req = $req->fresh();
+            if ($req->module === 'office_expense') {
+                self::finalizeOfficeExpense($req, $user, false);
+            } elseif ($req->module === 'vendor_payment') {
+                \App\Models\VendorPayment::where('id', $req->module_id)->update(['status' => 'rejected']);
+            }
+
+            return $req;
         });
     }
 }
