@@ -84,56 +84,138 @@ class ApprovalWorkflowController extends Controller
         return view('admin.approvals.requests', compact('requests'));
     }
 
+    /**
+     * Determine whether $user is the designated approver for the request's
+     * current level. Returns null if allowed, or a reason string if not.
+     */
+    private function approverCheck(ApprovalRequest $req, \App\Models\User $user): ?string
+    {
+        $step = $req->workflow?->steps?->firstWhere('level', $req->current_level);
+        if (!$step) {
+            return 'No approval step is configured for the current level.';
+        }
+
+        $matchesRole = fn(string $role) => $user->role === $role || $user->hasRole($role);
+
+        return match ($step->approver_type) {
+            'user' => $user->id === $step->approver_user_id
+                ? null
+                : "This step requires the designated approver ({$step->approver?->name}).",
+            'role', 'manager' => ($step->approver_role && $matchesRole($step->approver_role))
+                ? null
+                : "This step requires the '{$step->approver_role}' role.",
+            default => 'Unknown approver type for this step.',
+        };
+    }
+
+    private function guardApprovalAction(ApprovalRequest $req, \App\Models\User $user, string $action): void
+    {
+        if ($req->status !== 'pending') {
+            abort(403, 'This request is no longer pending.');
+        }
+
+        // Segregation of duties — creator cannot decide their own request
+        if ($req->requested_by === $user->id) {
+            \App\Models\AuditLog::log('deny', 'approvals', [
+                'module_action' => 'self_approval_attempt',
+                'new_values' => ['request' => $req->request_number, 'module' => $req->module, 'attempted' => $action],
+            ]);
+            abort(403, 'You cannot ' . $action . ' a request you created.');
+        }
+
+        // Duplicate decision at the same level
+        $alreadyActed = $req->tracks()
+            ->where('level', $req->current_level)
+            ->where('approver_id', $user->id)
+            ->whereIn('action', ['approved', 'rejected'])
+            ->exists();
+        if ($alreadyActed) {
+            abort(403, 'You have already decided on this level.');
+        }
+
+        if ($reason = $this->approverCheck($req, $user)) {
+            \App\Models\AuditLog::log('deny', 'approvals', [
+                'module_action' => 'unauthorized_approval_attempt',
+                'new_values' => ['request' => $req->request_number, 'level' => $req->current_level, 'attempted' => $action, 'reason' => $reason],
+            ]);
+            abort(403, $reason);
+        }
+    }
+
     public function approve(Request $request, ApprovalRequest $approvalRequest)
     {
+        $user = auth()->user();
+        $this->guardApprovalAction($approvalRequest, $user, 'approve');
         $validated = $request->validate(['comment' => 'nullable|string']);
 
-        $track = ApprovalTrack::create([
-            'approval_request_id' => $approvalRequest->id,
-            'level' => $approvalRequest->current_level,
-            'approver_id' => auth()->id(),
-            'action' => 'approved',
-            'comment' => $validated['comment'] ?? null,
-            'acted_at' => now(),
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($approvalRequest, $validated, $user) {
+            $previousLevel = $approvalRequest->current_level;
 
-        $nextStep = $approvalRequest->workflow->steps()->where('level', '>', $approvalRequest->current_level)->first();
-
-        if ($nextStep) {
-            $approvalRequest->update(['current_level' => $nextStep->level]);
             ApprovalTrack::create([
                 'approval_request_id' => $approvalRequest->id,
-                'level' => $nextStep->level,
-                'action' => 'pending',
+                'level' => $approvalRequest->current_level,
+                'approver_id' => $user->id,
+                'action' => 'approved',
+                'comment' => $validated['comment'] ?? null,
+                'acted_at' => now(),
             ]);
-        } else {
-            $approvalRequest->update([
-                'status' => 'approved',
-                'approved_at' => now(),
+
+            $nextStep = $approvalRequest->workflow->steps()->where('level', '>', $approvalRequest->current_level)->first();
+
+            if ($nextStep) {
+                $approvalRequest->update(['current_level' => $nextStep->level]);
+                ApprovalTrack::create([
+                    'approval_request_id' => $approvalRequest->id,
+                    'level' => $nextStep->level,
+                    'action' => 'pending',
+                ]);
+                $outcome = "advanced to level {$nextStep->level}";
+            } else {
+                $approvalRequest->update([
+                    'status' => 'approved',
+                    'approved_at' => now(),
+                ]);
+                $outcome = 'approved (final)';
+            }
+
+            \App\Models\AuditLog::log('approve', 'approvals', [
+                'module_action' => 'approval_granted',
+                'old_values' => ['status' => 'pending', 'level' => $previousLevel],
+                'new_values' => ['request' => $approvalRequest->request_number, 'module' => $approvalRequest->module, 'outcome' => $outcome],
             ]);
-        }
+        });
 
         return back()->with('success', 'Request approved.');
     }
 
     public function reject(Request $request, ApprovalRequest $approvalRequest)
     {
+        $user = auth()->user();
+        $this->guardApprovalAction($approvalRequest, $user, 'reject');
         $validated = $request->validate(['rejection_reason' => 'required|string']);
 
-        ApprovalTrack::create([
-            'approval_request_id' => $approvalRequest->id,
-            'level' => $approvalRequest->current_level,
-            'approver_id' => auth()->id(),
-            'action' => 'rejected',
-            'comment' => $validated['rejection_reason'],
-            'acted_at' => now(),
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($approvalRequest, $validated, $user) {
+            ApprovalTrack::create([
+                'approval_request_id' => $approvalRequest->id,
+                'level' => $approvalRequest->current_level,
+                'approver_id' => $user->id,
+                'action' => 'rejected',
+                'comment' => $validated['rejection_reason'],
+                'acted_at' => now(),
+            ]);
 
-        $approvalRequest->update([
-            'status' => 'rejected',
-            'rejected_at' => now(),
-            'rejection_reason' => $validated['rejection_reason'],
-        ]);
+            $approvalRequest->update([
+                'status' => 'rejected',
+                'rejected_at' => now(),
+                'rejection_reason' => $validated['rejection_reason'],
+            ]);
+
+            \App\Models\AuditLog::log('reject', 'approvals', [
+                'module_action' => 'approval_rejected',
+                'old_values' => ['status' => 'pending', 'level' => $approvalRequest->current_level],
+                'new_values' => ['request' => $approvalRequest->request_number, 'module' => $approvalRequest->module, 'reason' => $validated['rejection_reason']],
+            ]);
+        });
 
         return back()->with('success', 'Request rejected.');
     }
