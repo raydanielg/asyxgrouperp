@@ -2,226 +2,197 @@
 
 @section('title', 'Settlements - ' . $project->title)
 @section('page_title', 'Project Settlements')
-@section('page_actions')
-    <a href="{{ route('admin.projects.show', $project) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200 transition-colors">← Back to Project</a>
-@endsection
 
 @section('content')
-<div class="space-y-6">
-    {{-- Project Header --}}
-    <div class="bg-white rounded-md shadow-sm p-6 border border-gray-100">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-lg font-bold text-gray-900">{{ $project->title }}</h2>
-                <p class="text-sm text-gray-500 mt-1">
-                    Project #: {{ $project->project_number }}
-                    @if($project->start_date) | Start: {{ $project->start_date->format('d M Y') }} @endif
-                    @if($project->due_date) | End: {{ $project->due_date->format('d M Y') }} @endif
-                    @if($project->recurring_invoicing) | <span class="text-bronze font-semibold">Recurring Invoicing: {{ number_format($project->billing_amount, 0) }} TZS/month</span> @endif
-                </p>
-            </div>
-            <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold {{ $project->status === 'completed' ? 'bg-emerald-50 text-emerald-700' : ($project->status === 'in_progress' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span>
-        </div>
-    </div>
+@php $psc = ['completed'=>'#10b981','in_progress'=>'#f59e0b','planning'=>'#3b82f6','on_hold'=>'#9ca3af','cancelled'=>'#ef4444'][$project->status] ?? '#9ca3af'; @endphp
 
-    {{-- Summary Cards --}}
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
-            <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Invoiced</p>
-            <p class="text-xl font-bold text-blue-600 mt-1">{{ number_format($totals['invoiced'], 0) }}</p>
-            <p class="text-[10px] text-gray-400">TZS</p>
-        </div>
-        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
-            <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Received</p>
-            <p class="text-xl font-bold text-emerald-600 mt-1">{{ number_format($totals['received'], 0) }}</p>
-            <p class="text-[10px] text-gray-400">TZS</p>
-        </div>
-        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
-            <p class="text-[10px] text-gray-400 uppercase font-semibold">Outstanding</p>
-            <p class="text-xl font-bold text-amber-600 mt-1">{{ number_format($totals['outstanding'], 0) }}</p>
-            <p class="text-[10px] text-gray-400">TZS (invoiced - paid)</p>
-        </div>
-        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
-            <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Costs</p>
-            <p class="text-xl font-bold text-red-600 mt-1">{{ number_format($totals['total_cost'], 0) }}</p>
-            <p class="text-[10px] text-gray-400">TZS (vendor + office + staff)</p>
-        </div>
-        <div class="bg-white rounded-md shadow-sm p-4 border border-gray-100">
-            <p class="text-[10px] text-gray-400 uppercase font-semibold">Net Settlement</p>
-            <p class="text-xl font-bold {{ $totals['net'] >= 0 ? 'text-emerald-600' : 'text-red-600' }} mt-1">{{ number_format($totals['net'], 0) }}</p>
-            <p class="text-[10px] text-gray-400">TZS ({{ number_format($totals['margin'], 1) }}% margin)</p>
-        </div>
-    </div>
+<div class="mb-4 flex items-center justify-between flex-wrap gap-3">
+    <a href="{{ route('admin.projects.show', $project) }}" class="text-xs text-gray-400 hover:text-gray-700">← Back to Project</a>
+</div>
 
-    {{-- Cost Breakdown --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="bg-white rounded-md border p-4">
-            <p class="text-xs font-semibold text-gray-500 mb-2">Vendor / Procurement Costs</p>
-            <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['vendor_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
+{{-- Project Header --}}
+<div class="bg-white rounded-md border border-gray-200 px-5 py-4 mb-4 flex items-center justify-between flex-wrap gap-3">
+    <div>
+        <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-mono text-sm font-bold text-gray-900">{{ $project->project_number }}</span>
+            <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $psc }}"></span>{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span>
         </div>
-        <div class="bg-white rounded-md border p-4">
-            <p class="text-xs font-semibold text-gray-500 mb-2">Office Expenses</p>
-            <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['office_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
-        </div>
-        <div class="bg-white rounded-md border p-4">
-            <p class="text-xs font-semibold text-gray-500 mb-2">Staff Costs ({{ number_format($totals['staff_hours'], 0) }} hrs)</p>
-            <p class="text-2xl font-bold text-gray-900">{{ number_format($totals['staff_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
-        </div>
-        <div class="bg-white rounded-md border p-4">
-            <p class="text-xs font-semibold text-gray-500 mb-2">Staff Bonuses</p>
-            <p class="text-2xl font-bold text-amber-600">{{ number_format($totals['bonus_cost'], 0) }} <span class="text-xs text-gray-400">TZS</span></p>
-        </div>
+        <h2 class="text-base font-bold text-gray-900 mt-1">{{ $project->title }}</h2>
+        <p class="text-xs text-gray-400 mt-0.5">
+            @if($project->start_date){{ $project->start_date->format('d M Y') }}@endif
+            @if($project->due_date) — {{ $project->due_date->format('d M Y') }}@endif
+            @if($project->recurring_invoicing) · Recurring: {{ number_format($project->billing_amount, 0) }} TZS/mo@endif
+        </p>
     </div>
+</div>
 
-    {{-- Monthly Settlements Table --}}
-    <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-5 py-3 border-b bg-gray-50/50">
-            <h3 class="text-sm font-bold text-gray-700">Monthly Settlement Breakdown</h3>
-            <p class="text-[10px] text-gray-400 mt-0.5">Kila mwezi: invoiced, received, costs, na net settlement</p>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="text-left text-xs text-gray-500 bg-gray-50 border-b">
-                        <th class="px-4 py-3 font-medium">Month</th>
-                        <th class="px-4 py-3 font-medium text-right">Invoiced</th>
-                        <th class="px-4 py-3 font-medium text-right">Received</th>
-                        <th class="px-4 py-3 font-medium text-right">Outstanding</th>
-                        <th class="px-4 py-3 font-medium text-right">Vendor Costs</th>
-                        <th class="px-4 py-3 font-medium text-right">Office Exp.</th>
-                        <th class="px-4 py-3 font-medium text-right">Staff (hrs)</th>
-                        <th class="px-4 py-3 font-medium text-right">Bonuses</th>
-                        <th class="px-4 py-3 font-medium text-right">Total Costs</th>
-                        <th class="px-4 py-3 font-medium text-right">Net</th>
-                        <th class="px-4 py-3 font-medium text-center">Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($months as $m)
-                    <tr class="border-t border-gray-100 hover:bg-gray-50/50">
-                        <td class="px-4 py-3 text-xs font-semibold text-gray-700">{{ $m['label'] }}</td>
-                        <td class="px-4 py-3 text-xs text-right text-blue-600 font-medium">{{ $m['invoiced'] > 0 ? number_format($m['invoiced'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right text-emerald-600 font-medium">{{ $m['received'] > 0 ? number_format($m['received'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right {{ $m['outstanding'] > 0 ? 'text-amber-600 font-medium' : 'text-gray-400' }}">{{ $m['outstanding'] > 0 ? number_format($m['outstanding'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $m['vendor_cost'] > 0 ? number_format($m['vendor_cost'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $m['office_cost'] > 0 ? number_format($m['office_cost'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right text-gray-600">{{ $m['staff_hours'] > 0 ? number_format($m['staff_hours'], 0) . 'h (' . number_format($m['staff_cost'], 0) . ')' : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right text-amber-600">{{ $m['bonus_cost'] > 0 ? number_format($m['bonus_cost'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right text-red-600 font-medium">{{ $m['total_cost'] > 0 ? number_format($m['total_cost'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold {{ $m['net'] >= 0 ? 'text-emerald-600' : 'text-red-600' }}">{{ $m['net'] != 0 ? number_format($m['net'], 0) : '—' }}</td>
-                        <td class="px-4 py-3 text-center">
-                            @if($m['invoiced'] > 0 || $m['received'] > 0 || $m['vendor_cost'] > 0 || $m['office_cost'] > 0 || $m['staff_hours'] > 0)
-                            <button onclick="toggleMonth('month-{{ $m['key'] }}')" class="text-bronze text-xs hover:underline font-semibold">Expand</button>
-                            @else
-                            <span class="text-gray-300 text-xs">—</span>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr id="month-{{ $m['key'] }}" class="hidden bg-gray-50/30">
-                        <td colspan="11" class="px-4 py-4">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {{-- Invoices --}}
-                                <div>
-                                    <p class="text-[10px] font-bold uppercase text-gray-400 mb-2">Invoices ({{ $m['invoices']->count() }})</p>
-                                    @if($m['invoices']->isNotEmpty())
-                                    <div class="space-y-1">
-                                        @foreach($m['invoices'] as $inv)
-                                        <div class="flex justify-between text-xs">
-                                            <a href="{{ route('admin.sales-invoices.show', $inv) }}" class="text-blue-600 hover:underline">{{ $inv->invoice_number }}</a>
-                                            <span class="text-gray-600">{{ number_format($inv->total_amount, 0) }} TZS</span>
+{{-- Summary strip --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
+    <div class="grid grid-cols-2 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+        <div class="px-5 py-4"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Invoiced</p><p class="text-lg font-bold text-gray-900 mt-1">{{ number_format($totals['invoiced'], 0) }} <span class="text-[10px] font-normal text-gray-400">TZS</span></p></div>
+        <div class="px-5 py-4"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Received</p><p class="text-lg font-bold text-emerald-600 mt-1">{{ number_format($totals['received'], 0) }} <span class="text-[10px] font-normal text-gray-400">TZS</span></p></div>
+        <div class="px-5 py-4"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Outstanding</p><p class="text-lg font-bold text-amber-600 mt-1">{{ number_format($totals['outstanding'], 0) }} <span class="text-[10px] font-normal text-gray-400">TZS</span></p></div>
+        <div class="px-5 py-4"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Costs</p><p class="text-lg font-bold text-red-500 mt-1">{{ number_format($totals['total_cost'], 0) }} <span class="text-[10px] font-normal text-gray-400">TZS</span></p></div>
+        <div class="px-5 py-4"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Net · {{ number_format($totals['margin'], 1) }}%</p><p class="text-lg font-bold {{ $totals['net'] >= 0 ? 'text-emerald-600' : 'text-red-500' }} mt-1">{{ number_format($totals['net'], 0) }} <span class="text-[10px] font-normal text-gray-400">TZS</span></p></div>
+    </div>
+</div>
+
+{{-- Cost breakdown --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Cost Breakdown</h3></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+        <div class="px-5 py-4"><p class="text-[11px] text-gray-500">Vendor / Procurement</p><p class="text-base font-bold font-mono text-gray-900 mt-1">{{ number_format($totals['vendor_cost'], 0) }}</p></div>
+        <div class="px-5 py-4"><p class="text-[11px] text-gray-500">Office Expenses</p><p class="text-base font-bold font-mono text-gray-900 mt-1">{{ number_format($totals['office_cost'], 0) }}</p></div>
+        <div class="px-5 py-4"><p class="text-[11px] text-gray-500">Staff · {{ number_format($totals['staff_hours'], 0) }} hrs</p><p class="text-base font-bold font-mono text-gray-900 mt-1">{{ number_format($totals['staff_cost'], 0) }}</p></div>
+        <div class="px-5 py-4"><p class="text-[11px] text-gray-500">Bonuses</p><p class="text-base font-bold font-mono text-amber-600 mt-1">{{ number_format($totals['bonus_cost'], 0) }}</p></div>
+    </div>
+</div>
+
+{{-- Monthly table --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Monthly Breakdown</h3>
+        <span class="text-[10px] text-gray-400">Invoiced · received · costs · net per month</span>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
+                    <th class="px-5 py-3 font-semibold">Month</th>
+                    <th class="px-5 py-3 font-semibold text-right">Invoiced</th>
+                    <th class="px-5 py-3 font-semibold text-right">Received</th>
+                    <th class="px-5 py-3 font-semibold text-right">Outstanding</th>
+                    <th class="px-5 py-3 font-semibold text-right">Vendor</th>
+                    <th class="px-5 py-3 font-semibold text-right">Office</th>
+                    <th class="px-5 py-3 font-semibold text-right">Staff</th>
+                    <th class="px-5 py-3 font-semibold text-right">Bonuses</th>
+                    <th class="px-5 py-3 font-semibold text-right">Costs</th>
+                    <th class="px-5 py-3 font-semibold text-right">Net</th>
+                    <th class="px-5 py-3 font-semibold text-right"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @forelse($months as $m)
+                <tr class="hover:bg-gray-50/60">
+                    <td class="px-5 py-3.5 text-xs font-medium text-gray-900">{{ $m['label'] }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono text-gray-700">{{ $m['invoiced'] > 0 ? number_format($m['invoiced'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $m['received'] > 0 ? 'text-emerald-600' : 'text-gray-300' }}">{{ $m['received'] > 0 ? number_format($m['received'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $m['outstanding'] > 0 ? 'text-amber-600' : 'text-gray-300' }}">{{ $m['outstanding'] > 0 ? number_format($m['outstanding'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $m['vendor_cost'] > 0 ? 'text-gray-700' : 'text-gray-300' }}">{{ $m['vendor_cost'] > 0 ? number_format($m['vendor_cost'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $m['office_cost'] > 0 ? 'text-gray-700' : 'text-gray-300' }}">{{ $m['office_cost'] > 0 ? number_format($m['office_cost'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $m['staff_cost'] > 0 ? 'text-gray-700' : 'text-gray-300' }}">{{ $m['staff_hours'] > 0 ? number_format($m['staff_hours'], 0) . 'h' : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $m['bonus_cost'] > 0 ? 'text-amber-600' : 'text-gray-300' }}">{{ $m['bonus_cost'] > 0 ? number_format($m['bonus_cost'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $m['total_cost'] > 0 ? 'text-red-500' : 'text-gray-300' }}">{{ $m['total_cost'] > 0 ? number_format($m['total_cost'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono font-bold {{ $m['net'] != 0 ? ($m['net'] >= 0 ? 'text-emerald-600' : 'text-red-500') : 'text-gray-300' }}">{{ $m['net'] != 0 ? number_format($m['net'], 0) : '—' }}</td>
+                    <td class="px-5 py-3.5 text-right">
+                        @if($m['invoiced'] > 0 || $m['received'] > 0 || $m['vendor_cost'] > 0 || $m['office_cost'] > 0 || $m['staff_hours'] > 0)
+                        <button onclick="toggleMonth('month-{{ $m['key'] }}')" class="text-xs font-medium text-gray-600 hover:text-gray-900">Expand</button>
+                        @else
+                        <span class="text-gray-300 text-xs">—</span>
+                        @endif
+                    </td>
+                </tr>
+                <tr id="month-{{ $m['key'] }}" class="hidden bg-gray-50/50">
+                    <td colspan="11" class="px-5 py-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Invoices ({{ $m['invoices']->count() }})</p>
+                                @if($m['invoices']->isNotEmpty())
+                                <div class="space-y-1.5">
+                                    @foreach($m['invoices'] as $inv)
+                                    <div class="text-xs">
+                                        <div class="flex justify-between">
+                                            <a href="{{ route('admin.sales-invoices.show', $inv) }}" class="font-mono text-gray-700 hover:text-gray-900">{{ $inv->invoice_number }}</a>
+                                            <span class="font-mono text-gray-900">{{ number_format($inv->total_amount, 0) }}</span>
                                         </div>
-                                        <p class="text-[10px] text-gray-400 pl-2">Paid: {{ number_format($inv->paid_amount, 0) }} | Balance: {{ number_format($inv->balance_amount, 0) }} | {{ ucfirst($inv->status) }}</p>
-                                        @endforeach
+                                        <p class="text-[10px] text-gray-400">Paid {{ number_format($inv->paid_amount, 0) }} · Balance {{ number_format($inv->balance_amount, 0) }} · {{ ucfirst($inv->status) }}</p>
                                     </div>
-                                    @else
-                                    <p class="text-xs text-gray-400">No invoices this month</p>
-                                    @endif
+                                    @endforeach
                                 </div>
-                                {{-- Receipts --}}
-                                <div>
-                                    <p class="text-[10px] font-bold uppercase text-gray-400 mb-2">Client Receipts ({{ $m['receipts']->count() }})</p>
-                                    @if($m['receipts']->isNotEmpty())
-                                    <div class="space-y-1">
-                                        @foreach($m['receipts'] as $r)
-                                        <div class="flex justify-between text-xs">
-                                            <span class="text-gray-700">{{ $r->receipt_number }}</span>
-                                            <span class="text-emerald-600 font-medium">{{ number_format($r->amount, 0) }} TZS</span>
-                                        </div>
-                                        <p class="text-[10px] text-gray-400 pl-2">{{ $r->client_name }} | {{ $r->receipt_date->format('d M') }} | {{ $r->payment_method }}</p>
-                                        @endforeach
-                                    </div>
-                                    @else
-                                    <p class="text-xs text-gray-400">No receipts this month</p>
-                                    @endif
-                                </div>
-                                {{-- Vendor Invoices --}}
-                                <div>
-                                    <p class="text-[10px] font-bold uppercase text-gray-400 mb-2">Vendor Invoices ({{ $m['vendor_invoices']->count() }})</p>
-                                    @if($m['vendor_invoices']->isNotEmpty())
-                                    <div class="space-y-1">
-                                        @foreach($m['vendor_invoices'] as $vi)
-                                        <div class="flex justify-between text-xs">
-                                            <span class="text-gray-700">{{ $vi->vendor_invoice_number }}</span>
-                                            <span class="text-red-600 font-medium">{{ number_format($vi->total, 0) }} TZS</span>
-                                        </div>
-                                        <p class="text-[10px] text-gray-400 pl-2">Paid: {{ number_format($vi->amount_paid, 0) }} | {{ ucfirst($vi->status) }}</p>
-                                        @endforeach
-                                    </div>
-                                    @else
-                                    <p class="text-xs text-gray-400">No vendor invoices this month</p>
-                                    @endif
-                                </div>
+                                @else
+                                <p class="text-xs text-gray-400">No invoices this month</p>
+                                @endif
                             </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="11" class="px-4 py-12 text-center text-gray-400 text-sm">No settlement data available for this project</td></tr>
-                    @endforelse
-                </tbody>
-                <tfoot>
-                    <tr class="border-t-2 border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 text-xs font-bold text-gray-900">TOTALS</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-blue-600">{{ number_format($totals['invoiced'], 0) }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-emerald-600">{{ number_format($totals['received'], 0) }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-amber-600">{{ number_format($totals['outstanding'], 0) }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-gray-700">{{ number_format($totals['vendor_cost'], 0) }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-gray-700">{{ number_format($totals['office_cost'], 0) }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-gray-700">{{ number_format($totals['staff_hours'], 0) }}h ({{ number_format($totals['staff_cost'], 0) }})</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-amber-600">{{ number_format($totals['bonus_cost'], 0) }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold text-red-600">{{ number_format($totals['total_cost'], 0) }}</td>
-                        <td class="px-4 py-3 text-xs text-right font-bold {{ $totals['net'] >= 0 ? 'text-emerald-600' : 'text-red-600' }}">{{ number_format($totals['net'], 0) }}</td>
-                        <td class="px-4 py-3"></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Client Receipts ({{ $m['receipts']->count() }})</p>
+                                @if($m['receipts']->isNotEmpty())
+                                <div class="space-y-1.5">
+                                    @foreach($m['receipts'] as $r)
+                                    <div class="text-xs">
+                                        <div class="flex justify-between">
+                                            <span class="font-mono text-gray-700">{{ $r->receipt_number }}</span>
+                                            <span class="font-mono text-emerald-600">+{{ number_format($r->amount, 0) }}</span>
+                                        </div>
+                                        <p class="text-[10px] text-gray-400">{{ $r->client_name }} · {{ $r->receipt_date->format('d M') }} · {{ $r->payment_method }}</p>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @else
+                                <p class="text-xs text-gray-400">No receipts this month</p>
+                                @endif
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Vendor Invoices ({{ $m['vendor_invoices']->count() }})</p>
+                                @if($m['vendor_invoices']->isNotEmpty())
+                                <div class="space-y-1.5">
+                                    @foreach($m['vendor_invoices'] as $vi)
+                                    <div class="text-xs">
+                                        <div class="flex justify-between">
+                                            <span class="font-mono text-gray-700">{{ $vi->vendor_invoice_number }}</span>
+                                            <span class="font-mono text-red-500">-{{ number_format($vi->total, 0) }}</span>
+                                        </div>
+                                        <p class="text-[10px] text-gray-400">Paid {{ number_format($vi->amount_paid, 0) }} · {{ ucfirst($vi->status) }}</p>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @else
+                                <p class="text-xs text-gray-400">No vendor invoices this month</p>
+                                @endif
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="11" class="px-5 py-10 text-center text-gray-400 text-xs">No settlement data available for this project</td></tr>
+                @endforelse
+            </tbody>
+            @if(count($months))
+            <tfoot>
+                <tr class="border-t-2 border-gray-800 font-bold">
+                    <td class="px-5 py-3.5 text-xs">TOTALS</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono">{{ number_format($totals['invoiced'], 0) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono text-emerald-600">{{ number_format($totals['received'], 0) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono text-amber-600">{{ number_format($totals['outstanding'], 0) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono">{{ number_format($totals['vendor_cost'], 0) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono">{{ number_format($totals['office_cost'], 0) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono">{{ number_format($totals['staff_hours'], 0) }}h</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono">{{ number_format($totals['bonus_cost'], 0) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono text-red-500">{{ number_format($totals['total_cost'], 0) }}</td>
+                    <td class="px-5 py-3.5 text-xs text-right font-mono {{ $totals['net'] >= 0 ? 'text-emerald-600' : 'text-red-500' }}">{{ number_format($totals['net'], 0) }}</td>
+                    <td class="px-5 py-3.5"></td>
+                </tr>
+            </tfoot>
+            @endif
+        </table>
     </div>
+</div>
 
-    {{-- Info --}}
-    <div class="bg-blue-50 border border-blue-100 rounded-md p-4">
-        <div class="flex gap-3">
-            <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <div class="text-xs text-blue-700">
-                <p class="font-semibold mb-1">How settlements work:</p>
-                <ul class="space-y-0.5 list-disc list-inside">
-                    <li><strong>Invoiced</strong> = Total amount billed to client that month (recurring invoices)</li>
-                    <li><strong>Received</strong> = Actual payments received from client (client receipts)</li>
-                    <li><strong>Outstanding</strong> = Invoiced but not yet paid by client</li>
-                    <li><strong>Vendor Costs</strong> = Procurement / supplier invoices for this project</li>
-                    <li><strong>Office Expenses</strong> = Approved office expenses linked to this project</li>
-                    <li><strong>Staff Costs</strong> = Calculated from timesheet hours × employee hourly rate (salary ÷ 160 hrs)</li>
-                    <li><strong>Bonuses</strong> = Approved/paid employee bonuses linked to this project</li>
-                    <li><strong>Net</strong> = Received − Total Costs (actual profit for that month)</li>
-                </ul>
-            </div>
-        </div>
+{{-- Legend --}}
+<div class="bg-gray-50 border border-gray-200 rounded-md px-5 py-4">
+    <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">How settlements work</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1 text-[11px] text-gray-500">
+        <p><span class="font-medium text-gray-700">Invoiced</span> — billed to client that month</p>
+        <p><span class="font-medium text-gray-700">Received</span> — payments received (client receipts)</p>
+        <p><span class="font-medium text-gray-700">Outstanding</span> — invoiced but not yet paid</p>
+        <p><span class="font-medium text-gray-700">Staff Costs</span> — timesheet hours × hourly rate (salary ÷ 160)</p>
+        <p><span class="font-medium text-gray-700">Bonuses</span> — approved/paid bonuses on this project</p>
+        <p><span class="font-medium text-gray-700">Net</span> — Received − Total Costs (actual profit)</p>
     </div>
 </div>
 
 <script>
 function toggleMonth(id) {
-    const row = document.getElementById(id);
-    row.classList.toggle('hidden');
+    document.getElementById(id).classList.toggle('hidden');
 }
 </script>
 @endsection
