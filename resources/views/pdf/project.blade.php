@@ -159,7 +159,7 @@
     <tr>
       <td style="padding:6px 0;border-bottom:1px solid #f3f4f6;" class="small">{{ $idx + 1 }}</td>
       <td style="padding:6px 0;border-bottom:1px solid #f3f4f6;">{{ $task->title }}</td>
-      <td style="padding:6px 0;border-bottom:1px solid #f3f4f6;" class="small">{{ $task->assignedTo?->name ?? 'Unassigned' }}</td>
+      <td style="padding:6px 0;border-bottom:1px solid #f3f4f6;" class="small">{{ $task->assignee?->name ?? 'Unassigned' }}</td>
       <td style="padding:6px 0;border-bottom:1px solid #f3f4f6;" class="small">{{ ucfirst($task->priority) }}</td>
       <td style="padding:6px 0;border-bottom:1px solid #f3f4f6;">{{ ucfirst(str_replace('_', ' ', $task->status)) }}</td>
       <td style="padding:6px 0;border-bottom:1px solid #f3f4f6;text-align:right;" class="small">{{ $task->due_date?->format('d M Y') ?? '—' }}</td>

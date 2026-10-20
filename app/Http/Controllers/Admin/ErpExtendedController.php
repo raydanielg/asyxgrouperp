@@ -2199,7 +2199,7 @@ class ErpExtendedController extends Controller
             'isRemoteEnabled' => true,
         ]);
 
-        return $pdf->download('project-' . $project->project_number . '.pdf');
+        return $pdf->stream('project-' . $project->project_number . '.pdf', ['Attachment' => false]);
     }
 
     public function projectFinancingIndex(Project $project)
