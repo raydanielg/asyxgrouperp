@@ -83,7 +83,7 @@
                         <td class="px-3 py-2.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $rsc }}"></span>{{ ucfirst($rep->status) }}</span></td>
                         <td class="px-3 py-2.5 text-right">
                             @if($rep->status !== 'paid')
-                            <button type="button" onclick="openRepayDrawer({{ $rep->id }}, '{{ $rep->due_date->format('d M Y') }}', {{ $rep->amount }}, {{ $rep->paid_amount }})" class="text-xs font-medium text-gray-600 hover:text-gray-900">Record Payment</button>
+                            <button type="button" onclick="openRepayDrawer({{ $financing->id }}, {{ $rep->id }}, '{{ $rep->due_date->format('d M Y') }}', {{ $rep->amount }}, {{ $rep->paid_amount }})" class="text-xs font-medium text-gray-600 hover:text-gray-900">Record Payment</button>
                             @endif
                         </td>
                     </tr>
@@ -189,7 +189,7 @@ function closeDrawer(drawerId, panelId) {
     document.getElementById(panelId).classList.add('-translate-x-full');
     setTimeout(() => document.getElementById(drawerId).classList.add('hidden'), 300);
 }
-function openRepayDrawer(repId, dueDate, amount, paid) {
+function openRepayDrawer(financingId, repId, dueDate, amount, paid) {
     const outstanding = amount - paid;
     document.getElementById('repayId').value = repId;
     document.getElementById('repayDueLabel').textContent = 'Due ' + dueDate;
@@ -198,7 +198,7 @@ function openRepayDrawer(repId, dueDate, amount, paid) {
     document.getElementById('repayOutstanding').textContent = outstanding.toLocaleString('en-US', {minimumFractionDigits: 2});
     document.getElementById('repayPaidAmount').max = outstanding;
     document.getElementById('repayPaidAmount').value = outstanding;
-    document.getElementById('repayForm').action = '{{ route('admin.projects.financing.repayment', ':financing') }}'.replace(':financing', repId);
+    document.getElementById('repayForm').action = '{{ route('admin.projects.financing.repayment', ':financing') }}'.replace(':financing', financingId);
     openDrawer('repayDrawer','repayDrawerPanel');
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { ['financingDrawer','repayDrawer'].forEach(id => closeDrawer(id, id + 'Panel')); } });
