@@ -590,6 +590,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::post('/inventory/map-product', [$inv, 'mapProduct'])->name('inventory.map');
     Route::post('/inventory/release-reservation', [$inv, 'releaseReservation'])->name('inventory.release');
     Route::post('/inventory/assign-warehouse', [$inv, 'assignWarehouse'])->name('inventory.assign-warehouse');
+    Route::post('/inventory/reconcile-transfer', [$inv, 'reconcileTransferCompany'])->name('inventory.reconcile-transfer');
 
     // POS returns & refunds
     $posRet = App\Http\Controllers\Admin\PosReturnController::class;

@@ -266,10 +266,63 @@ class InventoryAuditController extends Controller
                 !StockMovement::withoutGlobalScopes()->where('reference', 'like', "POS {$s->sale_number}%")->exists()
             )->values();
 
+        // 12. Transfers with missing or inconsistent company
+        $transfersNoCompany = Transfer::withoutGlobalScopes()
+            ->whereNull('company_id')->with('fromWarehouse:id,name,company_id', 'toWarehouse:id,name,company_id')
+            ->get();
+        $transfersMismatch = Transfer::withoutGlobalScopes()
+            ->whereNotNull('company_id')
+            ->whereHas('fromWarehouse', fn($q) => $q->withoutGlobalScopes()->whereColumn('warehouses.company_id', '!=', 'transfers.company_id'))
+            ->with('fromWarehouse:id,name,company_id')->get();
+
+        // 13. Damaged returns (non-stock disposition — traceability only)
+        $damagedReturns = \App\Models\PosReturnItem::withoutGlobalScopes()
+            ->where('disposition', 'damaged')
+            ->whereHas('posReturn', fn($q) => $q->withoutGlobalScopes()->where('status', 'processed')->where('company_id', $companyId))
+            ->with('saleItem:id,product_name', 'posReturn:id,return_number')
+            ->latest('id')->limit(50)->get();
+
         return view('admin.inventory.audit', compact(
             'negative', 'missingMovement', 'duplicates', 'transferMissing', 'unmappedCount',
             'stockSnapshot', 'inconsistent', 'staleReservations',
-            'unattributed', 'terminalLinked', 'posMissing'
+            'unattributed', 'terminalLinked', 'posMissing',
+            'transfersNoCompany', 'transfersMismatch', 'damagedReturns'
         ));
+    }
+
+    /**
+     * Reconcile a transfer's company_id — set it to the consistent
+     * company proven by its warehouses. Ambiguous records (warehouses
+     * in different companies) are flagged, never guessed.
+     */
+    public function reconcileTransferCompany(Request $request)
+    {
+        $data = $request->validate([
+            'transfer_id' => 'required|exists:transfers,id',
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $transfer = Transfer::withoutGlobalScopes()->with(['fromWarehouse', 'toWarehouse'])->findOrFail($data['transfer_id']);
+        abort_unless(is_null($transfer->company_id), 403, 'This transfer already has a company — use a controlled correction.');
+
+        $fromCo = $transfer->fromWarehouse?->company_id;
+        $toCo = $transfer->toWarehouse?->company_id;
+
+        // Only reconcile when the evidence is unambiguous
+        if (!$fromCo || !$toCo || $fromCo !== $toCo) {
+            return back()->with('error', "Transfer #{$transfer->id} is ambiguous — warehouses belong to different or missing companies. Manual review required.");
+        }
+        abort_unless($fromCo === auth()->user()->company_id, 403, 'This transfer belongs to another company.');
+
+        $transfer->update(['company_id' => $fromCo]);
+
+        AuditLog::log('update', 'inventory', [
+            'module_action' => 'transfer_company_reconciled',
+            'old_values' => ['transfer' => $transfer->id, 'company_id' => null],
+            'new_values' => ['company_id' => $fromCo, 'reason' => $data['reason']],
+        ]);
+
+        return back()->with('success', "Transfer #{$transfer->id} assigned to company from warehouse evidence.");
+    }
     }
 }
