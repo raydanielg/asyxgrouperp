@@ -147,7 +147,7 @@
             <a href="{{ route('role.page', ['module' => 'sales-invoices']) }}" class="text-[10px] text-slate-600 hover:text-slate-800">View all →</a>
         </div>
         <div class="divide-y divide-gray-50">
-            @forelse(($recentItems['recentInvoices'] ?? collect())->take(5) as $invoice)
+            @forelse(($recentItems['recentSales'] ?? collect())->take(5) as $invoice)
             <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
                 <div><p class="text-xs font-medium text-gray-900">{{ $invoice->invoice_number }}</p><p class="text-[10px] text-gray-400">{{ $invoice->customer?->name ?? '—' }}</p></div>
                 <div class="text-right"><p class="text-xs font-semibold text-gray-900">{{ $money($invoice->total_amount) }}</p><p class="text-[10px] text-gray-400">{{ $invoice->created_at?->format('d M') }}</p></div>
