@@ -205,7 +205,7 @@ class InventoryAuditController extends Controller
             ->with('product:id,name', 'warehouse:id,name')
             ->get()
             ->filter(fn($s) => !$openTransfers->contains(
-                fn($t) => $t->product_id === $s->product_id && $t->from_warehouse === $s->warehouse_id
+                fn($t) => (int) $t->product_id === (int) $s->product_id && (int) $t->from_warehouse === (int) $s->warehouse_id
             ))
             ->values();
 
