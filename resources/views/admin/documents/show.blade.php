@@ -4,7 +4,8 @@
 @section('content')
 @php
     $dsc = ['signed' => '#10b981', 'pending_signature' => '#f59e0b', 'draft' => '#3b82f6', 'archived' => '#9ca3af'][$document->status] ?? '#9ca3af';
-    $previewable = in_array(strtolower($document->file_type), ['pdf','png','jpg','jpeg','gif','webp','svg','txt']);
+    $ft = strtolower($document->file_type ?? '');
+    $previewable = str_starts_with($ft, 'image/') || in_array($ft, ['application/pdf','text/plain','pdf','png','jpg','jpeg','gif','webp','svg','txt']);
 @endphp
 
 <div class="mb-4 flex items-center justify-between flex-wrap gap-3">
@@ -55,7 +56,7 @@
     </div>
     <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3 text-xs">
         <div><p class="text-gray-400">Category</p><p class="text-gray-800 mt-0.5 capitalize">{{ str_replace('_', ' ', $document->category ?? '—') }}</p></div>
-        <div><p class="text-gray-400">File Type</p><p class="text-gray-800 mt-0.5 uppercase">{{ $document->file_type }}</p></div>
+        <div><p class="text-gray-400">File Type</p><p class="text-gray-800 mt-0.5 uppercase">{{ str_contains($document->file_type, '/') ? last(explode('/', $document->file_type)) : $document->file_type }}</p></div>
         <div><p class="text-gray-400">Size</p><p class="text-gray-800 mt-0.5">{{ number_format($document->file_size / 1024, 0) }} KB</p></div>
         <div><p class="text-gray-400">Uploaded</p><p class="text-gray-800 mt-0.5">{{ $document->created_at->format('d M Y') }} · {{ $document->uploadedBy?->name }}</p></div>
         @if($document->project)
@@ -82,7 +83,7 @@
         @else
         <div class="bg-white rounded border border-gray-200 px-5 py-12 text-center">
             <svg class="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-            <p class="text-xs text-gray-500 mb-1">{{ strtoupper($document->file_type) }} files can't be previewed</p>
+            <p class="text-xs text-gray-500 mb-1">{{ strtoupper(str_contains($document->file_type, '/') ? last(explode('/', $document->file_type)) : $document->file_type) }} files can't be previewed</p>
             <a href="{{ route('admin.documents.download', $document) }}" class="text-xs font-medium text-gray-700 hover:text-gray-900 underline">Download to view</a>
         </div>
         @endif
