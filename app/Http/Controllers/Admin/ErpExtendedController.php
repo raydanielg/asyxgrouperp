@@ -2063,10 +2063,29 @@ class ErpExtendedController extends Controller
         return back()->with('success', 'Product "' . $name . '" deleted successfully!');
     }
 
-    public function supplierIndex()
+    public function supplierIndex(Request $request)
     {
-        $suppliers = Supplier::latest()->paginate(15);
+        $suppliers = Supplier::latest()
+            ->when($request->search, fn($q) => $q->where(fn($w) => $w->where('name', 'like', '%' . $request->search . '%')->orWhere('contact_person', 'like', '%' . $request->search . '%')->orWhere('email', 'like', '%' . $request->search . '%')))
+            ->when($request->status !== null && $request->status !== '', fn($q) => $q->where('is_active', $request->status === 'active'))
+            ->paginate(15)->withQueryString();
         return view('admin.products.suppliers', compact('suppliers'));
+    }
+
+    public function supplierUpdate(Request $request, Supplier $supplier)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'contact_person' => 'nullable|string|max:255',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'payment_terms' => 'nullable|string|max:100',
+            'is_active' => 'boolean',
+        ]);
+        $data['is_active'] = $request->boolean('is_active');
+        $supplier->update($data);
+        return back()->with('success', 'Supplier updated.');
     }
 
     public function supplierStore(Request $request)

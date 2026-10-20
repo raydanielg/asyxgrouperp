@@ -930,6 +930,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     Route::get('/suppliers', [$ext, 'supplierIndex'])->name('suppliers.index');
     Route::post('/suppliers', [$ext, 'supplierStore'])->name('suppliers.store');
+    Route::put('/suppliers/{supplier}', [$ext, 'supplierUpdate'])->name('suppliers.update');
     Route::delete('/suppliers/{supplier}', [$ext, 'supplierDestroy'])->name('suppliers.destroy');
 
     Route::get('/stock-movements', [$ext, 'stockMovementIndex'])->name('stock-movements.index');
