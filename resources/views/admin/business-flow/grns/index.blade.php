@@ -113,6 +113,17 @@
                         <input name="delivery_note_number" placeholder="DN-..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
                     </div>
                 </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Receiving Warehouse</label>
+                    @php $grnWarehouses = \App\Models\Warehouse::where('is_active', true)->orderBy('name')->get(); @endphp
+                    <select name="warehouse_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— LPO tracking only (no stock) —</option>
+                        @foreach($grnWarehouses as $w)
+                        <option value="{{ $w->id }}">{{ $w->name }}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-[10px] text-gray-400 mt-1">Set a warehouse to post stock movements on receipt — items need product mapping.</p>
+                </div>
             </div>
 
             <div class="border-t border-gray-100 pt-4 mb-5">
