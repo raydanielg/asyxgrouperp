@@ -324,5 +324,4 @@ class InventoryAuditController extends Controller
 
         return back()->with('success', "Transfer #{$transfer->id} assigned to company from warehouse evidence.");
     }
-    }
 }
