@@ -279,7 +279,7 @@ class UserController extends Controller
                 AuditLog::log($validated['action'], 'permissions', [
                     'module_action' => 'user_permission_' . ($validated['action'] === 'grant' ? 'granted' : 'denied'),
                     'old_values' => $existing ? ['state' => $existing->granted ? 'granted' : 'denied'] : null,
-                    'new_values' => ['target_user_id' => $user->id, 'target_user' => $user->name, 'permission' => $permission->name, 'reason' => $validated['reason']],
+                    'new_values' => ['target_user_id' => $user->id, 'target_user' => $user->name, 'permission' => $permission->name, 'reason' => $validated['reason'] ?? null],
                 ]);
             }
         });
