@@ -15,6 +15,15 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    public function __construct()
+    {
+        // Multi-company management is platform-level — superadmin only
+        $this->middleware(function ($request, $next) {
+            abort_unless(auth()->user()?->isSuperAdmin(), 403, 'Company management is restricted to the platform administrator.');
+            return $next($request);
+        })->except('switchCompany');
+    }
+
     public function index(Request $request)
     {
         $companies = Company::with('parent')
