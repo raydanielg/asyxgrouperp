@@ -126,10 +126,13 @@ class PosReturnController extends Controller
                     );
                 }
 
-                // Refund guard — cumulative refunds cannot exceed paid amount
+                // Refund guard — cumulative refunds cannot exceed paid amount.
+                // Counts all recorded refunds (awaiting + confirmed + processed-legacy).
                 if ($locked->refund_amount > 0) {
                     $priorRefunds = PosReturn::where('pos_sale_id', $sale->id)
-                        ->where('status', 'processed')->sum('refund_amount');
+                        ->where('status', 'processed')
+                        ->whereIn('refund_status', ['awaiting_reconciliation', 'confirmed', 'processed'])
+                        ->sum('refund_amount');
                     if ($priorRefunds + $locked->refund_amount > (float) $sale->paid_amount + 0.0001) {
                         abort(422, "Refund of {$locked->refund_amount} exceeds remaining refundable amount (paid {$sale->paid_amount}, refunded {$priorRefunds}).");
                     }
@@ -137,7 +140,9 @@ class PosReturnController extends Controller
 
                 $locked->update([
                     'status' => 'processed',
-                    'refund_status' => $locked->refund_amount > 0 ? 'processed' : 'none',
+                    // Internal record only — money movement requires manual
+                    // reconciliation (no payment provider is configured).
+                    'refund_status' => $locked->refund_amount > 0 ? 'awaiting_reconciliation' : 'none',
                     'processed_by' => $user->id,
                     'processed_at' => now(),
                 ]);
@@ -154,6 +159,50 @@ class PosReturnController extends Controller
         }
 
         return back()->with('success', "Return {$posReturn->return_number} processed.");
+    }
+
+    /**
+     * Confirm a refund — the manual reconciliation step. Records who,
+     * when, and an external reference if the payment was settled
+     * outside the system (cash, bank slip, gateway console).
+     * No external refund is claimed without evidence.
+     */
+    public function confirmRefund(Request $request, PosReturn $posReturn)
+    {
+        $user = auth()->user();
+        $data = $request->validate([
+            'refund_reference' => 'nullable|string|max:255',
+            'refund_notes' => 'nullable|string|max:500',
+        ]);
+
+        abort_if($posReturn->status !== 'processed', 403, 'Only processed returns can have refunds confirmed.');
+        abort_if($posReturn->refund_status === 'none', 403, 'This return has no refund to confirm.');
+        abort_if($posReturn->refund_status === 'confirmed', 403, 'This refund is already confirmed.');
+        abort_if($posReturn->created_by === $user->id, 403, 'You cannot confirm a refund on a return you requested.');
+
+        DB::transaction(function () use ($posReturn, $user, $data) {
+            $locked = PosReturn::lockForUpdate()->findOrFail($posReturn->id);
+            abort_if($locked->refund_status === 'confirmed', 403, 'This refund is already confirmed.');
+
+            $locked->update([
+                'refund_status' => 'confirmed',
+                'refund_confirmed_by' => $user->id,
+                'refund_confirmed_at' => now(),
+                'refund_reference' => $data['refund_reference'] ?? null,
+                'refund_notes' => $data['refund_notes'] ?? null,
+            ]);
+
+            AuditLog::log('execute', 'pos', [
+                'module_action' => 'pos_refund_confirmed',
+                'new_values' => [
+                    'return' => $locked->return_number,
+                    'amount' => $locked->refund_amount,
+                    'reference' => $data['refund_reference'] ?? null,
+                ],
+            ]);
+        });
+
+        return back()->with('success', "Refund for {$posReturn->return_number} confirmed.");
     }
 
     /**

@@ -596,6 +596,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/pos-returns', [$posRet, 'index'])->name('pos-returns.index');
     Route::post('/pos-sales/{posSale}/returns', [$posRet, 'store'])->name('pos-returns.store');
     Route::post('/pos-returns/{posReturn}/process', [$posRet, 'process'])->name('pos-returns.process');
+    Route::post('/pos-returns/{posReturn}/confirm-refund', [$posRet, 'confirmRefund'])->name('pos-returns.confirm-refund');
     Route::delete('/pos-returns/{posReturn}', [$posRet, 'destroy'])->name('pos-returns.destroy');
 
     // Plans

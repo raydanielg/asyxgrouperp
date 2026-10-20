@@ -21,7 +21,8 @@
                 </td>
                 <td class="px-5 py-3 text-xs text-right font-mono">
                     {{ $r->refund_amount > 0 ? number_format($r->refund_amount, 2) : '—' }}
-                    @if($r->refund_status === 'processed')<span class="text-[9px] text-amber-600 block">internal</span>@endif
+                    @if($r->refund_status === 'awaiting_reconciliation')<span class="text-[9px] text-amber-600 block">awaiting recon</span>
+                    @elseif($r->refund_status === 'confirmed')<span class="text-[9px] text-emerald-600 block">confirmed</span>@endif
                 </td>
                 <td class="px-5 py-3">
                     <span class="inline-flex items-center gap-1.5 text-xs"><span style="width:6px;height:6px;border-radius:99px;background:{{ $r->status === 'processed' ? '#10b981' : '#f59e0b' }}"></span>{{ ucfirst($r->status) }}</span>
@@ -31,6 +32,11 @@
                         @if($r->status === 'pending' && $r->created_by !== auth()->id())
                         <form method="POST" action="{{ route('admin.pos-returns.process', $r) }}" class="inline" onsubmit="return confirmAction(this, {title:'Process return?', text:'Restock items + record refund.', confirmText:'Process', color:'#059669'})">@csrf
                             <button class="text-xs font-semibold text-emerald-700 hover:text-emerald-900">Process</button>
+                        </form>
+                        @endif
+                        @if($r->status === 'processed' && $r->refund_status === 'awaiting_reconciliation' && $r->created_by !== auth()->id())
+                        <form method="POST" action="{{ route('admin.pos-returns.confirm-refund', $r) }}" class="inline" onsubmit="return confirmAction(this, {title:'Confirm refund?', text:'Record that money was actually returned (cash/bank reference).', confirmText:'Confirm'})">@csrf
+                            <button class="text-xs font-semibold text-emerald-700 hover:text-emerald-900">Confirm refund</button>
                         </form>
                         @endif
                         @if($r->status === 'pending')
