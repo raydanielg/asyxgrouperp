@@ -588,6 +588,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/inventory/audit', [$inv, 'auditReport'])->name('inventory.audit');
     Route::get('/inventory/reconciliation', [$inv, 'reconciliation'])->name('inventory.reconciliation');
     Route::post('/inventory/map-product', [$inv, 'mapProduct'])->name('inventory.map');
+    Route::post('/inventory/release-reservation', [$inv, 'releaseReservation'])->name('inventory.release');
 
     // Plans
     Route::get('/plans', [$erp, 'planIndex'])->name('plans.index')->middleware('platform.admin');

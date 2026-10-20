@@ -128,5 +128,38 @@
         </table>
     </div>
 
+    <div class="bg-white rounded-md border border-gray-200 lg:col-span-2">
+        <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-gray-800">Potentially Stale Reservations</h3>
+            <span class="text-[10px] px-1.5 py-0.5 rounded {{ $staleReservations->count() ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }}">{{ $staleReservations->count() }}</span>
+        </div>
+        <table class="w-full">
+            <tbody class="divide-y divide-gray-50">
+                @forelse($staleReservations as $s)
+                <tr>
+                    <td class="px-5 py-3 text-xs text-gray-800">{{ $s->product?->name }}</td>
+                    <td class="px-5 py-3 text-xs text-gray-500">{{ $s->warehouse?->name }}</td>
+                    <td class="px-5 py-3 text-xs text-right font-mono text-amber-600">{{ number_format($s->reserved_quantity) }} reserved</td>
+                    <td class="px-5 py-3 text-xs text-gray-400">No open transfer claims this reservation — manual review required</td>
+                    <td class="px-5 py-3 text-right">
+                        <form method="POST" action="{{ route('admin.inventory.release') }}" class="inline" onsubmit="return confirmAction(this, {title:'Release reservation?', text:'{{ number_format($s->reserved_quantity) }} units will return to available stock.', confirmText:'Release'})">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $s->product_id }}">
+                            <input type="hidden" name="warehouse_id" value="{{ $s->warehouse_id }}">
+                            <input type="hidden" name="reason" value="Stale reservation release — no open transfer claims it">
+                            <button class="text-xs font-medium text-red-600 hover:text-red-800">Release</button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="4" class="px-5 py-6 text-center text-xs text-gray-400">All reservations are claimed by open transfers.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div class="px-5 py-3 border-t border-gray-100">
+            <p class="text-[10px] text-gray-400">No reservation expiry policy is configured — stale reservations are preserved until consumed or explicitly released. Corrections require an authorized manual release with an audit trail.</p>
+        </div>
+    </div>
+
 </div>
 @endsection

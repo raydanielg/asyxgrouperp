@@ -88,6 +88,44 @@ class InventoryAuditController extends Controller
     }
 
     /**
+     * Manually release an outstanding reservation — the authorized
+     * reconciliation path for stale reservations. Floored at zero and
+     * idempotent: releasing an already-released row is a no-op.
+     */
+    public function releaseReservation(Request $request)
+    {
+        $data = $request->validate([
+            'product_id' => ['required', \Illuminate\Validation\Rule::exists('products','id')->where('company_id', auth()->user()->company_id)],
+            'warehouse_id' => ['required', \Illuminate\Validation\Rule::exists('warehouses','id')->where('company_id', auth()->user()->company_id)],
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $released = \Illuminate\Support\Facades\DB::transaction(function () use ($data) {
+            $stock = ProductWarehouseStock::withoutGlobalScopes()
+                ->where('product_id', $data['product_id'])
+                ->where('warehouse_id', $data['warehouse_id'])
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $amount = $stock->reserved_quantity;
+            if ($amount > 0) {
+                $stock->update(['reserved_quantity' => 0]);
+            }
+            return $amount;
+        });
+
+        AuditLog::log('update', 'inventory', [
+            'module_action' => 'reservation_released',
+            'new_values' => [
+                'product_id' => $data['product_id'], 'warehouse_id' => $data['warehouse_id'],
+                'released' => $released, 'reason' => $data['reason'],
+            ],
+        ]);
+
+        return back()->with('success', $released > 0 ? "Released {$released} reserved units." : 'No outstanding reservation — nothing to release.');
+    }
+
+    /**
      * Inventory audit — read-only discrepancy report.
      * Verified discrepancies vs missing-history are distinguished.
      */
@@ -153,9 +191,27 @@ class InventoryAuditController extends Controller
             ->where('company_id', $companyId)
             ->whereColumn('transferred_quantity', '>', 'quantity')->get();
 
+        // 8. Potentially stale reservations — reserved > 0 with no open
+        //    transfer claiming that product/warehouse. No expiry policy
+        //    exists (documented): these require manual review, not auto-release.
+        $openTransfers = Transfer::withoutGlobalScopes()
+            ->where('company_id', $companyId)
+            ->whereIn('status', ['approved', 'partially_transferred'])
+            ->whereNotNull('product_id')
+            ->get(['product_id', 'from_warehouse', 'quantity', 'transferred_quantity', 'status', 'id']);
+        $staleReservations = ProductWarehouseStock::withoutGlobalScopes()
+            ->where('reserved_quantity', '>', 0)
+            ->whereHas('warehouse', fn($q) => $q->where('company_id', $companyId))
+            ->with('product:id,name', 'warehouse:id,name')
+            ->get()
+            ->filter(fn($s) => !$openTransfers->contains(
+                fn($t) => $t->product_id === $s->product_id && $t->from_warehouse === $s->warehouse_id
+            ))
+            ->values();
+
         return view('admin.inventory.audit', compact(
             'negative', 'missingMovement', 'duplicates', 'transferMissing', 'unmappedCount',
-            'stockSnapshot', 'inconsistent'
+            'stockSnapshot', 'inconsistent', 'staleReservations'
         ));
     }
 }
