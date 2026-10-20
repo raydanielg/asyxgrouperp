@@ -144,7 +144,7 @@ class RbacAuthorizationTest extends TestCase
         ])->assertRedirect();
         $this->assertDatabaseHas('user_permissions', ['user_id' => $target->id, 'granted' => 1]);
 
-        $this->actingAs($super)->post("/admin/users/{$target->id}/permissions", [
+        $resp = $this->actingAs($super)->withoutExceptionHandling()->post("/admin/users/{$target->id}/permissions", [
             'permission' => 'p-1', 'action' => 'deny',
         ]);
         $this->assertDatabaseHas('user_permissions', ['user_id' => $target->id, 'granted' => 0]);
