@@ -82,8 +82,6 @@
                 </div>
                 @endif
                 <div class="grid grid-cols-2 gap-3">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
                     <div><label class="block text-xs font-medium text-gray-600 mb-1">Phone</label><input name="phone" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
                     <div><label class="block text-xs font-medium text-gray-600 mb-1">Email</label><input name="email" type="email" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
                 </div>
