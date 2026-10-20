@@ -98,10 +98,25 @@
     </div>
 </div>
 
-{{-- ═══ RECEIPT OVERLAY (thermal print animation) ═══ --}}
+{{-- ═══ RECEIPT OVERLAY (tick + thermal print animation) ═══ --}}
 <div id="receiptOverlay" class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/70">
-    <div class="flex flex-col items-center w-full max-w-[320px]">
-        {{-- Printer slot --}}
+
+    {{-- Phase 1: success tick --}}
+    <div id="tickPhase" class="flex flex-col items-center">
+        <svg class="w-20 h-20" viewBox="0 0 52 52">
+            <circle id="tickCircle" cx="26" cy="26" r="24" fill="none" stroke="#10b981" stroke-width="2.5"
+                stroke-dasharray="151" stroke-dashoffset="151" stroke-linecap="round"
+                style="transition: stroke-dashoffset 0.5s cubic-bezier(0.65,0,0.45,1)"/>
+            <path id="tickCheck" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l8 8 16-18"
+                stroke-dasharray="38" stroke-dashoffset="38"
+                style="transition: stroke-dashoffset 0.35s cubic-bezier(0.65,0,0.45,1) 0.45s"/>
+        </svg>
+        <p class="text-emerald-400 text-sm font-bold mt-3 tracking-wide">SALE COMPLETED</p>
+        <p class="text-slate-400 text-xs font-mono mt-1" id="tickSaleNo"></p>
+    </div>
+
+    {{-- Phase 2: printer + paper --}}
+    <div id="printPhase" class="hidden flex-col items-center w-full max-w-[320px]">
         <div class="w-[280px] bg-slate-800 rounded-t-lg px-4 py-2.5 flex items-center justify-between relative z-10">
             <div class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -110,15 +125,10 @@
             <span class="text-slate-500 text-[10px] font-mono">EFD</span>
         </div>
         <div class="w-[280px] h-1.5 bg-slate-950 relative z-10 shadow-[0_6px_12px_rgba(0,0,0,0.5)]"></div>
-
-        {{-- Receipt paper --}}
         <div id="receiptPaper" class="w-[280px] bg-white shadow-2xl relative" style="clip-path: inset(0 0 100% 0);">
             <div class="px-4 py-5 text-[11px] leading-relaxed font-mono text-gray-900" id="receiptContent"></div>
-            {{-- torn edge --}}
             <div style="height:8px;background:linear-gradient(-45deg,transparent 4px,#fff 0) 0 0/8px 8px repeat-x,linear-gradient(45deg,transparent 4px,#fff 0) 4px 0/8px 8px repeat-x;"></div>
         </div>
-
-        {{-- Actions --}}
         <div id="receiptActions" class="w-[280px] mt-4 flex gap-2 opacity-0 transition-opacity duration-300">
             <button onclick="printReceipt()" class="flex-1 py-2.5 bg-white text-gray-900 text-xs font-bold rounded hover:bg-gray-100">Print</button>
             <button onclick="closeReceipt()" class="flex-1 py-2.5 bg-slate-700 text-white text-xs font-bold rounded hover:bg-slate-600">New Sale</button>
@@ -231,7 +241,7 @@ function processSale() {
         body: JSON.stringify({ subtotal, tax_amount: tax, discount_amount: discount, total_amount: total, paid_amount: paid, payment_method: document.getElementById('paymentMethod').value, items: cart.map(i => ({product_id: i.product_id, product_name: i.product_name, quantity: i.quantity, unit_price: i.unit_price, total: i.unit_price * i.quantity})) })
     }).then(r => r.json()).then(data => {
         if (data.success) {
-            showReceipt(data.sale_number, {subtotal, tax, taxRate, discount, total, paid, method: document.getElementById('paymentMethod').value, items: cart});
+            showReceipt(data, {subtotal, tax, taxRate, discount, total, paid, method: document.getElementById('paymentMethod').value, items: cart});
         } else { Swal.fire({icon:'error',title:'Error',text:'Failed to process sale',confirmButtonColor:'#0f172a'}); }
     }).catch(e => Swal.fire({icon:'error',title:'Error',text:'Network error',confirmButtonColor:'#0f172a'}))
     .finally(() => { btn.disabled = false; btn.textContent = 'Complete Sale'; });
