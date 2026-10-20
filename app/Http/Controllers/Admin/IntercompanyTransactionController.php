@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 
 class IntercompanyTransactionController extends Controller
 {
+    public function __construct()
+    {
+        // Intercompany transactions are platform-level — superadmin only
+        $this->middleware(function ($request, $next) {
+            abort_unless(auth()->user()?->isSuperAdmin(), 403, 'Intercompany management is restricted to the platform administrator.');
+            return $next($request);
+        });
+    }
+
     public function index()
     {
         $transactions = IntercompanyTransaction::with(['fromCompany', 'toCompany'])
