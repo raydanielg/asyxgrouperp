@@ -43,6 +43,59 @@
             @endif
         </div>
     </div>
+
+    {{-- Payment progress --}}
+    @if($salesInvoice->total_amount > 0)
+    <div class="mt-4 pt-4 border-t border-gray-100">
+        <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[11px] text-gray-400">Payment progress</span>
+            <span class="text-[11px] font-mono font-medium text-gray-700">{{ number_format(min(100, $salesInvoice->paid_amount / $salesInvoice->total_amount * 100), 0) }}%</span>
+        </div>
+        <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full {{ $salesInvoice->balance_amount > 0 ? 'bg-amber-500' : 'bg-emerald-500' }} transition-all" style="width:{{ min(100, $salesInvoice->paid_amount / $salesInvoice->total_amount * 100) }}%"></div>
+        </div>
+        <div class="flex items-center justify-between mt-1.5">
+            <span class="text-[11px] text-emerald-600">Paid: TZS {{ number_format($salesInvoice->paid_amount) }}</span>
+            <span class="text-[11px] {{ $salesInvoice->balance_amount > 0 ? 'text-amber-600' : 'text-gray-400' }}">Due: TZS {{ number_format($salesInvoice->balance_amount) }}</span>
+        </div>
+    </div>
+    @endif
+
+    {{-- Status stepper --}}
+    @php
+        $steps = ['draft' => 'Draft', 'posted' => 'Posted', 'partial' => 'Partial', 'paid' => 'Paid'];
+        $stepKeys = array_keys($steps);
+        $curIdx = array_search($salesInvoice->status, $stepKeys);
+        $curIdx = $curIdx === false ? ($salesInvoice->status === 'overdue' ? 2 : -1) : $curIdx;
+    @endphp
+    <div class="mt-4 pt-4 border-t border-gray-100">
+        <div class="flex items-center">
+            @foreach($steps as $key => $label)
+            @php $idx = array_search($key, $stepKeys); $reached = $idx <= $curIdx; $isCurrent = $idx === $curIdx; @endphp
+            @if($idx > 0)
+            <div class="flex-1 h-px {{ $reached ? 'bg-gray-800' : 'bg-gray-200' }}"></div>
+            @endif
+            <div class="flex items-center gap-2 px-1">
+                <span class="w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 {{ $reached ? 'bg-gray-900 border-gray-900' : 'border-gray-300 bg-white' }}">
+                    @if($reached && !$isCurrent)
+                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    @elseif($isCurrent)
+                    <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    @endif
+                </span>
+                <span class="text-xs {{ $isCurrent ? 'font-bold text-gray-900' : ($reached ? 'text-gray-600' : 'text-gray-400') }}">{{ $label }}</span>
+            </div>
+            @endforeach
+            @if($salesInvoice->status === 'overdue')
+            <div class="flex-1 h-px bg-gray-200"></div>
+            <div class="flex items-center gap-2 px-1">
+                <span class="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-white"></span></span>
+                <span class="text-xs font-bold text-red-600">Overdue</span>
+            </div>
+            @endif
+        </div>
+    </div>
+
     <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3 text-xs">
         <div><p class="text-gray-400">Invoice Date</p><p class="text-gray-800 mt-0.5">{{ $salesInvoice->invoice_date->format('d M Y') }}</p></div>
         <div><p class="text-gray-400">Due Date</p><p class="mt-0.5 {{ $salesInvoice->due_date->isPast() && $salesInvoice->balance_amount > 0 ? 'text-red-600 font-medium' : 'text-gray-800' }}">{{ $salesInvoice->due_date->format('d M Y') }}</p></div>
