@@ -42,13 +42,30 @@ class User extends Authenticatable
     }
 
     /**
-     * HARDCODED permission names for this user, based on the
-     * users.role column. See App\Support\RolePermissions.
-     * This NO LONGER reads from the database (role_permission table).
+     * Database-driven permission resolution.
+     * Permissions = union of role_permission for the user's assigned roles
+     * (role_user pivot) + the user's role-column role. Falls back to the
+     * legacy RolePermissions map only when no DB entry exists.
+     * Cached per user and invalidated on role/permission changes.
      */
     public function permissionNames(): array
     {
-        return \App\Support\RolePermissions::forRole($this->role);
+        return cache()->remember("user_perms_{$this->id}", 300, function () {
+            $roleNames = $this->roles()->pluck('name')->all();
+            if ($this->role) {
+                $roleNames[] = $this->role;
+            }
+            $roleNames = array_unique(array_filter($roleNames));
+
+            $perms = Permission::whereHas('roles', function ($q) use ($roleNames) {
+                    $q->whereIn('roles.name', $roleNames);
+                })->pluck('name')->unique()->values()->all();
+
+            if (empty($perms)) {
+                $perms = \App\Support\RolePermissions::forRole($this->role);
+            }
+            return $perms;
+        });
     }
 
     public function hasPermission(string $name): bool
