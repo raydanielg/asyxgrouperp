@@ -103,6 +103,7 @@ class ContractController extends Controller
     public function activate(Contract $contract)
     {
         $user = auth()->user();
+        abort_unless($user->hasPermission('activate-contracts'), 403, 'You are not authorized to activate contracts.');
         abort_if($contract->status !== 'draft', 403, 'Only draft contracts can be activated.');
         abort_if($contract->created_by === $user->id, 403, 'You cannot activate a contract you created.');
 
