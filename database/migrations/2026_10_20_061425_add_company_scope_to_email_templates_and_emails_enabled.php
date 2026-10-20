@@ -6,23 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('email_templates_and_emails_enabled', function (Blueprint $table) {
-            //
+        Schema::table('email_templates', function (Blueprint $table) {
+            $table->foreignId('company_id')->nullable()->after('created_by')->index();
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->boolean('emails_enabled')->default(true)->after('suspension_reason');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('email_templates_and_emails_enabled', function (Blueprint $table) {
-            //
+        Schema::table('email_templates', function (Blueprint $table) {
+            $table->dropColumn('company_id');
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('emails_enabled');
         });
     }
 };
