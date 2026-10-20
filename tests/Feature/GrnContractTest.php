@@ -156,6 +156,7 @@ class GrnContractTest extends TestCase
         $whA = Warehouse::withoutGlobalScopes()->create(['name' => 'W1', 'address' => 'a', 'city' => 'a', 'zip_code' => '1', 'company_id' => $this->company()->id, 'is_active' => true]);
         $whB = Warehouse::withoutGlobalScopes()->create(['name' => 'W2', 'address' => 'a', 'city' => 'a', 'zip_code' => '1', 'company_id' => $this->company()->id, 'is_active' => true]);
         $creator = $this->makeUser();
+        $this->actingAs($creator); // company_id hook requires an authenticated user
         $transfer = Transfer::create([
             'from_warehouse' => $whA->id, 'to_warehouse' => $whB->id,
             'product_name' => 'Widget', 'quantity' => 5, 'status' => 'pending',

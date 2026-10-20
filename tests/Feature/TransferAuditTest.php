@@ -59,6 +59,8 @@ class TransferAuditTest extends TestCase
 
     private function makeTransfer(User $creator, Warehouse $from, Warehouse $to, Product $product, float $qty): Transfer
     {
+        // company_id is set by BelongsToCompany's creating hook — requires an authenticated user
+        $this->actingAs($creator);
         return Transfer::create([
             'from_warehouse' => $from->id, 'to_warehouse' => $to->id,
             'product_id' => $product->id, 'product_name' => $product->name,
