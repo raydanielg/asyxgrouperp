@@ -18,6 +18,7 @@ use App\Models\BankTransferPayment;
 use App\Models\BankAccount;
 use App\Models\AddOn;
 use App\Models\UserActiveModule;
+use App\Models\Company;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReturn;
 use App\Models\SalesInvoice;
@@ -203,6 +204,26 @@ class ErpController extends Controller
     public function orderShow(Order $order)
     {
         return view('admin.orders.show', compact('order'));
+    }
+
+    public function orderApprove(Order $order)
+    {
+        $order->update(['payment_status' => 'succeeded']);
+        if ($order->company_id && ($company = Company::find($order->company_id))) {
+            $company->update([
+                'is_active' => true,
+                'subscription_status' => 'active',
+                'subscription_starts_at' => now(),
+                'subscription_ends_at' => $company->billing_cycle === 'yearly' ? now()->addYear() : now()->addMonth(),
+            ]);
+        }
+        return back()->with('success', 'Order approved. Company activated.');
+    }
+
+    public function orderReject(Order $order)
+    {
+        $order->update(['payment_status' => 'failed']);
+        return back()->with('success', 'Order rejected.');
     }
 
     // ─── Coupons ───

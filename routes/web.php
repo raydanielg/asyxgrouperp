@@ -591,6 +591,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     // Orders
     Route::get('/orders', [$erp, 'orderIndex'])->name('orders.index');
     Route::get('/orders/{order}', [$erp, 'orderShow'])->name('orders.show');
+    Route::patch('/orders/{order}/approve', [$erp, 'orderApprove'])->name('orders.approve');
+    Route::patch('/orders/{order}/reject', [$erp, 'orderReject'])->name('orders.reject');
 
     // Coupons
     Route::get('/coupons', [$erp, 'couponIndex'])->name('coupons.index');

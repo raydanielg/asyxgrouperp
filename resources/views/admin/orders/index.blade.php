@@ -18,7 +18,7 @@
     <div class="overflow-x-auto"><table class="w-full text-sm">
         <thead>
             <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-200">
-                <th class="px-5 py-3 font-semibold">Order ID</th><th class="px-5 py-3 font-semibold">Customer</th><th class="px-5 py-3 font-semibold">Plan</th><th class="px-5 py-3 font-semibold text-right">Price</th><th class="px-5 py-3 font-semibold">Payment</th><th class="px-5 py-3 font-semibold text-right">Date</th>
+                <th class="px-5 py-3 font-semibold">Order ID</th><th class="px-5 py-3 font-semibold">Customer</th><th class="px-5 py-3 font-semibold">Plan</th><th class="px-5 py-3 font-semibold text-right">Price</th><th class="px-5 py-3 font-semibold">Payment</th><th class="px-5 py-3 font-semibold text-right">Date</th><th class="px-5 py-3 font-semibold text-right">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
@@ -33,9 +33,19 @@
             <td class="px-5 py-3.5 text-xs text-right font-mono font-bold text-gray-900">TZS {{ number_format($order->price) }}</td>
             <td class="px-5 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $sc[$order->payment_status] ?? '#9ca3af' }}"></span>{{ ucfirst($order->payment_status) }}</span></td>
             <td class="px-5 py-3.5 text-xs text-right text-gray-400">{{ $order->created_at->format('d M Y') }}</td>
+            <td class="px-5 py-3.5">
+                @if($order->payment_status === 'pending')
+                <div class="flex items-center justify-end gap-4">
+                    <form method="POST" action="{{ route('admin.orders.approve', $order) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Approve & activate this company?', color: '#059669'})">@csrf @method('PATCH')<button class="text-xs font-medium text-emerald-600 hover:text-emerald-700">Approve</button></form>
+                    <form method="POST" action="{{ route('admin.orders.reject', $order) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Reject this request?', color: '#dc2626'})">@csrf @method('PATCH')<button class="text-xs font-medium text-gray-400 hover:text-red-600">Reject</button></form>
+                </div>
+                @else
+                <div class="text-right text-xs text-gray-300">—</div>
+                @endif
+            </td>
         </tr>
         @empty
-        <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400 text-xs">No orders found</td></tr>
+        <tr><td colspan="7" class="px-5 py-10 text-center text-gray-400 text-xs">No orders found</td></tr>
         @endforelse
         </tbody>
     </table></div>
