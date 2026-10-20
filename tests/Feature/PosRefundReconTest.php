@@ -154,6 +154,7 @@ class PosRefundReconTest extends TestCase
             'created_at' => now(), 'updated_at' => now(),
         ]);
 
+        $this->withoutExceptionHandling();
         $this->actingAs($admin)->post('/admin/inventory/reconcile-transfer', [
             'transfer_id' => $transferId, 'reason' => 'Consistent warehouses',
         ])->assertRedirect();
