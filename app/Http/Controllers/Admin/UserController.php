@@ -8,7 +8,9 @@ use App\Models\Role;
 use App\Models\Permission;
 use App\Models\LoginHistory;
 use App\Models\Company;
+use App\Models\AuditLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -163,13 +165,17 @@ class UserController extends Controller
         $userRoles = $user->roles->pluck('id')->toArray();
         $companies = Company::orderBy('name')->get();
 
-        // Effective access: resolved permissions grouped by module
-        $effectivePerms = $user->isAdmin() || $user->isSuperAdmin()
+        // Effective access: full resolution with sources
+        $resolution = $user->resolvePermissionNames();
+        $isPrivileged = $user->isAdmin() || $user->isSuperAdmin();
+        $effectivePerms = $isPrivileged
             ? null // admins bypass the catalogue
-            : Permission::whereIn('name', $user->permissionNames())
+            : Permission::whereIn('name', $resolution['effective'])
                 ->get()->groupBy('module')->sortKeys();
+        $overrides = $user->directPermissions()->with(['permission', 'granter'])->latest()->get();
+        $allPermissions = $isPrivileged ? collect() : Permission::orderBy('module')->orderBy('name')->get()->groupBy('module');
 
-        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'companies', 'effectivePerms'));
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'companies', 'effectivePerms', 'overrides', 'allPermissions', 'resolution', 'isPrivileged'));
     }
 
     public function update(Request $request, User $user)
