@@ -96,14 +96,48 @@
     <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
       <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
         <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Effective Access</h4>
-        <span class="text-[10px] text-gray-400">Resolved from assigned roles</span>
+        <span class="text-[10px] text-gray-400">
+          {{ count($resolution['role']) }} role-derived · {{ count($resolution['granted']) }} granted · {{ count($resolution['denied']) }} denied · {{ count($resolution['effective']) }} effective
+        </span>
       </div>
       <div class="p-5">
         <div class="flex flex-wrap gap-x-6 gap-y-1.5 mb-4 text-xs">
           <span class="text-gray-400">System role: <span class="font-mono text-gray-800">{{ $user->role }}</span></span>
           <span class="text-gray-400">Assigned roles: <span class="font-medium text-gray-800">{{ $user->roles->pluck('label')->implode(', ') ?: '—' }}</span></span>
           <span class="text-gray-400">Company: <span class="font-medium text-gray-800">{{ $user->company?->name ?? '—' }}</span></span>
+          <span class="text-gray-400">Login: <span class="font-medium text-gray-800">{{ $user->is_enable_login ? 'Enabled' : 'Disabled' }}</span></span>
         </div>
+
+        {{-- Direct overrides --}}
+        @if($overrides->isNotEmpty())
+        <div class="mb-4 border border-gray-200 rounded overflow-hidden">
+          <p class="px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 bg-gray-50 border-b border-gray-100">Direct Overrides · {{ $overrides->count() }}</p>
+          <div class="divide-y divide-gray-100">
+            @foreach($overrides as $o)
+            <div class="px-4 py-2.5 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ $o->granted ? 'bg-emerald-500' : 'bg-red-500' }}"></span>
+                <span class="text-xs font-mono text-gray-800">{{ $o->permission?->name }}</span>
+                <span class="text-[10px] {{ $o->granted ? 'text-emerald-600' : 'text-red-500' }} font-medium">{{ $o->granted ? 'GRANTED' : 'DENIED' }}</span>
+                @if($o->reason)<span class="text-[10px] text-gray-400 truncate">— {{ $o->reason }}</span>@endif
+              </div>
+              <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="text-[10px] text-gray-400">{{ $o->granter?->name ?? 'system' }} · {{ $o->created_at->format('d M Y') }}</span>
+                @if(auth()->user()->isSuperAdmin())
+                <form method="POST" action="{{ route('admin.users.update-permission', $user) }}" onsubmit="return confirmAction(this, {title: 'Remove this override?'})">
+                  @csrf
+                  <input type="hidden" name="permission" value="{{ $o->permission?->name }}">
+                  <input type="hidden" name="action" value="revoke">
+                  <button class="text-[10px] font-medium text-gray-500 hover:text-red-600">Revoke</button>
+                </form>
+                @endif
+              </div>
+            </div>
+            @endforeach
+          </div>
+        </div>
+        @endif
+
         @if($effectivePerms === null)
         <p class="text-xs text-gray-500 italic">Administrator — bypasses the permission catalogue.</p>
         @elseif($effectivePerms->isEmpty())
@@ -115,7 +149,7 @@
             <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">{{ $module ?: 'general' }} <span class="font-normal">· {{ $perms->count() }}</span></p>
             <div class="flex flex-wrap gap-1">
               @foreach($perms as $p)
-              <span class="px-1.5 py-0.5 text-[10px] font-mono bg-gray-50 border border-gray-100 text-gray-600 rounded">{{ $p->name }}</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono border rounded {{ in_array($p->name, $resolution['granted']) ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-gray-50 border-gray-100 text-gray-600' }}" @if(in_array($p->name, $resolution['granted'])) title="Direct grant"@endif>{{ $p->name }}</span>
               @endforeach
             </div>
           </div>
@@ -123,6 +157,42 @@
         </div>
         @endif
       </div>
+
+      {{-- Manage direct permissions (superadmin, non-privileged target) --}}
+      @if(auth()->user()->isSuperAdmin() && !$isPrivileged)
+      <div class="px-5 py-4 border-t border-gray-100 bg-gray-50/40">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3">Add Override</p>
+        <form method="POST" action="{{ route('admin.users.update-permission', $user) }}" class="flex flex-wrap items-end gap-3">
+          @csrf
+          <div class="flex-1 min-w-56">
+            <label class="block text-xs font-medium text-gray-600 mb-1">Permission <span class="text-red-500">*</span></label>
+            <select name="permission" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white font-mono">
+              <option value="">— Select permission —</option>
+              @foreach($allPermissions as $module => $perms)
+              <optgroup label="{{ $module ?: 'general' }}">
+                @foreach($perms as $p)
+                <option value="{{ $p->name }}">{{ $p->name }}{{ in_array($p->name, $resolution['effective']) ? ' (has)' : '' }}</option>
+                @endforeach
+              </optgroup>
+              @endforeach
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Action <span class="text-red-500">*</span></label>
+            <select name="action" required class="px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+              <option value="grant">Grant</option>
+              <option value="deny">Deny</option>
+            </select>
+          </div>
+          <div class="flex-1 min-w-44">
+            <label class="block text-xs font-medium text-gray-600 mb-1">Reason</label>
+            <input name="reason" placeholder="e.g. Temporary coverage" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
+          </div>
+          <button type="submit" class="px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded hover:bg-slate-700 transition-colors">Apply</button>
+        </form>
+        <p class="text-[10px] text-gray-400 mt-2">Denials override role permissions. Grants add permissions on top. Overrides are audited.</p>
+      </div>
+      @endif
     </div>
 
     {{-- Actions --}}
