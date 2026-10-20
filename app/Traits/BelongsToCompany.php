@@ -36,12 +36,18 @@ trait BelongsToCompany
 
             $user = auth()->user();
 
-            // Superadmin / ERP admin sees all unless a company is explicitly switched
-            if ($user->isAdmin() || $user->isSuperAdmin()) {
+            // Superadmin sees all unless a company is explicitly switched
+            if ($user->isSuperAdmin()) {
                 $switchedId = session('switched_company_id');
                 if ($switchedId !== null) {
                     $builder->where($table . '.company_id', $switchedId);
                 }
+                return;
+            }
+
+            // Tenant admin is locked to their own company only
+            if ($user->isAdmin()) {
+                $builder->where($table . '.company_id', $user->company_id);
                 return;
             }
 
