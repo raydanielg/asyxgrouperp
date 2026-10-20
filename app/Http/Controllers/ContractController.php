@@ -35,7 +35,7 @@ class ContractController extends Controller
             'terms' => 'nullable|string',
         ]);
 
-        Contract::create([
+        $contract = Contract::create([
             'company_id' => auth()->user()->company_id ?? 1,
             'contract_number' => 'CNT-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
             'title' => $data['title'],
@@ -50,6 +50,8 @@ class ContractController extends Controller
             'terms' => $data['terms'],
             'created_by' => auth()->id(),
         ]);
+
+        \App\Services\ApprovalService::submit('contract', $contract, "Contract {$contract->contract_number}", $contract->contract_value, auth()->user());
 
         return back()->with('success', 'Contract created successfully.');
     }
@@ -70,14 +72,58 @@ class ContractController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'contract_value' => 'required|numeric|min:0',
-            'status' => 'required|in:draft,active,completed,terminated',
             'description' => 'nullable|string',
             'terms' => 'nullable|string',
         ]);
 
+        // Client-supplied status is never trusted — activation goes through
+        // the dedicated activate endpoint with workflow authorization.
+        $data['status'] = $contract->status;
+
+        // Material change → invalidate any previous approval
+        $materialChanged =
+            (float)$contract->contract_value !== (float)$data['contract_value'] ||
+            $contract->contractor_name !== $data['contractor_name'];
+
         $contract->update($data);
 
+        if ($materialChanged) {
+            \App\Services\ApprovalService::invalidateAndResubmit(
+                'contract', $contract, "Contract {$contract->contract_number}", $contract->contract_value, auth()->user()
+            );
+        }
+
         return back()->with('success', 'Contract updated.');
+    }
+
+    /**
+     * Activate a contract — the only path from draft to active.
+     * Requires an approved 'contract' workflow request when configured.
+     */
+    public function activate(Contract $contract)
+    {
+        $user = auth()->user();
+        abort_if($contract->status !== 'draft', 403, 'Only draft contracts can be activated.');
+        abort_if($contract->created_by === $user->id, 403, 'You cannot activate a contract you created.');
+
+        $req = \App\Models\ApprovalRequest::where('module', 'contract')
+            ->where('module_id', $contract->id)->latest('id')->first();
+
+        if (\App\Services\ApprovalService::findWorkflow('contract', $contract->company_id)) {
+            abort_if(!$req, 403, 'This contract has not been submitted for approval.');
+            abort_if($req->status === 'rejected', 403, 'This contract was rejected.');
+            abort_if($req->status !== 'approved', 403, 'This contract is still awaiting approval.');
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($contract, $user) {
+            $contract->update(['status' => 'active']);
+            \App\Models\AuditLog::log('execute', 'contracts', [
+                'module_action' => 'contract_activated',
+                'new_values' => ['contract' => $contract->contract_number, 'value' => $contract->contract_value],
+            ]);
+        });
+
+        return back()->with('success', "Contract {$contract->contract_number} activated.");
     }
 
     public function destroy(Contract $contract)

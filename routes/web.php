@@ -1076,6 +1076,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     $contractCtrl = App\Http\Controllers\ContractController::class;
     Route::get('/contracts', [$contractCtrl, 'index'])->name('contracts.index');
     Route::post('/contracts', [$contractCtrl, 'store'])->name('contracts.store');
+    Route::post('/contracts/{contract}/activate', [$contractCtrl, 'activate'])->name('contracts.activate');
     Route::get('/contracts/{contract}', [$contractCtrl, 'show'])->name('contracts.show');
     Route::put('/contracts/{contract}', [$contractCtrl, 'update'])->name('contracts.update');
     Route::delete('/contracts/{contract}', [$contractCtrl, 'destroy'])->name('contracts.destroy');
