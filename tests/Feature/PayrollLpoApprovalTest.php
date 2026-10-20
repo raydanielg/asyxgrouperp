@@ -54,7 +54,7 @@ class PayrollLpoApprovalTest extends TestCase
     private function makeEmployee(): Employee
     {
         return Employee::create([
-            'employee_number' => 'EMP-' . uniqid(), 'first_name' => 'Jane', 'last_name' => 'Doe',
+            'employee_id' => 'EMP-' . uniqid(), 'first_name' => 'Jane', 'last_name' => 'Doe',
             'email' => 'e' . uniqid() . '@x.co', 'status' => 'active',
             'company_id' => $this->company()->id,
         ]);
@@ -154,8 +154,8 @@ class PayrollLpoApprovalTest extends TestCase
 
         $this->assertEquals('superseded', $req->fresh()->status);
         // Fresh request is pending — stale approval cannot be used to pay
-        $newReq = ApprovalRequest::where('module', 'payroll')->where('module_id', $payroll->id)->latest()->first();
-        $this->assertEquals('pending', $newReq->status);
+        $pending = ApprovalRequest::where('module', 'payroll')->where('module_id', $payroll->id)->where('status', 'pending')->exists();
+        $this->assertTrue($pending);
         $this->assertDatabaseHas('audit_logs', ['module' => 'approvals', 'module_action' => 'approval_invalidated']);
     }
 
