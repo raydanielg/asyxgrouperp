@@ -155,7 +155,7 @@ class PosRefundReconTest extends TestCase
         ]);
 
         $this->actingAs($admin)->post('/admin/inventory/reconcile-transfer', [
-            'transfer_id' => $transfer->id, 'reason' => 'Consistent warehouses',
+            'transfer_id' => $transferId, 'reason' => 'Consistent warehouses',
         ])->assertRedirect();
 
         $this->assertEquals($this->company()->id, \App\Models\Transfer::withoutGlobalScopes()->find($transferId)->company_id);
