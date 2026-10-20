@@ -748,29 +748,83 @@ class BusinessFlowController extends Controller
             $data['approval_level'] = 1;
         }
 
-        OfficeExpense::create($data);
+        $expense = OfficeExpense::create($data);
+
+        // Route to the approval engine when a workflow is configured
+        if ($expense->status === 'pending') {
+            \App\Services\ApprovalService::submit(
+                'office_expense', $expense, "Office Expense {$expense->expense_number}",
+                $expense->amount, auth()->user()
+            );
+        }
+
         return back()->with('success', 'Office Expense submitted.');
     }
 
     public function officeExpenseApprove(OfficeExpense $expense)
     {
+        $user = auth()->user();
+
+        // Segregation of duties — requester can never approve their own expense
+        if ($expense->requested_by === $user->id || $expense->created_by === $user->id) {
+            \App\Models\AuditLog::log('deny', 'approvals', [
+                'module_action' => 'self_approval_attempt',
+                'new_values' => ['expense' => $expense->expense_number, 'attempted' => 'approve'],
+            ]);
+            abort(403, 'You cannot approve an expense you submitted.');
+        }
+
+        abort_if($expense->status !== 'pending', 403, 'This expense is no longer pending.');
+
+        // Workflow-linked expenses are decided through the approval engine
+        $req = \App\Models\ApprovalRequest::where('module', 'office_expense')
+            ->where('module_id', $expense->id)->latest()->first();
+        if ($req) {
+            $req = \App\Services\ApprovalService::approve($req, $user);
+            if ($req->status !== 'approved') {
+                return back()->with('success', "Approved — advanced to approval level {$req->current_level}.");
+            }
+            // Engine already synced expense status + project cost
+            return back()->with('success', 'Office Expense approved.');
+        }
+
+        // Legacy path — no configured workflow: require an admin approver
+        abort_unless($user->isAdmin(), 403, 'You are not authorized to approve expenses.');
         $expense->update([
             'status' => 'approved',
-            'approved_by' => auth()->id(),
+            'approved_by' => $user->id,
             'approved_at' => now(),
             'approval_level' => $expense->approval_level + 1,
         ]);
 
-        // Add to project cost
         if ($expense->project_id) {
             $expense->project->increment('actual_cost', $expense->amount);
         }
+
+        \App\Models\AuditLog::log('approve', 'office_expense', [
+            'module_action' => 'expense_approved_legacy',
+            'new_values' => ['expense' => $expense->expense_number, 'amount' => $expense->amount],
+        ]);
 
         return redirect()->back()->with('success', 'Office Expense approved.');
     }
 
     public function officeExpenseReject(OfficeExpense $expense)
     {
+        $user = auth()->user();
+        if ($expense->requested_by === $user->id || $expense->created_by === $user->id) {
+            abort(403, 'You cannot reject an expense you submitted.');
+        }
+        abort_if($expense->status !== 'pending', 403, 'This expense is no longer pending.');
+
+        $req = \App\Models\ApprovalRequest::where('module', 'office_expense')
+            ->where('module_id', $expense->id)->latest()->first();
+        if ($req) {
+            \App\Services\ApprovalService::reject($req, $user, request('reason', 'Rejected by approver'));
+            return back()->with('success', 'Office Expense rejected.');
+        }
+
+        abort_unless($user->isAdmin(), 403, 'You are not authorized to reject expenses.');
         $expense->update(['status' => 'rejected']);
         return redirect()->back()->with('success', 'Office Expense rejected.');
     }
