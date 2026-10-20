@@ -255,9 +255,104 @@ const COMPANY = {
     vrn: @json($company->vrn ?? ''),
 };
 const CASHIER = @json(auth()->user()->name);
-const VERIF = 'xxxxxxxxxxxx'.replace(/x/g, () => '0123456789ABCDEF'[Math.floor(Math.random()*16)]);
 
-function showReceipt(saleNumber, sale) {
+function showReceipt(data, sale) {
+    const saleNumber = data.sale_number;
+    const verif = data.verification_code || '—';
+
+    // ── Phase 1: success tick ──
+    document.getElementById('tickSaleNo').textContent = saleNumber;
+    document.getElementById('tickPhase').classList.remove('hidden');
+    document.getElementById('printPhase').classList.add('hidden');
+    document.getElementById('receiptOverlay').classList.remove('hidden');
+    document.getElementById('receiptOverlay').classList.add('flex');
+    const circle = document.getElementById('tickCircle');
+    const check = document.getElementById('tickCheck');
+    circle.style.strokeDashoffset = '151';
+    check.style.strokeDashoffset = '38';
+    requestAnimationFrame(() => {
+        circle.style.strokeDashoffset = '0';
+        check.style.strokeDashoffset = '0';
+    });
+
+    // build receipt HTML now; reveal after tick
+    const now = new Date();
+    const fmt = n => Math.round(n).toLocaleString();
+    const sep = '='.repeat(34);
+    const dSep = '-'.repeat(34);
+    const pad = (l, r) => l + ' '.repeat(Math.max(1, 34 - l.length - String(r).length)) + r;
+
+    let html = '<div class="text-center">';
+    html += '<p class="font-bold">*** RISITI / RECEIPT ***</p>';
+    html += '<p class="font-bold text-[13px] mt-1">' + COMPANY.name.toUpperCase() + '</p>';
+    html += '<p class="text-gray-600">' + COMPANY.address.toUpperCase() + '</p>';
+    if (COMPANY.phone) html += '<p class="text-gray-600">MOBILE: ' + COMPANY.phone + '</p>';
+    if (COMPANY.tin) html += '<p class="text-gray-600">TIN: ' + COMPANY.tin + '</p>';
+    if (COMPANY.vrn) html += '<p class="text-gray-600">VRN: ' + COMPANY.vrn + '</p>';
+    html += '<p class="text-gray-400 mt-1 text-[10px]">' + sep + '</p></div>';
+
+    html += '<div class="mt-1">';
+    html += '<p>' + pad('CUSTOMER NAME:', 'WALK-IN') + '</p>';
+    html += '<p>' + pad('RECEIPT NO:', saleNumber.replace('POS-','')) + '</p>';
+    html += '<p>' + pad('CASHIER:', CASHIER.toUpperCase().slice(0,16)) + '</p>';
+    html += '<p>' + pad('DATE:', now.toLocaleDateString('en-GB')) + '</p>';
+    html += '<p>' + pad('TIME:', now.toLocaleTimeString('en-GB')) + '</p>';
+    html += '<p class="text-gray-400 mt-1 text-[10px]">' + sep + '</p></div>';
+
+    sale.items.forEach(it => {
+        html += '<p class="font-medium">' + it.product_name.toUpperCase() + '</p>';
+        html += '<p class="pl-3">' + pad(it.quantity + ' x ' + fmt(it.unit_price), fmt(it.unit_price * it.quantity) + ' A') + '</p>';
+    });
+    html += '<p class="text-gray-400 mt-1 text-[10px]">' + dSep + '</p>';
+
+    html += '<p>' + pad('TOTAL EXCL TAX:', fmt(sale.subtotal)) + '</p>';
+    if (sale.tax > 0) html += '<p>' + pad('TAX A (' + (sale.taxRate || 0) + '%):', fmt(sale.tax)) + '</p>';
+    if (sale.discount > 0) html += '<p>' + pad('DISCOUNT:', '-' + fmt(sale.discount)) + '</p>';
+    html += '<p class="font-bold">' + pad('TOTAL INCL TAX:', fmt(sale.total)) + '</p>';
+    html += '<p class="text-gray-400 mt-1 text-[10px]">' + sep + '</p>';
+
+    const methodLabel = {cash:'CASH / TASLIMU', card:'CARD / KADI', mobile:'MOBILE / SIMU'}[sale.method] || 'PAID';
+    html += '<p class="font-bold">' + pad('JUMLA / TOTAL (TZS):', fmt(sale.total)) + '</p>';
+    html += '<p>' + pad(methodLabel + ':', fmt(sale.paid)) + '</p>';
+    html += '<p>' + pad('CHANGE / CHENJI:', fmt(Math.max(0, sale.paid - sale.total))) + '</p>';
+    html += '<p class="text-gray-400 mt-1 text-[10px]">' + dSep + '</p>';
+
+    html += '<div class="text-center mt-1">';
+    html += '<p class="text-gray-500">RECEIPT VERIFICATION CODE</p>';
+    html += '<p class="font-bold tracking-[0.2em]">' + verif + '</p>';
+    if (data.qr_svg) {
+        html += '<div class="flex justify-center my-2"><img src="data:image/svg+xml;base64,' + data.qr_svg + '" alt="QR" class="w-[110px] h-[110px]"></div>';
+    }
+    html += '<p class="text-gray-600">Z NUMBER: ' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '/' + saleNumber.slice(-4) + '</p>';
+    html += '<p class="text-gray-400 mt-1 text-[10px]">' + dSep + '</p>';
+    html += '<p class="font-bold mt-1">ASANTE KWA KUNUNUA!</p>';
+    html += '<p class="text-gray-600">THANK YOU, KARIBU TENA</p>';
+    html += '<p class="text-[9px] text-gray-400 mt-1">Bidhaa zilizonunuliwa hazirudishwi<br>Goods sold are not returnable</p>';
+    html += '</div>';
+
+    document.getElementById('receiptContent').innerHTML = html;
+    document.getElementById('receiptActions').style.opacity = '0';
+    document.getElementById('printerStatus').textContent = 'Printing receipt...';
+    const paper = document.getElementById('receiptPaper');
+    paper.style.transition = 'none';
+    paper.style.clipPath = 'inset(0 0 100% 0)';
+
+    // ── Phase 2: after tick, slide receipt out of printer ──
+    setTimeout(() => {
+        document.getElementById('tickPhase').classList.add('hidden');
+        const pp = document.getElementById('printPhase');
+        pp.classList.remove('hidden');
+        pp.classList.add('flex');
+        requestAnimationFrame(() => {
+            paper.style.transition = 'clip-path 2.4s cubic-bezier(0.35, 0.55, 0.45, 1)';
+            paper.style.clipPath = 'inset(0 0 0% 0)';
+        });
+        setTimeout(() => {
+            document.getElementById('printerStatus').textContent = 'Receipt ready';
+            document.getElementById('receiptActions').style.opacity = '1';
+        }, 2500);
+    }, 1200);
+}
     const now = new Date();
     const fmt = n => Math.round(n).toLocaleString();
     const sep = '='.repeat(34) + '\n';
