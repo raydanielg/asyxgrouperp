@@ -35,6 +35,14 @@ class BusinessFlowController extends Controller
     {
         $this->ledger = app(LedgerService::class);
         $this->middleware(function ($request, $next) {
+            // Decision endpoints are guarded per-action inside the methods
+            // (self-approval, designated approver, pending-state checks) so
+            // non-admin designated approvers can reach them. Read/write
+            // operations still require admin.
+            $decisionMethods = ['officeExpenseApprove', 'officeExpenseReject', 'vendorPaymentExecute'];
+            if (in_array($request->route()->getActionMethod(), $decisionMethods)) {
+                return $next($request);
+            }
             if (!auth()->check() || !auth()->user()->isAdmin()) {
                 abort(403, 'Unauthorized access. Admin only.');
             }
