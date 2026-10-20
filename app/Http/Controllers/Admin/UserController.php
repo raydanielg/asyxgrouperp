@@ -82,6 +82,36 @@ class UserController extends Controller
         return view('admin.users.index', compact('users', 'roles', 'disabledCount', 'activeSessions', 'perPage'));
     }
 
+    /**
+     * Superadmin protection — only a superadmin may create or assign the
+     * superadmin role, and the last superadmin can never be demoted,
+     * disabled, or deleted.
+     */
+    private function guardSuperadminRole(string $role): void
+    {
+        if ($role === 'superadmin' && !auth()->user()->isSuperAdmin()) {
+            abort(403, 'Only a platform administrator can create or assign the Super Admin role.');
+        }
+    }
+
+    private function guardSuperadminTarget(User $target, ?string $newRole = null, ?bool $enableLogin = null): void
+    {
+        $actor = auth()->user();
+
+        if ($target->isSuperAdmin() && !$actor->isSuperAdmin()) {
+            abort(403, 'You cannot modify a platform administrator account.');
+        }
+
+        if ($target->isSuperAdmin()) {
+            $superadminCount = User::where('role', 'superadmin')->count();
+            $demoting = $newRole !== null && $newRole !== 'superadmin';
+            $disabling = $enableLogin === false;
+            if (($demoting || $disabling) && $superadminCount <= 1) {
+                abort(403, 'The last Super Admin account cannot be demoted or disabled.');
+            }
+        }
+    }
+
     public function create()
     {
         $roles = Role::orderBy('name')->get();
@@ -102,6 +132,8 @@ class UserController extends Controller
             'assigned_roles.*' => 'exists:roles,id',
             'is_enable_login' => 'boolean',
         ]);
+
+        $this->guardSuperadminRole($validated['role']);
 
         $user = User::create([
             'name' => $validated['name'],
@@ -144,6 +176,9 @@ class UserController extends Controller
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
+        $this->guardSuperadminRole($validated['role']);
+        $this->guardSuperadminTarget($user, $validated['role'], $request->boolean('is_enable_login', true));
+
         $data = [
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -179,6 +214,11 @@ class UserController extends Controller
             return back()->with('error', 'You cannot delete yourself.');
         }
 
+        $this->guardSuperadminTarget($user);
+        if ($user->isSuperAdmin() && User::where('role', 'superadmin')->count() <= 1) {
+            return back()->with('error', 'The last Super Admin account cannot be deleted.');
+        }
+
         $user->roles()->detach();
         $user->delete();
 
@@ -190,6 +230,8 @@ class UserController extends Controller
         $validated = $request->validate([
             'password' => 'required|string|min:6|confirmed',
         ]);
+
+        $this->guardSuperadminTarget($user);
 
         $user->update(['password' => Hash::make($validated['password'])]);
 
@@ -205,7 +247,19 @@ class UserController extends Controller
         ]);
 
         $ownId = auth()->id();
-        $ids = collect($validated['ids'])->reject(fn($id) => $id == $ownId)->toArray();
+        $actor = auth()->user();
+        $lastSuperadminId = User::where('role', 'superadmin')->count() <= 1
+            ? User::where('role', 'superadmin')->value('id')
+            : null;
+
+        $ids = collect($validated['ids'])
+            ->reject(fn($id) => $id == $ownId)
+            ->reject(fn($id) => $id == $lastSuperadminId)
+            ->when(!$actor->isSuperAdmin(), function ($ids) {
+                // Non-superadmin cannot toggle superadmin accounts
+                return $ids->reject(fn($id) => User::where('id', $id)->where('role', 'superadmin')->exists());
+            })
+            ->toArray();
 
         User::whereIn('id', $ids)->update(['is_enable_login' => $validated['is_enable_login']]);
 
