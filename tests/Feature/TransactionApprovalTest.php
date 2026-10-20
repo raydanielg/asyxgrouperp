@@ -219,9 +219,9 @@ class TransactionApprovalTest extends TestCase
         $branchA = Branch::create(['company_id' => $this->company()->id, 'name' => 'HQ']);
         $branchB = Branch::create(['company_id' => $this->company()->id, 'name' => 'MWZ']);
 
-        $whA = Warehouse::withoutGlobalScopes()->create(['name' => 'WH-A', 'company_id' => $this->company()->id, 'branch_id' => $branchA->id, 'is_active' => true]);
-        $whB = Warehouse::withoutGlobalScopes()->create(['name' => 'WH-B', 'company_id' => $this->company()->id, 'branch_id' => $branchB->id, 'is_active' => true]);
-        $whNull = Warehouse::withoutGlobalScopes()->create(['name' => 'WH-Gen', 'company_id' => $this->company()->id, 'branch_id' => null, 'is_active' => true]);
+        $whA = Warehouse::withoutGlobalScopes()->create(['name' => 'WH-A', 'address' => 'a', 'city' => 'a', 'zip_code' => '1', 'company_id' => $this->company()->id, 'branch_id' => $branchA->id, 'is_active' => true]);
+        $whB = Warehouse::withoutGlobalScopes()->create(['name' => 'WH-B', 'address' => 'a', 'city' => 'a', 'zip_code' => '1', 'company_id' => $this->company()->id, 'branch_id' => $branchB->id, 'is_active' => true]);
+        $whNull = Warehouse::withoutGlobalScopes()->create(['name' => 'WH-Gen', 'address' => 'a', 'city' => 'a', 'zip_code' => '1', 'company_id' => $this->company()->id, 'branch_id' => null, 'is_active' => true]);
 
         $restricted = $this->makeUser(['role' => 'user']);
         $restricted->branches()->sync([$branchA->id]);
@@ -237,8 +237,8 @@ class TransactionApprovalTest extends TestCase
     public function test_company_wide_user_sees_all_warehouses(): void
     {
         $branchA = Branch::create(['company_id' => $this->company()->id, 'name' => 'HQ']);
-        Warehouse::withoutGlobalScopes()->create(['name' => 'WH-A', 'company_id' => $this->company()->id, 'branch_id' => $branchA->id, 'is_active' => true]);
-        Warehouse::withoutGlobalScopes()->create(['name' => 'WH-B', 'company_id' => $this->company()->id, 'branch_id' => null, 'is_active' => true]);
+        Warehouse::withoutGlobalScopes()->create(['name' => 'WH-A', 'address' => 'a', 'city' => 'a', 'zip_code' => '1', 'company_id' => $this->company()->id, 'branch_id' => $branchA->id, 'is_active' => true]);
+        Warehouse::withoutGlobalScopes()->create(['name' => 'WH-B', 'address' => 'a', 'city' => 'a', 'zip_code' => '1', 'company_id' => $this->company()->id, 'branch_id' => null, 'is_active' => true]);
 
         $user = $this->makeUser(['role' => 'admin']);
         $this->actingAs($user);
