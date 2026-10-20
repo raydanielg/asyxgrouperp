@@ -45,6 +45,7 @@ class InventoryService
                 ['product_id' => $productId, 'warehouse_id' => $warehouseId],
                 ['quantity' => 0, 'reserved_quantity' => 0]
             );
+            $stock = ProductWarehouseStock::lockForUpdate()->find($stock->id);
 
             $stock->increment('quantity', $quantity);
 
@@ -78,7 +79,14 @@ class InventoryService
         return DB::transaction(function () use ($productId, $warehouseId, $quantity, $reason, $createdBy) {
             $stock = ProductWarehouseStock::where('product_id', $productId)
                 ->where('warehouse_id', $warehouseId)
+                ->lockForUpdate()
                 ->firstOrFail();
+
+            // Revalidate inside the lock — concurrent requests cannot oversell
+            $available = $stock->quantity - ($stock->reserved_quantity ?? 0);
+            if ($quantity > $available) {
+                throw new RuntimeException("Insufficient stock. Available: {$available}, requested: {$quantity}.");
+            }
 
             $stock->decrement('quantity', $quantity);
 
@@ -116,7 +124,14 @@ class InventoryService
         DB::transaction(function () use ($productId, $fromWarehouseId, $toWarehouseId, $quantity, $createdBy) {
             $fromStock = ProductWarehouseStock::where('product_id', $productId)
                 ->where('warehouse_id', $fromWarehouseId)
+                ->lockForUpdate()
                 ->firstOrFail();
+
+            // Revalidate inside the lock — concurrent transfers cannot oversell
+            $available = $fromStock->quantity - ($fromStock->reserved_quantity ?? 0);
+            if ($quantity > $available) {
+                throw new RuntimeException("Insufficient stock at source. Available: {$available}, requested: {$quantity}.");
+            }
 
             $toStock = ProductWarehouseStock::firstOrCreate(
                 ['product_id' => $productId, 'warehouse_id' => $toWarehouseId],
