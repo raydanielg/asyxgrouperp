@@ -157,10 +157,18 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $this->guardSuperadminTarget($user);
         $roles = Role::orderBy('name')->get();
         $userRoles = $user->roles->pluck('id')->toArray();
         $companies = Company::orderBy('name')->get();
-        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'companies'));
+
+        // Effective access: resolved permissions grouped by module
+        $effectivePerms = $user->isAdmin() || $user->isSuperAdmin()
+            ? null // admins bypass the catalogue
+            : Permission::whereIn('name', $user->permissionNames())
+                ->get()->groupBy('module')->sortKeys();
+
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'companies', 'effectivePerms'));
     }
 
     public function update(Request $request, User $user)

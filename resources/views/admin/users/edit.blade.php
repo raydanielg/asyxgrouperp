@@ -92,6 +92,39 @@
       </div>
     </div>
 
+    {{-- Effective Access --}}
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Effective Access</h4>
+        <span class="text-[10px] text-gray-400">Resolved from assigned roles</span>
+      </div>
+      <div class="p-5">
+        <div class="flex flex-wrap gap-x-6 gap-y-1.5 mb-4 text-xs">
+          <span class="text-gray-400">System role: <span class="font-mono text-gray-800">{{ $user->role }}</span></span>
+          <span class="text-gray-400">Assigned roles: <span class="font-medium text-gray-800">{{ $user->roles->pluck('label')->implode(', ') ?: '—' }}</span></span>
+          <span class="text-gray-400">Company: <span class="font-medium text-gray-800">{{ $user->company?->name ?? '—' }}</span></span>
+        </div>
+        @if($effectivePerms === null)
+        <p class="text-xs text-gray-500 italic">Administrator — bypasses the permission catalogue.</p>
+        @elseif($effectivePerms->isEmpty())
+        <p class="text-xs text-gray-400">No permissions resolved for this user.</p>
+        @else
+        <div class="space-y-3">
+          @foreach($effectivePerms as $module => $perms)
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">{{ $module ?: 'general' }} <span class="font-normal">· {{ $perms->count() }}</span></p>
+            <div class="flex flex-wrap gap-1">
+              @foreach($perms as $p)
+              <span class="px-1.5 py-0.5 text-[10px] font-mono bg-gray-50 border border-gray-100 text-gray-600 rounded">{{ $p->name }}</span>
+              @endforeach
+            </div>
+          </div>
+          @endforeach
+        </div>
+        @endif
+      </div>
+    </div>
+
     {{-- Actions --}}
     <div class="flex items-center justify-between gap-3 bg-white rounded-md border border-gray-200 px-5 py-3.5">
       <a href="{{ route('admin.users.index') }}" class="text-xs text-gray-500 hover:text-gray-800">Cancel</a>
