@@ -37,13 +37,23 @@
             <td class="px-5 py-3.5 text-xs text-gray-400">{{ $g->received_date->format('d M Y') }}</td>
             <td class="px-5 py-3.5 text-xs font-mono text-gray-400">{{ $g->delivery_note_number ?? '—' }}</td>
             <td class="px-5 py-3.5">
-                @php $gd=['received'=>'#10b981','discrepant'=>'#f59e0b','rejected'=>'#ef4444'][$g->status] ?? '#9ca3af'; @endphp
+                @php $gd=['received'=>'#10b981','discrepant'=>'#f59e0b','pending'=>'#f59e0b','rejected'=>'#ef4444'][$g->status] ?? '#9ca3af'; @endphp
                 <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $gd }}"></span>{{ ucfirst($g->status) }}</span>
             </td>
             <td class="px-5 py-3.5">
                 <div class="flex items-center justify-end gap-4">
+                    @php $gReq = $g->status === 'pending' ? \App\Models\ApprovalRequest::where('module','grn')->where('module_id',$g->id)->latest('id')->first() : null; @endphp
+                    @if($gReq?->status === 'approved' && $g->created_by !== auth()->id())
+                    <form method="POST" action="{{ route('admin.grns.receive', $g) }}" class="inline" onsubmit="return confirmAction(this, {title:'Finalize GRN?', text:'Received quantities will be applied to the LPO.', confirmText:'Finalize', color:'#059669'})">@csrf
+                        <button class="text-xs font-semibold text-emerald-700 hover:text-emerald-900">Finalize</button>
+                    </form>
+                    @elseif($g->status === 'pending')
+                    <span class="text-[10px] text-amber-600 font-medium">Awaiting approval</span>
+                    @endif
                     <a href="{{ route('admin.grns.show', $g) }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">View</a>
+                    @unless(in_array($g->status, ['received','discrepant']))
                     <form method="POST" action="{{ route('admin.grns.destroy', $g) }}" class="inline" onsubmit="return confirmAction(this, {title:'Delete GRN?', text:'{{ $g->grn_number }} will be permanently removed. This cannot be undone.', confirmText:'Yes, delete'})">@csrf @method('DELETE')<button class="text-xs font-medium text-gray-400 hover:text-red-600">Delete</button></form>
+                    @endunless
                 </div>
             </td>
         </tr>
