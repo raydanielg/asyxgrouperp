@@ -65,7 +65,8 @@ class GrnStockTest extends TestCase
     private function makeProduct(): Product
     {
         return Product::withoutGlobalScopes()->create([
-            'name' => 'Product X', 'company_id' => $this->company()->id, 'is_active' => true,
+            'name' => 'Product X', 'product_code' => 'P-' . uniqid(),
+            'company_id' => $this->company()->id, 'is_active' => true,
         ]);
     }
 
@@ -229,10 +230,14 @@ class GrnStockTest extends TestCase
     {
         $this->workflowFor('contract');
         $otherCo = Company::create(['name' => 'Other', 'legal_name' => 'Other Ltd', 'short_code' => 'OTH', 'is_active' => true]);
+        $foreignUser = User::create([
+            'name' => 'F', 'email' => 'f' . uniqid() . '@x.co', 'password' => Hash::make('x'),
+            'role' => 'admin', 'company_id' => $otherCo->id, 'is_enable_login' => true,
+        ]);
         $foreignContract = Contract::withoutGlobalScopes()->create([
             'contract_number' => 'CNT-F1', 'title' => 'X', 'contractor_name' => 'Y',
             'type' => 'supply', 'start_date' => '2026-10-20', 'contract_value' => 100,
-            'status' => 'draft', 'created_by' => 1, 'company_id' => $otherCo->id,
+            'status' => 'draft', 'created_by' => $foreignUser->id, 'company_id' => $otherCo->id,
         ]);
         $activator = $this->makeUser();
 
