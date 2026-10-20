@@ -219,9 +219,6 @@ function toggleFullscreen() {
     else { document.documentElement.requestFullscreen().catch(() => {}); }
 }
 </script>
-@endpush
-
-@push('styles')
 <style>
 /* POS = fullscreen terminal: hide admin chrome */
 aside#adminSidebar { display: none !important; }
