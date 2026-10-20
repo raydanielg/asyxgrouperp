@@ -815,7 +815,40 @@ class ErpController extends Controller
     // ─── Media Library ───
     public function mediaIndex()
     {
-        return view('admin.media.index');
+        $files = Media::with('creator')->latest()->paginate(24);
+        $totalSize = Media::sum('size');
+        $counts = [
+            'images' => Media::where('mime_type', 'like', 'image/%')->count(),
+            'docs' => Media::where('mime_type', 'not like', 'image/%')->count(),
+        ];
+        return view('admin.media.index', compact('files', 'totalSize', 'counts'));
+    }
+
+    public function mediaStore(Request $request)
+    {
+        $request->validate(['file' => 'required|file|max:10240']);
+        $file = $request->file('file');
+        $path = $file->store('media', 'public');
+        Media::create([
+            'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+            'file_name' => $file->getClientOriginalName(),
+            'mime_type' => $file->getMimeType(),
+            'disk' => 'public',
+            'size' => $file->getSize(),
+            'url' => '/storage/' . $path,
+            'creator_id' => auth()->id(),
+            'created_by' => auth()->id(),
+        ]);
+        return back()->with('success', 'File uploaded.');
+    }
+
+    public function mediaDestroy(Media $media)
+    {
+        if ($media->url && str_starts_with($media->url, '/storage/')) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete(substr($media->url, 9));
+        }
+        $media->delete();
+        return back()->with('success', 'File deleted.');
     }
 
     // ─── Warehouse Edit ───

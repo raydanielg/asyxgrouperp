@@ -681,6 +681,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     // Media
     Route::get('/media', [$erp, 'mediaIndex'])->name('media.index');
+    Route::post('/media', [$erp, 'mediaStore'])->name('media.store');
+    Route::delete('/media/{media}', [$erp, 'mediaDestroy'])->name('media.destroy');
 
     // Notification Templates
     Route::get('/notification-templates', [$erp, 'notificationTemplateIndex'])->name('notification-templates.index');
