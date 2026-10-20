@@ -22,6 +22,7 @@ return new class extends Migration
     {
         Schema::create('pos_returns', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
             $table->string('return_number')->unique();
             $table->foreignId('pos_sale_id')->constrained()->cascadeOnDelete();
             $table->string('status')->default('pending'); // pending | processed
