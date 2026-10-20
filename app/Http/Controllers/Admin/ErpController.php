@@ -749,17 +749,54 @@ class ErpController extends Controller
     // ─── Email Templates ───
     public function emailTemplateIndex()
     {
-        $templates = EmailTemplate::latest()->paginate(12);
-        return view('admin.email-templates.index', compact('templates'));
+        $user = auth()->user();
+        $query = EmailTemplate::latest();
+        if (!$user->isSuperAdmin()) {
+            // Tenant sees own templates + platform defaults (read-only)
+            $query->where(function ($q) use ($user) {
+                $q->where('company_id', $user->company_id)->orWhereNull('company_id');
+            });
+        }
+        return view('admin.email-templates.index', ['templates' => $query->paginate(12)]);
+    }
+
+    public function emailTemplateCreate()
+    {
+        return view('admin.email-templates.create');
+    }
+
+    public function emailTemplateStore(Request $request)
+    {
+        $user = auth()->user();
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'from' => 'nullable|email',
+            'subject' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'is_active' => 'boolean',
+        ]);
+        $data['is_active'] = $request->boolean('is_active', true);
+        $data['created_by'] = $user->id;
+        $data['company_id'] = $user->isSuperAdmin() ? null : $user->company_id;
+        EmailTemplate::create($data);
+        return redirect()->route('admin.email-templates.index')->with('success', 'Template created.');
     }
 
     public function emailTemplateEdit(EmailTemplate $emailTemplate)
     {
+        $user = auth()->user();
+        if (!$user->isSuperAdmin() && $emailTemplate->company_id !== $user->company_id) {
+            abort(403, 'Platform templates are managed by the platform administrator.');
+        }
         return view('admin.email-templates.edit', compact('emailTemplate'));
     }
 
     public function emailTemplateUpdate(Request $request, EmailTemplate $emailTemplate)
     {
+        $user = auth()->user();
+        if (!$user->isSuperAdmin() && $emailTemplate->company_id !== $user->company_id) {
+            abort(403, 'Platform templates are managed by the platform administrator.');
+        }
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'from' => 'nullable|email',
@@ -775,12 +812,34 @@ class ErpController extends Controller
     // ─── Settings ───
     public function settingsIndex()
     {
+        $user = auth()->user();
+        if (!$user->isSuperAdmin()) {
+            // Tenant admin gets company-level settings only
+            $company = $user->company;
+            $templates = EmailTemplate::where('company_id', $user->company_id)->latest()->get();
+            return view('admin.settings-company', compact('company', 'templates'));
+        }
         $settings = Setting::all();
         return view('admin.settings-full', compact('settings'));
     }
 
     public function settingsUpdate(Request $request)
     {
+        $user = auth()->user();
+        if (!$user->isSuperAdmin()) {
+            // Tenant admin can only update their own company's settings
+            $company = $user->company;
+            abort_unless($company, 403);
+            $data = $request->validate([
+                'name' => 'nullable|string|max:255',
+                'email' => 'nullable|email|max:255',
+                'phone' => 'nullable|string|max:50',
+                'address' => 'nullable|string|max:500',
+            ]);
+            $data['emails_enabled'] = $request->boolean('emails_enabled');
+            $company->update(array_filter($data, fn($v) => !is_null($v)));
+            return redirect()->back()->with('success', 'Company settings updated.');
+        }
         foreach ($request->except('_token', '_method') as $key => $value) {
             Setting::set($key, $value);
         }

@@ -663,6 +663,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
 
     // Email Templates
     Route::get('/email-templates', [$erp, 'emailTemplateIndex'])->name('email-templates.index');
+    Route::get('/email-templates/create', [$erp, 'emailTemplateCreate'])->name('email-templates.create');
+    Route::post('/email-templates', [$erp, 'emailTemplateStore'])->name('email-templates.store');
     Route::get('/email-templates/{emailTemplate}/edit', [$erp, 'emailTemplateEdit'])->name('email-templates.edit');
     Route::patch('/email-templates/{emailTemplate}', [$erp, 'emailTemplateUpdate'])->name('email-templates.update');
 
