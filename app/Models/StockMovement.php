@@ -19,4 +19,9 @@ class StockMovement extends Model
     {
         return $this->belongsTo(Warehouse::class);
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }
