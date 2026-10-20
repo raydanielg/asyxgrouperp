@@ -147,17 +147,18 @@ class PosRefundReconTest extends TestCase
         ]);
 
         // Clear case — both warehouses same company, transfer missing company
-        $this->actingAs($admin);
-        $transfer = \App\Models\Transfer::withoutGlobalScopes()->create([
+        // (DB insert bypasses the BelongsToCompany auto-assign hook)
+        $transferId = \Illuminate\Support\Facades\DB::table('transfers')->insertGetId([
             'from_warehouse' => $wh->id, 'to_warehouse' => $wh2->id, 'product_name' => 'X',
             'quantity' => 5, 'status' => 'pending', 'created_by' => $admin->id, 'company_id' => null,
+            'created_at' => now(), 'updated_at' => now(),
         ]);
 
-        $this->post('/admin/inventory/reconcile-transfer', [
+        $this->actingAs($admin)->post('/admin/inventory/reconcile-transfer', [
             'transfer_id' => $transfer->id, 'reason' => 'Consistent warehouses',
         ])->assertRedirect();
 
-        $this->assertEquals($this->company()->id, $transfer->fresh()->company_id);
+        $this->assertEquals($this->company()->id, \App\Models\Transfer::withoutGlobalScopes()->find($transferId)->company_id);
         $this->assertDatabaseHas('audit_logs', ['module' => 'inventory', 'module_action' => 'transfer_company_reconciled']);
     }
 
@@ -171,16 +172,16 @@ class PosRefundReconTest extends TestCase
             'company_id' => $otherCo->id, 'is_active' => true,
         ]);
 
-        $this->actingAs($admin);
-        $transfer = \App\Models\Transfer::withoutGlobalScopes()->create([
+        $transferId = \Illuminate\Support\Facades\DB::table('transfers')->insertGetId([
             'from_warehouse' => $wh->id, 'to_warehouse' => $foreignWh->id, 'product_name' => 'X',
             'quantity' => 5, 'status' => 'pending', 'created_by' => $admin->id, 'company_id' => null,
+            'created_at' => now(), 'updated_at' => now(),
         ]);
 
-        $this->post('/admin/inventory/reconcile-transfer', [
-            'transfer_id' => $transfer->id, 'reason' => 'guess',
+        $this->actingAs($admin)->post('/admin/inventory/reconcile-transfer', [
+            'transfer_id' => $transferId, 'reason' => 'guess',
         ]);
 
-        $this->assertNull($transfer->fresh()->company_id); // not assigned — ambiguous
+        $this->assertNull(\App\Models\Transfer::withoutGlobalScopes()->find($transferId)->company_id); // not assigned — ambiguous
     }
 }
