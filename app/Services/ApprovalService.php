@@ -80,6 +80,21 @@ class ApprovalService
             return $req;
         });
 
+        // Notify current-level approvers — post-commit, failures never abort
+        if ($request) {
+            $step = $workflow->steps->firstWhere('level', $request->current_level);
+            if ($step) {
+                UserNotifier::sendToStepApprovers(
+                    $step, $request->company_id,
+                    'approval_submitted',
+                    "Approval required: {$label}",
+                    "{$label} is waiting for your decision ({$request->request_number}).",
+                    "/admin/approvals",
+                    "apr-submit-{$request->id}"
+                );
+            }
+        }
+
         return $request;
     }
 
@@ -153,7 +168,7 @@ class ApprovalService
     {
         self::guard($req, $user, 'approve');
 
-        return DB::transaction(function () use ($req, $user, $comment) {
+        $req = DB::transaction(function () use ($req, $user, $comment) {
             $previousLevel = $req->current_level;
 
             ApprovalTrack::create([
@@ -193,6 +208,29 @@ class ApprovalService
 
             return $req;
         });
+
+        // Notify requester + next-level approvers — post-commit
+        if ($req) {
+            UserNotifier::send($req->requested_by, 'approval_step_decided',
+                "Your request was approved: {$req->module_label}",
+                "{$req->request_number} " . ($req->status === 'approved' ? 'is fully approved.' : "advanced to level {$req->current_level}."),
+                "/admin/approvals",
+                "apr-ok-{$req->id}-{$req->current_level}-{$req->requested_by}"
+            );
+            if ($req->status === 'pending') {
+                $nextStep = $req->workflow->steps->firstWhere('level', $req->current_level);
+                if ($nextStep) {
+                    UserNotifier::sendToStepApprovers($nextStep, $req->company_id,
+                        'approval_submitted',
+                        "Approval required: {$req->module_label}",
+                        "{$req->request_number} advanced to your level.",
+                        "/admin/approvals",
+                        "apr-level-{$req->id}-{$req->current_level}");
+                }
+            }
+        }
+
+        return $req;
     }
 
     /**
