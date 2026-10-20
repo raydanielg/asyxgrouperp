@@ -68,9 +68,22 @@ class PosController extends Controller
                     'total' => $item['quantity'] * $item['price'],
                 ]);
 
-                // Decrement stock
-                Product::where('id', $item['product_id'])
-                    ->decrement('stock_quantity', $item['quantity']);
+                // Reservation-aware stock removal — respects
+                // available = on-hand − reserved at the product's home warehouse
+                $product = Product::where('id', $item['product_id'])->first();
+                if ($product && $product->warehouse_id) {
+                    try {
+                        app(\App\Services\InventoryService::class)->removeStock(
+                            $product->id, $product->warehouse_id, $item['quantity'],
+                            "POS {$sale->sale_number}"
+                        );
+                    } catch (\RuntimeException $e) {
+                        abort(422, "Insufficient available stock for {$product->name}: {$e->getMessage()}");
+                    }
+                } elseif ($product) {
+                    // Legacy path — no warehouse assignment on product
+                    $product->decrement('stock_quantity', $item['quantity']);
+                }
             }
 
             return response()->json($sale->load('items.product'), 201);

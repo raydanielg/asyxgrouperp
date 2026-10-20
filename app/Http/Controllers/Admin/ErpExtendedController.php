@@ -2195,7 +2195,21 @@ class ErpExtendedController extends Controller
             if (!empty($item['product_id'])) {
                 $product = Product::find($item['product_id']);
                 if ($product) {
-                    $product->decrement('stock_quantity', $item['quantity']);
+                    if ($product->warehouse_id) {
+                        // Reservation-aware stock removal — respects
+                        // available = on-hand − reserved, records movement
+                        try {
+                            app(\App\Services\InventoryService::class)->removeStock(
+                                $product->id, $product->warehouse_id, $item['quantity'],
+                                "POS {$sale->sale_number}"
+                            );
+                        } catch (\RuntimeException $e) {
+                            abort(422, "Insufficient available stock for {$product->name}: {$e->getMessage()}");
+                        }
+                    } else {
+                        // Legacy path — product has no warehouse assignment
+                        $product->decrement('stock_quantity', $item['quantity']);
+                    }
                 }
             }
         }
