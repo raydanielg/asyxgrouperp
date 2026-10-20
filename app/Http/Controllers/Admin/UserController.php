@@ -28,6 +28,12 @@ class UserController extends Controller
     {
         $query = User::with('roles');
 
+        // Tenant admins only manage users inside their own company
+        $user = auth()->user();
+        if ($user->isAdmin() && !$user->isSuperAdmin()) {
+            $query->where('company_id', $user->company_id);
+        }
+
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
         }
