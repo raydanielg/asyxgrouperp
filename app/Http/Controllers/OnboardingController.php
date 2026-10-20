@@ -45,8 +45,14 @@ class OnboardingController extends Controller
         $plan = Plan::findOrFail($data['plan_id']);
         $price = $data['billing_cycle'] === 'yearly' ? $plan->package_price_yearly : $plan->package_price_monthly;
 
+        $shortCode = strtoupper(collect(explode(' ', $data['company_name']))->map(fn($w) => substr($w, 0, 1))->take(3)->implode(''));
+        if (Company::where('short_code', $shortCode)->exists()) {
+            $shortCode .= strtoupper(Str::random(2));
+        }
+
         $company = Company::create([
             'name' => $data['company_name'],
+            'short_code' => $shortCode,
             'legal_name' => $data['legal_name'] ?? $data['company_name'],
             'email' => $data['email'] ?? $user->email,
             'phone' => $data['phone'] ?? null,
