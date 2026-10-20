@@ -2,96 +2,111 @@
 @section('title', 'Quotation - ' . config('app.name'))
 @section('page_title', 'Quotation Details')
 @section('content')
-<div class="max-w-4xl">
-    {{-- Actions Bar --}}
-    <div class="flex items-center justify-between mb-4">
-        <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg> Back to Quotations</a>
-        <div class="flex items-center gap-2">
-            <a href="{{ route('admin.sales-proposals.edit', $salesProposal) }}" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Edit</a>
+@php $sc = ['draft'=>'#9ca3af','sent'=>'#3b82f6','accepted'=>'#10b981','rejected'=>'#ef4444'][$salesProposal->status] ?? '#9ca3af'; @endphp
+
+<div class="mb-4 flex items-center justify-between flex-wrap gap-3">
+    <a href="{{ route('admin.sales-proposals.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Quotations</a>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('admin.sales-proposals.edit', $salesProposal) }}" class="px-3 py-1.5 border border-gray-200 text-gray-700 text-xs font-medium rounded hover:bg-gray-50">Edit</a>
         @if($salesProposal->status === 'accepted')
-        <form method="POST" action="{{ route('admin.sales-proposals.convert-to-project', $salesProposal) }}">@csrf<button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700" onclick="return confirmAction(this.form, {title: 'Convert this accepted quotation into a project?'})">→ Convert to Project</button></form>
+        <form method="POST" action="{{ route('admin.sales-proposals.convert-to-project', $salesProposal) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Convert this accepted quotation into a project?'})">@csrf
+            <button type="submit" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700">→ Convert to Project</button>
+        </form>
         @endif
+    </div>
+</div>
+
+{{-- Header card --}}
+<div class="bg-white rounded-md border border-gray-200 px-5 py-4 mb-4">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-mono text-sm font-bold text-gray-900">{{ $salesProposal->proposal_number }}</span>
+                <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $sc }}"></span>{{ ucfirst($salesProposal->status) }}</span>
+            </div>
+            <h1 class="text-base font-bold text-gray-900 mt-1.5">Sales Quotation</h1>
+            <p class="text-[11px] text-gray-400 mt-1">For {{ $salesProposal->customer?->name ?? '—' }}</p>
+        </div>
+        <div class="text-right flex-shrink-0">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total</p>
+            <p class="text-xl font-bold text-gray-900 mt-0.5">TZS {{ number_format($salesProposal->total_amount) }}</p>
         </div>
     </div>
+    <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3 text-xs">
+        <div><p class="text-gray-400">Customer</p><p class="text-gray-800 mt-0.5">{{ $salesProposal->customer?->name ?? '—' }}</p></div>
+        <div><p class="text-gray-400">Email</p><p class="text-gray-800 mt-0.5">{{ $salesProposal->customer?->email ?? '—' }}</p></div>
+        <div><p class="text-gray-400">Date</p><p class="text-gray-800 mt-0.5">{{ $salesProposal->proposal_date->format('d M Y') }}</p></div>
+        <div><p class="text-gray-400">Valid Until</p><p class="mt-0.5 {{ $salesProposal->due_date->isPast() && $salesProposal->status !== 'accepted' ? 'text-red-600 font-medium' : 'text-gray-800' }}">{{ $salesProposal->due_date->format('d M Y') }}</p></div>
+    </div>
+</div>
 
-    {{-- Quotation Document --}}
-    <div class="bg-white rounded-md border overflow-hidden">
-        {{-- Header with Gradient --}}
-        <div class="bg-gradient-to-r from-emerald-600 to-emerald-800 px-8 py-6 text-white">
-            <div class="flex items-start justify-between">
-                <div><h2 class="text-2xl font-bold">QUOTATION</h2><p class="text-emerald-100 text-xs mt-1">{{ $salesProposal->proposal_number }}</p></div>
-                <div class="text-right"><p class="text-emerald-100 text-[10px] uppercase">Status</p>@php $c=['draft'=>'gray','sent'=>'sky','accepted'=>'emerald','rejected'=>'red']; @endphp<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30">{{ ucfirst($salesProposal->status) }}</span></div>
-            </div>
-        </div>
-
-        {{-- Customer & Date Info --}}
-        <div class="px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 border-b">
-            <div><p class="text-[10px] text-gray-400 uppercase mb-2">From</p><p class="text-sm font-bold text-gray-900">{{ config('app.name') }}</p></div>
-            <div><p class="text-[10px] text-gray-400 uppercase mb-2">Bill To</p><p class="text-sm font-bold text-gray-900">{{ $salesProposal->customer?->name ?? 'N/A' }}</p><p class="text-xs text-gray-500">{{ $salesProposal->customer?->email ?? '' }}</p></div>
-            <div><p class="text-[10px] text-gray-400 uppercase mb-1">Date</p><p class="text-sm text-gray-700">{{ $salesProposal->proposal_date->format('d M Y') }}</p></div>
-            <div><p class="text-[10px] text-gray-400 uppercase mb-1">Valid Until</p><p class="text-sm text-gray-700">{{ $salesProposal->due_date->format('d M Y') }}</p></div>
-        </div>
-
-        {{-- Items Table --}}
-        @if($salesProposal->items->count() > 0)
-        <div class="px-8 py-6">
-            <table class="w-full text-sm">
-                <thead><tr class="text-left text-xs text-gray-500 bg-gray-50 border-b">
-                    <th class="px-4 py-3 font-medium">#</th><th class="px-4 py-3 font-medium">Description</th><th class="px-4 py-3 font-medium text-center">Qty</th><th class="px-4 py-3 font-medium text-right">Unit Price</th><th class="px-4 py-3 font-medium text-right">Discount</th><th class="px-4 py-3 font-medium text-right">Tax</th><th class="px-4 py-3 font-medium text-right">Total</th>
-                </tr></thead>
-                <tbody>
+{{-- Items --}}
+@if($salesProposal->items->count() > 0)
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Items</h3></div>
+    <div class="overflow-x-auto"><table class="w-full text-sm">
+        <thead>
+            <tr class="text-left text-[11px] text-gray-500 uppercase tracking-wide bg-gray-50/50 border-b border-gray-100">
+                <th class="px-5 py-2.5 font-semibold w-8">#</th><th class="px-5 py-2.5 font-semibold">Description</th><th class="px-5 py-2.5 font-semibold text-right">Qty</th><th class="px-5 py-2.5 font-semibold text-right">Unit Price</th><th class="px-5 py-2.5 font-semibold text-right">Discount</th><th class="px-5 py-2.5 font-semibold text-right">Tax</th><th class="px-5 py-2.5 font-semibold text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
         @foreach($salesProposal->items as $i => $item)
-        <tr class="border-b border-gray-100">
-                    <td class="px-4 py-3 text-xs text-gray-400">{{ $i + 1 }}</td>
-                    <td class="px-4 py-3 text-xs text-gray-700 font-medium">{{ $item->product_name }}</td>
-                    <td class="px-4 py-3 text-xs text-gray-500 text-center">{{ $item->quantity }}</td>
-                    <td class="px-4 py-3 text-xs text-gray-500 text-right">TZS {{ number_format($item->unit_price) }}</td>
-                    <td class="px-4 py-3 text-xs text-red-500 text-right">TZS {{ number_format($item->discount_amount) }}</td>
-                    <td class="px-4 py-3 text-xs text-gray-500 text-right">{{ $item->tax_percentage }}%</td>
-                    <td class="px-4 py-3 text-xs font-semibold text-gray-900 text-right">TZS {{ number_format($item->total_amount) }}</td>
-                </tr>
+        <tr>
+            <td class="px-5 py-3 text-xs text-gray-400">{{ $i + 1 }}</td>
+            <td class="px-5 py-3 text-xs font-medium text-gray-900">{{ $item->product_name }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono text-gray-500">{{ $item->quantity }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono text-gray-500">{{ number_format($item->unit_price) }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono {{ $item->discount_amount > 0 ? 'text-red-500' : 'text-gray-300' }}">{{ $item->discount_amount > 0 ? number_format($item->discount_amount) : '—' }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono {{ $item->tax_percentage > 0 ? 'text-gray-500' : 'text-gray-300' }}">{{ $item->tax_percentage > 0 ? $item->tax_percentage . '%' : '—' }}</td>
+            <td class="px-5 py-3 text-xs text-right font-mono font-bold text-gray-900">{{ number_format($item->total_amount) }}</td>
+        </tr>
         @endforeach
         </tbody>
-            </table>
-        </div>
-        @endif
+    </table></div>
+</div>
+@endif
 
-        {{-- Summary --}}
-        <div class="px-8 py-6 bg-gray-50/50 border-t">
-            <div class="flex justify-end">
-                <div class="w-80 space-y-2">
-                    <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal</span><span class="font-medium text-gray-900">TZS {{ number_format($salesProposal->subtotal) }}</span></div>
-                    <div class="flex justify-between text-sm"><span class="text-gray-500">Discount</span><span class="font-medium text-red-600">TZS {{ number_format($salesProposal->discount_amount) }}</span></div>
-                    <div class="flex justify-between text-sm"><span class="text-gray-500">Tax</span><span class="font-medium text-gray-900">TZS {{ number_format($salesProposal->tax_amount) }}</span></div>
-                    <div class="border-t-2 border-emerald-300 pt-2 flex justify-between items-center"><span class="font-bold text-gray-900">Total</span><span class="font-bold text-xl text-emerald-700">TZS {{ number_format($salesProposal->total_amount) }}</span></div>
-                </div>
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    {{-- Summary --}}
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Summary</h3></div>
+        <div class="divide-y divide-gray-100">
+            <div class="flex justify-between px-5 py-3"><span class="text-xs text-gray-500">Subtotal</span><span class="text-xs font-mono font-medium text-gray-900">TZS {{ number_format($salesProposal->subtotal) }}</span></div>
+            <div class="flex justify-between px-5 py-3"><span class="text-xs text-gray-500">Discount</span><span class="text-xs font-mono {{ $salesProposal->discount_amount > 0 ? 'text-red-500' : 'text-gray-400' }}">TZS {{ number_format($salesProposal->discount_amount) }}</span></div>
+            <div class="flex justify-between px-5 py-3"><span class="text-xs text-gray-500">Tax</span><span class="text-xs font-mono font-medium text-gray-900">TZS {{ number_format($salesProposal->tax_amount) }}</span></div>
+            <div class="flex justify-between px-5 py-3.5 bg-gray-50/60"><span class="text-xs font-bold text-gray-900">Total</span><span class="text-sm font-mono font-bold text-gray-900">TZS {{ number_format($salesProposal->total_amount) }}</span></div>
         </div>
-
-        {{-- Terms & Notes --}}
-        @if($salesProposal->payment_terms || $salesProposal->notes)
-        <div class="px-8 py-6 border-t space-y-4">
-        @if($salesProposal->payment_terms)
-        <div><p class="text-[10px] text-gray-400 uppercase mb-1">Payment Terms</p><p class="text-xs text-gray-600">{{ $salesProposal->payment_terms }}</p></div>
-        @endif
-            @if($salesProposal->notes)
-        <div><p class="text-[10px] text-gray-400 uppercase mb-1">Notes</p><p class="text-xs text-gray-600">{{ $salesProposal->notes }}</p></div>
-        @endif
-        </div>
-        @endif
     </div>
 
-    {{-- Status Update --}}
-    <div class="mt-4 bg-white rounded-md border p-4 flex items-center gap-3">
-        <span class="text-xs text-gray-500">Update Status:</span>
-        <form method="POST" action="{{ route('admin.sales-proposals.status', $salesProposal) }}" class="flex items-center gap-2">@csrf @method('PATCH')
-            <select name="status" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border border-gray-200 text-xs focus:border-gray-400 outline-none">
-                <option value="draft" {{ $salesProposal->status === 'draft' ? 'selected' : '' }}>Draft</option>
-                <option value="sent" {{ $salesProposal->status === 'sent' ? 'selected' : '' }}>Sent</option>
-                <option value="accepted" {{ $salesProposal->status === 'accepted' ? 'selected' : '' }}>Accepted</option>
-                <option value="rejected" {{ $salesProposal->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
-            </select>
-        </form>
+    {{-- Terms, Notes & Status --}}
+    <div class="space-y-4">
+        @if($salesProposal->payment_terms || $salesProposal->notes)
+        <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+            <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Terms &amp; Notes</h3></div>
+            <div class="px-5 py-4 space-y-3">
+                @if($salesProposal->payment_terms)
+                <div><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Payment Terms</p><p class="text-xs text-gray-600">{{ $salesProposal->payment_terms }}</p></div>
+                @endif
+                @if($salesProposal->notes)
+                <div><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Notes</p><p class="text-xs text-gray-600 whitespace-pre-line">{{ $salesProposal->notes }}</p></div>
+                @endif
+            </div>
+        </div>
+        @endif
+
+        {{-- Status update --}}
+        <div class="bg-white rounded-md border border-gray-200 px-5 py-4 flex items-center justify-between">
+            <span class="text-xs font-medium text-gray-600">Update Status</span>
+            <form method="POST" action="{{ route('admin.sales-proposals.status', $salesProposal) }}">@csrf @method('PATCH')
+                <select name="status" onchange="this.form.submit()" class="px-3 py-1.5 rounded border border-gray-200 text-xs outline-none focus:border-gray-400 bg-white">
+                    <option value="draft" {{ $salesProposal->status === 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="sent" {{ $salesProposal->status === 'sent' ? 'selected' : '' }}>Sent</option>
+                    <option value="accepted" {{ $salesProposal->status === 'accepted' ? 'selected' : '' }}>Accepted</option>
+                    <option value="rejected" {{ $salesProposal->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                </select>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
