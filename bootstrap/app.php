@@ -39,7 +39,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // HTTP exceptions (403/404/419 etc.) pass through to normal handling —
         // only unexpected errors get the safe error page.
         $exceptions->render(function (\Throwable $e, Request $request) {
-            if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface) {
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
+                || $e instanceof \Illuminate\Validation\ValidationException
+                || $e instanceof \Illuminate\Auth\AuthenticationException
+                || $e instanceof \Illuminate\Auth\Access\AuthorizationException) {
                 return null;
             }
 

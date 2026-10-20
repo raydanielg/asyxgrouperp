@@ -16,7 +16,7 @@
         <p class="text-gray-600 mb-6">{{ $message ?? 'We encountered an issue while loading this page. Our team has been notified.' }}</p>
         <div class="flex items-center justify-center gap-3">
             <a href="{{ url()->previous() }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-colors">Go Back</a>
-            <a href="{{ auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard')) : route('login') }}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors">Dashboard</a>
+            <a href="{{ auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : route('role.dashboard')) : route('login') }}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors">Dashboard</a>
         </div>
         @if(isset($code) && app()->environment('local'))
         <p class="mt-6 text-xs text-gray-400">Error code: {{ $code }}</p>
