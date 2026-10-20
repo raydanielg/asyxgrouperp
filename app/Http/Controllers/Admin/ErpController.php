@@ -74,10 +74,22 @@ class ErpController extends Controller
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'is_active' => 'boolean',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
         $data['creator_id'] = auth()->id();
         $data['created_by'] = auth()->id();
         $data['is_active'] = $request->boolean('is_active', true);
+
+        // Branch must belong to the acting user's company
+        if (!empty($data['branch_id'])) {
+            $companyId = auth()->user()->isSuperAdmin() && session('switched_company_id')
+                ? session('switched_company_id') : auth()->user()->company_id;
+            abort_unless(
+                \App\Models\Branch::withoutGlobalScopes()->where('id', $data['branch_id'])->where('company_id', $companyId)->exists(),
+                403, 'Invalid branch for this company.'
+            );
+        }
+
         Warehouse::create($data);
         return back()->with('success', 'Warehouse created successfully.');
     }
@@ -92,8 +104,17 @@ class ErpController extends Controller
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'is_active' => 'boolean',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
         $data['is_active'] = $request->boolean('is_active', true);
+
+        if (!empty($data['branch_id'])) {
+            abort_unless(
+                \App\Models\Branch::withoutGlobalScopes()->where('id', $data['branch_id'])->where('company_id', $warehouse->company_id)->exists(),
+                403, 'Invalid branch for this company.'
+            );
+        }
+
         $warehouse->update($data);
         return back()->with('success', 'Warehouse updated successfully.');
     }

@@ -70,6 +70,19 @@
                     <div><label class="block text-xs font-medium text-gray-600 mb-1">City <span class="text-red-500">*</span></label><input name="city" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
                     <div><label class="block text-xs font-medium text-gray-600 mb-1">Zip Code <span class="text-red-500">*</span></label><input name="zip_code" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
                 </div>
+                @php $branchesList = \App\Models\Branch::where('company_id', auth()->user()->company_id)->active()->orderBy('name')->get(); @endphp
+                @if($branchesList->isNotEmpty())
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Branch</label>
+                    <select name="branch_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— Company-wide —</option>
+                        @foreach($branchesList as $b)<option value="{{ $b->id }}">{{ $b->name }}</option>@endforeach
+                    </select>
+                    <p class="text-[10px] text-gray-400 mt-1">Only branch-restricted users see warehouses of their branches.</p>
+                </div>
+                @endif
+                <div class="grid grid-cols-2 gap-3">
+                </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div><label class="block text-xs font-medium text-gray-600 mb-1">Phone</label><input name="phone" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
                     <div><label class="block text-xs font-medium text-gray-600 mb-1">Email</label><input name="email" type="email" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400"></div>
