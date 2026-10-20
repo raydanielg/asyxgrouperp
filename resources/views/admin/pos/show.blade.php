@@ -2,41 +2,99 @@
 @section('title', 'POS Sale Details - ' . config('app.name'))
 @section('page_title', 'Sale Receipt')
 @section('content')
-<div class="mb-4">
-    <a href="{{ route('admin.pos.reports') }}" class="text-xs text-gray-500 hover:text-gray-700">&larr; Back to POS Reports</a>
+
+<div class="mb-4 flex items-center justify-between flex-wrap gap-3">
+    <a href="{{ route('admin.pos.reports') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to POS Reports</a>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('admin.pos.index') }}" class="px-3 py-1.5 border border-gray-200 text-gray-700 text-xs font-medium rounded hover:bg-gray-50">Terminal</a>
+        <button onclick="printReceipt()" class="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700">Print Receipt</button>
+    </div>
 </div>
-<div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-md border p-8">
-        <div class="text-center mb-6">
-            <h2 class="text-lg font-bold text-gray-900">{{ config('app.name') }}</h2>
-            <p class="text-xs text-gray-400">POS Sale Receipt</p>
-            <p class="text-xs font-mono text-gray-500 mt-1">{{ $posSale->sale_number }}</p>
-        </div>
-        <div class="flex justify-between text-xs mb-4 pb-4 border-b">
-            <div><p class="text-gray-400">Date</p><p class="text-gray-700">{{ $posSale->created_at->format('d M Y H:i') }}</p></div>
-            <div><p class="text-gray-400">Cashier</p><p class="text-gray-700">{{ $posSale->cashier?->name ?? 'N/A' }}</p></div>
-            <div><p class="text-gray-400">Payment</p><p class="text-gray-700">{{ ucfirst($posSale->payment_method) }}</p></div>
-        </div>
-        <table class="w-full text-sm mb-4">
-            <thead><tr class="text-left text-xs text-gray-500 border-b"><th class="py-2">Item</th><th class="py-2 text-center">Qty</th><th class="py-2 text-right">Price</th><th class="py-2 text-right">Total</th></tr></thead>
-            <tbody>
-        @foreach($posSale->items as $item)
-        <tr class="border-b border-gray-50"><td class="py-2 text-xs text-gray-900">{{ $item->product_name }}</td><td class="py-2 text-center text-xs text-gray-500">{{ $item->quantity }}</td><td class="py-2 text-right text-xs text-gray-500">TZS {{ number_format($item->unit_price) }}</td><td class="py-2 text-right text-xs font-medium text-gray-900">TZS {{ number_format($item->total) }}</td></tr>
-        @endforeach
-        </tbody>
-        </table>
-        <div class="space-y-1 text-xs">
-            <div class="flex justify-between"><span class="text-gray-500">Subtotal</span><span class="text-gray-900">TZS {{ number_format($posSale->subtotal) }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-500">Tax</span><span class="text-gray-700">TZS {{ number_format($posSale->tax_amount) }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-500">Discount</span><span class="text-gray-700">-TZS {{ number_format($posSale->discount_amount) }}</span></div>
-            <div class="flex justify-between text-sm font-bold border-t pt-2 mt-2"><span class="text-gray-900">Total</span><span class="text-emerald-700">TZS {{ number_format($posSale->total_amount) }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-500">Paid</span><span class="text-gray-700">TZS {{ number_format($posSale->paid_amount) }}</span></div>
-            <div class="flex justify-between"><span class="text-gray-500">Change</span><span class="text-gray-700">TZS {{ number_format($posSale->paid_amount - $posSale->total_amount) }}</span></div>
-        </div>
-        <div class="text-center mt-6 pt-4 border-t">
-            <p class="text-xs text-gray-400">Thank you for your purchase!</p>
-            <button onclick="window.print()" class="mt-3 px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-700">Print Receipt</button>
+
+{{-- Receipt paper on canvas --}}
+<div class="flex justify-center">
+    <div class="bg-gray-100 rounded-md border border-gray-200 p-4 md:p-8 w-full max-w-lg flex flex-col items-center">
+
+        <div id="receipt" class="w-[300px] bg-white shadow-md">
+            <div class="px-4 py-5 text-[11px] leading-relaxed font-mono text-gray-900">
+
+                <div class="text-center">
+                    <p class="font-bold">*** RISITI / RECEIPT ***</p>
+                    <p class="font-bold text-[13px] mt-1">{{ strtoupper($company->name ?? config('app.name')) }}</p>
+                    <p class="text-gray-600">{{ strtoupper($company->address ?? 'DAR ES SALAAM, TANZANIA') }}</p>
+                    @if($company?->phone)<p class="text-gray-600">MOBILE: {{ $company->phone }}</p>@endif
+                    @if($company?->tax_id)<p class="text-gray-600">TIN: {{ $company->tax_id }}</p>@endif
+                    @if($company?->vrn)<p class="text-gray-600">VRN: {{ $company->vrn }}</p>@endif
+                    <p class="text-gray-400 mt-1 text-[10px]">{{ str_repeat('=', 34) }}</p>
+                </div>
+
+                <div class="mt-1">
+                    <div class="flex justify-between"><span>CUSTOMER NAME:</span><span>WALK-IN</span></div>
+                    <div class="flex justify-between"><span>RECEIPT NO:</span><span>{{ str_replace('POS-', '', $posSale->sale_number) }}</span></div>
+                    <div class="flex justify-between"><span>CASHIER:</span><span>{{ strtoupper(substr($posSale->cashier?->name ?? '—', 0, 16)) }}</span></div>
+                    <div class="flex justify-between"><span>DATE:</span><span>{{ $posSale->created_at->format('d/m/Y') }}</span></div>
+                    <div class="flex justify-between"><span>TIME:</span><span>{{ $posSale->created_at->format('H:i:s') }}</span></div>
+                    <p class="text-gray-400 mt-1 text-[10px]">{{ str_repeat('=', 34) }}</p>
+                </div>
+
+                <div class="mt-1">
+                    @foreach($posSale->items as $item)
+                    <p class="font-medium">{{ strtoupper($item->product_name) }}</p>
+                    <div class="flex justify-between pl-3">
+                        <span>{{ $item->quantity }} x {{ number_format($item->unit_price) }}</span>
+                        <span>{{ number_format($item->total) }} A</span>
+                    </div>
+                    @endforeach
+                    <p class="text-gray-400 mt-1 text-[10px]">{{ str_repeat('-', 34) }}</p>
+                </div>
+
+                <div class="mt-1">
+                    <div class="flex justify-between"><span>TOTAL EXCL TAX:</span><span>{{ number_format($posSale->subtotal) }}</span></div>
+                    @if($posSale->tax_amount > 0)
+                    <div class="flex justify-between"><span>TAX A:</span><span>{{ number_format($posSale->tax_amount) }}</span></div>
+                    @endif
+                    @if($posSale->discount_amount > 0)
+                    <div class="flex justify-between"><span>DISCOUNT:</span><span>-{{ number_format($posSale->discount_amount) }}</span></div>
+                    @endif
+                    <div class="flex justify-between font-bold"><span>TOTAL INCL TAX:</span><span>{{ number_format($posSale->total_amount) }}</span></div>
+                    <p class="text-gray-400 mt-1 text-[10px]">{{ str_repeat('=', 34) }}</p>
+                </div>
+
+                <div class="mt-1">
+                    <div class="flex justify-between font-bold"><span>JUMLA / TOTAL (TZS):</span><span>{{ number_format($posSale->total_amount) }}</span></div>
+                    <div class="flex justify-between"><span>{{ ['cash'=>'CASH / TASLIMU','card'=>'CARD / KADI','mobile'=>'MOBILE / SIMU'][$posSale->payment_method] ?? 'PAID' }}:</span><span>{{ number_format($posSale->paid_amount) }}</span></div>
+                    <div class="flex justify-between"><span>CHANGE / CHENJI:</span><span>{{ number_format(max(0, $posSale->paid_amount - $posSale->total_amount)) }}</span></div>
+                    <p class="text-gray-400 mt-1 text-[10px]">{{ str_repeat('-', 34) }}</p>
+                </div>
+
+                <div class="text-center mt-1">
+                    <p class="text-gray-500">RECEIPT VERIFICATION CODE</p>
+                    <p class="font-bold tracking-[0.2em]">{{ $verificationCode }}</p>
+                    @if($qrSvg)
+                    <div class="flex justify-center my-2"><img src="data:image/svg+xml;base64,{{ $qrSvg }}" alt="QR" class="w-[110px] h-[110px]"></div>
+                    @endif
+                    <p class="text-gray-600">Z NUMBER: {{ $posSale->created_at->format('Ymd') }}/{{ substr($posSale->sale_number, -4) }}</p>
+                    <p class="text-gray-400 mt-1 text-[10px]">{{ str_repeat('-', 34) }}</p>
+                    <p class="font-bold mt-1">ASANTE KWA KUNUNUA!</p>
+                    <p class="text-gray-600">THANK YOU, KARIBU TENA</p>
+                    <p class="text-[9px] text-gray-400 mt-1">Bidhaa zilizonunuliwa hazirudishwi<br>Goods sold are not returnable</p>
+                </div>
+            </div>
+            {{-- torn edge --}}
+            <div style="height:8px;background:linear-gradient(-45deg,transparent 4px,#fff 0) 0 0/8px 8px repeat-x,linear-gradient(45deg,transparent 4px,#fff 0) 4px 0/8px 8px repeat-x;"></div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+function printReceipt() {
+    const w = window.open('', '_blank', 'width=320,height=720');
+    const content = document.getElementById('receipt').innerHTML;
+    w.document.write('<html><head><title>Receipt {{ $posSale->sale_number }}</title><style>body{font-family:monospace;font-size:11px;margin:10px;} .text-center{text-align:center;} .flex{display:flex;justify-content:space-between;} .justify-between{justify-content:space-between;} .justify-center{justify-content:center;} .font-bold{font-weight:700;} .pl-3{padding-left:12px;} .mt-1{margin-top:4px;} .my-2{margin:8px 0;} p{margin:0;} img{display:block;margin:0 auto;}</style></head><body>' + content + '</body></html>');
+    w.document.close();
+    setTimeout(() => w.print(), 400);
+}
+</script>
+@endpush
 @endsection

@@ -2209,7 +2209,7 @@ class ErpExtendedController extends Controller
     public function posSaleShow(PosSale $posSale)
     {
         $posSale->load('items', 'cashier');
-        $company = $posSale->company ?? (session('switched_company_id') ? \App\Models\Company::find(session('switched_company_id')) : auth()->user()->company);
+        $company = $posSale->company_id ? \App\Models\Company::find($posSale->company_id) : (session('switched_company_id') ? \App\Models\Company::find(session('switched_company_id')) : auth()->user()->company);
         $verificationCode = strtoupper(substr(md5($posSale->sale_number . $posSale->id . $posSale->total_amount), 0, 12));
         $qrText = implode('|', [
             $posSale->sale_number,
