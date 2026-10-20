@@ -156,7 +156,16 @@ class ErpController extends Controller
 
     public function transferApprove(Transfer $transfer)
     {
-        $transfer->approve(auth()->user());
+        $user = auth()->user();
+        abort_if($transfer->status === 'completed', 403, 'This transfer is already completed.');
+        abort_if($transfer->created_by === $user->id || $transfer->creator_id === $user->id,
+            403, 'You cannot approve a transfer you created.');
+
+        \App\Models\AuditLog::log('approve', 'stock_transfers', [
+            'module_action' => 'transfer_approved',
+            'new_values' => ['transfer' => $transfer->id, 'product' => $transfer->product_name, 'qty' => $transfer->quantity],
+        ]);
+        $transfer->approve($user);
         return back()->with('success', 'Transfer approved and completed.');
     }
 
