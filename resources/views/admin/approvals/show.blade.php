@@ -23,18 +23,35 @@
             </div>
         </div>
 
-        {{-- Approval chain --}}
+        {{-- Approval chain (vertical stepper) --}}
         <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
-            <div class="px-5 py-3.5 border-b border-gray-100"><h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Approval Chain</h4></div>
-            <div class="px-5 py-4">
+            <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">Approval Chain</h4>
+                <span class="text-[10px] text-gray-400">{{ $workflow->steps->count() }} level{{ $workflow->steps->count() === 1 ? '' : 's' }}</span>
+            </div>
+            <div class="px-5 py-5">
                 @forelse($workflow->steps as $i => $step)
-                <div class="flex items-start gap-3 {{ !$loop->last ? 'pb-3.5 mb-3.5 border-b border-gray-50' : '' }}">
+                <div class="flex items-stretch gap-3">
+                    {{-- Rail: circle + connector --}}
                     <div class="flex flex-col items-center flex-shrink-0">
-                        <span class="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-[10px] font-bold">{{ $step->level }}</span>
+                        <span class="w-7 h-7 rounded-full {{ $step->level === 1 ? 'bg-gray-900' : 'bg-white border-2 border-gray-300' }} flex items-center justify-center text-[11px] font-bold {{ $step->level === 1 ? 'text-white' : 'text-gray-500' }}">{{ $step->level }}</span>
+                        @if(!$loop->last)
+                        <div class="w-0.5 flex-1 bg-gray-200 my-1"></div>
+                        @endif
                     </div>
-                    <div class="min-w-0">
-                        <p class="text-xs font-medium text-gray-900">{{ $step->name }}</p>
-                        <p class="text-[10px] text-gray-400 mt-0.5">{{ ucfirst($step->approver_type) }}{{ ($step->approver_role ?? $step->approver?->name) ? ' · ' . ($step->approver_role ?? $step->approver->name) : '' }}</p>
+                    {{-- Content --}}
+                    <div class="min-w-0 {{ !$loop->last ? 'pb-5' : 'pb-0.5' }} pt-0.5">
+                        <p class="text-xs font-bold text-gray-900 leading-tight">{{ $step->name }}</p>
+                        <div class="flex items-center gap-1.5 mt-1">
+                            <span class="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">{{ ucfirst($step->approver_type) }}</span>
+                            @if($step->approver_role ?? $step->approver?->name)
+                            <span class="text-[10px] text-gray-300">·</span>
+                            <span class="text-[10px] text-gray-400">{{ $step->approver_role ?? $step->approver->name }}</span>
+                            @endif
+                        </div>
+                        @if($step->description ?? null)
+                        <p class="text-[10px] text-gray-400 mt-1">{{ $step->description }}</p>
+                        @endif
                     </div>
                 </div>
                 @empty
