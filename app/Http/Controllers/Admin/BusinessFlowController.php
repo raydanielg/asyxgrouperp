@@ -678,39 +678,82 @@ class BusinessFlowController extends Controller
         $invoice = VendorInvoice::findOrFail($data['vendor_invoice_id']);
         $data['payment_number'] = 'VPAY-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['supplier_id'] = $invoice->supplier_id;
-        $data['status'] = 'completed';
         $data['created_by'] = auth()->id();
 
-        DB::transaction(function () use ($data, $invoice) {
-            VendorPayment::create($data);
+        // When a vendor_payment approval workflow is configured, the payment
+        // is created PENDING and its financial effects only apply on execute.
+        $workflow = \App\Services\ApprovalService::findWorkflow('vendor_payment', $invoice->company_id ?? auth()->user()->company_id);
+        $data['status'] = $workflow ? 'pending' : 'completed';
 
-            // Update invoice
-            $invoice->increment('amount_paid', $data['amount']);
-            $invoice->decrement('balance', $data['amount']);
-            if ($invoice->balance <= 0) {
-                $invoice->update(['status' => 'paid']);
-            } else {
-                $invoice->update(['status' => 'partially_paid']);
-            }
+        $payment = null;
+        if (!$workflow) {
+            DB::transaction(function () use ($data, $invoice, &$payment) {
+                $payment = VendorPayment::create($data);
+                $this->executeVendorPayment($payment, $invoice);
+            });
+            return redirect()->back()->with('success', 'Payment recorded successfully.');
+        }
 
-            // Post to ledger
-            try {
-                $payment = VendorPayment::where('payment_number', $data['payment_number'])->first();
-                if ($payment) {
-                    $this->ledger->postVendorPayment($payment);
-                }
-            } catch (\Throwable $e) {
-                \Log::error('Ledger posting failed for vendor payment: ' . $e->getMessage());
-            }
+        $payment = VendorPayment::create($data);
+        \App\Services\ApprovalService::submit(
+            'vendor_payment', $payment, "Vendor Payment {$payment->payment_number}",
+            $payment->amount, auth()->user()
+        );
 
-            // Update project actual cost
-            if ($invoice->project_id) {
-                $project = $invoice->project;
-                $project->increment('actual_cost', $data['amount']);
-            }
+        return redirect()->back()->with('success', "Payment {$payment->payment_number} submitted for approval.");
+    }
+
+    /**
+     * Apply the financial effects of a vendor payment — invoice balance,
+     * ledger posting, project cost. Called on creation (no workflow) or
+     * on explicit execution after approval.
+     */
+    private function executeVendorPayment(VendorPayment $payment, VendorInvoice $invoice): void
+    {
+        $invoice->increment('amount_paid', $payment->amount);
+        $invoice->decrement('balance', $payment->amount);
+        $invoice->update(['status' => $invoice->balance <= 0 ? 'paid' : 'partially_paid']);
+
+        try {
+            $this->ledger->postVendorPayment($payment);
+        } catch (\Throwable $e) {
+            \Log::error('Ledger posting failed for vendor payment: ' . $e->getMessage());
+        }
+
+        if ($invoice->project_id) {
+            $invoice->project?->increment('actual_cost', $payment->amount);
+        }
+    }
+
+    /**
+     * Execute an approved vendor payment — applies financial effects.
+     * Rejected payments can never be executed.
+     */
+    public function vendorPaymentExecute(VendorPayment $vendorPayment)
+    {
+        $user = auth()->user();
+
+        abort_if($vendorPayment->status !== 'pending', 403, 'This payment is not awaiting execution.');
+        abort_if($vendorPayment->created_by === $user->id, 403, 'You cannot execute a payment you created.');
+
+        // The linked approval request must be fully approved
+        $req = \App\Models\ApprovalRequest::where('module', 'vendor_payment')
+            ->where('module_id', $vendorPayment->id)->latest()->first();
+        abort_if(!$req, 403, 'This payment has no approval request.');
+        abort_if($req->status === 'rejected', 403, 'This payment was rejected and cannot be executed.');
+        abort_if($req->status !== 'approved', 403, 'This payment is still awaiting approval.');
+
+        DB::transaction(function () use ($vendorPayment) {
+            $vendorPayment->update(['status' => 'completed']);
+            $this->executeVendorPayment($vendorPayment, $vendorPayment->vendorInvoice);
+
+            \App\Models\AuditLog::log('execute', 'vendor_payments', [
+                'module_action' => 'payment_executed',
+                'new_values' => ['payment' => $vendorPayment->payment_number, 'amount' => $vendorPayment->amount],
+            ]);
         });
 
-        return redirect()->back()->with('success', 'Payment recorded successfully.');
+        return redirect()->back()->with('success', "Payment {$vendorPayment->payment_number} executed.");
     }
 
     // ═══════════════════════════════════════════════════════

@@ -1020,6 +1020,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     // Vendor Payments
     Route::get('/vendor-payments', [$bf, 'vendorPaymentIndex'])->name('vendor-payments.index');
     Route::post('/vendor-payments', [$bf, 'vendorPaymentStore'])->name('vendor-payments.store');
+    Route::post('/vendor-payments/{vendorPayment}/execute', [$bf, 'vendorPaymentExecute'])->name('vendor-payments.execute');
 
     // Office Expenses
     Route::get('/office-expenses', [$bf, 'officeExpenseIndex'])->name('office-expenses.index');
