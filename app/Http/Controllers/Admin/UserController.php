@@ -235,6 +235,59 @@ class UserController extends Controller
         return back()->with('success', 'User deleted successfully!');
     }
 
+    /**
+     * Manage a direct permission override for a user.
+     * action = grant | deny | revoke
+     * Only the platform superadmin can set direct permission overrides —
+     * they bypass normal role delegation and must be tightly controlled.
+     */
+    public function updatePermission(Request $request, User $user)
+    {
+        abort_unless(auth()->user()->isSuperAdmin(), 403, 'Only a platform administrator can manage direct permissions.');
+
+        $validated = $request->validate([
+            'permission' => 'required|string|exists:permissions,name',
+            'action' => 'required|in:grant,deny,revoke',
+            'reason' => 'nullable|string|max:255',
+        ]);
+
+        $permission = Permission::where('name', $validated['permission'])->firstOrFail();
+        $existing = $user->directPermissions()->where('permission_id', $permission->id)->first();
+
+        DB::transaction(function () use ($validated, $user, $permission, $existing) {
+            if ($validated['action'] === 'revoke') {
+                $existing?->delete();
+                AuditLog::log('revoke', 'permissions', [
+                    'module_action' => 'user_permission_revoked',
+                    'new_values' => ['target_user_id' => $user->id, 'target_user' => $user->name, 'permission' => $permission->name, 'revoked_state' => $existing?->granted ? 'granted' : 'denied'],
+                ]);
+            } else {
+                $user->directPermissions()->updateOrCreate(
+                    ['permission_id' => $permission->id],
+                    [
+                        'granted' => $validated['action'] === 'grant',
+                        'granted_by' => auth()->id(),
+                        'reason' => $validated['reason'] ?? null,
+                    ]
+                );
+                AuditLog::log($validated['action'], 'permissions', [
+                    'module_action' => 'user_permission_' . ($validated['action'] === 'grant' ? 'granted' : 'denied'),
+                    'old_values' => $existing ? ['state' => $existing->granted ? 'granted' : 'denied'] : null,
+                    'new_values' => ['target_user_id' => $user->id, 'target_user' => $user->name, 'permission' => $permission->name, 'reason' => $validated['reason']],
+                ]);
+            }
+        });
+
+        Cache::forget("user_perms_{$user->id}");
+
+        $msg = match ($validated['action']) {
+            'grant' => "Permission '{$permission->name}' granted to {$user->name}.",
+            'deny' => "Permission '{$permission->name}' denied for {$user->name}.",
+            default => "Override for '{$permission->name}' removed.",
+        };
+        return back()->with('success', $msg);
+    }
+
     public function changePassword(Request $request, User $user)
     {
         $validated = $request->validate([

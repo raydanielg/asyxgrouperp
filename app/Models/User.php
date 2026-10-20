@@ -48,24 +48,63 @@ class User extends Authenticatable
      * legacy RolePermissions map only when no DB entry exists.
      * Cached per user and invalidated on role/permission changes.
      */
+    public function directPermissions()
+    {
+        return $this->hasMany(UserPermission::class);
+    }
+
+    /**
+     * Database-driven permission resolution.
+     * Resolution order:
+     *   1. Role-derived permissions (role_user pivot + role column → role_permission)
+     *   2. Explicit user denials REMOVE role-derived permissions
+     *   3. Explicit user grants ADD permissions on top
+     * Falls back to the legacy RolePermissions map only when no DB entry exists.
+     * Cached per user and invalidated on role/permission changes.
+     */
     public function permissionNames(): array
     {
         return cache()->remember("user_perms_{$this->id}", 300, function () {
-            $roleNames = $this->roles()->pluck('name')->all();
-            if ($this->role) {
-                $roleNames[] = $this->role;
-            }
-            $roleNames = array_unique(array_filter($roleNames));
-
-            $perms = Permission::whereHas('roles', function ($q) use ($roleNames) {
-                    $q->whereIn('roles.name', $roleNames);
-                })->pluck('name')->unique()->values()->all();
-
-            if (empty($perms)) {
-                $perms = \App\Support\RolePermissions::forRole($this->role);
-            }
-            return $perms;
+            $perms = $this->resolvePermissionNames();
+            return $perms['effective'];
         });
+    }
+
+    /**
+     * Full permission resolution for the Effective Access panel.
+     * Returns ['role' => [...], 'granted' => [...], 'denied' => [...], 'effective' => [...]]
+     */
+    public function resolvePermissionNames(): array
+    {
+        $roleNames = $this->roles()->pluck('name')->all();
+        if ($this->role) {
+            $roleNames[] = $this->role;
+        }
+        $roleNames = array_unique(array_filter($roleNames));
+
+        $rolePerms = Permission::whereHas('roles', function ($q) use ($roleNames) {
+                $q->whereIn('roles.name', $roleNames);
+            })->pluck('name')->unique()->values()->all();
+
+        if (empty($rolePerms)) {
+            $rolePerms = \App\Support\RolePermissions::forRole($this->role);
+        }
+
+        $granted = [];
+        $denied = [];
+        $overrides = $this->directPermissions()->with('permission')->get();
+        foreach ($overrides as $o) {
+            $name = $o->permission?->name;
+            if (!$name) continue;
+            if ($o->granted) $granted[] = $name; else $denied[] = $name;
+        }
+
+        $effective = array_values(array_unique(array_merge(
+            array_diff($rolePerms, $denied),
+            $granted
+        )));
+
+        return ['role' => $rolePerms, 'granted' => $granted, 'denied' => $denied, 'effective' => $effective];
     }
 
     public function hasPermission(string $name): bool
