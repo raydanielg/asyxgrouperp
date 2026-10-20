@@ -2189,29 +2189,34 @@ class ErpExtendedController extends Controller
         $data['sale_number'] = 'POS-' . date('Ymd') . '-' . strtoupper(Str::random(4));
         $data['cashier_id'] = auth()->id();
         $data['status'] = 'completed';
-        $sale = PosSale::create($data);
-        foreach ($data['items'] as $item) {
-            $sale->items()->create($item);
-            if (!empty($item['product_id'])) {
-                $product = Product::find($item['product_id']);
-                if ($product) {
-                    // Explicit policy: warehouse-managed stock only — a
-                    // missing warehouse_id never bypasses availability
-                    // checks. Reconcile unmapped products via the
-                    // inventory reconciliation tools.
-                    if (!$product->warehouse_id) {
-                        abort(422, "Product '{$product->name}' has no warehouse assignment — stock cannot be verified. Assign a warehouse in Inventory → Reconciliation first.");
-                    }
-                    try {
-                        app(\App\Services\InventoryService::class)->removeStock(
-                            $product->id, $product->warehouse_id, $item['quantity'],
-                            "POS {$sale->sale_number}"
-                        );
-                    } catch (\RuntimeException $e) {
-                        abort(422, "Insufficient available stock for {$product->name}: {$e->getMessage()}");
+
+        try {
+            $sale = DB::transaction(function () use ($data) {
+                $sale = PosSale::create($data);
+                foreach ($data['items'] as $item) {
+                    $sale->items()->create($item);
+                    if (!empty($item['product_id'])) {
+                        $product = Product::lockForUpdate()->find($item['product_id']);
+                        if ($product) {
+                            // Explicit policy: warehouse-managed stock only —
+                            // a missing warehouse_id never bypasses
+                            // availability checks.
+                            if (!$product->warehouse_id) {
+                                throw new \RuntimeException("Product '{$product->name}' has no warehouse assignment — assign one in Inventory → Reconciliation.");
+                            }
+                            app(\App\Services\InventoryService::class)->removeStock(
+                                $product->id, $product->warehouse_id, $item['quantity'],
+                                "POS {$sale->sale_number}"
+                            );
+                        }
                     }
                 }
-            }
+                return $sale;
+            });
+        } catch (\RuntimeException $e) {
+            // Stock validation failure — return JSON so the POS UI can
+            // show the real message instead of a generic network error.
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
         }
 
         $verificationCode = strtoupper(substr(md5($sale->sale_number . $sale->id . $sale->total_amount), 0, 12));

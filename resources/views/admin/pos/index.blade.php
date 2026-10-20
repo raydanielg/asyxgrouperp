@@ -250,11 +250,15 @@ function processSale() {
     fetch('{{ route("admin.pos.store") }}', {
         method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-TOKEN':'{{ csrf_token() }}'},
         body: JSON.stringify({ subtotal, tax_amount: tax, discount_amount: discount, total_amount: total, paid_amount: paid, payment_method: document.getElementById('paymentMethod').value, items: cart.map(i => ({product_id: i.product_id, product_name: i.product_name, quantity: i.quantity, unit_price: i.unit_price, total: i.unit_price * i.quantity})) })
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
+    }).then(async r => {
+        const data = await r.json().catch(() => null);
+        if (r.ok && data && data.success) {
             showReceipt(data, {subtotal, tax, taxRate, discount, total, paid, method: document.getElementById('paymentMethod').value, items: cart});
-        } else { Swal.fire({icon:'error',title:'Error',text:'Failed to process sale',confirmButtonColor:'#0f172a'}); }
-    }).catch(e => Swal.fire({icon:'error',title:'Error',text:'Network error',confirmButtonColor:'#0f172a'}))
+        } else {
+            const msg = (data && data.message) || (data && data.errors && Object.values(data.errors).flat().join(' ')) || 'Failed to process sale (' + r.status + ')';
+            Swal.fire({icon:'error',title:'Error',text:msg,confirmButtonColor:'#0f172a'});
+        }
+    }).catch(e => Swal.fire({icon:'error',title:'Error',text:'Network error — please check your connection and try again',confirmButtonColor:'#0f172a'}))
     .finally(() => { btn.disabled = false; btn.textContent = 'Complete Sale'; });
 }
 
