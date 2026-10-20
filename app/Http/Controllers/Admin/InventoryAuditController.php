@@ -135,8 +135,27 @@ class InventoryAuditController extends Controller
             + GrnItem::withoutGlobalScopes()->whereNull('product_id')
             ->whereHas('grn', fn($q) => $q->where('company_id', $companyId))->count();
 
+        // 6. On-hand / reserved / available snapshot
+        $stockSnapshot = ProductWarehouseStock::withoutGlobalScopes()
+            ->whereHas('warehouse', fn($q) => $q->where('company_id', $companyId))
+            ->with('product:id,name,product_code', 'warehouse:id,name')
+            ->orderBy('product_id')->get()
+            ->map(fn($s) => [
+                'product' => $s->product?->name,
+                'warehouse' => $s->warehouse?->name,
+                'on_hand' => $s->quantity,
+                'reserved' => $s->reserved_quantity,
+                'available' => $s->quantity - $s->reserved_quantity,
+            ]);
+
+        // 7. Transfers with inconsistent quantity state (transferred > requested)
+        $inconsistent = Transfer::withoutGlobalScopes()
+            ->where('company_id', $companyId)
+            ->whereColumn('transferred_quantity', '>', 'quantity')->get();
+
         return view('admin.inventory.audit', compact(
-            'negative', 'missingMovement', 'duplicates', 'transferMissing', 'unmappedCount'
+            'negative', 'missingMovement', 'duplicates', 'transferMissing', 'unmappedCount',
+            'stockSnapshot', 'inconsistent'
         ));
     }
 }

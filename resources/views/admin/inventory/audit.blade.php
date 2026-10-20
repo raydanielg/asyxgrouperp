@@ -86,5 +86,47 @@
         </div>
     </div>
 
+    <div class="bg-white rounded-md border border-gray-200 lg:col-span-2">
+        <div class="px-5 py-3 border-b border-gray-100"><h3 class="text-sm font-semibold text-gray-800">Stock Snapshot — On-hand / Reserved / Available</h3></div>
+        <table class="w-full">
+            <thead><tr class="text-left text-[10px] uppercase text-gray-400 border-b border-gray-100">
+                <th class="px-5 py-2">Product</th><th class="px-5 py-2">Warehouse</th>
+                <th class="px-5 py-2 text-right">On-hand</th><th class="px-5 py-2 text-right">Reserved</th><th class="px-5 py-2 text-right">Available</th>
+            </tr></thead>
+            <tbody class="divide-y divide-gray-50">
+                @forelse($stockSnapshot as $row)
+                <tr>
+                    <td class="px-5 py-2.5 text-xs text-gray-800">{{ $row['product'] }}</td>
+                    <td class="px-5 py-2.5 text-xs text-gray-500">{{ $row['warehouse'] }}</td>
+                    <td class="px-5 py-2.5 text-xs text-right font-mono">{{ number_format($row['on_hand']) }}</td>
+                    <td class="px-5 py-2.5 text-xs text-right font-mono text-amber-600">{{ number_format($row['reserved']) }}</td>
+                    <td class="px-5 py-2.5 text-xs text-right font-mono {{ $row['available'] < 0 ? 'text-red-600 font-bold' : 'text-emerald-600' }}">{{ number_format($row['available']) }}</td>
+                </tr>
+                @empty
+                <tr><td colspan="5" class="px-5 py-6 text-center text-xs text-gray-400">No stock records.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-white rounded-md border border-gray-200 lg:col-span-2">
+        <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-gray-800">Transfers — Quantity Inconsistencies</h3>
+            <span class="text-[10px] px-1.5 py-0.5 rounded {{ $inconsistent->count() ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600' }}">{{ $inconsistent->count() }}</span>
+        </div>
+        <table class="w-full">
+            <tbody class="divide-y divide-gray-50">
+                @forelse($inconsistent as $t)
+                <tr>
+                    <td class="px-5 py-3 text-xs text-gray-600">Transfer #{{ $t->id }} — {{ $t->product_name }}</td>
+                    <td class="px-5 py-3 text-xs text-red-600">Transferred {{ $t->transferred_quantity }} exceeds requested {{ $t->quantity }}</td>
+                </tr>
+                @empty
+                <tr><td class="px-5 py-6 text-center text-xs text-gray-400">No inconsistencies detected.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
 </div>
 @endsection
