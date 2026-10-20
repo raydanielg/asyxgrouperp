@@ -106,7 +106,7 @@ class InventoryService
         });
     }
 
-    public function transferStock(int $productId, int $fromWarehouseId, int $toWarehouseId, float $quantity, ?int $createdBy = null): void
+    public function transferStock(int $productId, int $fromWarehouseId, int $toWarehouseId, float $quantity, ?int $createdBy = null, ?string $reference = null): void
     {
         if ($quantity <= 0) {
             throw new RuntimeException('Transfer quantity must be greater than zero.');
@@ -147,7 +147,7 @@ class InventoryService
                 'type' => 'transfer_out',
                 'quantity' => (int) $quantity,
                 'balance_after' => (int) $fromStock->fresh()->quantity,
-                'reference' => "Transfer to warehouse #{$toWarehouseId}",
+                'reference' => ($reference ? $reference . ' — ' : '') . "Transfer to warehouse #{$toWarehouseId}",
                 'created_by' => $createdBy ?? auth()->id(),
             ]);
 
@@ -157,7 +157,7 @@ class InventoryService
                 'type' => 'transfer_in',
                 'quantity' => (int) $quantity,
                 'balance_after' => (int) $toStock->fresh()->quantity,
-                'reference' => "Transfer from warehouse #{$fromWarehouseId}",
+                'reference' => ($reference ? $reference . ' — ' : '') . "Transfer from warehouse #{$fromWarehouseId}",
                 'created_by' => $createdBy ?? auth()->id(),
             ]);
         });
