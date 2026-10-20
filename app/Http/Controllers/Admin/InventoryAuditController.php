@@ -245,9 +245,31 @@ class InventoryAuditController extends Controller
             ))
             ->values();
 
+        // 9. Active reservations without source attribution (legacy)
+        $unattributed = \App\Models\StockReservation::withoutGlobalScopes()
+            ->where('company_id', $companyId)->where('status', 'active')
+            ->whereNull('transfer_id')->with('product:id,name', 'warehouse:id,name')->get();
+
+        // 10. Active reservation records whose transfer is no longer open
+        $terminalLinked = \App\Models\StockReservation::withoutGlobalScopes()
+            ->where('company_id', $companyId)->where('status', 'active')
+            ->whereNotNull('transfer_id')
+            ->whereHas('transfer', fn($q) => $q->withoutGlobalScopes()->whereNotIn('status', ['approved','partially_transferred']))
+            ->with('transfer:id,status', 'product:id,name')->get();
+
+        // 11. POS sales missing expected stock movements
+        $posMissing = \App\Models\PosSale::withoutGlobalScopes()
+            ->where('company_id', $companyId)
+            ->whereDoesntHave('items', fn($q) => $q->whereNull('product_id'))
+            ->latest('id')->limit(100)->get()
+            ->filter(fn($s) => $s->items->some(fn($i) => $i->product_id) &&
+                !StockMovement::withoutGlobalScopes()->where('reference', 'like', "POS {$s->sale_number}%")->exists()
+            )->values();
+
         return view('admin.inventory.audit', compact(
             'negative', 'missingMovement', 'duplicates', 'transferMissing', 'unmappedCount',
-            'stockSnapshot', 'inconsistent', 'staleReservations'
+            'stockSnapshot', 'inconsistent', 'staleReservations',
+            'unattributed', 'terminalLinked', 'posMissing'
         ));
     }
 }

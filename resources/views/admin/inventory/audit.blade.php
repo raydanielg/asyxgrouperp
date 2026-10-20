@@ -130,6 +130,53 @@
 
     <div class="bg-white rounded-md border border-gray-200 lg:col-span-2">
         <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-gray-800">Reservation Records — Attribution Issues</h3>
+            <span class="text-[10px] px-1.5 py-0.5 rounded {{ $unattributed->count() + $terminalLinked->count() ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }}">{{ $unattributed->count() + $terminalLinked->count() }}</span>
+        </div>
+        <table class="w-full">
+            <tbody class="divide-y divide-gray-50">
+                @foreach($unattributed as $r)
+                <tr>
+                    <td class="px-5 py-3 text-xs text-gray-800">{{ $r->product?->name }} — {{ $r->warehouse?->name }}</td>
+                    <td class="px-5 py-3 text-xs text-right font-mono">{{ number_format($r->quantity - $r->consumed_quantity) }}</td>
+                    <td class="px-5 py-3 text-xs text-gray-400">Active reservation with no source record — legacy/unattributed</td>
+                </tr>
+                @endforeach
+                @foreach($terminalLinked as $r)
+                <tr>
+                    <td class="px-5 py-3 text-xs text-gray-800">{{ $r->product?->name }} — Transfer #{{ $r->transfer_id }}</td>
+                    <td class="px-5 py-3 text-xs text-right font-mono">{{ number_format($r->quantity - $r->consumed_quantity) }}</td>
+                    <td class="px-5 py-3 text-xs text-amber-600">Source is {{ $r->transfer?->status }} — reservation still marked active</td>
+                </tr>
+                @endforeach
+                @if($unattributed->isEmpty() && $terminalLinked->isEmpty())
+                <tr><td colspan="3" class="px-5 py-6 text-center text-xs text-gray-400">All reservation records are correctly attributed.</td></tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-white rounded-md border border-gray-200 lg:col-span-2">
+        <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-gray-800">POS Sales Missing Stock Movement</h3>
+            <span class="text-[10px] px-1.5 py-0.5 rounded {{ $posMissing->count() ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }}">{{ $posMissing->count() }}</span>
+        </div>
+        <table class="w-full">
+            <tbody class="divide-y divide-gray-50">
+                @forelse($posMissing as $s)
+                <tr>
+                    <td class="px-5 py-3 text-xs font-mono text-gray-600">{{ $s->sale_number }}</td>
+                    <td class="px-5 py-3 text-xs text-gray-400">Legacy sale — predates warehouse posting or item was unmapped</td>
+                </tr>
+                @empty
+                <tr><td class="px-5 py-6 text-center text-xs text-gray-400">All POS sales have movement records.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-white rounded-md border border-gray-200 lg:col-span-2">
+        <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
             <h3 class="text-sm font-semibold text-gray-800">Potentially Stale Reservations</h3>
             <span class="text-[10px] px-1.5 py-0.5 rounded {{ $staleReservations->count() ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }}">{{ $staleReservations->count() }}</span>
         </div>
