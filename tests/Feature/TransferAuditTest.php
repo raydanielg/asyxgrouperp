@@ -82,20 +82,26 @@ class TransferAuditTest extends TestCase
     {
         $creator = $this->makeUser();
         $approver = $this->makeUser();
+        $executor = $this->makeUser();
         $from = $this->makeWarehouse('W1'); $to = $this->makeWarehouse('W2');
         $product = $this->makeProduct();
         $this->seedStock($product, $from, 50);
 
         $transfer = $this->makeTransfer($creator, $from, $to, $product, 20);
 
+        // Approve → reserves full qty, no stock moves yet
         $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve")->assertRedirect();
+        $this->assertEquals('approved', $transfer->fresh()->status);
+        $this->assertEquals(50, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
+        $this->assertEquals(20, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('reserved_quantity'));
 
+        // Execute → consumes reservation + moves stock
+        $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute")->assertRedirect();
         $this->assertEquals('completed', $transfer->fresh()->status);
         $this->assertEquals(30, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
+        $this->assertEquals(0, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('reserved_quantity'));
         $this->assertEquals(20, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $to->id)->value('quantity'));
         $this->assertEquals(2, StockMovement::where('reference', 'like', "Transfer #{$transfer->id}%")->count());
-        $this->assertDatabaseHas('stock_movements', ['product_id' => $product->id, 'type' => 'transfer_out', 'quantity' => 20]);
-        $this->assertDatabaseHas('stock_movements', ['product_id' => $product->id, 'type' => 'transfer_in', 'quantity' => 20]);
     }
 
     public function test_insufficient_source_stock_rejected(): void
@@ -109,6 +115,7 @@ class TransferAuditTest extends TestCase
         $transfer = $this->makeTransfer($creator, $from, $to, $product, 20);
         $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve");
 
+        $this->assertNotEquals('approved', $transfer->fresh()->status);
         $this->assertNotEquals('completed', $transfer->fresh()->status);
         $this->assertEquals(5, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
         $this->assertEquals(0, StockMovement::count());
@@ -118,16 +125,99 @@ class TransferAuditTest extends TestCase
     {
         $creator = $this->makeUser();
         $approver = $this->makeUser();
+        $executor = $this->makeUser();
         $from = $this->makeWarehouse('W1'); $to = $this->makeWarehouse('W2');
         $product = $this->makeProduct();
         $this->seedStock($product, $from, 50);
 
         $transfer = $this->makeTransfer($creator, $from, $to, $product, 20);
         $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve")->assertRedirect();
-        $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve")->assertStatus(403);
+        $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute")->assertRedirect();
+        $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute")->assertStatus(403);
 
         $this->assertEquals(30, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
         $this->assertEquals(2, StockMovement::count());
+    }
+
+    public function test_partial_transfer_executes_twice_then_completes(): void
+    {
+        $creator = $this->makeUser();
+        $approver = $this->makeUser();
+        $executor = $this->makeUser();
+        $from = $this->makeWarehouse('W1'); $to = $this->makeWarehouse('W2');
+        $product = $this->makeProduct();
+        $this->seedStock($product, $from, 50);
+
+        $transfer = $this->makeTransfer($creator, $from, $to, $product, 20);
+        $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve");
+
+        // First partial: 8
+        $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute", ['quantity' => 8])->assertRedirect();
+        $t = $transfer->fresh();
+        $this->assertEquals('partially_transferred', $t->status);
+        $this->assertEquals(8, $t->transferred_quantity);
+        $this->assertEquals(42, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
+        $this->assertEquals(12, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('reserved_quantity'));
+
+        // Second partial: remaining 12 → completed
+        $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute", ['quantity' => 12])->assertRedirect();
+        $this->assertEquals('completed', $transfer->fresh()->status);
+        $this->assertEquals(30, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
+        $this->assertEquals(20, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $to->id)->value('quantity'));
+        $this->assertEquals(0, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('reserved_quantity'));
+    }
+
+    public function test_partial_execute_capped_at_outstanding(): void
+    {
+        $creator = $this->makeUser();
+        $approver = $this->makeUser();
+        $executor = $this->makeUser();
+        $from = $this->makeWarehouse('W1'); $to = $this->makeWarehouse('W2');
+        $product = $this->makeProduct();
+        $this->seedStock($product, $from, 50);
+
+        $transfer = $this->makeTransfer($creator, $from, $to, $product, 20);
+        $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve");
+        $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute", ['quantity' => 15]);
+
+        // Attempt to execute 10 → capped at outstanding 5
+        $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute", ['quantity' => 10]);
+        $this->assertEquals(35, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
+        $this->assertEquals('completed', $transfer->fresh()->status);
+    }
+
+    public function test_cancel_releases_reservation(): void
+    {
+        $creator = $this->makeUser();
+        $approver = $this->makeUser();
+        $from = $this->makeWarehouse('W1'); $to = $this->makeWarehouse('W2');
+        $product = $this->makeProduct();
+        $this->seedStock($product, $from, 50);
+
+        $transfer = $this->makeTransfer($creator, $from, $to, $product, 20);
+        $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve");
+        $this->actingAs($approver)->post("/admin/transfers/{$transfer->id}/cancel")->assertRedirect();
+
+        $this->assertEquals('cancelled', $transfer->fresh()->status);
+        $this->assertEquals(0, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('reserved_quantity'));
+        $this->assertEquals(50, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
+
+        // Cancelled transfer cannot be executed
+        $this->actingAs($approver)->post("/admin/transfers/{$transfer->id}/execute")->assertStatus(403);
+    }
+
+    public function test_reserved_stock_cannot_be_taken_by_other_operation(): void
+    {
+        $from = $this->makeWarehouse('W1'); $to = $this->makeWarehouse('W2');
+        $product = $this->makeProduct();
+        $this->seedStock($product, $from, 10);
+
+        // Reserve all 10 for another operation
+        app(\App\Services\InventoryService::class)->reserveStock($product->id, $from->id, 10);
+
+        // Now a removeStock attempt for anything > 0 fails — stock is reserved
+        $this->expectException(\RuntimeException::class);
+        app(\App\Services\InventoryService::class)->removeStock($product->id, $from->id, 5, 'test');
     }
 
     public function test_cross_company_warehouse_rejected_on_store(): void
