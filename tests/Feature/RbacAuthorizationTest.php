@@ -30,7 +30,7 @@ class RbacAuthorizationTest extends TestCase
     {
         $company = Company::firstOrCreate(
             ['name' => 'Test Co'],
-            ['short_code' => 'TST', 'is_active' => true]
+            ['legal_name' => 'Test Co Ltd', 'short_code' => 'TST', 'is_active' => true]
         );
         return User::create(array_merge([
             'name' => 'Test User',
@@ -42,8 +42,7 @@ class RbacAuthorizationTest extends TestCase
         ], $attrs));
     }
 
-    /** @test */
-    public function role_permissions_resolve_from_database(): void
+    public function test_role_permissions_resolve_from_database(): void
     {
         $role = $this->makeRole('test_accountant', ['view-invoices', 'create-invoices']);
         $user = $this->makeUser(['role' => 'test_accountant']);
@@ -55,8 +54,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertFalse($user->hasPermission('delete-invoices'));
     }
 
-    /** @test */
-    public function role_permission_changes_take_effect_after_cache_clear(): void
+    public function test_role_permission_changes_take_effect_after_cache_clear(): void
     {
         $role = $this->makeRole('test_role', ['perm-a']);
         $user = $this->makeUser();
@@ -73,8 +71,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertTrue($user->hasPermission('perm-b'));
     }
 
-    /** @test */
-    public function direct_grant_adds_permission(): void
+    public function test_direct_grant_adds_permission(): void
     {
         $role = $this->makeRole('test_gr', ['perm-x']);
         $user = $this->makeUser();
@@ -88,8 +85,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertContains('special-perm', $user->resolvePermissionNames()['granted']);
     }
 
-    /** @test */
-    public function explicit_denial_overrides_role_permission(): void
+    public function test_explicit_denial_overrides_role_permission(): void
     {
         $role = $this->makeRole('test_dn', ['payroll-approve']);
         $user = $this->makeUser();
@@ -106,8 +102,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertNotContains('payroll-approve', $user->resolvePermissionNames()['effective']);
     }
 
-    /** @test */
-    public function revoking_override_restores_role_permissions(): void
+    public function test_revoking_override_restores_role_permissions(): void
     {
         $role = $this->makeRole('test_rv', ['perm-keep']);
         $user = $this->makeUser();
@@ -123,8 +118,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertTrue($user->hasPermission('perm-keep'));
     }
 
-    /** @test */
-    public function non_superadmin_cannot_manage_direct_permissions(): void
+    public function test_non_superadmin_cannot_manage_direct_permissions(): void
     {
         $admin = $this->makeUser(['role' => 'admin']);
         $target = $this->makeUser();
@@ -139,8 +133,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertDatabaseMissing('user_permissions', ['user_id' => $target->id]);
     }
 
-    /** @test */
-    public function superadmin_can_grant_deny_and_revoke(): void
+    public function test_superadmin_can_grant_deny_and_revoke(): void
     {
         $super = $this->makeUser(['role' => 'superadmin']);
         $target = $this->makeUser();
@@ -162,8 +155,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertDatabaseMissing('user_permissions', ['user_id' => $target->id]);
     }
 
-    /** @test */
-    public function non_superadmin_cannot_create_superadmin_user(): void
+    public function test_non_superadmin_cannot_create_superadmin_user(): void
     {
         $admin = $this->makeUser(['role' => 'admin']);
         $response = $this->actingAs($admin)->post('/admin/users', [
@@ -177,8 +169,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'evil@test.com']);
     }
 
-    /** @test */
-    public function last_superadmin_cannot_be_demoted(): void
+    public function test_last_superadmin_cannot_be_demoted(): void
     {
         $super = $this->makeUser(['role' => 'superadmin']);
         $response = $this->actingAs($super)->patch("/admin/users/{$super->id}", [
@@ -188,8 +179,7 @@ class RbacAuthorizationTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $super->id, 'role' => 'superadmin']);
     }
 
-    /** @test */
-    public function admin_role_bypasses_permission_catalogue(): void
+    public function test_admin_role_bypasses_permission_catalogue(): void
     {
         // Documented behavior: system role 'admin' bypasses the catalogue
         // for backoffice access — business scoping is applied separately.
