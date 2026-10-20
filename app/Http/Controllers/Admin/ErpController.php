@@ -19,6 +19,7 @@ use App\Models\BankAccount;
 use App\Models\AddOn;
 use App\Models\UserActiveModule;
 use App\Models\Company;
+use App\Models\Media;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReturn;
 use App\Models\SalesInvoice;
