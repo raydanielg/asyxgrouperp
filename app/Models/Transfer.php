@@ -8,7 +8,7 @@ use App\Traits\BelongsToCompany;
 class Transfer extends Model
 {
     use BelongsToCompany;
-    protected $fillable = ['from_warehouse', 'to_warehouse', 'product_name', 'quantity', 'date', 'creator_id', 'created_by', 'status', 'approved_by', 'approved_at'];
+    protected $fillable = ['from_warehouse', 'to_warehouse', 'product_id', 'product_name', 'quantity', 'date', 'creator_id', 'created_by', 'status', 'approved_by', 'approved_at'];
 
     protected $casts = ['approved_at' => 'datetime'];
 
