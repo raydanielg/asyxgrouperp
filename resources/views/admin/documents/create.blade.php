@@ -2,109 +2,107 @@
 @section('title', 'Upload Document - ' . config('app.name'))
 @section('page_title', 'Upload Document')
 @section('content')
-<div class="mb-4"><a href="{{ route('admin.documents.index') }}" class="text-sm text-gray-500 hover:text-bronze">&larr; Back to Documents</a></div>
+<div class="mb-4"><a href="{{ route('admin.documents.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Documents</a></div>
 
 @if(session('error'))
-<div class="mb-4 px-4 py-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-100">{{ session('error') }}</div>
+<div class="bg-red-50 border border-red-200 rounded-md px-5 py-3 mb-4 text-xs text-red-700">{{ session('error') }}</div>
 @endif
 
-<div class="bg-white rounded-md border border-gray-100 p-6 max-w-3xl">
-    <form method="POST" action="{{ route('admin.documents.store') }}" enctype="multipart/form-data">@csrf
-        <div class="space-y-5">
-            {{-- Basic Info --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden max-w-3xl">
+    <div class="px-5 py-4 border-b border-gray-100">
+        <h3 class="text-base font-bold text-gray-900">Upload Document</h3>
+        <p class="text-[11px] text-gray-400 mt-0.5">Attach a file, link to a project, and request signatures</p>
+    </div>
+    <form method="POST" action="{{ route('admin.documents.store') }}" enctype="multipart/form-data">
+        @csrf
+
+        <div class="px-5 py-4 border-b border-gray-100">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Basic Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Title <span class="text-red-500">*</span></label>
+                    <input type="text" name="title" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400" placeholder="e.g. Service Agreement - ABC Corp">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Category <span class="text-red-500">*</span></label>
+                    <select name="category" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        @foreach($categories as $slug => $cat)
+                            <option value="{{ $slug }}" {{ $preselectedCategory === $slug ? 'selected' : '' }}>{{ $cat['label'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Tags</label>
+                    <input type="text" name="tags" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400" placeholder="comma, separated, tags">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Description</label>
+                    <textarea name="description" rows="2" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400" placeholder="Brief description of this document..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-5 py-4 border-b border-gray-100">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">Project Linking</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Link to Project</label>
+                    <select name="project_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400 bg-white">
+                        <option value="">— No project (general document) —</option>
+                        @foreach($projects as $project)
+                            <option value="{{ $project->id }}" {{ (string)$preselectedProject === (string)$project->id ? 'selected' : '' }}>{{ $project->title }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Reference Type</label>
+                    <input type="text" name="reference_type" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400" placeholder="project, tender, employee...">
+                </div>
+            </div>
+        </div>
+
+        <div class="px-5 py-4 border-b border-gray-100">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">File</h4>
             <div>
-                <h3 class="text-sm font-bold text-gray-900 mb-3">Basic Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Title <span class="text-red-500">*</span></label>
-                        <input type="text" name="title" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-bronze/30 focus:border-bronze" placeholder="e.g. Service Agreement - ABC Corp">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Category <span class="text-red-500">*</span></label>
-                        <select name="category" required class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-bronze/30 focus:border-bronze">
-                            @foreach($categories as $slug => $cat)
-                                <option value="{{ $slug }}" {{ $preselectedCategory === $slug ? 'selected' : '' }}>{{ $cat['label'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Tags</label>
-                        <input type="text" name="tags" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-bronze/30 focus:border-bronze" placeholder="comma, separated, tags">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Description</label>
-                        <textarea name="description" rows="2" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-bronze/30 focus:border-bronze" placeholder="Brief description of this document..."></textarea>
-                    </div>
-                </div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Upload File <span class="text-red-500">*</span></label>
+                <input type="file" name="file" required class="w-full text-xs text-gray-500 file:mr-3 file:px-3 file:py-2 file:border-0 file:rounded file:bg-gray-900 file:text-white file:text-xs file:font-medium hover:file:bg-gray-700 file:cursor-pointer border border-gray-200 rounded">
+                <p class="text-[10px] text-gray-400 mt-1.5">Max 20MB — PDF, DOCX, XLSX, images accepted.</p>
             </div>
-
-            {{-- Project Linking --}}
-            <div class="pt-4 border-t">
-                <h3 class="text-sm font-bold text-gray-900 mb-3">Project Linking</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Link to Project</label>
-                        <select name="project_id" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-bronze/30 focus:border-bronze">
-                            <option value="">No project (general document)</option>
-                            @foreach($projects as $project)
-                                <option value="{{ $project->id }}" {{ (string)$preselectedProject === (string)$project->id ? 'selected' : '' }}>{{ $project->title }}</option>
-                            @endforeach
-                        </select>
-                        <p class="text-[10px] text-gray-400 mt-1">Link this document to a specific project (contracts, minutes, action points, etc.)</p>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Reference Type</label>
-                        <input type="text" name="reference_type" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-bronze/30 focus:border-bronze" placeholder="project, tender, employee...">
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Expiry Date <span class="text-gray-400 font-normal">(optional)</span></label>
+                    <input type="date" name="expiry_date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none focus:border-gray-400">
                 </div>
-            </div>
-
-            {{-- File Upload --}}
-            <div class="pt-4 border-t">
-                <h3 class="text-sm font-bold text-gray-900 mb-3">File</h3>
-                <div class="grid grid-cols-1 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Upload File <span class="text-red-500">*</span></label>
-                        <input type="file" name="file" required class="w-full text-sm border border-gray-200 rounded-lg p-2">
-                        <p class="text-[10px] text-gray-400 mt-1">Max 20MB. PDF, DOCX, XLSX, images accepted.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Expiry Date (optional)</label>
-                            <input type="date" name="expiry_date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-bronze/30 focus:border-bronze">
-                        </div>
-                        <div>
-                            <label class="flex items-center gap-2 text-xs font-semibold text-gray-600 mt-6">
-                                <input type="checkbox" name="is_confidential" value="1" class="rounded">
-                                Mark as Confidential
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Signers --}}
-            <div class="pt-4 border-t">
-                <h3 class="text-sm font-bold text-gray-900 mb-1">E-Signature Requests (optional)</h3>
-                <p class="text-[10px] text-gray-400 mb-3">Select users who need to sign this document. They will be notified.</p>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
-                    @foreach($users as $user)
-                    <label class="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 cursor-pointer">
-                        <input type="checkbox" name="signers[]" value="{{ $user->id }}" class="rounded">
-                        <div>
-                            <p class="text-gray-700 text-xs font-medium">{{ $user->name }}</p>
-                            <p class="text-[10px] text-gray-400">{{ $user->email }}</p>
-                        </div>
+                <div class="flex items-end pb-1">
+                    <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                        <input type="checkbox" name="is_confidential" value="1" class="w-4 h-4 rounded border-gray-300 text-gray-800 focus:ring-gray-400">
+                        Mark as Confidential
                     </label>
-                    @endforeach
                 </div>
             </div>
+        </div>
 
-            {{-- Actions --}}
-            <div class="flex items-center gap-3 pt-4 border-t">
-                <button type="submit" class="px-5 py-2 bg-bronze text-white text-sm font-semibold rounded-lg hover:bg-bronze-dark">Upload Document</button>
-                <a href="{{ route('admin.documents.index') }}" class="px-5 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200">Cancel</a>
+        <div class="px-5 py-4 border-b border-gray-100">
+            <div class="flex items-center justify-between mb-3">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500">E-Signature Requests</h4>
+                <span class="text-[10px] text-gray-400">optional — selected users will be notified</span>
             </div>
+            <div class="divide-y divide-gray-100 border border-gray-200 rounded max-h-48 overflow-y-auto">
+                @foreach($users as $user)
+                <label class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" name="signers[]" value="{{ $user->id }}" class="w-4 h-4 rounded border-gray-300 text-gray-800 focus:ring-gray-400 flex-shrink-0">
+                    <div class="min-w-0">
+                        <p class="text-gray-800 text-xs font-medium truncate">{{ $user->name }}</p>
+                        <p class="text-[10px] text-gray-400 truncate">{{ $user->email }}</p>
+                    </div>
+                </label>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="px-5 py-4 flex items-center gap-3">
+            <button type="submit" class="px-5 py-2 bg-gray-900 text-white text-sm font-medium rounded hover:bg-gray-700">Upload Document</button>
+            <a href="{{ route('admin.documents.index') }}" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</a>
         </div>
     </form>
 </div>
