@@ -23,7 +23,9 @@
       </div>
       <div class="flex items-center gap-2">
         <a href="{{ route('admin.users.login-history') }}" class="px-3 py-2 border border-gray-200 text-gray-600 text-xs font-medium rounded hover:bg-gray-50 transition-colors">Login History</a>
+        @if(auth()->user()->isSuperAdmin())
         <a href="{{ route('admin.roles.index') }}" class="px-3 py-2 border border-gray-200 text-gray-600 text-xs font-medium rounded hover:bg-gray-50 transition-colors">Roles</a>
+        @endif
         <a href="{{ route('admin.users.create') }}" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           Add User
