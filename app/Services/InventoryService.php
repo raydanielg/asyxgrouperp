@@ -121,7 +121,7 @@ class InventoryService
             throw new RuntimeException("Insufficient stock at source. Available: {$available}, requested: {$quantity}.");
         }
 
-        DB::transaction(function () use ($productId, $fromWarehouseId, $toWarehouseId, $quantity, $createdBy) {
+        DB::transaction(function () use ($productId, $fromWarehouseId, $toWarehouseId, $quantity, $createdBy, $reference) {
             $fromStock = ProductWarehouseStock::where('product_id', $productId)
                 ->where('warehouse_id', $fromWarehouseId)
                 ->lockForUpdate()
