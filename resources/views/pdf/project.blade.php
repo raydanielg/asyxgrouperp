@@ -6,7 +6,7 @@
 <style>
   @page{margin:38px 42px;}
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:#fff;color:#111827;font-family:Helvetica,Arial,sans-serif;font-size:11px;line-height:1.45;}
+  body{background:#fff;color:#111827;font-family:Helvetica,Arial,sans-serif;font-size:11px;line-height:1.45;margin:38px 42px;}
   .page{padding:0;}
   .border-b{border-bottom:1px solid #111827;}
   table{width:100%;border-collapse:collapse;}
