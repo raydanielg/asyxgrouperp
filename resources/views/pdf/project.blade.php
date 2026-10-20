@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Project Report — {{ $project->project_number }}</title>
 <style>
+  @page{margin:38px 42px;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:#fff;color:#111827;font-family:Helvetica,Arial,sans-serif;font-size:11px;line-height:1.45;}
   .page{padding:0;}
