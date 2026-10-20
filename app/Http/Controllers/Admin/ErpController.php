@@ -197,7 +197,7 @@ class ErpController extends Controller
     // ─── Orders ───
     public function orderIndex()
     {
-        $orders = Order::with('plan')->latest()->paginate(10);
+        $orders = Order::withoutGlobalScope('company')->with('plan')->latest()->paginate(10);
         return view('admin.orders.index', compact('orders'));
     }
 
