@@ -39,7 +39,7 @@ $statusDot = fn($s) => match(strtolower((string) $s)) {
         <h2 class="text-lg font-bold text-gray-900">{{ $title }}</h2>
         <p class="text-xs text-gray-400 mt-0.5">{{ $rows->count() }} {{ Str::plural('record', $rows->count()) }}{{ method_exists($items ?? null, 'total') ? ' of ' . $items->total() : '' }}</p>
     </div>
-    <a href="{{ route('dashboard') }}" class="text-[10px] text-slate-600 hover:text-slate-800">← Back to dashboard</a>
+    <a href="{{ route('role.dashboard') }}" class="text-[10px] text-slate-600 hover:text-slate-800">← Back to dashboard</a>
 </div>
 
 {{-- KPI strip (if there is data worth summarising) --}}
