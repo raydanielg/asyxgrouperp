@@ -124,3 +124,64 @@ class PosController extends Controller
         return response()->json($posSale->load('items.product'));
     }
 }
+
+
+
+    /**
+     * List returns for the user's company.
+     */
+    public function returns(Request $request)
+    {
+        $returns = \App\Models\PosReturn::with(['sale:id,sale_number', 'items', 'creator:id,name'])
+            ->latest()->paginate(20);
+        return response()->json($returns);
+    }
+
+    /**
+     * Create a pending return — same service + validation rules as web.
+     */
+    public function returnStore(Request $request, PosSale $posSale)
+    {
+        $data = $request->validate([
+            'reason' => 'required|string|max:500',
+            'items' => 'required|array|min:1',
+            'items.*.pos_sale_item_id' => 'required|exists:pos_sale_items,id',
+            'items.*.quantity' => 'required|numeric|min:0.0001',
+            'items.*.disposition' => 'required|in:restock,damaged',
+            'refund_amount' => 'nullable|numeric|min:0',
+        ]);
+
+        $return = app(\App\Services\PosReturnService::class)->create(
+            $posSale, $data['items'], $data['reason'], $data['refund_amount'] ?? 0, $request->user()
+        );
+
+        return response()->json($return->load('items'), 201);
+    }
+
+    /**
+     * Process a return — restock + refund intent. Creator cannot process.
+     */
+    public function returnProcess(\App\Models\PosReturn $posReturn)
+    {
+        app(\App\Services\PosReturnService::class)->process($posReturn, auth()->user());
+        return response()->json($posReturn->fresh()->load('items'));
+    }
+
+    /**
+     * Confirm a refund — manual reconciliation. Does NOT claim external
+     * payment settlement; records who/when/reference.
+     */
+    public function returnConfirmRefund(Request $request, \App\Models\PosReturn $posReturn)
+    {
+        $data = $request->validate([
+            'refund_reference' => 'nullable|string|max:255',
+            'refund_notes' => 'nullable|string|max:500',
+        ]);
+
+        app(\App\Services\PosReturnService::class)->confirmRefund(
+            $posReturn, auth()->user(), $data['refund_reference'] ?? null, $data['refund_notes'] ?? null
+        );
+
+        return response()->json($posReturn->fresh()->load('items'));
+    }
+}
