@@ -93,12 +93,50 @@ class AccountingLedgerController extends Controller
         ]);
 
         try {
+            $workflow = \App\Services\ApprovalService::findWorkflow('journal_entry', auth()->user()->company_id);
+
+            if ($workflow) {
+                // Approval required — create the entry pending approval
+                $entry = \DB::transaction(function () use ($validated, $workflow) {
+                    $totalDebit = array_sum(array_map(fn($l) => (float)($l['debit'] ?? 0), $validated['lines']));
+                    $entry = JournalEntry::create([
+                        'entry_number' => 'JE-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+                        'entry_date' => $validated['entry_date'],
+                        'reference' => $validated['reference'] ?? null,
+                        'description' => $validated['description'] ?? null,
+                        'source_type' => 'manual',
+                        'project_id' => $validated['project_id'] ?? null,
+                        'status' => 'pending',
+                        'created_by' => auth()->id(),
+                        'branch_id' => $validated['branch_id'] ?? null,
+                    ]);
+                    foreach ($validated['lines'] as $line) {
+                        JournalEntryLine::create([
+                            'journal_entry_id' => $entry->id,
+                            'chart_of_account_id' => $line['chart_of_account_id'],
+                            'debit' => $line['debit'] ?? 0,
+                            'credit' => $line['credit'] ?? 0,
+                            'description' => $line['description'] ?? null,
+                            'project_id' => $line['project_id'] ?? $validated['project_id'] ?? null,
+                        ]);
+                    }
+                    \App\Services\ApprovalService::submit(
+                        'journal_entry', $entry, "Journal {$entry->entry_number}", $totalDebit, auth()->user()
+                    );
+                    return $entry;
+                });
+                return back()->with('success', "Journal entry {$entry->entry_number} submitted for approval.");
+            }
+
+            // Documented policy: no journal_entry workflow configured →
+            // direct posting permitted for holders of create-journal-entries.
             $this->ledger->postEntry([
                 'entry_date' => $validated['entry_date'],
                 'reference' => $validated['reference'] ?? null,
                 'description' => $validated['description'] ?? null,
                 'source_type' => 'manual',
                 'project_id' => $validated['project_id'] ?? null,
+                'branch_id' => $validated['branch_id'] ?? null,
                 'created_by' => auth()->id(),
             ], $validated['lines']);
         } catch (\Throwable $e) {
@@ -106,6 +144,87 @@ class AccountingLedgerController extends Controller
         }
 
         return back()->with('success', 'Journal entry posted.');
+    }
+
+    /**
+     * Post an approved journal entry — applies the final status flip inside
+     * a row lock so concurrent requests cannot double-post.
+     */
+    public function journalEntriesPost(JournalEntry $journalEntry)
+    {
+        $user = auth()->user();
+        abort_unless($user->hasPermission('post-journal-entries'), 403, 'You are not authorized to post journal entries.');
+
+        \DB::transaction(function () use ($journalEntry, $user) {
+            $entry = JournalEntry::lockForUpdate()->findOrFail($journalEntry->id);
+            abort_if($entry->status === 'posted', 403, 'This entry is already posted.');
+            abort_if($entry->status === 'rejected', 403, 'This entry was rejected and cannot be posted.');
+
+            $req = \App\Models\ApprovalRequest::where('module', 'journal_entry')
+                ->where('module_id', $entry->id)->latest('id')->first();
+            abort_if($req && $req->status === 'rejected', 403, 'This entry was rejected.');
+            abort_if($req && $req->status === 'pending', 403, 'This entry is still awaiting approval.');
+            abort_if($req && $req->status === 'superseded', 403, 'This entry was modified — pending re-approval.');
+
+            $entry->update(['status' => 'posted', 'posted_at' => now()]);
+            \App\Models\AuditLog::log('execute', 'journal_entries', [
+                'module_action' => 'journal_posted',
+                'new_values' => ['entry' => $entry->entry_number, 'posted_by' => $user->name],
+            ]);
+        });
+
+        return back()->with('success', "Journal entry {$journalEntry->entry_number} posted.");
+    }
+
+    /**
+     * Reverse a posted entry — creates a linked reversal entry with
+     * swapped debits/credits. The original is preserved.
+     */
+    public function journalEntriesReverse(JournalEntry $journalEntry)
+    {
+        $user = auth()->user();
+        abort_unless($user->hasPermission('reverse-journal-entries'), 403, 'You are not authorized to reverse journal entries.');
+        abort_if($journalEntry->status !== 'posted', 403, 'Only posted entries can be reversed.');
+        abort_unless($journalEntry->isReversible(), 403, 'This entry has already been reversed.');
+
+        $reversal = \DB::transaction(function () use ($journalEntry, $user) {
+            $original = JournalEntry::lockForUpdate()->with('lines')->findOrFail($journalEntry->id);
+            abort_unless($original->isReversible(), 403, 'This entry has already been reversed.');
+
+            $rev = JournalEntry::create([
+                'entry_number' => 'JE-REV-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
+                'entry_date' => now()->toDateString(),
+                'reference' => 'REVERSAL of ' . $original->entry_number,
+                'description' => 'Reversal: ' . ($original->description ?? $original->entry_number),
+                'source_type' => 'reversal',
+                'reversal_of_id' => $original->id,
+                'status' => 'posted',
+                'created_by' => $user->id,
+                'posted_at' => now(),
+                'project_id' => $original->project_id,
+                'branch_id' => $original->branch_id,
+            ]);
+            foreach ($original->lines as $line) {
+                JournalEntryLine::create([
+                    'journal_entry_id' => $rev->id,
+                    'chart_of_account_id' => $line->chart_of_account_id,
+                    'debit' => $line->credit,  // swapped
+                    'credit' => $line->debit,
+                    'description' => 'Reversal: ' . $line->description,
+                    'project_id' => $line->project_id,
+                ]);
+            }
+
+            \App\Models\AuditLog::log('update', 'journal_entries', [
+                'module_action' => 'journal_reversed',
+                'old_values' => ['entry' => $original->entry_number],
+                'new_values' => ['reversal' => $rev->entry_number, 'reversed_by' => $user->name],
+            ]);
+
+            return $rev;
+        });
+
+        return back()->with('success', "Reversed as {$reversal->entry_number}.");
     }
 
     public function journalEntriesShow(JournalEntry $journalEntry)
