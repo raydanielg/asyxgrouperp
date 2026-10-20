@@ -76,7 +76,7 @@ class TransactionApprovalTest extends TestCase
         $expense = OfficeExpense::create([
             'expense_number' => 'OEXP-1', 'description' => 'x', 'amount' => 200000,
             'expense_date' => '2026-10-20', 'status' => 'pending',
-            'requested_by' => $user->id, 'created_by' => $user->id,
+            'requested_by' => $user->id, 'created_by' => $user->id, 'company_id' => $this->company()->id,
         ]);
 
         $this->actingAs($user)->post("/admin/office-expenses/{$expense->id}/approve")->assertStatus(403);
@@ -91,7 +91,7 @@ class TransactionApprovalTest extends TestCase
         $expense = OfficeExpense::create([
             'expense_number' => 'OEXP-2', 'description' => 'x', 'amount' => 300000,
             'expense_date' => '2026-10-20', 'status' => 'pending',
-            'requested_by' => $requester->id, 'created_by' => $requester->id,
+            'requested_by' => $requester->id, 'created_by' => $requester->id, 'company_id' => $this->company()->id,
         ]);
         \App\Services\ApprovalService::submit('office_expense', $expense, 'Office Expense OEXP-2', 300000, $requester);
 
@@ -105,10 +105,11 @@ class TransactionApprovalTest extends TestCase
     private function makeInvoice(): VendorInvoice
     {
         $supplier = Supplier::create(['name' => 'Vendor X', 'company_id' => $this->company()->id]);
-        return VendorInvoice::create([
-            'invoice_number' => 'VI-1', 'supplier_id' => $supplier->id,
-            'invoice_date' => '2026-10-20', 'total_amount' => 1000000,
-            'balance' => 1000000, 'status' => 'posted',
+        return VendorInvoice::withoutGlobalScopes()->create([
+            'vendor_invoice_number' => 'VI-' . uniqid(), 'supplier_id' => $supplier->id,
+            'invoice_date' => '2026-10-20', 'subtotal' => 1000000, 'tax_amount' => 0,
+            'total' => 1000000, 'amount_paid' => 0, 'balance' => 1000000,
+            'status' => 'posted', 'company_id' => $this->company()->id,
         ]);
     }
 
@@ -141,7 +142,7 @@ class TransactionApprovalTest extends TestCase
             'payment_number' => 'VP-1', 'vendor_invoice_id' => $invoice->id,
             'supplier_id' => $invoice->supplier_id, 'payment_date' => '2026-10-20',
             'amount' => 400000, 'payment_method' => 'cash', 'status' => 'pending',
-            'created_by' => $user->id,
+            'created_by' => $user->id, 'company_id' => $this->company()->id,
         ]);
         \App\Services\ApprovalService::submit('vendor_payment', $payment, 'VP-1', 400000, $user);
 
@@ -161,7 +162,7 @@ class TransactionApprovalTest extends TestCase
             'payment_number' => 'VP-2', 'vendor_invoice_id' => $invoice->id,
             'supplier_id' => $invoice->supplier_id, 'payment_date' => '2026-10-20',
             'amount' => 400000, 'payment_method' => 'cash', 'status' => 'pending',
-            'created_by' => $user->id,
+            'created_by' => $user->id, 'company_id' => $this->company()->id,
         ]);
         $req = \App\Services\ApprovalService::submit('vendor_payment', $payment, 'VP-2', 400000, $user);
         \App\Services\ApprovalService::approve($req, $fm);
@@ -183,7 +184,7 @@ class TransactionApprovalTest extends TestCase
             'payment_number' => 'VP-3', 'vendor_invoice_id' => $invoice->id,
             'supplier_id' => $invoice->supplier_id, 'payment_date' => '2026-10-20',
             'amount' => 400000, 'payment_method' => 'cash', 'status' => 'pending',
-            'created_by' => $user->id,
+            'created_by' => $user->id, 'company_id' => $this->company()->id,
         ]);
         $req = \App\Services\ApprovalService::submit('vendor_payment', $payment, 'VP-3', 400000, $user);
         \App\Services\ApprovalService::reject($req, $fm, 'Insufficient budget');
@@ -203,7 +204,7 @@ class TransactionApprovalTest extends TestCase
             'payment_number' => 'VP-4', 'vendor_invoice_id' => $invoice->id,
             'supplier_id' => $invoice->supplier_id, 'payment_date' => '2026-10-20',
             'amount' => 400000, 'payment_method' => 'cash', 'status' => 'pending',
-            'created_by' => $user->id,
+            'created_by' => $user->id, 'company_id' => $this->company()->id,
         ]);
         $req = \App\Services\ApprovalService::submit('vendor_payment', $payment, 'VP-4', 400000, $user);
         \App\Services\ApprovalService::approve($req, $fm);
