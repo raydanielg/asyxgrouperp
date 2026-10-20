@@ -4,54 +4,101 @@
 @section('page_title', 'Reports & Analytics')
 
 @section('content')
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        @foreach([
-        ['label'=>'Total Users','value'=>number_format($stats['totalUsers']),'icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z','from'=>'emerald-600','to'=>'emerald-700','border'=>'emerald-500','text'=>'emerald-100','sub'=>'emerald-200'],
-        ['label'=>'Active','value'=>number_format($stats['activeUsers']),'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'amber-400','to'=>'amber-500','border'=>'amber-300','text'=>'amber-50','sub'=>'amber-100'],
-        ['label'=>'Inactive','value'=>number_format($stats['inactiveUsers']),'icon'=>'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'red-400','to'=>'red-500','border'=>'red-300','text'=>'red-50','sub'=>'red-100'],
-        ['label'=>'Admins','value'=>number_format($stats['totalAdmins']),'icon'=>'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z','from'=>'sky-500','to'=>'sky-600','border'=>'sky-400','text'=>'sky-100','sub'=>'sky-200']
-    ] as $card)
-    <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-md border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden hover:shadow-lg transition-shadow">
-        <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
-        <div class="relative z-10">
-            <div class="flex items-start justify-between mb-2">
-                <span class="text-[10px] font-medium {{ $card['text'] }}">{{ $card['label'] }}</span>
-                <svg class="w-4 h-4 {{ $card['sub'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $card['icon'] }}"/></svg>
+@php
+    $verifiedPct = $stats['totalAllUsers'] > 0 ? round($stats['activeUsers'] / $stats['totalAllUsers'] * 100) : 0;
+@endphp
+
+{{-- Financial summary strip --}}
+<div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
+        <span class="text-xs text-gray-400">System-wide overview</span>
+        <a href="{{ route('admin.reports.index') }}" class="px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-700 transition-colors">All Reports →</a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
+        <div class="px-4 py-3.5"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Sales</p><p class="text-lg font-bold text-emerald-600 mt-0.5">TZS {{ number_format($stats['totalSales']) }}</p></div>
+        <div class="px-4 py-3.5"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Purchases</p><p class="text-lg font-bold text-gray-900 mt-0.5">TZS {{ number_format($stats['totalPurchases']) }}</p></div>
+        <div class="px-4 py-3.5"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Sales Returns</p><p class="text-lg font-bold text-red-500 mt-0.5">TZS {{ number_format($stats['totalSalesReturns']) }}</p></div>
+        <div class="px-4 py-3.5"><p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Purchase Returns</p><p class="text-lg font-bold text-amber-600 mt-0.5">TZS {{ number_format($stats['totalPurchaseReturns']) }}</p></div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    {{-- Users --}}
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Users</h3>
+            <span class="text-[10px] text-gray-400">{{ $stats['totalAllUsers'] }} total</span>
+        </div>
+        <div class="p-5 space-y-4">
+            <div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs text-gray-600">Verified</span>
+                    <span class="text-xs font-bold text-gray-900">{{ number_format($stats['activeUsers']) }} <span class="text-gray-400 font-normal">· {{ $verifiedPct }}%</span></span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-1.5">
+                    <div class="bg-gray-900 h-1.5 rounded-full transition-all" style="width: {{ $verifiedPct }}%"></div>
+                </div>
             </div>
-            <p class="text-xl font-bold tracking-tight text-white">{{ $card['value'] }}</p>
+            <div class="divide-y divide-gray-100">
+                <div class="flex items-center justify-between py-2"><span class="text-xs text-gray-500">Unverified</span><span class="text-xs font-medium text-gray-700">{{ number_format($stats['inactiveUsers']) }}</span></div>
+                <div class="flex items-center justify-between py-2"><span class="text-xs text-gray-500">Admins</span><span class="text-xs font-medium text-gray-700">{{ number_format($stats['totalAdmins']) }}</span></div>
+                <div class="flex items-center justify-between py-2"><span class="text-xs text-gray-500">Regular Users</span><span class="text-xs font-medium text-gray-700">{{ number_format($stats['totalUsers']) }}</span></div>
+            </div>
         </div>
     </div>
-        @endforeach
-        </div>
 
-<div class="bg-white rounded-md border p-6">
-    <h3 class="text-sm font-semibold text-gray-900 mb-4">User Distribution</h3>
-    <div class="space-y-4">
-        <div>
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-sm font-medium text-gray-700">Verified Users</span>
-                <span class="text-sm font-bold text-emerald-600">{{ $stats['activeUsers'] }}</span>
+    {{-- Invoices --}}
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">Invoices</h3></div>
+        <div class="p-5 space-y-4">
+            <div>
+                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Sales</p>
+                <div class="grid grid-cols-2 gap-y-2">
+                    @foreach(['draft' => '#9ca3af', 'posted' => '#3b82f6', 'paid' => '#10b981', 'overdue' => '#ef4444'] as $s => $c)
+                    <div class="flex items-center justify-between pr-2">
+                        <span class="inline-flex items-center gap-1.5 text-xs text-gray-600 capitalize"><span style="width:6px;height:6px;border-radius:99px;background:{{ $c }}"></span>{{ $s }}</span>
+                        <span class="text-xs font-mono font-medium text-gray-800">{{ $salesByStatus[$s] ?? 0 }}</span>
+                    </div>
+                    @endforeach
+                </div>
             </div>
-            <div class="w-full bg-gray-100 rounded-full h-3">
-                <div class="bg-gradient-to-r from-emerald-400 to-emerald-600 h-3 rounded-full transition-all" style="width: {{ ($stats['totalAllUsers'] ?? 0) > 0 ? ($stats['activeUsers'] / ($stats['totalAllUsers'] ?? 1) * 100) : 0 }}%"></div>
+            <div class="pt-3 border-t border-gray-100">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Purchases</p>
+                <div class="grid grid-cols-2 gap-y-2">
+                    @foreach(['draft' => '#9ca3af', 'posted' => '#3b82f6', 'paid' => '#10b981', 'overdue' => '#ef4444'] as $s => $c)
+                    <div class="flex items-center justify-between pr-2">
+                        <span class="inline-flex items-center gap-1.5 text-xs text-gray-600 capitalize"><span style="width:6px;height:6px;border-radius:99px;background:{{ $c }}"></span>{{ $s }}</span>
+                        <span class="text-xs font-mono font-medium text-gray-800">{{ $purchaseByStatus[$s] ?? 0 }}</span>
+                    </div>
+                    @endforeach
+                </div>
             </div>
         </div>
-        <div>
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-sm font-medium text-gray-700">Unverified Users</span>
-                <span class="text-sm font-bold text-amber-600">{{ $stats['inactiveUsers'] }}</span>
+    </div>
+
+    {{-- System --}}
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h3 class="text-xs font-bold uppercase tracking-widest text-gray-500">System</h3></div>
+        <div class="divide-y divide-gray-50">
+            <div class="flex items-center justify-between px-5 py-3">
+                <span class="text-xs text-gray-500">Warehouses</span>
+                <span class="text-xs font-mono font-bold text-gray-900">{{ $stats['totalWarehouses'] }}</span>
             </div>
-            <div class="w-full bg-gray-100 rounded-full h-3">
-                <div class="bg-gradient-to-r from-amber-400 to-amber-500 h-3 rounded-full transition-all" style="width: {{ ($stats['totalAllUsers'] ?? 0) > 0 ? ($stats['inactiveUsers'] / ($stats['totalAllUsers'] ?? 1) * 100) : 0 }}%"></div>
+            <div class="flex items-center justify-between px-5 py-3">
+                <span class="text-xs text-gray-500">Support Tickets</span>
+                <span class="text-xs font-mono font-bold text-gray-900">{{ $stats['totalTickets'] }} <span class="text-amber-600 font-normal">({{ $stats['openTickets'] }} open)</span></span>
             </div>
-        </div>
-        <div>
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-sm font-medium text-gray-700">Admin Users</span>
-                <span class="text-sm font-bold text-sky-600">{{ $stats['totalAdmins'] }}</span>
+            <div class="flex items-center justify-between px-5 py-3">
+                <span class="text-xs text-gray-500">Orders</span>
+                <span class="text-xs font-mono font-bold text-gray-900">{{ $stats['totalOrders'] }}</span>
             </div>
-            <div class="w-full bg-gray-100 rounded-full h-3">
-                <div class="bg-gradient-to-r from-sky-400 to-sky-600 h-3 rounded-full transition-all" style="width: {{ ($stats['totalAllUsers'] ?? 0) > 0 ? ($stats['totalAdmins'] / ($stats['totalAllUsers'] ?? 1) * 100) : 0 }}%"></div>
+            <div class="flex items-center justify-between px-5 py-3">
+                <span class="text-xs text-gray-500">Plans</span>
+                <span class="text-xs font-mono font-bold text-gray-900">{{ $stats['totalPlans'] }}</span>
+            </div>
+            <div class="flex items-center justify-between px-5 py-3">
+                <span class="text-xs text-gray-500">Coupons</span>
+                <span class="text-xs font-mono font-bold text-gray-900">{{ $stats['totalCoupons'] }}</span>
             </div>
         </div>
     </div>
