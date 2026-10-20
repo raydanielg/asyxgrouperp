@@ -21,7 +21,7 @@
         <p class="text-xs text-gray-400 mt-0.5">
             @if($project->start_date){{ $project->start_date->format('d M Y') }}@endif
             @if($project->due_date) — {{ $project->due_date->format('d M Y') }}@endif
-            @if($project->recurring_invoicing) · Recurring: {{ number_format($project->billing_amount, 0) }} TZS/mo@endif
+            @if($project->recurring_invoicing) · Recurring: {{ number_format($project->billing_amount, 0) }} TZS/mo @endif
         </p>
     </div>
 </div>
