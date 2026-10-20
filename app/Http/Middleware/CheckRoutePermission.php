@@ -161,7 +161,6 @@ class CheckRoutePermission
 
             if ($matches) {
                 if (!$user->hasPermission($permission)) {
-                    \Log::info("perm-deny route={$currentRoute} perm={$permission} user={$user->id} role={$user->role} perms=" . implode(',', $user->permissionNames()));
                     $message = $isFinanceRoute
                         ? 'You are not allowed to access this finance account.'
                         : 'You are not allowed to access this page.';
@@ -173,7 +172,6 @@ class CheckRoutePermission
 
         // If user is trying to access an admin route without explicit permission, deny access.
         if (str_starts_with($currentRoute, 'admin.')) {
-            \Log::info("perm-deny-catchall route={$currentRoute} user={$user->id} role={$user->role}");
             $message = $isFinanceRoute
                 ? 'You are not allowed to access this finance account.'
                 : 'You are not allowed to access this page.';
