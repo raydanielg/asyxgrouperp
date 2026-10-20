@@ -660,8 +660,10 @@ class BusinessFlowController extends Controller
 
         $payments = $query->latest()->paginate(20)->withQueryString();
         $totalPaid = VendorPayment::sum('amount');
+        $approvalMap = \App\Models\ApprovalRequest::where('module', 'vendor_payment')
+            ->whereIn('module_id', $payments->pluck('id'))->get()->keyBy('module_id');
 
-        return view('admin.business-flow.vendor-payments.index', compact('payments', 'totalPaid'));
+        return view('admin.business-flow.vendor-payments.index', compact('payments', 'totalPaid', 'approvalMap'));
     }
 
     public function vendorPaymentStore(Request $request)

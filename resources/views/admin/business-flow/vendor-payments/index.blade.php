@@ -66,7 +66,19 @@
                         <span class="inline-flex items-center gap-1.5 text-xs text-gray-600"><span style="width:6px;height:6px;border-radius:99px;background:{{ $pd }}"></span>{{ ucfirst($p->status) }}</span>
                     </td>
                     <td class="px-5 py-3.5 text-xs text-gray-500">{{ $p->createdBy?->name ?? '—' }}</td>
-                    <td class="px-5 py-3.5 text-right">
+                    <td class="px-5 py-3.5 text-right whitespace-nowrap">
+                        @php $apr = $approvalMap[$p->id] ?? null; @endphp
+                        @if($p->status === 'pending')
+                            @if($apr?->status === 'approved' && $p->created_by !== auth()->id())
+                            <form method="POST" action="{{ route('admin.vendor-payments.execute', $p) }}" class="inline" onsubmit="return confirmAction(this, {title:'Execute Payment?', text:'Release TZS {{ number_format($p->amount) }} to {{ $p->supplier?->name }}.', confirmText:'Execute', color:'#059669'})">@csrf
+                                <button class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 mr-3">Execute</button>
+                            </form>
+                            @elseif($apr?->status === 'pending')
+                            <span class="text-[10px] text-amber-600 font-medium mr-3">Awaiting L{{ $apr->current_level }} approval</span>
+                            @else
+                            <span class="text-[10px] text-gray-400 mr-3">Awaiting approval</span>
+                            @endif
+                        @endif
                         @if($p->vendorInvoice)
                         <a href="{{ route('admin.vendor-invoices.show', $p->vendorInvoice) }}" class="text-xs font-medium text-gray-600 hover:text-gray-900">Invoice →</a>
                         @endif
