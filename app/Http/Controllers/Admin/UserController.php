@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Permission;
 use App\Models\LoginHistory;
 use App\Models\Company;
 use Illuminate\Http\Request;
