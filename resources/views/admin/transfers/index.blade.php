@@ -45,8 +45,9 @@
                     </form>
                     @endif
                     @if(in_array($transfer->status ?? '', ['approved','partially_transferred']) && $transfer->created_by !== auth()->id())
-                    <form method="POST" action="{{ route('admin.transfers.execute', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Execute transfer?', text: 'Outstanding quantity will move to the destination warehouse.', confirmText:'Execute', color:'#059669'})">
+                    <form method="POST" action="{{ route('admin.transfers.execute', $transfer) }}" class="inline-flex items-center gap-1" onsubmit="return confirmAction(this, {title: 'Execute transfer?', text: 'Entered quantity will move to the destination warehouse.', confirmText:'Execute', color:'#059669'})">
                         @csrf
+                        <input type="number" name="quantity" step="0.01" min="0.01" max="{{ $transfer->quantity - $transfer->transferred_quantity }}" value="{{ $transfer->quantity - $transfer->transferred_quantity }}" required class="w-20 px-2 py-1 text-xs border border-gray-200 rounded" title="Qty to transfer (max {{ $transfer->quantity - $transfer->transferred_quantity }})">
                         <button class="text-xs font-semibold text-blue-700 hover:text-blue-900">Execute</button>
                     </form>
                     <form method="POST" action="{{ route('admin.transfers.cancel', $transfer) }}" class="inline" onsubmit="return confirmAction(this, {title: 'Cancel transfer?', text: 'Remaining reservation will be released.', confirmText:'Cancel transfer'})">
@@ -61,6 +62,14 @@
                     </form>
                     @endunless
                 </div>
+                @if(in_array($transfer->status ?? '', ['approved','partially_transferred']) && $transfer->product_id)
+                @php $src = \App\Models\ProductWarehouseStock::withoutGlobalScopes()->where('product_id',$transfer->product_id)->where('warehouse_id',$transfer->from_warehouse)->first(); @endphp
+                @if($src)
+                <div class="text-[9px] text-gray-400 text-right mt-1">
+                    Source: {{ number_format($src->quantity) }} on-hand · {{ number_format($src->reserved_quantity) }} reserved · <span class="{{ $src->quantity - $src->reserved_quantity < 0 ? 'text-red-500' : 'text-gray-500' }}">{{ number_format($src->quantity - $src->reserved_quantity) }} avail</span>
+                </div>
+                @endif
+                @endif
             </td>
         </tr>
         @empty
