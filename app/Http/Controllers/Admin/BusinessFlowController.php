@@ -499,13 +499,18 @@ class BusinessFlowController extends Controller
             }
         }
 
+        // When a GRN approval workflow is configured, the GRN is created
+        // PENDING — LPO quantities only update on finalization via grnReceive.
+        $workflow = \App\Services\ApprovalService::findWorkflow('grn', auth()->user()->company_id);
+        $status = $workflow ? 'pending' : ($hasDiscrepancy ? 'discrepant' : 'received');
+
         $grn = Grn::create([
             'grn_number' => 'GRN-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
             'lpo_id' => $data['lpo_id'] ?? null,
             'supplier_id' => $data['supplier_id'] ?? null,
             'received_date' => $data['received_date'],
             'delivery_note_number' => $data['delivery_note_number'] ?? null,
-            'status' => $hasDiscrepancy ? 'discrepant' : 'received',
+            'status' => $status,
             'notes' => $data['notes'] ?? null,
             'created_by' => auth()->id(),
         ]);
@@ -522,26 +527,83 @@ class BusinessFlowController extends Controller
                 'unit' => $item['unit'] ?? null,
                 'remarks' => $item['remarks'] ?? null,
             ]);
+        }
 
-            // Update LPO item received quantity
-            if (!empty($item['lpo_item_id'])) {
-                $lpoItem = LpoItem::find($item['lpo_item_id']);
-                if ($lpoItem) {
-                    $lpoItem->increment('quantity_received', $item['quantity_received']);
-                }
+        if ($workflow) {
+            \App\Services\ApprovalService::submit('grn', $grn, "GRN {$grn->grn_number}", null, auth()->user());
+        } else {
+            // No workflow — apply receipt effects immediately (documented policy)
+            $this->applyGrnReceipt($grn);
+        }
+
+        return back()->with('success', $workflow ? "GRN {$grn->grn_number} submitted for approval." : 'GRN created successfully.');
+    }
+
+    /**
+     * Finalize a GRN — applies LPO received quantities and status updates.
+     * Requires approved workflow request when configured; idempotent via
+     * row lock + status recheck. Over-receipt is rejected.
+     */
+    public function grnReceive(Grn $grn)
+    {
+        $user = auth()->user();
+        abort_if($grn->created_by === $user->id, 403, 'You cannot finalize a GRN you created.');
+
+        DB::transaction(function () use ($grn, $user) {
+            $locked = Grn::lockForUpdate()->findOrFail($grn->id);
+            abort_if($locked->status === 'received' || $locked->status === 'discrepant', 403, 'This GRN is already finalized.');
+            abort_if($locked->status === 'cancelled', 403, 'Cancelled GRNs cannot be finalized.');
+
+            $req = \App\Models\ApprovalRequest::where('module', 'grn')
+                ->where('module_id', $locked->id)->latest('id')->first();
+            if ($req) {
+                abort_if($req->status === 'rejected', 403, 'This GRN was rejected.');
+                abort_if($req->status !== 'approved', 403, 'This GRN is still awaiting approval.');
             }
+
+            $this->applyGrnReceipt($locked);
+            $locked->update(['status' => 'received', 'received_by' => $user->id]);
+
+            \App\Models\AuditLog::log('execute', 'grn', [
+                'module_action' => 'grn_received',
+                'new_values' => ['grn' => $locked->grn_number, 'lpo' => $locked->lpo_id],
+            ]);
+        });
+
+        return back()->with('success', "GRN {$grn->grn_number} finalized.");
+    }
+
+    /**
+     * Apply LPO received quantities for a finalized GRN — rejects over-receipt.
+     * Must be called inside a transaction.
+     */
+    private function applyGrnReceipt(Grn $grn): void
+    {
+        foreach ($grn->items as $item) {
+            if (!$item->lpo_item_id) {
+                continue;
+            }
+            $lpoItem = LpoItem::lockForUpdate()->find($item->lpo_item_id);
+            if (!$lpoItem) {
+                continue;
+            }
+            // Reject over-receipt — received cannot exceed ordered
+            if ($lpoItem->quantity_received + $item->quantity_received > $lpoItem->quantity_ordered + 0.0001) {
+                throw new \RuntimeException("Over-receipt on '{$item->description}': ordered {$lpoItem->quantity_ordered}, would reach " . ($lpoItem->quantity_received + $item->quantity_received) . ".");
+            }
+            $lpoItem->increment('quantity_received', $item->quantity_received);
         }
 
         // Update LPO status
-        if (!empty($data['lpo_id'])) {
-            $lpo = Lpo::find($data['lpo_id']);
-            $allReceived = $lpo->items->every(fn($i) => $i->quantity_received >= $i->quantity_ordered);
-            $anyReceived = $lpo->items->some(fn($i) => $i->quantity_received > 0);
-            if ($allReceived) $lpo->update(['status' => 'received']);
-            elseif ($anyReceived) $lpo->update(['status' => 'partially_received']);
+        if ($grn->lpo_id) {
+            $lpo = Lpo::lockForUpdate()->with('items')->find($grn->lpo_id);
+            if ($lpo) {
+                $allReceived = $lpo->items->every(fn($i) => $i->quantity_received >= $i->quantity_ordered);
+                $anyReceived = $lpo->items->some(fn($i) => $i->quantity_received > 0);
+                if ($allReceived) $lpo->update(['status' => 'received']);
+                elseif ($anyReceived) $lpo->update(['status' => 'partially_received']);
+            }
         }
-
-        return back()->with('success', 'GRN created successfully.');
     }
 
     public function grnShow(Grn $grn)
