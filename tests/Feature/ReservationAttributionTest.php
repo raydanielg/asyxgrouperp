@@ -143,12 +143,14 @@ class ReservationAttributionTest extends TestCase
     public function test_double_reserve_same_transfer_rejected(): void
     {
         $wh = $this->makeWarehouse();
+        $wh2 = $this->makeWarehouse('W2');
         $product = $this->makeProduct();
         $this->seedStock($product, $wh, 50);
-        $this->actingAs($this->makeUser());
+        $user = $this->makeUser();
+        $this->actingAs($user);
         $transfer = Transfer::create([
-            'from_warehouse' => $wh->id, 'to_warehouse' => $wh->id + 999, 'product_id' => $product->id,
-            'product_name' => 'x', 'quantity' => 10, 'status' => 'pending', 'created_by' => 1,
+            'from_warehouse' => $wh->id, 'to_warehouse' => $wh2->id, 'product_id' => $product->id,
+            'product_name' => 'x', 'quantity' => 10, 'status' => 'pending', 'created_by' => $user->id,
             'company_id' => $this->company()->id,
         ]);
         $inv = app(\App\Services\InventoryService::class);
