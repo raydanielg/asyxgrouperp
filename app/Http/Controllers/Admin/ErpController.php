@@ -191,6 +191,8 @@ class ErpController extends Controller
                     'new_values' => ['transfer' => $locked->id, 'product' => $locked->product_name, 'qty' => $locked->quantity],
                 ]);
             });
+        } catch (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e) {
+            throw $e;
         } catch (\RuntimeException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -254,6 +256,8 @@ class ErpController extends Controller
                     'new_values' => ['transfer' => $locked->id, 'qty' => $qty, 'total_transferred' => $newTransferred],
                 ]);
             });
+        } catch (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e) {
+            throw $e;
         } catch (\RuntimeException $e) {
             return back()->with('error', $e->getMessage());
         }

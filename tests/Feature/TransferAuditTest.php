@@ -180,9 +180,9 @@ class TransferAuditTest extends TestCase
         $this->actingAs($approver)->patch("/admin/transfers/{$transfer->id}/approve");
         $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute", ['quantity' => 15]);
 
-        // Attempt to execute 10 → capped at outstanding 5
+        // Attempt to execute 10 → capped at outstanding 5 (20 total moved)
         $this->actingAs($executor)->post("/admin/transfers/{$transfer->id}/execute", ['quantity' => 10]);
-        $this->assertEquals(35, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
+        $this->assertEquals(30, ProductWarehouseStock::where('product_id', $product->id)->where('warehouse_id', $from->id)->value('quantity'));
         $this->assertEquals('completed', $transfer->fresh()->status);
     }
 
