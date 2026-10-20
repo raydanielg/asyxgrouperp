@@ -2130,7 +2130,8 @@ class ErpExtendedController extends Controller
     {
         $products = Product::where('is_active', true)->where('stock_quantity', '>', 0)->get();
         $warehouses = Warehouse::where('is_active', true)->get();
-        return view('admin.pos.index', compact('products', 'warehouses'));
+        $company = session('switched_company_id') ? \App\Models\Company::find(session('switched_company_id')) : auth()->user()->company;
+        return view('admin.pos.index', compact('products', 'warehouses', 'company'));
     }
 
     public function posStore(Request $request)
