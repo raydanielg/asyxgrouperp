@@ -103,6 +103,13 @@ class CheckRoutePermission
         'role.page' => 'view-dashboard',
         'role.dashboard' => 'view-dashboard',
         'reception.*' => 'view-dashboard',
+        'admin.dashboard' => 'view-dashboard',
+        'admin.login-history' => 'view-login-history',
+        'admin.contracts.index' => 'view-crm-contracts',
+        'admin.contracts.show' => 'view-crm-contracts',
+        'admin.contracts.store' => 'create-crm-contracts',
+        'admin.contracts.update' => 'edit-crm-contracts',
+        'admin.contracts.destroy' => 'delete-crm-contracts',
     ];
 
     /**
