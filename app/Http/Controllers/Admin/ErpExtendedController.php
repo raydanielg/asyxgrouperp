@@ -2191,12 +2191,19 @@ class ErpExtendedController extends Controller
         ]);
     }
 
-    public function posReports()
+    public function posReports(Request $request)
     {
-        $sales = PosSale::with('items')->latest()->paginate(20);
+        $sales = PosSale::with('items', 'cashier')
+            ->when($request->search, fn($q) => $q->where('sale_number', 'like', '%' . $request->search . '%'))
+            ->when($request->method, fn($q) => $q->where('payment_method', $request->method))
+            ->when($request->date, fn($q) => $q->whereDate('created_at', $request->date))
+            ->latest()->paginate(20)->withQueryString();
         $todayTotal = PosSale::whereDate('created_at', today())->sum('total_amount');
+        $todayCount = PosSale::whereDate('created_at', today())->count();
         $monthTotal = PosSale::whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->sum('total_amount');
-        return view('admin.pos.reports', compact('sales', 'todayTotal', 'monthTotal'));
+        $allTotal = PosSale::sum('total_amount');
+        $methodTotals = PosSale::selectRaw('payment_method, SUM(total_amount) as total')->groupBy('payment_method')->pluck('total', 'payment_method');
+        return view('admin.pos.reports', compact('sales', 'todayTotal', 'todayCount', 'monthTotal', 'allTotal', 'methodTotals'));
     }
 
     public function posSaleShow(PosSale $posSale)
