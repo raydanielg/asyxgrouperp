@@ -12,6 +12,36 @@
 <div class="max-w-3xl">
     <div class="mb-4"><a href="{{ route('admin.helpdesk-tickets.index') }}" class="text-xs text-gray-400 hover:text-gray-700">&larr; Back to Tickets</a></div>
 
+    {{-- Status stepper --}}
+    @php
+        $stages = ['open' => 'Open', 'in_progress' => 'In Progress', 'resolved' => 'Resolved', 'closed' => 'Closed'];
+        $order = array_keys($stages);
+        $cur = array_search($ticket->status, $order);
+        if ($cur === false) $cur = 0;
+    @endphp
+    <div class="bg-white rounded-md border border-gray-200 px-5 py-4 mb-4">
+        <div class="flex items-center">
+            @foreach($stages as $key => $label)
+            @php $done = $key === $ticket->status ? true : array_search($key, $order) < $cur; @endphp
+            <div class="flex items-center {{ !$loop->last ? 'flex-1' : '' }}">
+                <div class="flex items-center gap-2">
+                    @if($key === $ticket->status)
+                    <span class="w-6 h-6 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0"><span class="w-2 h-2 rounded-full bg-white"></span></span>
+                    @elseif($done)
+                    <span class="w-6 h-6 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></span>
+                    @else
+                    <span class="w-6 h-6 rounded-full border-2 border-gray-200 flex-shrink-0"></span>
+                    @endif
+                    <span class="text-[11px] {{ $key === $ticket->status ? 'font-bold text-gray-900' : ($done ? 'font-medium text-gray-600' : 'text-gray-400') }}">{{ $label }}</span>
+                </div>
+                @if(!$loop->last)
+                <div class="flex-1 h-0.5 mx-3 {{ array_search($key, $order) < $cur ? 'bg-gray-900' : 'bg-gray-200' }}"></div>
+                @endif
+            </div>
+            @endforeach
+        </div>
+    </div>
+
     {{-- Header card --}}
     <div class="bg-white rounded-md border border-gray-200 overflow-hidden mb-4">
         <div class="px-5 py-4 border-b border-gray-100 flex items-start justify-between gap-3">
