@@ -303,7 +303,7 @@ class ApprovalService
     {
         self::guard($req, $user, 'reject');
 
-        return DB::transaction(function () use ($req, $user, $reason) {
+        $req = DB::transaction(function () use ($req, $user, $reason) {
             ApprovalTrack::create([
                 'approval_request_id' => $req->id,
                 'level' => $req->current_level,
@@ -333,5 +333,13 @@ class ApprovalService
 
             return $req;
         });
+
+        UserNotifier::send($req->requested_by, 'approval_rejected',
+            "Your request was rejected: {$req->module_label}",
+            "{$req->request_number} — {$reason}",
+            "/admin/approvals",
+            "apr-rej-{$req->id}-{$req->requested_by}");
+
+        return $req;
     }
 }

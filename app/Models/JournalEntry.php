@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToBranch;
 use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
 class JournalEntry extends Model
 {
-    use BelongsToCompany;
+    use BelongsToCompany, BelongsToBranch;
 
     protected $guarded = ['id'];
 
