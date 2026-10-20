@@ -668,10 +668,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::get('/bank-transfers', [$erp, 'bankTransferIndex'])->name('bank-transfers.index');
     Route::patch('/bank-transfers/{bankTransfer}', [$erp, 'bankTransferUpdate'])->name('bank-transfers.update');
 
-    // Add-ons
-    Route::get('/add-ons', [$erp, 'addOnIndex'])->name('add-ons.index');
-    Route::patch('/add-ons/{addOn}/toggle', [$erp, 'addOnToggle'])->name('add-ons.toggle');
-
     // Messenger
     Route::get('/messenger', [$erp, 'messengerIndex'])->name('messenger.index');
 
