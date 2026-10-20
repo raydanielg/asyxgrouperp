@@ -418,6 +418,9 @@ class BusinessFlowController extends Controller
             ]);
         }
 
+        // Submit to the lpo approval workflow when configured
+        \App\Services\ApprovalService::submit('lpo', $lpo, "LPO {$lpo->lpo_number}", $lpo->total, auth()->user());
+
         return back()->with('success', 'LPO created successfully.');
     }
 
@@ -430,12 +433,29 @@ class BusinessFlowController extends Controller
     public function lpoUpdateStatus(Lpo $lpo, Request $request)
     {
         $request->validate(['status' => 'required|in:draft,sent,partially_received,received,closed,cancelled']);
+
+        // The 'sent' transition issues the LPO — requires an approved workflow
+        // request when one is configured for the company.
+        if ($request->status === 'sent' && $lpo->status === 'draft') {
+            $req = \App\Models\ApprovalRequest::where('module', 'lpo')
+                ->where('module_id', $lpo->id)->latest()->first();
+            if ($req) {
+                abort_if($req->status === 'rejected', 403, 'This LPO was rejected and cannot be issued.');
+                abort_if($req->status !== 'approved', 403, 'This LPO is still awaiting approval.');
+            } elseif (\App\Services\ApprovalService::findWorkflow('lpo', $lpo->company_id)) {
+                // Workflow exists but request is missing (legacy record) — submit now
+                \App\Services\ApprovalService::submit('lpo', $lpo, "LPO {$lpo->lpo_number}", $lpo->total, auth()->user());
+                return back()->with('success', 'LPO submitted for approval.');
+            }
+        }
+
         $lpo->update(['status' => $request->status]);
         return redirect()->back()->with('success', 'LPO status updated.');
     }
 
     public function lpoDestroy(Lpo $lpo)
     {
+        abort_unless(in_array($lpo->status, ['draft', 'cancelled']), 403, 'Only draft or cancelled LPOs can be deleted.');
         $lpo->items()->delete();
         $lpo->delete();
         return back()->with('success', 'LPO deleted.');
