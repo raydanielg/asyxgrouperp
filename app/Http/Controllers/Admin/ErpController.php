@@ -206,8 +206,9 @@ class ErpController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
-    public function orderApprove(Order $order)
+    public function orderApprove($order)
     {
+        $order = Order::withoutGlobalScope('company')->findOrFail($order);
         $order->update(['payment_status' => 'succeeded']);
         if ($order->company_id && ($company = Company::find($order->company_id))) {
             $company->update([
@@ -220,8 +221,9 @@ class ErpController extends Controller
         return back()->with('success', 'Order approved. Company activated.');
     }
 
-    public function orderReject(Order $order)
+    public function orderReject($order)
     {
+        $order = Order::withoutGlobalScope('company')->findOrFail($order);
         $order->update(['payment_status' => 'failed']);
         return back()->with('success', 'Order rejected.');
     }
