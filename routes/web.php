@@ -581,6 +581,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'route-permission'])
     Route::patch('/transfers/{transfer}/approve', [$erp, 'transferApprove'])->name('transfers.approve');
     Route::delete('/transfers/{transfer}', [$erp, 'transferDestroy'])->name('transfers.destroy');
 
+    // Inventory audit + legacy product reconciliation
+    $inv = App\Http\Controllers\Admin\InventoryAuditController::class;
+    Route::get('/inventory/audit', [$inv, 'auditReport'])->name('inventory.audit');
+    Route::get('/inventory/reconciliation', [$inv, 'reconciliation'])->name('inventory.reconciliation');
+    Route::post('/inventory/map-product', [$inv, 'mapProduct'])->name('inventory.map');
+
     // Plans
     Route::get('/plans', [$erp, 'planIndex'])->name('plans.index')->middleware('platform.admin');
     Route::post('/plans', [$erp, 'planStore'])->name('plans.store')->middleware('platform.admin');
