@@ -44,7 +44,7 @@ return new class extends Migration
         // aggregate reserved_quantity rows become traceable.
         DB::statement("
             INSERT INTO stock_reservations (company_id, product_id, warehouse_id, transfer_id, quantity, consumed_quantity, status, created_by, created_at, updated_at)
-            SELECT company_id, product_id, from_warehouse, id, quantity - transferred_quantity, 0, 'active', created_by, datetime('now'), datetime('now')
+            SELECT company_id, product_id, from_warehouse, id, quantity - transferred_quantity, 0, 'active', created_by, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
             FROM transfers
             WHERE status IN ('approved', 'partially_transferred')
               AND product_id IS NOT NULL
