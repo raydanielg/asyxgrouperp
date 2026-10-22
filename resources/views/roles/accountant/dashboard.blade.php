@@ -1,302 +1,182 @@
 @extends('layouts.admin')
-@section('title', 'Accountant Dashboard')
-@section('page_title', 'Accountant Dashboard')
+@section('title', 'Finance Manager')
+@section('page_title', 'Accountant')
 @section('content')
 @php
-    $money = fn($n) => 'TZS ' . number_format($n);
-    $c = [
-        'emerald' => 'from-emerald-600 to-emerald-700 border-emerald-500',
-        'sky' => 'from-sky-500 to-sky-600 border-sky-400',
-        'amber' => 'from-amber-400 to-amber-500 border-amber-300',
-        'rose' => 'from-rose-500 to-rose-600 border-rose-400',
-        'violet' => 'from-violet-500 to-violet-600 border-violet-400',
-    ];
-
-    $today = now();
-    $calendarStart = $today->copy()->startOfMonth()->startOfWeek();
-    $calendarEnd = $today->copy()->endOfMonth()->endOfWeek();
-    $calendarDays = [];
-    $cursor = $calendarStart->copy();
-    while ($cursor <= $calendarEnd) {
-        $calendarDays[] = $cursor->copy();
-        $cursor->addDay();
-    }
-
-    $recentSales = $recentItems['recentSales'] ?? collect();
-    $recentExpenses = $recentItems['recentExpenses'] ?? collect();
-    $recentPurchases = $recentItems['recentPurchases'] ?? collect();
+    $money = fn($n) => 'TZS ' . number_format($n ?? 0);
+    $net = ($stats['totalRevenues'] ?? 0) - ($stats['totalExpenses'] ?? 0);
+    $arRate = ($stats['totalSales'] ?? 0) > 0 ? round(($stats['salesPaid'] ?? 0) / $stats['totalSales'] * 100) : 0;
 @endphp
 
-{{-- Welcome Banner --}}
-<div class="bg-gradient-to-r from-emerald-700 to-emerald-900 rounded-xl p-6 mb-6 text-white relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
-    <div class="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mb-8"></div>
-    <div class="relative z-10 flex items-center justify-between">
+{{-- Header --}}
+<div class="bg-slate-800 rounded-md p-6 mb-5 text-white">
+    <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-2xl font-bold">Welcome, {{ auth()->user()->name }}</h2>
-            <p class="text-emerald-100 text-sm mt-1">Accountant Dashboard - Financial Overview</p>
+            <p class="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Accountant</p>
+            <h2 class="text-xl font-bold">Welcome, {{ auth()->user()->name }}</h2>
+            <p class="text-slate-400 text-xs mt-1">Daily accounting · invoices · expenses.</p>
         </div>
         <div class="text-right">
-            <p class="text-emerald-100 text-xs">{{ $today->format('l, d M Y') }}</p>
-            <p class="text-emerald-200 text-[10px] mt-1">{{ $today->format('H:i') }}</p>
+            <p class="text-slate-300 text-xs">{{ now()->format('l, d M Y') }}</p>
+            <p class="text-slate-500 text-[10px] mt-1">Collection rate: {{ $arRate }}%</p>
         </div>
     </div>
 </div>
 
-{{-- KPI Cards --}}
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-    <div class="bg-gradient-to-br {{ $c['emerald'] }} rounded-xl border p-4 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        <div class="relative z-10">
-            <span class="text-[10px] font-medium text-emerald-100">Total Sales</span>
-            <p class="text-xl font-bold mt-1">{{ $money($stats['totalSales'] ?? 0) }}</p>
-        </div>
+{{-- Primary KPIs --}}
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-5">
+    <div class="bg-white rounded-md border border-gray-200 p-4">
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Revenue</span>
+        <p class="text-lg font-bold text-gray-900 mt-1">{{ $money($stats['totalRevenues']) }}</p>
+        <p class="text-[10px] text-gray-400 mt-0.5">Month: {{ $money($stats['monthRevenues']) }}</p>
     </div>
-    <div class="bg-gradient-to-br {{ $c['rose'] }} rounded-xl border p-4 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        <div class="relative z-10">
-            <span class="text-[10px] font-medium text-rose-100">Outstanding Receivables</span>
-            <p class="text-xl font-bold mt-1">{{ $money($stats['salesBalance'] ?? 0) }}</p>
-        </div>
+    <div class="bg-white rounded-md border border-gray-200 p-4">
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Expenses</span>
+        <p class="text-lg font-bold text-gray-900 mt-1">{{ $money($stats['totalExpenses']) }}</p>
+        <p class="text-[10px] text-gray-400 mt-0.5">Month: {{ $money($stats['monthExpenses']) }}</p>
     </div>
-    <div class="bg-gradient-to-br {{ $c['amber'] }} rounded-xl border p-4 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        <div class="relative z-10">
-            <span class="text-[10px] font-medium text-amber-50">Month Expenses</span>
-            <p class="text-xl font-bold mt-1">{{ $money($stats['monthExpenses'] ?? 0) }}</p>
-        </div>
+    <div class="bg-white rounded-md border {{ $net >= 0 ? 'border-emerald-200' : 'border-red-200' }} p-4">
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Net Position</span>
+        <p class="text-lg font-bold {{ $net >= 0 ? 'text-emerald-700' : 'text-red-600' }} mt-1">{{ $money($net) }}</p>
+        <p class="text-[10px] text-gray-400 mt-0.5">Revenue − expenses</p>
     </div>
-    <div class="bg-gradient-to-br {{ $c['sky'] }} rounded-xl border p-4 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        <div class="relative z-10">
-            <span class="text-[10px] font-medium text-sky-100">Net Position</span>
-            <p class="text-xl font-bold mt-1">{{ $money(($stats['totalRevenues'] ?? 0) - ($stats['totalExpenses'] ?? 0)) }}</p>
-        </div>
+    <div class="bg-white rounded-md border border-gray-200 p-4">
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Receivable (AR)</span>
+        <p class="text-lg font-bold text-amber-600 mt-1">{{ $money($stats['salesBalance']) }}</p>
+        <p class="text-[10px] {{ ($stats['overdueInvoices'] ?? 0) > 0 ? 'text-red-500' : 'text-gray-400' }} mt-0.5">{{ $stats['overdueInvoices'] ?? 0 }} overdue</p>
+    </div>
+    <div class="bg-white rounded-md border border-gray-200 p-4">
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Payable (AP)</span>
+        <p class="text-lg font-bold text-gray-900 mt-1">{{ $money($stats['purchaseBalance']) }}</p>
+        <p class="text-[10px] text-gray-400 mt-0.5">of {{ $money($stats['totalPurchases']) }} purchases</p>
+    </div>
+    <div class="bg-white rounded-md border border-gray-200 p-4">
+        <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wide">Cash Collected</span>
+        <p class="text-lg font-bold text-gray-900 mt-1">{{ $money($stats['salesPaid']) }}</p>
+        <p class="text-[10px] text-gray-400 mt-0.5">{{ $arRate }}% of invoiced</p>
     </div>
 </div>
 
-{{-- AI Insights --}}
-@include('roles.shared.ai-insights')
-
-{{-- Charts & Calendar --}}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-    <div class="lg:col-span-2 bg-white rounded-xl border p-5">
-        <h3 class="text-sm font-bold text-gray-900 mb-4">Revenue vs Expenses (14 days)</h3>
-        <canvas id="financeChart" height="120"></canvas>
-    </div>
-    <div class="bg-white rounded-xl border p-5">
+{{-- Chart + Pulse --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+    <div class="lg:col-span-2 bg-white rounded-md border border-gray-200 p-5">
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-bold text-gray-900">Calendar</h3>
-            <span class="text-[10px] text-emerald-600 font-medium">{{ $today->format('F Y') }}</span>
+            <h3 class="text-sm font-bold text-gray-900">Cash Flow — Last 14 Days</h3>
+            <a href="{{ route('role.page', ['module' => 'financial-reports']) }}" class="text-[10px] text-slate-600 hover:text-slate-800">Full report →</a>
         </div>
-        <div class="grid grid-cols-7 gap-1 text-center mb-2">
-            @foreach(['S','M','T','W','T','F','S'] as $d)
-            <span class="text-[10px] font-bold text-gray-400">{{ $d }}</span>
+        <canvas id="finChart" height="110"></canvas>
+    </div>
+    <div class="bg-white rounded-md border border-gray-200 p-5">
+        <h3 class="text-sm font-bold text-gray-900 mb-4">Ledger Pulse</h3>
+        <div class="space-y-2.5">
+            @php
+            $pulse = [
+                ['label' => 'Draft invoices', 'value' => $stats['draftInvoices'] ?? 0, 'link' => 'sales-invoices'],
+                ['label' => 'Overdue', 'value' => $stats['overdueInvoices'] ?? 0, 'link' => 'sales-invoices'],
+                ['label' => 'Pending', 'value' => $stats['pendingTransfers'] ?? 0, 'link' => 'acc-transfers'],
+            ];
+            $dot = fn($v) => is_numeric($v) && $v > 0 ? '#f59e0b' : '#94a3b8';
+            @endphp
+            @foreach($pulse as $p)
+            <a href="{{ route('role.page', ['module' => $p['link']]) }}" class="flex items-center justify-between hover:bg-gray-50 -mx-2 px-2 py-1 rounded">
+                <span class="text-xs text-gray-600">{{ $p['label'] }}</span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-900"><span style="width:6px;height:6px;border-radius:99px;background:{{ $dot($p['value']) }}"></span>{{ $p['value'] }}</span>
+            </a>
             @endforeach
         </div>
-        <div class="grid grid-cols-7 gap-1">
-            @foreach($calendarDays as $day)
-            <div class="aspect-square rounded-lg flex items-center justify-center text-[10px] font-medium
-                {{ $day->isCurrentMonth() ? ($day->isToday() ? 'bg-emerald-600 text-white' : 'text-gray-700 hover:bg-gray-50') : 'text-gray-300' }}">
-                {{ $day->format('j') }}
-            </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+            <span class="text-[10px] uppercase text-gray-400">AR collection</span>
+            <div class="w-full bg-gray-100 rounded-full h-1.5 mt-1.5"><div class="bg-emerald-600 h-1.5 rounded-full" style="width:{{ $arRate }}%"></div></div>
+        </div>
+    </div>
+</div>
+
+{{-- Actions + recent --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+    <div class="bg-white rounded-md border border-gray-200 p-5">
+        <h3 class="text-sm font-bold text-gray-900 mb-4">Finance Actions</h3>
+        <div class="space-y-2">
+            @php
+            $actions = [
+                ['module' => 'journal-entries', 'label' => 'Journal Entries'],
+                ['module' => 'sales-invoices', 'label' => 'Sales Invoices'],
+                ['module' => 'purchase-invoices', 'label' => 'Purchase Invoices'],
+                ['module' => 'expenses', 'label' => 'Expenses'],
+                ['module' => 'revenues', 'label' => 'Revenues'],
+                ['module' => 'financial-reports', 'label' => 'Financial Reports'],
+            ];
+            @endphp
+            @foreach($actions as $a)
+            <a href="{{ route('role.page', ['module' => $a['module']]) }}" class="flex items-center justify-between px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded text-xs font-medium text-gray-700">
+                {{ $a['label'] }}
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
             @endforeach
         </div>
     </div>
-</div>
-
-{{-- Secondary KPIs --}}
-<div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-6">
-    @foreach($secondaryKpis as $kpi)
-    <a href="{{ route($kpi['route'], $kpi['params'] ?? []) }}" class="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow">
-        <span class="text-[10px] font-medium text-gray-500">{{ $kpi['label'] }}</span>
-        <p class="text-lg font-bold text-gray-900 mt-1">{{ $kpi['value'] }}</p>
-    </a>
-    @endforeach
-</div>
-
-{{-- Quick Actions --}}
-<div class="bg-white rounded-xl border p-5 mb-6">
-    <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        Quick Actions
-    </h3>
-    <div class="flex flex-wrap gap-3">
-        @foreach($quickActions as $action)
-        <a href="{{ route($action['route'], $action['params'] ?? []) }}" class="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium transition-colors border border-emerald-100">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $action['icon'] }}"/></svg>
-            {{ $action['label'] }}
-        </a>
-        @endforeach
-    </div>
-</div>
-
-{{-- Salary Advance Section --}}
-<div class="bg-white rounded-xl border overflow-hidden mb-6">
-    <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 px-6 py-5 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <svg class="w-5 h-5 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <div class="bg-white rounded-md border border-gray-200 p-5">
+        <h3 class="text-sm font-bold text-gray-900 mb-4">Accounts Snapshot</h3>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="border border-gray-100 rounded p-3">
+                <p class="text-[9px] uppercase text-gray-400">Invoiced</p>
+                <p class="text-sm font-bold text-gray-900">{{ $money($stats['totalSales']) }}</p>
             </div>
-            <div>
-                <h3 class="text-white font-bold text-base">Salary Advance</h3>
-                <p class="text-emerald-100 text-[10px]">Employee advance requests overview</p>
+            <div class="border border-gray-100 rounded p-3">
+                <p class="text-[9px] uppercase text-gray-400">Collected</p>
+                <p class="text-sm font-bold text-emerald-700">{{ $money($stats['salesPaid']) }}</p>
             </div>
-        </div>
-        <a href="{{ route('role.page', ['module' => 'salary-advance']) }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-2">
-            Manage Requests
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </a>
-    </div>
-    <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="rounded-xl border p-4 bg-amber-50/50 border-amber-200">
-                <p class="text-[10px] font-bold text-amber-700 uppercase tracking-wide">Pending</p>
-                <p class="text-2xl font-bold text-amber-800 mt-1">{{ number_format($salaryAdvancePending) }}</p>
+            <div class="border border-gray-100 rounded p-3">
+                <p class="text-[9px] uppercase text-gray-400">Purchases</p>
+                <p class="text-sm font-bold text-gray-900">{{ $money($stats['totalPurchases']) }}</p>
             </div>
-            <div class="rounded-xl border p-4 bg-emerald-50/50 border-emerald-200">
-                <p class="text-[10px] font-bold text-emerald-700 uppercase tracking-wide">Approved</p>
-                <p class="text-2xl font-bold text-emerald-800 mt-1">{{ number_format($salaryAdvanceApproved) }}</p>
+            <div class="border border-gray-100 rounded p-3">
+                <p class="text-[9px] uppercase text-gray-400">Payroll advances</p>
+                <p class="text-sm font-bold text-gray-900">{{ $money($salaryAdvanceTotal ?? 0) }}</p>
             </div>
-            <div class="rounded-xl border p-4 bg-sky-50/50 border-sky-200">
-                <p class="text-[10px] font-bold text-sky-700 uppercase tracking-wide">Total Requested</p>
-                <p class="text-2xl font-bold text-sky-800 mt-1">{{ $money($salaryAdvanceTotal) }}</p>
-            </div>
-        </div>
-
-        <h4 class="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Recent Requests</h4>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 border-b">
-                    <tr>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Employee</th>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Date</th>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Amount</th>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-bold text-gray-600 uppercase">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @forelse($recentSalaryAdvances as $advance)
-                    <tr class="hover:bg-gray-50/50">
-                        <td class="px-4 py-3 text-xs font-medium text-gray-900">{{ $advance->user?->name ?? 'N/A' }}</td>
-                        <td class="px-4 py-3 text-xs text-gray-500">{{ $advance->requested_date?->format('d M Y') ?? '-' }}</td>
-                        <td class="px-4 py-3 text-xs font-bold text-gray-900">{{ $money($advance->amount) }}</td>
-                        <td class="px-4 py-3 text-xs">
-                            @php
-                                $statusColors = [
-                                    'pending' => 'bg-amber-50 text-amber-700 border border-amber-200',
-                                    'approved' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-                                    'rejected' => 'bg-rose-50 text-rose-700 border border-rose-200',
-                                ];
-                            @endphp
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium {{ $statusColors[$advance->status] ?? $statusColors['pending'] }}">{{ ucfirst($advance->status) }}</span>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="px-4 py-8 text-center text-xs text-gray-400">No salary advance requests found</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
         </div>
     </div>
-</div>
-
-{{-- Recent Items --}}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="bg-white rounded-xl border overflow-hidden">
-        <div class="px-5 py-4 border-b flex items-center justify-between">
-            <h3 class="text-sm font-bold text-gray-900">Recent Sales Invoices</h3>
-            <a href="{{ route('role.page', ['module' => 'sales-invoices']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
+    <div class="bg-white rounded-md border border-gray-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-sm font-bold text-gray-900">Recent Invoices</h3>
+            <a href="{{ route('role.page', ['module' => 'sales-invoices']) }}" class="text-[10px] text-slate-600 hover:text-slate-800">View all →</a>
         </div>
-        <div class="divide-y divide-gray-100">
-        @forelse($recentSales->take(5) as $invoice)
+        <div class="divide-y divide-gray-50">
+            @forelse(($recentItems['recentSales'] ?? collect())->take(5) as $invoice)
             <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
-                <div>
-                    <p class="text-xs font-medium text-gray-900">{{ $invoice->invoice_number }}</p>
-                    <p class="text-[10px] text-gray-400">{{ $invoice->customer?->name ?? 'N/A' }}</p>
-                </div>
+                <div><p class="text-xs font-medium text-gray-900">{{ $invoice->invoice_number }}</p><p class="text-[10px] text-gray-400">{{ $invoice->customer?->name ?? '—' }}</p></div>
                 <div class="text-right">
-                    <p class="text-xs font-semibold text-gray-900">TZS {{ number_format($invoice->total_amount) }}</p>
-                    <p class="text-[10px] text-gray-400">{{ $invoice->invoice_date?->format('d M Y') ?? '' }}</p>
+                    <p class="text-xs font-semibold text-gray-900">{{ $money($invoice->total_amount) }}</p>
+                    <p class="text-[10px] {{ $invoice->status === 'paid' ? 'text-emerald-600' : 'text-amber-600' }}">{{ ucfirst($invoice->status) }}</p>
                 </div>
             </div>
-        @empty
-            <div class="px-5 py-8 text-center text-gray-400 text-xs">No recent sales invoices</div>
-        @endforelse
-        </div>
-    </div>
-    <div class="bg-white rounded-xl border overflow-hidden">
-        <div class="px-5 py-4 border-b flex items-center justify-between">
-            <h3 class="text-sm font-bold text-gray-900">Recent Expenses</h3>
-            <a href="{{ route('role.page', ['module' => 'expenses']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
-        </div>
-        <div class="divide-y divide-gray-100">
-        @forelse($recentExpenses->take(5) as $expense)
-            <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
-                <div>
-                    <p class="text-xs font-medium text-gray-900">{{ $expense->description ?? $expense->category ?? 'Expense' }}</p>
-                    <p class="text-[10px] text-gray-400">{{ $expense->expense_date?->format('d M Y') ?? '' }}</p>
-                </div>
-                <p class="text-xs font-semibold text-red-600">TZS {{ number_format($expense->amount) }}</p>
-            </div>
-        @empty
-            <div class="px-5 py-8 text-center text-gray-400 text-xs">No recent expenses</div>
-        @endforelse
-        </div>
-    </div>
-    <div class="bg-white rounded-xl border overflow-hidden">
-        <div class="px-5 py-4 border-b flex items-center justify-between">
-            <h3 class="text-sm font-bold text-gray-900">Recent Purchases</h3>
-            <a href="{{ route('role.page', ['module' => 'purchase-invoices']) }}" class="text-[10px] text-emerald-600 hover:text-emerald-700">View All</a>
-        </div>
-        <div class="divide-y divide-gray-100">
-        @forelse($recentPurchases->take(5) as $purchase)
-            <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-50/50">
-                <div>
-                    <p class="text-xs font-medium text-gray-900">{{ $purchase->invoice_number }}</p>
-                    <p class="text-[10px] text-gray-400">{{ $purchase->vendor?->name ?? 'N/A' }}</p>
-                </div>
-                <p class="text-xs font-semibold text-gray-900">TZS {{ number_format($purchase->total_amount) }}</p>
-            </div>
-        @empty
-            <div class="px-5 py-8 text-center text-gray-400 text-xs">No recent purchases</div>
-        @endforelse
+            @empty
+            <div class="px-5 py-8 text-center text-gray-400 text-xs">No recent invoices</div>
+            @endforelse
         </div>
     </div>
 </div>
+
+@include('roles.shared.ai-insights')
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const ctx = document.getElementById('financeChart');
+const ctx = document.getElementById('finChart');
 if (ctx) {
     new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: @json($chartData['labels']),
+            labels: @json($chartData['labels'] ?? []),
             datasets: [
-                { label: 'Revenue', data: @json($chartData['values']), backgroundColor: '#024938', borderRadius: 4 },
+                { label: 'In', data: @json($chartData['values'] ?? []), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.08)', tension: .35, fill: true, pointRadius: 2 },
                 @if(!empty($chartData['secondaryValues']))
-                { label: 'Expenses', data: @json($chartData['secondaryValues']), backgroundColor: '#f9ac00', borderRadius: 4 },
+                { label: '{{ $chartData['secondaryTitle'] ?? 'Out' }}', data: @json($chartData['secondaryValues']), borderColor: '#94a3b8', backgroundColor: 'transparent', tension: .35, pointRadius: 2, borderDash: [4,4] },
                 @endif
             ]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom', labels: { font: { size: 10 }, usePointStyle: true } },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) { return context.dataset.label + ': TZS ' + context.raw.toLocaleString(); }
-                    }
-                }
-            },
-            scales: {
-                y: { beginAtZero: true, ticks: { font: { size: 9 }, callback: function(v) { return 'TZS ' + v.toLocaleString(); } } },
-                x: { ticks: { font: { size: 8 } } }
-            }
+            plugins: { legend: { position: 'bottom', labels: { font: { size: 10 }, usePointStyle: true } } },
+            scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } }, grid: { color: '#f1f5f9' } }, x: { ticks: { font: { size: 8 } }, grid: { display: false } } }
         }
     });
 }

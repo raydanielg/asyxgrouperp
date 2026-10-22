@@ -1,2 +1,1 @@
-@extends('roles.shared.page')
-@section('title', ucfirst(str_replace('-', ' ', 'sales-invoices')) . ' - ' . $roleLabel)
+@extends('roles.cashier.pages._exec')
