@@ -1,3 +1,9 @@
+@php
+    // Defensive: when an exception is rendered before the session-middleware
+    // shares the ViewErrorBag, $errors may be missing — never let the error
+    // page itself crash because of it.
+    $errors = $errors ?? new \Illuminate\Support\ViewErrorBag;
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
