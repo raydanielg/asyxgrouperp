@@ -156,6 +156,7 @@ class RolePermissions
             'view-employees', 'view-attendance', 'view-leaves', 'view-tenders',
             'view-crm-contracts', 'view-helpdesk-tickets', 'view-products',
             'view-warehouses', 'view-budgets', 'view-expenses', 'view-revenues',
+            'view-companies', 'switch-companies',
         ],
         'technical_manager' => [
             'view-projects', 'create-projects', 'edit-projects', 'view-timesheets',

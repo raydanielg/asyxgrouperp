@@ -688,7 +688,7 @@
                 @php
                     $user = auth()->user();
                     $userCompany = $user->company;
-                    $canSwitch = $user->isSuperAdmin() || (($userCompany && $userCompany->is_group) && !$user->isAdmin());
+                    $canSwitch = $user->isSuperAdmin() || $user->hasPermission('switch-companies');
                     $allCompanies = $canSwitch
                         ? \App\Models\Company::where('is_active', true)->orderBy('is_group', 'desc')->orderBy('name')->get()
                         : collect([$userCompany])->filter();

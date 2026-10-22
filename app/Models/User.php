@@ -174,15 +174,12 @@ class User extends Authenticatable
 
     public function canSwitchCompany(): bool
     {
-        return $this->isAdmin() || $this->isSuperAdmin() || $this->hasPermission('switch-companies') || ($this->company && $this->company->is_group);
+        return $this->isSuperAdmin() || $this->hasPermission('switch-companies');
     }
 
     public function accessibleCompanyIds(): array
     {
         if ($this->isAdmin() || $this->isSuperAdmin() || $this->hasPermission('switch-companies')) {
-            return \App\Models\Company::where('is_active', true)->pluck('id')->toArray();
-        }
-        if ($this->company && $this->company->is_group) {
             return \App\Models\Company::where('is_active', true)->pluck('id')->toArray();
         }
         return $this->company_id ? [$this->company_id] : [];
